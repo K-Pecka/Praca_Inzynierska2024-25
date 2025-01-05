@@ -40,10 +40,9 @@ $text-color: var(--text-color);
 $background-color: var(--background-color);
 $border-radius: var(--border-radius);
 $font-family: var(--font-family);
-
+@use "@/assets/style" as *;
 .navbar {
-  width: 100%;
-  max-width: 83vw;
+  @include section-width;
   margin: 1rem auto;
   padding: 1rem;
   height: 6rem;

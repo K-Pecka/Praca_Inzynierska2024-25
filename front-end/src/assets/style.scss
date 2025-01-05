@@ -13,6 +13,10 @@ h2{
   font-size: 4rem;
   font-family: var(--font-family);
 }
+h1{
+  font-size: 4rem;
+  font-family: var(--font-family);
+}
 :root {
   --primary-color: #2f27ce;
   --secondary-color: #dedcff;
@@ -48,4 +52,8 @@ h2{
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
+}
+
+.gradient-text{
+  @include gradient-text;
 }

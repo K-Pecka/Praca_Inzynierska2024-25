@@ -45,13 +45,14 @@ const toggle = (index: number) => {
 
 <style scoped lang="scss">
 .faq {
-  padding: 2rem;
+  padding: 2rem 0;
   .faq-items {
     .faq-item {
       border: 1px solid var(--primary-color);
+      width: 100%;
       padding: 1rem;
-      margin: 1rem;
-      border-radius: .5rem;
+      margin: 1rem 0;
+      border-radius: 0.5rem;
       background-color: var(--secondary-color);
       .faq-question {
         color: var(--primary-color);

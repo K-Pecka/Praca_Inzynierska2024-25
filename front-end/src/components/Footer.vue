@@ -58,8 +58,7 @@ footer {
   font-family: Arial, sans-serif;
 }
 .footer {
-  width: 83vw;
-  margin: auto;
+  @include section-width;
 }
 
 .footer__top {

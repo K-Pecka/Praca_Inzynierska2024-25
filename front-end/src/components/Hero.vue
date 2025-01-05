@@ -55,9 +55,8 @@ header{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 70vw;
-  margin: auto;
-  padding: 1rem;
+  @include section-width;
+  padding: 1rem 0;
 }
 .word
 {
@@ -71,7 +70,7 @@ header{
   font-weight: 600;
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
   letter-spacing: -4%;
-  padding: 2rem;
+  padding: 2rem 0;
   display: flex;
   align-items: flex-start;
   height: 100%;
