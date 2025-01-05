@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*{
+    box-sizing: border-box;
+}
+html{
+  overflow-x: hidden;
+}
+:root {
+    --primary-color: #2F27CE;
+    --secondary-color: #DEDCFF;
+    --accent:#AC6ED9;
+    --text-color: #030309;
+    --background-color: rgba(245, 244, 252, 0.75);
+    --border-radius: 24px;
+    --font-family: 'Inter', sans-serif;
+  }
+  @mixin font-large{
+    font-size: 4rem;
+    font-weight: bold;
+    font-family: var(--font-family);
+    color: var(--text-color);
+  }
