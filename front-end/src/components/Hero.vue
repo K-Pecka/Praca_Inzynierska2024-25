@@ -55,7 +55,7 @@ header{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 66.6vw;
+  width: 70vw;
   margin: auto;
   padding: 1rem;
 }

@@ -11,6 +11,23 @@
         <img src="@/assets/vue.svg" alt="Hero image" />
       </template>
     </Hero>
+    <Section>
+      <template #title><h2>FAQ</h2><span>Najczęściej zadawane pytania</span></template>
+      <template #content>
+        <FAQ
+        :faqList=faqList
+        >
+          <template #question="{ question }">
+            <strong>{{ question }}</strong>
+          </template>
+          <template #answer="{ answer }">
+            <p>{{ answer }}</p>
+          </template>
+        </FAQ>
+      </template>
+      
+    </Section>
+    
     <Footer :footerData="footerData">
       <template #logo>
         Plannder
@@ -24,6 +41,8 @@
 import Navbar from "@/components/Navbar.vue";
 import Hero from "@/components/Hero.vue";
 import Footer from "@/components/Footer.vue";
+import FAQ from "@/components/section/FAQ.vue";
+import Section from "@/components/Section.vue";
 const navLinks = [
   { label: "Oferta", href: "/" },
   { label: "Kontakt", href: "/" },
@@ -32,7 +51,7 @@ const navLinks = [
 
 const heroPhrases = [
   { word: "Zaplanuj" },
-  { word: ["przygodę", "podróż"], animation: true},
+  { word: ["przygodę", "podróż"], animation: true },
   { word: "która" },
   { word: "zapadnie" },
   { word: "w pamięć" },
@@ -43,10 +62,24 @@ const footerData = {
   links: [
     { label: "Oferta", href: "/" },
     { label: "Kontakt", href: "/" },
-    { label: "Panel", href: "/"}
+    { label: "Panel", href: "/" },
   ],
-  footerText: '© 2024 Plannder Wszystkie prawa zastrzeżone'
+  footerText: "© 2024 Plannder Wszystkie prawa zastrzeżone",
 };
+const faqList = [
+  {
+    question: "?",
+    answer: "...",
+  },
+  {
+    question: "?",
+    answer: "...",
+  },
+  {
+    question: "?",
+    answer: "...",
+  },
+];
 </script>
 
 <style></style>
