@@ -1,6 +1,5 @@
 <template>
   <div class="app">
-    <!-- Navbar Component -->
     <Navbar :links="navLinks">
       <template #logo>
         <img src="@/assets/vue.svg" alt="App Logo" />
@@ -12,13 +11,19 @@
         <img src="@/assets/vue.svg" alt="Hero image" />
       </template>
     </Hero>
+    <Footer :footerData="footerData">
+      <template #logo>
+        Plannder
+        <!--img src="@/assets/vue.svg" alt="Hero image" /-->
+      </template>
+    </Footer>
   </div>
 </template>
 
 <script lang="ts" setup>
 import Navbar from "@/components/Navbar.vue";
 import Hero from "@/components/Hero.vue";
-
+import Footer from "@/components/Footer.vue";
 const navLinks = [
   { label: "Oferta", href: "/" },
   { label: "Kontakt", href: "/" },
@@ -33,6 +38,15 @@ const heroPhrases = [
   { word: "w pamięć" },
   { word: "na zawsze" },
 ];
+
+const footerData = {
+  links: [
+    { label: "Oferta", href: "/" },
+    { label: "Kontakt", href: "/" },
+    { label: "Panel", href: "/"}
+  ],
+  footerText: '© 2024 Plannder Wszystkie prawa zastrzeżone'
+};
 </script>
 
 <style></style>

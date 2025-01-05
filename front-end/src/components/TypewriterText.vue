@@ -18,8 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
-import { defineProps, PropType } from "vue";
+import { ref, onMounted,PropType } from "vue";
 import Typewriter from "typewriter-effect/dist/core";
 
 interface Phrase {

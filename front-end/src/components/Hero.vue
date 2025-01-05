@@ -14,13 +14,13 @@
           <h1>Logo</h1>
         </slot>
     </div>
-    <div class="circle"></div>
+    <!--div class="circle"></div-->
   </header>
 </template>
 
 <script lang="ts" setup>
 import TypewriterText from "./TypewriterText.vue";
-import { defineProps, PropType } from "vue";
+import { PropType } from "vue";
 const imageSrc = "@/assets/your-image.jpg";
 interface Phrase {
   word: string | string[];
@@ -61,10 +61,7 @@ header{
 }
 .word
 {
-  background-image: linear-gradient(to right, var(--primary-color),var(--accent));
-  color: transparent;
-  background-clip: text;
-  -webkit-background-clip: text;
+  @include gradient-text;
 }
 .hero__text {
   flex: 3;

@@ -44,7 +44,7 @@ $font-family: var(--font-family);
 .navbar {
   width: 100%;
   max-width: 83vw;
-  margin: auto;
+  margin: 1rem auto;
   padding: 1rem;
   height: 6rem;
   background-color: $background-color;
