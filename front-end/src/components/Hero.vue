@@ -69,7 +69,7 @@ header{
   @include font-large;
   font-weight: 600;
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
-  letter-spacing: -4%;
+  letter-spacing: -4px;
   padding: 2rem 0;
   display: flex;
   align-items: flex-start;
