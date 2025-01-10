@@ -29,6 +29,7 @@ ALLOWED_HOSTS = [
 INSTALLED_ADDITIONAL_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
+    'sslserver',
 ]
 
 INSTALLED_APPS = [
