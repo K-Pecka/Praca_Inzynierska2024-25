@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import type { RouteRecordRaw } from 'vue-router'; 
+import type { RouteRecordRaw } from 'vue-router';
 import Home from '@/views/Home.vue';
 import Landing from '@/views/children/Landing.vue';
 import LogIn from '@/views/children/LogIn.vue';

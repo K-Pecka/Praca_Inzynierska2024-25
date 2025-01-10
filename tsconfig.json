@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "module": "esnext",
     "target": "es2019",
     "lib": ["dom", "es2019"],
     "baseUrl": ".",
@@ -11,14 +10,12 @@
     "esModuleInterop": true,
     "strict": true,
     "jsx": "preserve",
-    "skipLibCheck": true,
-    "noEmit": true,
-    "outDir": "./dist",
+    "skipLibCheck": true
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
+    "backend/_static/**/*.ts",
+    "backend/_static/**/*.d.ts",
+    "backend/_static/**/*.tsx",
+    "backend/_static/**/*.vue"
   ]
 }
