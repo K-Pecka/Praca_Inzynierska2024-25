@@ -1,12 +1,26 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router'; 
-import Home from '@/views/Landing.vue';
+import Home from '@/views/Home.vue';
+import Landing from '@/views/Landing.vue';
+import LogIn from '@/views/LogIn.vue';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
     component: Home,
+    children: [
+      {
+        path: '',
+        name: 'landing',
+        component: Landing,
+      },
+      {
+        path: 'logIn',
+        name: 'logIn',
+        component: LogIn,
+      },
+    ],
   }
 ];
 
