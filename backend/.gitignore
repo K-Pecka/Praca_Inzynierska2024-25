@@ -32,3 +32,4 @@ backend/.venv
 # python
 server/__pycache__
 server/__pycache__/*
+db.sqlite3
