@@ -30,6 +30,9 @@ backend/.venv
 .venv/bin
 
 # python
-server/__pycache__
-server/__pycache__/*
+*/__pycache__
+*/__pycache__/*
+*/*/__pycache__/*
 db.sqlite3
+*/migrations/*
+!*/migrations/__init__.py
