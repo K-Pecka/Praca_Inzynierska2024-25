@@ -16,12 +16,12 @@ def required_permission(permission_code, action):
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(view, request, *args, **kwargs):
-            user = getattr(request.user, 'managerprofile', None)
+            profile = getattr(request.profile, 'guideprofile', None)
 
-            if user is None:
+            if profile is None:
                 raise PermissionDenied
 
-            permission = request.user.user_to_permissions.filter(permission__code=permission_code).first().permission
+            permission = request.profile.profile_to_permission.filter(permission__code=permission_code).first().permission
 
             if permission is None:
                 return HttpResponseForbidden("You do not have permission to perform this action.")

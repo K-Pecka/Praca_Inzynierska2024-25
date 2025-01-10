@@ -16,7 +16,7 @@ dist-ssr
 .vscode
 .vscode/*
 .vscode/extensions.json
-../.idea/
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
@@ -32,7 +32,9 @@ backend/.venv
 # python
 */__pycache__
 */__pycache__/*
+*/*/__pycache__
 */*/__pycache__/*
 db.sqlite3
 */migrations/*
+*/*/migrations/*
 !*/migrations/__init__.py

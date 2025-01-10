@@ -5,7 +5,7 @@
         <div class="footer__logo">
           <slot name="logo"> </slot>
         </div>
-
+        
         <div
           class="footer__links"
           v-if="footerData.links && footerData.links.length > 0"

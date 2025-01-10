@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "lib": ["dom", "es2019"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "jsx": "preserve",
+    "skipLibCheck": true
+  },
+  "include": [
+    "backend/_static/**/*.ts",
+    "backend/_static/**/*.d.ts",
+    "backend/_static/**/*.tsx",
+    "backend/_static/**/*.vue"
+  ]
+}
