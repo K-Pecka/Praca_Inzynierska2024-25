@@ -21,7 +21,7 @@ def required_permission(permission_code, action):
             if user is None:
                 raise PermissionDenied
 
-            permission = request.user.user_to_permissions.filter(permission__code=permission_code).first().permission
+            permission = request.user.user_to_permission.filter(permission__code=permission_code).first().permission
 
             if permission is None:
                 return HttpResponseForbidden("You do not have permission to perform this action.")

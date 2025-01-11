@@ -129,7 +129,7 @@ class UserPermissions(BaseModel):
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.PROTECT,
-        related_name="user_to_permissions",
+        related_name="user_to_permission",
         verbose_name=_("Użytkownik"), help_text=_("Użytkownik")
     )
     permission = models.ForeignKey(
