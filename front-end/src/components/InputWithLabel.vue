@@ -1,8 +1,8 @@
 <template>
     <div class="input-wrapper">
-      <!-- Etykieta -->
+      
       <label :for="inputData.name" class="input-label">{{ inputData.label }}</label>
-      <!-- Pole input -->
+      
       <input
         :id="inputData.name"
         :type="inputData.type"
@@ -15,15 +15,13 @@
   </template>
   
   <script setup lang="ts">
-  import { defineProps, defineEmits } from 'vue';
-  
-  // Dane wejściowe
+
   defineProps({
     inputData: {
       type: Object as () => {
         name: string;
         label: string;
-        type: string;
+        type?: string;
         placeholder: string;
       },
       required: true,
@@ -34,10 +32,8 @@
     },
   });
   
-  // Emitowanie zdarzeń dla `v-model`
   const emit = defineEmits(['update:modelValue']);
-  
-  // Aktualizacja wartości
+
   const updateValue = (event: Event) => {
     emit('update:modelValue', (event.target as HTMLInputElement).value);
   };
@@ -47,7 +43,7 @@
   .input-wrapper {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1rem;
+    margin:1.5rem auto;
   }
   .input-label {
     margin-bottom: 0.5rem;
