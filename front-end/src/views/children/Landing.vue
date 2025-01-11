@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div>
 
       <Hero :phrases="heroPhrases">
       <template #hero>
@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import Hero from "@/components/Hero.vue";
-import Sections from "@/components/Sections.vue";
+import Section from "@/components/Section.vue";
 
 const heroPhrases = [
   { word: "Zaplanuj" },
