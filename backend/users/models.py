@@ -26,17 +26,19 @@ class CustomUser(AbstractBaseUser, BaseModel):
         blank=True,
         validators=[validate_only_alphabetic],
         verbose_name=_("Nazwisko"), help_text=_("Nazwisko użytkownika"))
+    date_of_birth = models.DateField(
+        blank=False,
+        null=False,
+        verbose_name=_("Data urodzenia"), help_text=_("Data urodzenia"))
     is_active = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name=_("Czy aktywny"), help_text=_("Czy użytkownik aktywny"))
     is_staff = models.BooleanField(
         default=False,
-        verbose_name=_("Czy dostęp do admina"), help_text=_("Czy użytkownik ma dostęp do admina")
-    )
+        verbose_name=_("Czy dostęp do admina"), help_text=_("Czy użytkownik ma dostęp do admina"))
     is_superuser = models.BooleanField(
         default=False,
-        verbose_name=_("Czy super użytkownik"), help_text=_("Czy super użytkownik")
-    )
+        verbose_name=_("Czy super użytkownik"), help_text=_("Czy super użytkownik"))
 
     objects = CustomUserManager()
 
@@ -72,13 +74,13 @@ class UserProfile(BaseModel):
         CLIENT = 'client', _("Client")
         GUIDE = 'guide', _("Guide")
         ADMIN = 'admin', _("Admin")
+
     user = models.OneToOneField(
         CustomUser,
         on_delete=models.PROTECT,
         related_name="profile",
         verbose_name=_("Użytkownik"),
-        help_text=_("Użytkownik")
-    )
+        help_text=_("Użytkownik"))
     type = models.CharField(
         max_length=32,
         blank=False,
@@ -86,8 +88,10 @@ class UserProfile(BaseModel):
         choices=ProfileType.choices,
         default=ProfileType.CLIENT,
         verbose_name=_("Typ"),
-        help_text=_("Typ profilu")
-    )
+        help_text=_("Typ profilu"))
+    is_default = models.BooleanField(
+        default=False,
+        verbose_name=_("Czy jest podstawowym profilem"), help_text=_("Czy jest podstawowym profilem"))
 
     # objects = CustomProfileManager()
 
