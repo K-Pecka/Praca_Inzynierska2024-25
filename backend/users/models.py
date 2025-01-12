@@ -6,7 +6,7 @@ from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 
 from permissions.models import CustomPermission
-from .managers import CustomUserManager
+from .managers import CustomUserManager, CustomProfileManager
 from dicts.models import BaseModel
 from dicts.validators import validate_only_alphabetic
 
@@ -89,8 +89,18 @@ class UserProfile(BaseModel):
         help_text=_("Typ profilu")
     )
 
+    # objects = CustomProfileManager()
+
     def __str__(self):
         return f"{self.user}({str(self.type).upper()})"
+
+    @property
+    def created_trips(self):
+        return self.trips_as_creator.all()
+
+    @property
+    def trips(self):
+        return self.trips_as_member.all()
 
     def save(self, *args, **kwargs):
         if UserProfile.objects.filter(user=self.user, type=kwargs.get('type')).exists():
