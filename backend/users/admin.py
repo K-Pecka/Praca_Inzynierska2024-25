@@ -28,7 +28,14 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 @admin.register(UserProfile)
 class ClientProfileAdmin(admin.ModelAdmin):
-    list_display = ("pk", "user")
+    list_select_related = ('user',)
+    list_display = ("pk", "get_user_link")
+
+    def get_user_link(self, obj):
+        return get_admin_change_link(obj.user)
+
+    get_user_link.short_description = 'User'
+
 
 
 @admin.register(UserPermissions)
@@ -44,4 +51,4 @@ class UserPermissionsAdmin(admin.ModelAdmin):
     def get_permission_link(self, obj):
         return get_admin_change_link(obj.permission)
 
-    get_profile_link.short_description = 'Permission'
+    get_permission_link.short_description = 'Permission'

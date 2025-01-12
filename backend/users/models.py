@@ -90,7 +90,7 @@ class UserProfile(BaseModel):
     )
 
     def __str__(self):
-        return f"{self.user}"
+        return f"{self.user}({str(self.type).upper()})"
 
     def save(self, *args, **kwargs):
         if UserProfile.objects.filter(user=self.user, type=kwargs.get('type')).exists():
