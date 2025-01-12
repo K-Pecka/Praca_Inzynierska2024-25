@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
+from django.urls import reverse
 
 from .models import UserPermissions, UserProfile, CustomUser
 
@@ -7,7 +9,7 @@ from dicts.helpers import get_admin_change_link
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_superuser')
+    list_display = ('pk', 'email', 'get_profile_link', 'is_active', 'is_staff', 'is_superuser')
     list_filter = ('is_active', 'is_staff', 'is_superuser')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
@@ -15,7 +17,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         ('Important dates', {'fields': ('last_login',)}),
     )
     add_fieldsets = (
@@ -25,6 +27,14 @@ class CustomUserAdmin(admin.ModelAdmin):
         }),
     )
 
+    def get_profile_link(self, obj):
+        if obj.profile:
+            # Using reverse to generate the URL for the profile change page
+            url = reverse('admin:users_userprofile_change', args=[obj.profile.pk])
+            return mark_safe(f'<a href="{url}">{obj.profile}</a>')  # Make it a hyperlink
+        return "No profile"
+
+    get_profile_link.short_description = 'Profile'
 
 @admin.register(UserProfile)
 class ClientProfileAdmin(admin.ModelAdmin):
