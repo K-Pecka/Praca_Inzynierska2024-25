@@ -36,6 +36,7 @@ OWN_ADDITIONAL_APPS = [
     'dicts',
     'users',
     'permissions',
+    'trips',
 ]
 
 INSTALLED_APPS = [

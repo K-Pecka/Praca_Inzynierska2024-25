@@ -6,7 +6,7 @@ from dicts.models import BaseModel
 from users.models import UserProfile
 
 
-class Trip(models.Model, BaseModel):
+class Trip(BaseModel):
     creator = models.ForeignKey(
         UserProfile,
         on_delete=models.CASCADE,
@@ -14,7 +14,6 @@ class Trip(models.Model, BaseModel):
         verbose_name=_('Właściciel'), help_text=_('Właściciel')),
     members = models.ManyToManyField(
         UserProfile,
-        on_delete=models.PROTECT,
         related_name='trips_as_member',
         verbose_name=_('Profil'), help_text=_('Profil'))
     budget = models.DecimalField(
@@ -42,7 +41,7 @@ class Trip(models.Model, BaseModel):
         verbose_name_plural = 'Wycieczki'
 
 
-class TripActivity(models.Model, BaseModel):
+class TripActivity(BaseModel):
     name = models.CharField(
         max_length=50,
         verbose_name=_("Nazwa"), help_text=_("Nazwa"))
@@ -69,7 +68,7 @@ class TripActivity(models.Model, BaseModel):
         verbose_name_plural = 'Aktywności na wycieczce'
 
 
-class FYQ(models.Model, BaseModel):
+class FYQ(BaseModel):
     class Meta:
         db_table = 'fyq'
         verbose_name = 'FYQ'
