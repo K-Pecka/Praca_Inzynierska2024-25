@@ -2,12 +2,15 @@
 URL configuration for server project.
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+
+
+
 '''
 Extending schema example
 @extend_schema(
@@ -25,4 +28,6 @@ urlpatterns = [
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     # Redoc UI
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('user_auth/', include('user_auth.api_urls')),
+    path('user/', include('users.api_urls')),
 ]
