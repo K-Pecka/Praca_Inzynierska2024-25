@@ -1,20 +1,19 @@
 from django.contrib.auth.hashers import make_password
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
 
 from rest_framework import serializers
 
 from users.models import CustomUser
 
 
-class RegisterSerializer(serializers.ModelSerializer):
+class UserCreateSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError("Hasło musi składać się z conajmniej 8 znaków.")
-        if not any(char.isdigit() for char in value):
-            raise serializers.ValidationError("Hasło musi zawierać co najmniej jedną liczbę.")
-        if not any(char.isalpha() for char in value):
-            raise serializers.ValidationError("Hasło musi zawierać co najmniej jedną literę.")
+        try:
+            validate_password(value)
+        except ValidationError as e:
+            raise serializers.ValidationError(e.messages)
         return value
 
     def validate_email(self, value):
@@ -36,3 +35,36 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['email', 'first_name', 'last_name', 'date_of_birth', 'password']
         extra_kwargs = {'password': {'write_only': True}}
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'email', 'first_name', 'last_name', 'date_of_birth']
+        read_only_fields = ['id']
+
+
+class UserUpdatePasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    def validate_password(self, value):
+        try:
+            validate_password(value)
+        except ValidationError as e:
+            raise serializers.ValidationError(e.messages)
+        return value
+
+    def update(self, instance, validated_data):
+        password = validated_data.get('password')
+        if password:
+            instance.set_password(password)
+            instance.save()
+        return instance
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'password']
+        read_only_fields = ['id']
+
+
+
