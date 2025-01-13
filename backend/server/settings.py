@@ -2,9 +2,13 @@
 Django settings for server project.
 """
 import os
-from datetime import timedelta
 
+from datetime import timedelta
 from pathlib import Path
+
+import django_heroku
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +26,7 @@ ALLOWED_HOSTS = [
     'localhost',
     'plannder-69ddef817c80.herokuapp.com',
     'plannder.com',
-    'app.plannder.com'
+    'api.plannder.com'
 ]
 
 # Application definition
@@ -61,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'server.urls'
@@ -97,13 +102,9 @@ CACHES = {
 
 
 # Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config()
 }
 
 # Rest framework
@@ -185,10 +186,10 @@ LOGIN_URL = 'user_auth/login/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '_static/'
+STATIC_URL = 'static_files/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "_static"),
+    os.path.join(BASE_DIR, "static_files"),
 ]
 
 MEDIA_URL = '' # TODO: ustawić
@@ -204,3 +205,5 @@ CONN_MAX_AGE = 0
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+django_heroku.settings(locals())
