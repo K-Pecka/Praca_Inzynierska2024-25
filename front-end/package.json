@@ -3,11 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-"scripts": {
+  "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "start": "vite preview",
-    "heroku-postbuild": "vite build"
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "typewriter-effect": "^2.21.0",
