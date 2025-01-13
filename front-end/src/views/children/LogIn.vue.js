@@ -38,8 +38,8 @@ function __VLS_template() {
     let __VLS_components;
     let __VLS_directives;
     ['extraOption',];
-    // CSS variable injection 
-    // CSS variable injection end 
+    // CSS variable injection
+    // CSS variable injection end
     // @ts-ignore
     /** @type { [typeof Section, typeof Section, ] } */ ;
     // @ts-ignore
