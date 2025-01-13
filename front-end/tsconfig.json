@@ -10,7 +10,9 @@
     "esModuleInterop": true,
     "strict": true,
     "jsx": "preserve",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noEmit": true,
+    "outDir": "./dist",
   },
   "include": [
     "src/**/*.ts",
