@@ -6,6 +6,7 @@ from .serializers import UserCreateSerializer, UserUpdateSerializer, UserUpdateP
 
 
 class UserCreateAPIView(CreateAPIView):
+    permission_classes = []
     queryset = CustomUser.objects.all()
     serializer_class = UserCreateSerializer
 
