@@ -25,6 +25,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'plannder-69ddef817c80.herokuapp.com',
+    'plannder',
     'plannder.com',
     'api.plannder.com'
 ]
