@@ -20,6 +20,9 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
     '127.0.0.1',
     'localhost',
+    'plannder-69ddef817c80.herokuapp.com',
+    'plannder.com',
+    'app.plannder.com'
 ]
 
 # Application definition
