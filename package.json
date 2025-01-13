@@ -5,9 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "node_modules/.bin/vite",
-    "build": "node_modules/.bin/vue-tsc -b && vite build",
-    "preview": "node_modules/.bin/vite preview"
+   "start": "node server.js",
+   "build": "tsc",
+   "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "typewriter-effect": "^2.21.0",
