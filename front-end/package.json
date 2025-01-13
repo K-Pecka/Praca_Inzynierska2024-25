@@ -14,7 +14,7 @@
     "vue-router": "^4.5.0"
   },
   "engines": {
-    "node": "16.20",
+    "node": "18.19.1",
     "npm": "8.19"
   },
   "devDependencies": {
