@@ -13,9 +13,9 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
+    "front-end/src/**/*.ts",
+    "front-end/src/**/*.d.ts",
+    "front-end/src/**/*.tsx",
+    "front-end/src/**/*.vue"
   ]
 }
