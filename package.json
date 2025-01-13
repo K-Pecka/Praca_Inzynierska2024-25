@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "dev": "front-end/node_modules/.bin/vite",
+    "build": "front-end/node_modules/.bin/vue-tsc -b && vite build",
+    "preview": "front-end/node_modules/.bin/vite preview"
   },
   "dependencies": {
     "typewriter-effect": "^2.21.0",
