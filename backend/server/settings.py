@@ -2,15 +2,13 @@
 Django settings for server project.
 """
 import os
+from datetime import timedelta
 
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'xkudmt1*h-go&u1@&!396=@_m-bly^@446q@e2^yjeg&8e(h$7' # TODO: Pozniej bedzie to trzeba zmienic na: os.environ["SECRET_KEY"]
@@ -30,12 +28,17 @@ INSTALLED_ADDITIONAL_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'sslserver',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 OWN_ADDITIONAL_APPS = [
     'dicts',
     'users',
     'permissions',
+    'trips',
+    'user_auth',
+    'chats',
 ]
 
 INSTALLED_APPS = [
@@ -104,11 +107,27 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+# JWT token
+
+SIMPLE_JWT = {
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
+    'TITLE': 'Plannder API',
+    'DESCRIPTION': 'Engineering thesis PJATK',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
@@ -156,6 +175,8 @@ USE_I18N = True
 USE_TZ = True
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+LOGIN_URL = 'user_auth/login/'
 
 
 # Static files (CSS, JavaScript, Images)
