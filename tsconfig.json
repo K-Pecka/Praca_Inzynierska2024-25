@@ -13,9 +13,9 @@
     "skipLibCheck": true
   },
   "include": [
-    "**/*.ts",
-    "**/*.d.ts",
-    "**/*.tsx",
-    "**/*.vue"
+    "backend/_static/**/*.ts",
+    "backend/_static/**/*.d.ts",
+    "backend/_static/**/*.tsx",
+    "backend/_static/**/*.vue"
   ]
 }
