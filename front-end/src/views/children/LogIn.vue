@@ -49,7 +49,6 @@ const inputStyle = {
   fontSize: "2rem",
 };
 const moreOption = [
-  { icon: "@/assets/vue.svg" },
   { icon: "@/assets/vue.svg", text: "Zaloguj się za pomocą Google" },
 ];
 const inputs = ref([
@@ -79,7 +78,7 @@ const handleSubmit = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .container {
   width: 50%;
   margin: auto;
@@ -114,5 +113,12 @@ button {
   border: none;
   padding: 1rem;
   cursor: pointer;
+}
+.more-action{
+  img {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0.25rem;
+}
 }
 </style>

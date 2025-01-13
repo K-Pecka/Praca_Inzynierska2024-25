@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import Hero from "@/components/Hero.vue";
-import Section from "@/components/Section.vue";
+import Sections from "@/components/section/Sections.vue";
 
 const heroPhrases = [
   { word: "Zaplanuj" },
