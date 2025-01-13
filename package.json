@@ -5,9 +5,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "dev": "node_modules/.bin/vite",
     "build": "tsc",
-    "start": "node .",
-    "start:dev": "ts-node index.ts",
+    "preview": "node_modules/.bin/vite preview"
   },
   "dependencies": {
     "typewriter-effect": "^2.21.0",
