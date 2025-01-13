@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 
-from .models import UserPermissions, UserProfile, CustomUser
+from .models import UserPermission, UserProfile, CustomUser
 
 from dicts.helpers import get_admin_change_link
 
@@ -48,8 +48,8 @@ class ClientProfileAdmin(admin.ModelAdmin):
 
 
 
-@admin.register(UserPermissions)
-class UserPermissionsAdmin(admin.ModelAdmin):
+@admin.register(UserPermission)
+class UserPermissionAdmin(admin.ModelAdmin):
     list_select_related = ('profile', 'permission')
     list_display = ('pk', 'get_profile_link', 'get_permission_link')
 

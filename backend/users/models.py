@@ -117,7 +117,7 @@ class UserProfile(BaseModel):
         db_table = "users"
 
 
-class UserPermissions(BaseModel):
+class UserPermission(BaseModel):
     profile = models.ForeignKey(
         UserProfile,
         on_delete=models.PROTECT,
