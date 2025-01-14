@@ -17,7 +17,6 @@
   </template>
   
   <script lang="ts" setup>
-  import { defineProps } from "vue";
   interface SubSectionItem {
     image: string;
     alt: string;
