@@ -1,2 +1,0 @@
-https://github.com/heroku/heroku-buildpack-nodejs  # Frontend (Node.js)
-https://github.com/heroku/heroku-buildpack-python  # Backend (Python, e.g., Django)
