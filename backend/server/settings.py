@@ -38,7 +38,7 @@ OWN_ADDITIONAL_APPS = [
     'permissions',
     'trips',
     'user_auth',
-    'chats',
+    'itineraries',
 ]
 
 INSTALLED_APPS = [

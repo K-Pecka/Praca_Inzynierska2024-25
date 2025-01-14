@@ -9,8 +9,6 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
-
-
 '''
 Extending schema example
 @extend_schema(
@@ -25,9 +23,10 @@ urlpatterns = [
     # OpenAPI schema generation endpoint
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Swagger UI
-    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     # Redoc UI
     path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     path('user_auth/', include('user_auth.api_urls')),
     path('user/', include('users.api_urls')),
+    path('itinerary/', include('itineraries.api_urls')),
 ]
