@@ -1,13 +1,11 @@
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from users.models import CustomUser
 from .serializers import UserCreateSerializer, UserUpdateSerializer, UserUpdatePasswordSerializer
 
 
 class UserCreateAPIView(CreateAPIView):
     permission_classes = []
-    queryset = CustomUser.objects.all()
     serializer_class = UserCreateSerializer
 
 
