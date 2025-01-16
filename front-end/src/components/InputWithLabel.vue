@@ -22,8 +22,8 @@ interface InputData {
   label: string;
   type?: string;
   placeholder: string;
-  onInput: (value: string) => Boolean;
-  errorMessage: string;
+  onInput?: (value: string) => Boolean;
+  errorMessage?: string;
 }
 
 const props = defineProps({
@@ -46,7 +46,7 @@ const updateValue = (event: Event) => {
 const handleInput = (event: Event) => {
   updateValue(event);
   const value = (event.target as HTMLInputElement).value;
-  if(props.inputData.onInput(value))showError.value=true;
+  if(props.inputData.onInput?.(value))showError.value=true;
   else showError.value=false;
 };
 </script>
