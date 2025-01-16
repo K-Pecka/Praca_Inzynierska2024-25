@@ -24,7 +24,8 @@ const footerData = {
     ...navLinksBase,
     { label: "Panel", href: "/" },
   ],
-  footerText: `© 2025 Plannder Wszystkie prawa zastrzeżone | ostatnia modyfikacja: ${new Date().toLocaleDateString()} `,
+  footerText: `© 2025 Plannder Wszystkie prawa zastrzeżone `,
+  subSection: `ostatnia modyfikacja: ${new Date().toLocaleDateString()}`
 };
 </script>
 

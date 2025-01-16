@@ -19,7 +19,8 @@
       </div>
       <hr />
       <div class="footer__bottom" v-if="footerData.footerText">
-        <p>{{ footerData.footerText }}</p>
+        <p v-if="footerData.footerText">{{ footerData.footerText }}</p>
+        <p v-if="footerData.subSection">{{ footerData.subSection }}</p>
       </div>
     </div>
   </footer>
@@ -36,6 +37,7 @@ interface Link {
 interface FooterData {
   links: Link[];
   footerText?: string;
+  subSection?: string;
 }
 
 const props = defineProps({
@@ -48,75 +50,95 @@ const props = defineProps({
 
 <style scoped lang="scss">
 @use "@/assets/style" as *;
+
 * {
   color: var(--text-color);
   font-family: var(--font-family);
 }
+
 footer {
   padding: 3rem;
   background-color: var(--secondary-color);
   font-family: Arial, sans-serif;
 }
+
 .footer {
   @include section-width;
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  &__logo {
+    @include font-large;
+    @include gradient-text;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+    }
+  }
+
+  &__name {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  &__links {
+    ul {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+      padding: 0.5rem;
+      margin: 0;
+    }
+
+    li {
+      margin: 5px 0;
+      @include font-regular;
+    }
+
+    a {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__bottom {
+    text-align: center;
+    margin-top: 20px;
+    @media screen and (min-width: 768px) {
+      flex-direction: column;
+      &::after {
+        content: "";
+        margin: 10px 0;
+    }
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    p {
+      &:not(:last-child)::after {
+      content: " | ";
+      margin: 0 5px;
+    }
+      margin: 0;
+      font-size: 1rem;
+    }
+  }
+}
 }
 
-.footer__top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.footer__logo {
-  @include font-large;
-  @include gradient-text;
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
-}
-
-.footer__logo img {
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
-}
-
-.footer__name {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.footer__links ul {
-  display: flex;
-  list-style: none;
-  gap: 2rem;
-  padding: 0.5rem;
-  margin: 0;
-}
-
-.footer__links li {
-  margin: 5px 0;
-  @include font-regular;
-}
-
-.footer__links a {
-  text-decoration: none;
-}
-
-.footer__links a:hover {
-  text-decoration: underline;
-}
 hr {
   color: #0000001c;
-}
-.footer__bottom {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.footer__bottom p {
-  margin: 0;
-  font-size: 1rem;
 }
 </style>
