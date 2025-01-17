@@ -2,12 +2,12 @@
 import Navbar from "@/components/main/Navbar.vue";
 import Footer from "@/components/main/Footer.vue";
 
-const SiteName=import.meta.env.VITE_APP_SITE_NAME;
+const SiteName = import.meta.env.VITE_APP_SITE_NAME;
 
 const navLinksBase = [
-  { label: "Oferta", href: "/",className:["navbar__link--base"] },
-  { label: "O nas", href: "/" ,className:["navbar__link--base"]},
-  { label: "Kontakt", href: "/",className:["navbar__link--base"] },
+  { label: "Oferta", href: "/", className: ["navbar__link--base"] },
+  { label: "O nas", href: "/", className: ["navbar__link--base"] },
+  { label: "Kontakt", href: "/", className: ["navbar__link--base"] },
 ];
 const user = localStorage.getItem("user") || false;
 const navLinks = [
@@ -20,31 +20,42 @@ const navLinks = [
       ]),
 ];
 const footerData = {
-  links: [
-    ...navLinksBase,
-    { label: "Panel", href: "/" },
-  ],
+  links: [...navLinksBase, { label: "Panel", href: "/" }],
   footerText: `© 2025 Plannder Wszystkie prawa zastrzeżone `,
-  subSection: `ostatnia modyfikacja: ${new Date().toLocaleDateString()}`
+  subSection: `ostatnia modyfikacja: ${new Date().toLocaleDateString()}`,
 };
 </script>
 
 <template>
-  <div class="app">
-    <Navbar :links="navLinks">
-      <template #logo>
-        <img src="@/assets/vue.svg" alt="App Logo" />
-      </template>
-    </Navbar>
+  <v-app>
+    <v-container fluid class="full-width-container">
+      <v-row class="sticky-top fixed-center">
+        <v-col cols="10" offset="1" class="navbar-col-11">
+          <Navbar :links="navLinks">
+            <template #logo>
+              <img src="@/assets/vue.svg" alt="App Logo" />
+            </template>
+          </Navbar>
+        </v-col>
+      </v-row>
 
-    <main>
-      <router-view />
-    </main>
+      <v-row>
+        <v-col cols="8" offset="2">
+          <main>
+            <router-view />
+          </main>
+        </v-col>
+      </v-row>
 
-    <Footer :footerData="footerData">
-      <template #logo>
-        {{ SiteName }}
-      </template>
-    </Footer>
-  </div>
+      <v-row>
+        <v-col cols="12">
+          <Footer :footerData="footerData">
+            <template #logo>
+              {{ SiteName }}
+            </template>
+          </Footer>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-app>
 </template>

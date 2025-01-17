@@ -62,7 +62,6 @@ const toggleMenu = () => {
 @use "@/assets/style" as *;
 
 .navbar {
-  @include section-width;
   margin: 1rem auto;
   position:sticky;
   padding: 1rem;

@@ -3,7 +3,7 @@
 
       <Hero :phrases="heroPhrases">
       <template #hero>
-        <img src="@/assets/vue.svg" alt="Hero image" />
+        <img src="@/assets/hero.svg" alt="Hero image" />
       </template>
       </Hero>
 

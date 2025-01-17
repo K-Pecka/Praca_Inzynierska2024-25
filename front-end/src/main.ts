@@ -4,4 +4,10 @@ import router from './router';
 import '@/assets/style.scss';
 
 const app = createApp(App);
-app.use(router).mount('#app');
+
+import { createVuetify } from "vuetify";
+import "vuetify/styles";
+
+const vuetify = createVuetify();
+
+app.use(router).use(vuetify).mount('#app');
