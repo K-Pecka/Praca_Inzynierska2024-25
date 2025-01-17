@@ -30,7 +30,7 @@ const footerData = {
   <v-app>
     <v-container fluid class="full-width-container">
       <v-row class="sticky-top fixed-center">
-        <v-col cols="10" offset="1" class="navbar-col-11">
+        <v-col cols="12" md="10" offset-md="1">
           <Navbar :links="navLinks">
             <template #logo>
               <img src="@/assets/vue.svg" alt="App Logo" />
@@ -40,7 +40,7 @@ const footerData = {
       </v-row>
 
       <v-row>
-        <v-col cols="8" offset="2">
+        <v-col cols="12" md="10" lg="8" offset-lg="2" offset-md="1">
           <main>
             <router-view />
           </main>
@@ -59,3 +59,9 @@ const footerData = {
     </v-container>
   </v-app>
 </template>
+<style lang="scss" scoped>
+*
+{
+  transition: all 0.3s ease;
+}
+</style>

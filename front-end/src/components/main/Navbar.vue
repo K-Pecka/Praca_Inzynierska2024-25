@@ -62,7 +62,7 @@ const toggleMenu = () => {
 @use "@/assets/style" as *;
 
 .navbar {
-  margin: 1rem auto;
+  margin: .5rem auto;
   position:sticky;
   padding: 1rem;
   height: 6rem;
@@ -135,7 +135,6 @@ const toggleMenu = () => {
     }
     &{
       margin-top:1vh;
-      width: 95vw;
     }
 
     .navbar__hamburger {
