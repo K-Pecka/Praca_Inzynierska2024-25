@@ -2,7 +2,7 @@
 import Navbar from "@/components/main/Navbar.vue";
 import Footer from "@/components/main/Footer.vue";
 
-const SiteName = import.meta.env.VITE_APP_SITE_NAME;
+const SiteName = import.meta.env.VITE_APP_SITE_NAME || "Plannder";
 
 const navLinksBase = [
   { label: "Oferta", href: "/", className: ["navbar__link--base"] },
