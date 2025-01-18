@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
+    "types": ["vuetify"],
     "module": "esnext",
-    "target": "es2019",
-    "lib": ["dom", "es2019"],
+    "target": "esnext",
+    "lib": ["dom", "esnext"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

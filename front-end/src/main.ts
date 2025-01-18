@@ -5,6 +5,9 @@ import '@/assets/style.scss';
 
 const app = createApp(App);
 
-app.config.globalProperties.$siteName = import.meta.env.VITE_APP_SITE_NAME;
+import { createVuetify } from "vuetify";
+import "vuetify/styles";
 
-app.use(router).mount('#app');
+const vuetify = createVuetify();
+
+app.use(router).use(vuetify).mount('#app');

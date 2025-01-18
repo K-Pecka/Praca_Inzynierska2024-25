@@ -50,7 +50,6 @@ h1{
   color: var(--text-color);
 }
 @mixin section-width {
-  width: 83vw;
   margin: auto;
 }
 @mixin gradient-text {
@@ -62,4 +61,26 @@ h1{
 
 .gradient-text{
   @include gradient-text;
+}
+.col{
+  padding: 0;
+}
+@mixin navbar-col($nr) {
+  width: calc(100vw / 12 * #{$nr});
+}
+@for $nr from 1 through 12 {
+  .navbar-col-#{$nr} {
+    @include navbar-col($nr);
+  }
+}
+.container {
+  min-height: 100vh;
+  padding: 0;
+}
+.sticky-top {
+  position: sticky;
+  z-index: 1000;
+}
+.fixed-center {
+  top: 0;
 }

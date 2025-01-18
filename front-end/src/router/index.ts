@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
-import Home from '@/views/Home.vue';
-import Landing from '@/views/children/Landing.vue';
-import LogIn from '@/views/children/LogIn.vue';
-import Register from '@/views/children/Register.vue';
+import Home from '@/views/home/Home.vue';
+import Landing from '@/views/home/children/Landing.vue';
+import LogIn from '@/views/home/children/LogIn.vue';
+import Register from '@/views/home/children/Register.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -37,7 +37,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const siteName = import.meta.env.VITE_APP_SITE_NAME;
+  const siteName = import.meta.env.VITE_APP_SITE_TITLE;
   document.title = to.meta.title ? `${to.meta.title} - ${siteName}` : siteName;
   next();
 });

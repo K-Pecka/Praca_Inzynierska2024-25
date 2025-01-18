@@ -1,20 +1,30 @@
 <template>
   <header class="hero">
-    <div class="hero__text">
-      <span v-for="(item, index) in phrases" :key="index" class="phrase">
-        <TypewriterText v-if="item.animation" :phrases="[item]" class="word" :style="item.styles"/>
-        <span v-else>
-          {{ item.word }}
-        </span>
-      </span>
-    </div>
+    <v-container fluid class="full-width-container">
+      <v-row>
+        <v-col cols="7" class="hero__text">
+          <span v-for="(item, index) in phrases" :key="index" class="phrase">
+            <TypewriterText
+              v-if="item.animation"
+              :phrases="[item]"
+              class="word"
+              :style="item.styles"
+            />
+            <span v-else>
+              {{ item.word }}
+            </span>
+          </span>
+        </v-col>
 
-    <div class="hero__image">
-      <slot name="hero">
-          <h1>Logo</h1>
-        </slot>
-    </div>
-    <!--div class="circle"></div-->
+        <v-col cols="5" class="hero__image">
+          <div class="wrapper">
+            <slot name="hero">
+              <img :src="imageSrc" alt="Hero image" />
+            </slot>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
   </header>
 </template>
 
@@ -36,34 +46,28 @@ const props = defineProps({
 </script>
 
 <style scoped lang="scss">
-@use '@/assets/style' as *;
-header{
+@use "@/assets/style" as *;
+header {
   position: relative;
 }
-.circle
-{
+.circle {
   border-radius: 50%;
   background-color: var(--secondary-color);
-  width:  55vw;
+  width: 55vw;
   height: 55vw;
   position: absolute;
   z-index: -1;
   left: 40vw;
-  bottom:2vh;
+  bottom: 2vh;
 }
 .hero {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  @include section-width;
+  margin: 1rem;
   padding: 1rem 0;
 }
-.word
-{
+.word {
   @include gradient-text;
 }
 .hero__text {
-  flex: 3;
   flex-direction: column;
   text-transform: uppercase;
   @include font-large;
@@ -73,15 +77,21 @@ header{
   padding: 2rem 0;
   display: flex;
   align-items: flex-start;
-  height: 100%;
 }
-
-.hero__image {
-  flex: 1;
-  img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
+.wrapper {
+  position: relative;
+}
+.hero__text {
+  font-size: 4rem;
+  transition: transform 0.3s ease;
+  @media (max-width: 600px) {
+    font-size:2rem;
+  }
+  @media (min-width: 600px) and (max-width: 800px) {
+    font-size:3rem;
+  }
+  @media (min-width: 800px) and (max-width: 1200px) {
+    font-size: 3.5rem;
   }
 }
 </style>
