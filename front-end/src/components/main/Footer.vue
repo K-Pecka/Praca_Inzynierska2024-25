@@ -1,28 +1,33 @@
 <template>
   <footer>
-    <div class="footer">
-      <div class="footer__top">
-        <div class="footer__logo">
-          <slot name="logo"> </slot>
-        </div>
-        
-        <div
-          class="footer__links"
-          v-if="footerData.links && footerData.links.length > 0"
-        >
-          <ul>
-            <li v-for="(link, index) in footerData.links" :key="index">
-              <a :href="link.href">{{ link.label }}</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <hr />
-      <div class="footer__bottom" v-if="footerData.footerText">
-        <p v-if="footerData.footerText">{{ footerData.footerText }}</p>
-        <p v-if="footerData.subSection">{{ footerData.subSection }}</p>
-      </div>
-    </div>
+    <v-container fluid class="footer full-width-container">
+      <v-row>
+        <v-col class="footer__top"  cols="12" md="10" offset-md="1">
+          <div class="footer__logo">
+            <slot name="logo"> </slot>
+          </div>
+
+          <div
+            class="footer__links"
+            v-if="footerData.links && footerData.links.length > 0"
+          >
+            <ul>
+              <li v-for="(link, index) in footerData.links" :key="index">
+                <a :href="link.href">{{ link.label }}</a>
+              </li>
+            </ul>
+          </div>
+        </v-col>
+      </v-row>
+     
+      <v-row>
+        <v-col class="footer__bottom"  cols="12" md="10" offset-md="1" v-if="footerData.footerText">
+          <hr>
+          <p v-if="footerData.footerText">{{ footerData.footerText }}</p>
+          <p v-if="footerData.subSection">{{ footerData.subSection }}</p>
+        </v-col>
+      </v-row>
+    </v-container>
   </footer>
 </template>
 
@@ -49,27 +54,26 @@ const props = defineProps({
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/style" as *;
+@use "@/assets/style.scss" as *;
 
+.v-row + .v-row {
+    margin-top: 0.25rem;
+}
 * {
   color: var(--text-color);
   font-family: var(--font-family);
 }
 
-footer {
-  padding: 3rem;
-  background-color: var(--secondary-color);
-  font-family: Arial, sans-serif;
-}
-
 .footer {
   @include section-width;
-
+  padding: 3rem 0 1rem 0;
+  background-color: var(--secondary-color);
+  font-family: var(--font-family);
   &__top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
   }
 
   &__logo {
@@ -115,30 +119,36 @@ footer {
   }
 
   &__bottom {
+    line-height: 3rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
     text-align: center;
-    margin-top: 20px;
     @media screen and (min-width: 768px) {
       flex-direction: column;
       &::after {
         content: "";
-        margin: 10px 0;
-    }
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    p {
-      &:not(:last-child)::after {
-      content: " | ";
-      margin: 0 5px;
-    }
-      margin: 0;
-      font-size: 1rem;
+        margin: 0.5rem 0;
+      }
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      p {
+        &:not(:last-child)::after {
+          content: " | ";
+          margin: 0 0.5rem;
+        }
+        margin: 0;
+        font-size: 1rem;
+      }
     }
   }
-}
 }
 
 hr {
   color: #0000001c;
+  width: 100%;
+  margin-bottom: 0.2rem;
 }
 </style>
