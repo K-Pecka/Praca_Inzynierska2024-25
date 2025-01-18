@@ -22,7 +22,7 @@ const props = defineProps({
 @use "@/assets/style" as *;
 .section {
   @include section-width;
-  padding: 2rem 0;
+  padding: 2rem 0.5rem;
   border-radius: 0.5rem;
   &-header {
     text-align: center;

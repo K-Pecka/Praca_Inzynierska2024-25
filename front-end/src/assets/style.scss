@@ -73,9 +73,12 @@ h1{
     @include navbar-col($nr);
   }
 }
-.container {
-  min-height: 100vh;
+.v-container {
+  width: 100%;
   padding: 0;
+}
+.v-row{
+  margin: 0;
 }
 .sticky-top {
   position: sticky;
@@ -83,4 +86,10 @@ h1{
 }
 .fixed-center {
   top: 0;
+}
+.v-col{
+  padding: 0;
+}
+input{
+  background-color: var(--background-color);
 }

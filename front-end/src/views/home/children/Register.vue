@@ -17,7 +17,7 @@
                     {{ errors[inputsData.name] }}
                   </span>
                 </div>
-                <button type="submit">Zaloguj się</button>
+                <button type="submit">Zarejestruj się</button>
               </form>
               <div class="extraOption" v-if="config.extraOption">
                 <div v-for="(option, index) in extraOption" :key="index">
@@ -105,8 +105,7 @@
     margin: 2rem auto;
   }
   .wrapper {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding: 2rem;
   }
   button {
     background-color: var(--primary-color);

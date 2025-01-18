@@ -51,7 +51,8 @@ const handleInput = (event: Event) => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/assets/style" as *;
 .input-wrapper {
   display: flex;
   flex-direction: column;
