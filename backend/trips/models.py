@@ -7,6 +7,10 @@ from users.models import UserProfile
 
 
 class Trip(BaseModel):
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_("Nazwa"), help_text=_("Nazwa")
+    )
     creator = models.ForeignKey(
         UserProfile,
         on_delete=models.CASCADE,
@@ -36,10 +40,6 @@ class Trip(BaseModel):
         default=dict, # TODO: stworzyć defaultowe, customowe ustawienia
         verbose_name=_("Ustawienia"), help_text=_("Ustawienia")
     )
-
-    @property
-    def activities(self):
-        return self.activities.all()
 
     class Meta:
         db_table = "trips"

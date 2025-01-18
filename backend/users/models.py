@@ -71,11 +71,12 @@ class CustomUser(AbstractBaseUser, BaseModel):
 
 class UserProfile(BaseModel):
     class ProfileType(models.TextChoices):
-        CLIENT = 'client', _("Client")
-        GUIDE = 'guide', _("Guide")
-        ADMIN = 'admin', _("Admin")
+        CLIENT = 'client', _("Klient")
+        GUIDE = 'guide', _("Przewodnik")
+        ADMIN = 'admin', _("Administrator")
 
     user = models.OneToOneField(
+
         CustomUser,
         on_delete=models.PROTECT,
         related_name="profile",
@@ -136,7 +137,7 @@ class UserPermission(BaseModel):
         return f"UserProfilePermission: {self.profile} - {self.permission}"
 
     def __repr__(self):
-        return f'<UserProfilePermission(id={self.id}, profile={self.profile}, permission={self.permission})>'
+        return f'<UserProfilePermission(pk={self.pk}, profile={self.profile}, permission={self.permission})>'
 
     class Meta:
         verbose_name = _("Uprawnienie użytkownika")
