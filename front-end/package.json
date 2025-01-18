@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "heroku run npm install && serve -s build",
+    "start": "serve -s build",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
