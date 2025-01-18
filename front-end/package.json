@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "serve -s build",
+    "start": "serve -s dist",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
