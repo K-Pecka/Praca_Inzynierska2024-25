@@ -5,8 +5,8 @@ from ..users.models import UserProfile
 
 # Trip Serializer
 class TripSerializer(serializers.ModelSerializer):
-    creator = serializers.StringRelatedField(read_only=True)
-    members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all())
+    creator = serializers.StringRelatedField(required=True, read_only=True)
+    members = serializers.PrimaryKeyRelatedField(required=True, queryset=UserProfile.objects.all())
 
     class Meta:
         model = Trip
@@ -18,7 +18,7 @@ class TripSerializer(serializers.ModelSerializer):
 
 # TripActivity Serializer
 class TripActivitySerializer(serializers.ModelSerializer):
-    trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
+    trip = serializers.PrimaryKeyRelatedField(required=False, queryset=Trip.objects.all())
 
     class Meta:
         model = TripActivity
@@ -30,9 +30,9 @@ class TripActivitySerializer(serializers.ModelSerializer):
 
 # Ticket Serializer
 class TicketSerializer(serializers.ModelSerializer):
-    profile = serializers.StringRelatedField(read_only=True)
-    trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
-    activity = serializers.PrimaryKeyRelatedField(queryset=TripActivity.objects.all())
+    profile = serializers.StringRelatedField(required=True, read_only=True)
+    trip = serializers.PrimaryKeyRelatedField(required=True, queryset=Trip.objects.all())
+    activity = serializers.PrimaryKeyRelatedField(required=True, queryset=TripActivity.objects.all())
 
     class Meta:
         model = Ticket

@@ -76,7 +76,6 @@ class UserProfile(BaseModel):
         ADMIN = 'admin', _("Administrator")
 
     user = models.OneToOneField(
-
         CustomUser,
         on_delete=models.PROTECT,
         related_name="profile",
