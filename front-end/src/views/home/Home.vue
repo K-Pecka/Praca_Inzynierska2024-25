@@ -13,7 +13,7 @@ const user = localStorage.getItem("user") || false;
 const navLinks = [
   ...navLinksBase,
   ...(user
-    ? [{ label: "Panel", href: "/", active: true }]
+    ? [{ label: "Panel", href: "/panel", active: true }]
     : [
         { label: "Zaloguj się", href: "/logIn" },
         { label: "Zarejestruj się", href: "/register", active: true },

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router'; 
 import Home from '@/views/home/Home.vue';
+import Panel from '@/views/panel/Panel.vue';
 import Landing from '@/views/home/children/Landing.vue';
 import LogIn from '@/views/home/children/LogIn.vue';
 import Register from '@/views/home/children/Register.vue';
@@ -8,7 +9,7 @@ import Register from '@/views/home/children/Register.vue';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Home,
     meta: { title: 'Home' },
     children: [
@@ -27,6 +28,14 @@ const routes: RouteRecordRaw[] = [
         name: 'register',
         component: Register,
       },
+    ],
+  },
+  {
+    path: '/panel',
+    name: 'panel',
+    component: Panel,
+    meta: { title: 'Panel' },
+    children: [
     ],
   }
 ];
