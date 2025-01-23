@@ -27,8 +27,7 @@ class CustomUser(AbstractBaseUser, BaseModel):
         validators=[validate_only_alphabetic],
         verbose_name=_("Nazwisko"), help_text=_("Nazwisko użytkownika"))
     date_of_birth = models.DateField(
-        blank=False,
-        null=False,
+        blank=True, null=True,
         verbose_name=_("Data urodzenia"), help_text=_("Data urodzenia"))
     is_active = models.BooleanField(
         default=False,
@@ -76,7 +75,6 @@ class UserProfile(BaseModel):
         ADMIN = 'admin', _("Administrator")
 
     user = models.OneToOneField(
-
         CustomUser,
         on_delete=models.PROTECT,
         related_name="profile",
@@ -110,6 +108,8 @@ class UserProfile(BaseModel):
     def save(self, *args, **kwargs):
         if UserProfile.objects.filter(user=self.user, type=kwargs.get('type')).exists():
             raise ValidationError(_("Użytkownik może mieć tylko jeden profil (klient, przewodnik lub administrator)."))
+        if not UserProfile.objects.filter(user=self.user, is_default=True):
+            self.is_default = True
         super().save(*args, **kwargs)
 
     class Meta:
