@@ -291,14 +291,14 @@ class ChatAPITestCase(TestCase):
         data = {
             'text': 'test_chatmessage',
             'profile': self.user_profile.id,
-            'chatroom': self.chatroom.id,
+            'chatroom': self.chatroom.id
         }
 
         view = ChatMessageCreateAPIView.as_view()
-        request = self.factory.post('chat/chat-message/', data, format='json')
+        request = self.factory.post(f'chat/{self.chatroom.id}/chat-message/', data, format='json')
         force_authenticate(request, user=self.user)
         request.user_profile = self.user_profile
-        response = view(request)
+        response = view(request, pk=self.chatroom.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
@@ -385,6 +385,7 @@ class ChatAPITestCase(TestCase):
         path = f'chat/{self.chatroom.id}/chat-message/{self.chat_message.id}/'
         request = self.factory.get(path, format='json')
         force_authenticate(request, user=self.user)
+        request.user_profile = self.user_profile
         response = view(request, room_pk=self.chatroom.id, pk=self.chat_message.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

@@ -1,12 +1,13 @@
 from django.db.models import Q
+from rest_framework.exceptions import NotFound
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import (
-    CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView
+    CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView, get_object_or_404
 )
 
 from .models import Chatroom, ChatMessage
-from .permissions import IsCreatorForChatroom, IsParticipantForChatroom, CanSendMessageInChatroom, IsCreatorForChatMessage
+from .permissions import IsCreatorForChatroom, IsParticipantForChatroom, IsCreatorForChatMessage
 from .serializers import (
     ChatroomCreateSerializer, ChatroomUpdateSerializer, ChatMessageCreateSerializer, ChatroomSerializer,
     ChatMessageSerializer, ChatMessageUpdateSerializer
@@ -24,7 +25,10 @@ class ChatroomRetrieveAPIView(RetrieveAPIView):
     serializer_class = ChatroomSerializer
 
     def get_object(self):
-        return Chatroom.objects.get(pk=self.kwargs['pk'])
+        try:
+            return Chatroom.objects.get(pk=self.kwargs['pk'])
+        except Chatroom.DoesNotExist:
+            raise NotFound(detail="Nie znaleziono czatu o podanym ID")
 
 
 class ChatroomListAPIView(ListAPIView):
@@ -41,7 +45,10 @@ class ChatroomUpdateAPIView(UpdateAPIView):
     serializer_class = ChatroomUpdateSerializer
 
     def get_object(self):
-        return Chatroom.objects.get(pk=self.kwargs['pk'])
+        try:
+            return Chatroom.objects.get(pk=self.kwargs['pk'])
+        except Chatroom.DoesNotExist:
+            raise NotFound(detail="Nie znaleziono czatu o podanym ID")
 
 
 class ChatroomDestroyAPIView(DestroyAPIView):
@@ -49,21 +56,27 @@ class ChatroomDestroyAPIView(DestroyAPIView):
     serializer_class = ChatroomSerializer
 
     def get_object(self):
-        return Chatroom.objects.get(pk=self.kwargs['pk'])
+        try:
+            return Chatroom.objects.get(pk=self.kwargs['pk'])
+        except Chatroom.DoesNotExist:
+            raise NotFound(detail="Nie znaleziono czatu o podanym ID")
 
 
 # ChatMessage Views
 class ChatMessageCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated, CanSendMessageInChatroom]
+    permission_classes = [IsAuthenticated, IsParticipantForChatroom]
     serializer_class = ChatMessageCreateSerializer
 
 
 class ChatMessageRetrieveAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsParticipantForChatroom]
     serializer_class = ChatMessageSerializer
 
     def get_object(self):
-        return ChatMessage.objects.get(chatroom=self.kwargs['room_pk'], pk=self.kwargs['pk'])
+        try:
+            return ChatMessage.objects.get(chatroom=self.kwargs['room_pk'], pk=self.kwargs['pk'])
+        except ChatMessage.DoesNotExist:
+            raise NotFound("Nie znaleziono wiadomości o podanym ID")
 
 
 class ChatMessageListAPIView(ListAPIView):
@@ -71,8 +84,7 @@ class ChatMessageListAPIView(ListAPIView):
     serializer_class = ChatMessageSerializer
 
     def get_queryset(self):
-        profile = self.request.user_profile
-        return ChatMessage.objects.filter(chatroom=self.kwargs['room_pk'], profile=profile)
+        return ChatMessage.objects.filter(chatroom=self.kwargs['room_pk'], profile=self.request.user_profile)
 
 
 class ChatMessageUpdateAPIView(UpdateAPIView):
@@ -80,7 +92,10 @@ class ChatMessageUpdateAPIView(UpdateAPIView):
     serializer_class = ChatMessageUpdateSerializer
 
     def get_object(self):
-        return ChatMessage.objects.get(chatroom=self.kwargs['room_pk'], pk=self.kwargs['pk'])
+        try:
+            return ChatMessage.objects.get(chatroom=self.kwargs['room_pk'], pk=self.kwargs['pk'])
+        except ChatMessage.DoesNotExist:
+            raise NotFound("Nie znaleziono wiadomości o podanym ID")
 
 
 class ChatMessageDestroyAPIView(DestroyAPIView):
@@ -88,4 +103,7 @@ class ChatMessageDestroyAPIView(DestroyAPIView):
     serializer_class = ChatMessageSerializer
 
     def get_object(self):
-        return ChatMessage.objects.get(chatroom=self.kwargs['room_pk'], pk=self.kwargs['pk'])
+        try:
+            return ChatMessage.objects.get(chatroom=self.kwargs['room_pk'], pk=self.kwargs['pk'])
+        except ChatMessage.DoesNotExist:
+            raise NotFound("Nie znaleziono wiadomości o podanym ID")
