@@ -29,13 +29,13 @@ class Chatroom(BaseModel):
         related_name="chat_rooms",
         verbose_name=_("Wycieczka"), help_text=_("Wycieczka")
     )
-    owner = models.ForeignKey(
+    creator = models.ForeignKey(
         UserProfile,
         on_delete=models.PROTECT,
-        related_name="chat_rooms_owner",
+        related_name="chat_rooms_creator",
         verbose_name=_("Przewodnik"), help_text=_("Przewodnik")
     )
-    tourists = models.ManyToManyField(
+    members = models.ManyToManyField(
         UserProfile,
         related_name="chat_rooms",
         blank=True,
@@ -50,11 +50,11 @@ class Chatroom(BaseModel):
         if not self.pk:
             self.save()
 
-        if self.type == self.ChatroomType.PRIVATE and self.tourists.count() > 1:
+        if self.type == self.ChatroomType.PRIVATE and self.members.count() > 1:
             raise ValidationError(_("A private chatroom can only have one tourist."))
 
-        if self.owner and self.tourists.filter(id=self.owner.id).exists():
-            raise ValidationError(_("The owner cannot also be a tourist in the same chatroom."))
+        if self.creator and self.members.filter(id=self.creator.id).exists():
+            raise ValidationError(_("The creator cannot also be a tourist in the same chatroom."))
 
     class Meta:
         db_table = "chat_rooms"

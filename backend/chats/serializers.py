@@ -11,13 +11,13 @@ class ChatroomSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     type = serializers.CharField()
     trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
-    owner = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
-    tourists = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), required=False)
+    creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), required=False)
     settings = serializers.JSONField()
 
     class Meta:
         model = Chatroom
-        fields = ['id', 'name', 'type', 'trip', 'owner', 'tourists', 'settings']
+        fields = ['id', 'name', 'type', 'trip', 'creator', 'members', 'settings']
         read_only_fields = ['id']
 
 
@@ -25,23 +25,23 @@ class ChatroomCreateSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     type = serializers.CharField()
     trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
-    owner = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
-    tourists = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), required=False)
+    creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), required=False)
     settings = serializers.JSONField()
 
-    def validate_tourists(self, value):
+    def validate_members(self, value):
         # Custom validation method
         if len(value) != len(set(value)):
-            # Check tourists duplicates
-            raise serializers.ValidationError("Duplicate tourists are not allowed.")
-        if self.owner in value:
-            # Check if guide is also a tourist
-            raise serializers.ValidationError("Guide cannot be a tourist.")
+            # Check members duplicates
+            raise serializers.ValidationError("Duplicate members are not allowed.")
+        if self.creator in value:
+            # Check if creator is also a tourist
+            raise serializers.ValidationError("Creator cannot be a tourist.")
         return value
 
     class Meta:
         model = Chatroom
-        fields = ['id', 'name', 'type', 'trip', 'owner', 'tourists', 'settings']
+        fields = ['id', 'name', 'type', 'trip', 'creator', 'members', 'settings']
         read_only_fields = ['id']
 
 
@@ -49,19 +49,19 @@ class ChatroomUpdateSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     type = serializers.CharField()
     trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
-    owner = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
-    tourists = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), required=False)
+    creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all(), required=False)
     settings = serializers.JSONField()
 
-    def validate_tourists(self, value):
-        # Check tourists duplicates
+    def validate_members(self, value):
+        # Check members duplicates
         if len(value) != len(set(value)):
-            raise serializers.ValidationError("Duplicate tourists are not allowed.")
+            raise serializers.ValidationError("Duplicate members are not allowed.")
         return value
 
     class Meta:
         model = Chatroom
-        fields = ['id', 'name', 'type', 'trip', 'owner', 'tourists', 'settings']
+        fields = ['id', 'name', 'type', 'trip', 'creator', 'members', 'settings']
         read_only_fields = ['id']
 
 

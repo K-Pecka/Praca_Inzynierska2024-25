@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from users.models import UserProfile
 from .models import Chatroom, ChatMessage
-from .permissions import IsOwnerForChatroom, IsParticipantForChatroom, CanSendMessageInChatroom, IsOwnerForChatMessage
+from .permissions import IsCreatorForChatroom, IsParticipantForChatroom, CanSendMessageInChatroom, IsCreatorForChatMessage
 from .serializers import (
     ChatroomCreateSerializer, ChatroomUpdateSerializer, ChatMessageCreateSerializer, ChatroomSerializer,
     ChatMessageSerializer, ChatMessageUpdateSerializer
@@ -29,7 +29,7 @@ class ChatroomRetrieveAPIView(RetrieveAPIView):
 
 
 class ChatroomUpdateAPIView(UpdateAPIView):
-    permission_classes = [IsAuthenticated, IsOwnerForChatroom]
+    permission_classes = [IsAuthenticated, IsCreatorForChatroom]
     serializer_class = ChatroomUpdateSerializer
 
     def get_object(self):
@@ -37,7 +37,7 @@ class ChatroomUpdateAPIView(UpdateAPIView):
 
 
 class ChatroomDestroyAPIView(DestroyAPIView):
-    permission_classes = [IsAuthenticated, IsOwnerForChatroom]
+    permission_classes = [IsAuthenticated, IsCreatorForChatroom]
     serializer_class = ChatroomSerializer
 
     def get_object(self):
@@ -50,7 +50,7 @@ class ChatroomListAPIView(ListAPIView):
 
     def get_queryset(self):
         profile = self.request.user_profile
-        return Chatroom.objects.filter(Q(owner=profile) | Q(tourists=profile)).distinct()
+        return Chatroom.objects.filter(Q(creator=profile) | Q(members=profile)).distinct()
 
 
 # ChatMessage Views
@@ -68,7 +68,7 @@ class ChatMessageRetrieveAPIView(RetrieveAPIView):
 
 
 class ChatMessageUpdateAPIView(UpdateAPIView):
-    permission_classes = [IsAuthenticated, IsOwnerForChatMessage]
+    permission_classes = [IsAuthenticated, IsCreatorForChatMessage]
     serializer_class = ChatMessageUpdateSerializer
 
     def get_object(self):
@@ -76,7 +76,7 @@ class ChatMessageUpdateAPIView(UpdateAPIView):
 
 
 class ChatMessageDestroyAPIView(DestroyAPIView):
-    permission_classes = [IsAuthenticated, IsOwnerForChatMessage]
+    permission_classes = [IsAuthenticated, IsCreatorForChatMessage]
     serializer_class = ChatMessageSerializer
 
     def get_object(self):

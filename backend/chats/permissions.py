@@ -2,9 +2,9 @@ from rest_framework.permissions import BasePermission
 from .models import Chatroom, UserProfile, ChatMessage
 
 
-class IsOwnerForChatroom(BasePermission):
+class IsCreatorForChatroom(BasePermission):
     """
-    Custom permission to check if the user is the guide for the chatroom.
+    Custom permission to check if the user is the creator for the chatroom.
     """
     message = 'Tylko właściel czatu może wykonywać tę akcje.'
 
@@ -12,13 +12,13 @@ class IsOwnerForChatroom(BasePermission):
         obj = view.get_object()
         if isinstance(obj, Chatroom):
             profile = getattr(request, 'user_profile', None)
-            return obj.owner == profile
+            return obj.creator == profile
         return False
 
 
 class IsParticipantForChatroom(BasePermission):
     """
-    Custom permission to check if the user is the guide for the chatroom.
+    Custom permission to check if the user is the creator for the chatroom.
     """
     message = "Tylko uczestnicy czatu mogą wykonać tę akcje."
 
@@ -26,13 +26,13 @@ class IsParticipantForChatroom(BasePermission):
         obj = view.get_object()
         if isinstance(obj, Chatroom):
             profile = getattr(request, 'user_profile', None)
-            return obj.owner == profile or profile in obj.tourists.all()
+            return obj.creator == profile or profile in obj.members.all()
         return False
 
 
 class CanSendMessageInChatroom(BasePermission):
     """
-    Custom permission to check if the user is the guide for the chatroom.
+    Custom permission to check if the user is the creator for the chatroom.
     """
     message = "Tylko uczestnicy czatu mogą wykonać tę akcje."
 
@@ -51,12 +51,12 @@ class CanSendMessageInChatroom(BasePermission):
         if not profile:
             return False
 
-        return chatroom.owner == profile or profile in chatroom.tourists.all()
+        return chatroom.creator == profile or profile in chatroom.members.all()
 
 
-class IsOwnerForChatMessage(BasePermission):
+class IsCreatorForChatMessage(BasePermission):
     """
-    Custom permission to check if the user is the owner for the chat message.
+    Custom permission to check if the user is the creator for the chat message.
     """
     message = 'Tylko właściel wiadomości może wykonywać tę akcje.'
 
