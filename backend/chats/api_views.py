@@ -1,11 +1,10 @@
 from django.db.models import Q
-from rest_framework.exceptions import PermissionDenied
+
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import (
     CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView
 )
-from rest_framework.permissions import IsAuthenticated
 
-from users.models import UserProfile
 from .models import Chatroom, ChatMessage
 from .permissions import IsCreatorForChatroom, IsParticipantForChatroom, CanSendMessageInChatroom, IsCreatorForChatMessage
 from .serializers import (
@@ -28,6 +27,15 @@ class ChatroomRetrieveAPIView(RetrieveAPIView):
         return Chatroom.objects.get(pk=self.kwargs['pk'])
 
 
+class ChatroomListAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ChatroomSerializer
+
+    def get_queryset(self):
+        profile = self.request.user_profile
+        return Chatroom.objects.filter(Q(creator=profile) | Q(members=profile)).distinct()
+
+
 class ChatroomUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsCreatorForChatroom]
     serializer_class = ChatroomUpdateSerializer
@@ -44,15 +52,6 @@ class ChatroomDestroyAPIView(DestroyAPIView):
         return Chatroom.objects.get(pk=self.kwargs['pk'])
 
 
-class ChatroomListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = ChatroomSerializer
-
-    def get_queryset(self):
-        profile = self.request.user_profile
-        return Chatroom.objects.filter(Q(creator=profile) | Q(members=profile)).distinct()
-
-
 # ChatMessage Views
 class ChatMessageCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated, CanSendMessageInChatroom]
@@ -65,6 +64,15 @@ class ChatMessageRetrieveAPIView(RetrieveAPIView):
 
     def get_object(self):
         return ChatMessage.objects.get(chatroom=self.kwargs['room_pk'], pk=self.kwargs['pk'])
+
+
+class ChatMessageListAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ChatMessageSerializer
+
+    def get_queryset(self):
+        profile = self.request.user_profile
+        return ChatMessage.objects.filter(chatroom=self.kwargs['room_pk'], profile=profile)
 
 
 class ChatMessageUpdateAPIView(UpdateAPIView):
@@ -81,12 +89,3 @@ class ChatMessageDestroyAPIView(DestroyAPIView):
 
     def get_object(self):
         return ChatMessage.objects.get(chatroom=self.kwargs['room_pk'], pk=self.kwargs['pk'])
-
-
-class ChatMessageListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = ChatMessageSerializer
-
-    def get_queryset(self):
-        profile = self.request.user_profile
-        return ChatMessage.objects.filter(chatroom=self.kwargs['room_pk'], profile=profile)
