@@ -105,6 +105,10 @@ class UserProfile(BaseModel):
     def trips(self):
         return self.trips_as_member.all()
 
+    @property
+    def is_guide(self):
+        return self.type == 'Przewodnik'
+
     def save(self, *args, **kwargs):
         if UserProfile.objects.filter(user=self.user, type=kwargs.get('type')).exists():
             raise ValidationError(_("Użytkownik może mieć tylko jeden profil (klient, przewodnik lub administrator)."))
