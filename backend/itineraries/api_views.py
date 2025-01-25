@@ -2,8 +2,8 @@ from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from .models import Itinerary
-from .serializers import ItinerarySerializer
+from .models import Itinerary, ItineraryActivity
+from .serializers import ItinerarySerializer, ItineraryActivitySerializer
 
 
 class ItineraryCreateAPIView(CreateAPIView):
@@ -39,3 +39,38 @@ class ItineraryListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Itinerary.objects.all()
     serializer_class = ItinerarySerializer
+
+
+class ItineraryActivityCreateAPIView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItineraryActivitySerializer
+
+
+class ItineraryActivityRetrieveAPIView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItineraryActivitySerializer
+
+    def get_object(self):
+        return ItineraryActivity.objects.get(pk=self.kwargs['pk'])
+
+
+class ItineraryActivityUpdateAPIView(UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItineraryActivitySerializer
+
+    def get_object(self):
+        return ItineraryActivity.objects.get(pk=self.kwargs['pk'])
+
+
+class ItineraryActivityDestroyAPIView(DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItineraryActivitySerializer
+
+    def get_object(self):
+        return ItineraryActivity.objects.get(pk=self.kwargs['pk'])
+
+
+class ItineraryActivityListAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = ItineraryActivity.objects.all()
+    serializer_class = ItineraryActivitySerializer

@@ -20,6 +20,7 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
     '127.0.0.1',
     'localhost',
+    'testserver',
 ]
 
 # Application definition
@@ -39,6 +40,7 @@ OWN_ADDITIONAL_APPS = [
     'trips',
     'user_auth',
     'itineraries',
+    'chats',
 ]
 
 INSTALLED_APPS = [
@@ -50,6 +52,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ] + INSTALLED_ADDITIONAL_APPS + OWN_ADDITIONAL_APPS
 
+OWN_MIDDLEWARE = [
+    'user_auth.middleware.AttachProfileMiddleware',
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,7 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+] + OWN_MIDDLEWARE
 
 ROOT_URLCONF = 'server.urls'
 
@@ -119,7 +125,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
 }

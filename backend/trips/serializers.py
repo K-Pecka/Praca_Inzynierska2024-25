@@ -1,12 +1,36 @@
 from rest_framework import serializers
 from .models import Trip, TripActivity, Ticket
-from ..users.models import UserProfile
+from users.models import UserProfile
 
 
 # Trip Serializer
 class TripSerializer(serializers.ModelSerializer):
-    creator = serializers.StringRelatedField(read_only=True)
-    members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all())
+    creator = serializers.PrimaryKeyRelatedField(required=True, queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(required=True, queryset=UserProfile.objects.all())
+
+    class Meta:
+        model = Trip
+        fields = [
+            'id', 'name', 'creator', 'members', 'budget', 'start_date', 'end_date', 'settings'
+        ]
+        read_only_fields = ['id', 'creator']
+
+
+class TripCreateSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(required=False, queryset=UserProfile.objects.all())
+    budget = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+    settings = serializers.JSONField(required=False)
+
+    def validate(self, data):
+        request = self.context['request']
+        if not request.user_profile.is_guide:
+            if Trip.objects.filter(creator=request.user_profile).count() > 2:
+                raise serializers.ValidationError("Osiągnąłeś limit wycieczek dla swojego profilu.")
+        return data
 
     class Meta:
         model = Trip
@@ -18,7 +42,7 @@ class TripSerializer(serializers.ModelSerializer):
 
 # TripActivity Serializer
 class TripActivitySerializer(serializers.ModelSerializer):
-    trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
+    trip = serializers.PrimaryKeyRelatedField(required=False, queryset=Trip.objects.all())
 
     class Meta:
         model = TripActivity
@@ -30,9 +54,9 @@ class TripActivitySerializer(serializers.ModelSerializer):
 
 # Ticket Serializer
 class TicketSerializer(serializers.ModelSerializer):
-    profile = serializers.StringRelatedField(read_only=True)
-    trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
-    activity = serializers.PrimaryKeyRelatedField(queryset=TripActivity.objects.all())
+    profile = serializers.PrimaryKeyRelatedField(required=True, queryset=UserProfile.objects.all())
+    trip = serializers.PrimaryKeyRelatedField(required=True, queryset=Trip.objects.all())
+    activity = serializers.PrimaryKeyRelatedField(required=True, queryset=TripActivity.objects.all())
 
     class Meta:
         model = Ticket

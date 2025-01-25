@@ -3,6 +3,8 @@ from functools import wraps
 from django.http import HttpResponseForbidden
 from rest_framework.exceptions import PermissionDenied
 
+from users.models import UserProfile
+
 
 def required_permission(permission_code, action):
     """
@@ -15,28 +17,23 @@ def required_permission(permission_code, action):
 
     def decorator(view_func):
         @wraps(view_func)
-        def _wrapped_view(view, request, *args, **kwargs):
-            profile = getattr(request.profile, 'guideprofile', None)
+        def _wrapped_view(request, *args, **kwargs):
+            profile = UserProfile.objects.get(pk=request.session.get('profile_id')) if request.session.get('profile_id') else None
 
             if profile is None:
                 raise PermissionDenied
 
-            permission = request.profile.profile_to_permission.filter(permission__code=permission_code).first().permission
+            permission = profile.profile_to_permission.filter(permission__code=permission_code).first()
 
             if permission is None:
                 return HttpResponseForbidden("You do not have permission to perform this action.")
 
-            actions_mapping = {
-                'READ': permission.can_view,
-                'WRITE': permission.can_edit,
-                'DELETE': permission.can_delete
-            }
+            has_permission = getattr(permission, f'can_{action.lower()}', None)
 
-            has_permission = actions_mapping.get(action)
-            if has_permission is None or not has_permission:
+            if not has_permission:
                 return HttpResponseForbidden("You do not have permission to perform this action.")
 
-            return view_func(view, request, *args, **kwargs)
+            return view_func(request, *args, **kwargs)
 
         return _wrapped_view
     return decorator
