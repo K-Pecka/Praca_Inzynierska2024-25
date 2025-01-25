@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from django.utils.translation import gettext_lazy as _
 
@@ -19,6 +20,7 @@ class Trip(BaseModel):
     )
     members = models.ManyToManyField(
         UserProfile,
+        blank=True,
         related_name="trips_as_member",
         verbose_name=_("Profil"), help_text=_("Profil")
     )
@@ -40,6 +42,24 @@ class Trip(BaseModel):
         default=dict, # TODO: stworzyć defaultowe, customowe ustawienia
         verbose_name=_("Ustawienia"), help_text=_("Ustawienia")
     )
+
+    def clean(self):
+        if self.end_date and self.start_date and self.end_date < self.start_date:
+            raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
+        elif self.creator in self.members:
+            raise ValidationError(_("Twórca wycieczki nie może być jednocześnie jej członkiem."))
+
+
+    @property
+    def all_members(self):
+        """
+        Returns a combined list of the creator and all members.
+        """
+        members_list = list(self.members.all())
+        if self.creator:
+            members_list.insert(0, self.creator)
+        return members_list
+
 
     class Meta:
         db_table = "trips"
