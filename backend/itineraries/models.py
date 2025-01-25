@@ -17,18 +17,13 @@ class Itinerary(BaseModel):
 
 
 class ItineraryActivity(BaseModel):
-    ACTIVITY_TYPES = [
-        ("Jedzenie", "Jedzenie"),
-        ("Atrakcja", "Atrakcja"),
-        ("Transport", "Transport")
-    ]
 
     name = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
     description = models.TextField(max_length=5120)
-    city = models.CharField(max_length=255)
-    activity_type = models.CharField(max_length=255, choices=ACTIVITY_TYPES)
+    location = models.CharField(max_length=255)
     start_time = models.TimeField()
-    end_time = models.TimeField()
+    duration = models.IntegerField()
     itinerary = models.ForeignKey(Itinerary, on_delete=models.CASCADE, related_name="activities")
 
     class Meta:

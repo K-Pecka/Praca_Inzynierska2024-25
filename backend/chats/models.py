@@ -8,11 +8,11 @@ from users.models import UserProfile
 from trips.models import Trip
 
 
-
 class Chatroom(BaseModel):
     class ChatroomType(models.TextChoices):
         PRIVATE = 'private', _("Prywatny")
         GROUP = 'group', _("Grupowy")
+
     name = models.CharField(
         max_length=50,
         verbose_name=_("Nazwa"), help_text=_("Nazwa")
@@ -55,7 +55,6 @@ class Chatroom(BaseModel):
 
         if self.owner and self.tourists.filter(id=self.owner.id).exists():
             raise ValidationError(_("The owner cannot also be a tourist in the same chatroom."))
-
 
     class Meta:
         db_table = "chat_rooms"
