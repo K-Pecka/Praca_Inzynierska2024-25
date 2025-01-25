@@ -6,8 +6,9 @@
         :key="index"
         class="faq-item"
         :class="{ open: openIndex === index }"
+        @click="toggle(index)"
       >
-        <div class="faq-question" @click="toggle(index)">
+        <div class="faq-question">
           <slot name="question" :question="item.question">{{
             item.question
           }}</slot>
@@ -54,6 +55,7 @@ const toggle = (index: number) => {
       margin: 1rem 0;
       border-radius: 0.5rem;
       background-color: var(--secondary-color);
+      cursor: pointer;
       .faq-question {
         color: var(--primary-color);
         transition: all 0.3s;

@@ -83,9 +83,10 @@ const toggleMenu = () => {
   }
 
   .navbar__logo {
+    @include font-large;
+    @include gradient-text;
+    font-size: 2rem;
     padding: 1rem;
-    font-size: 1.5rem;
-    color: var(--primary-color);
   }
 
   .navbar__links {

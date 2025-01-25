@@ -33,7 +33,7 @@ const footerData = {
         <v-col cols="12" md="10" offset-md="1">
           <Navbar :links="navLinks">
             <template #logo>
-              <img src="@/assets/vue.svg" alt="App Logo" />
+              {{ SiteName }}
             </template>
           </Navbar>
         </v-col>

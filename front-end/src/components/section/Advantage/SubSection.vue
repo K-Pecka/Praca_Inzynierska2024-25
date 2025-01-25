@@ -6,7 +6,9 @@
       <div class="sub-section__content">
         <div class="sub-section__item" v-for="(item, index) in items" :key="index">
           <div class="sub-section__image-container">
-            <div class="sub-section__color-box"></div>
+            <div class="sub-section__color-box">
+              <img :src="item.image" :alt="item.alt" />
+            </div>
           </div>
           <div class="sub-section__caption">
             <p>{{ item.caption }}</p>
@@ -32,6 +34,10 @@
   </script>
   
   <style scoped lang="scss">
+  img{
+    width: 100%;
+    height: 100%;
+  }
   .sub-section {
     margin: 5rem 0;
   

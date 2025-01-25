@@ -17,11 +17,9 @@
         </v-col>
 
         <v-col cols="5" class="hero__image">
-          <div class="wrapper">
             <slot name="hero">
               <img :src="imageSrc" alt="Hero image" />
             </slot>
-          </div>
         </v-col>
       </v-row>
     </v-container>
@@ -78,13 +76,11 @@ header {
   display: flex;
   align-items: flex-start;
 }
-.wrapper {
-  position: relative;
-}
 .hero__text {
   font-size: 4rem;
   transition: transform 0.3s ease;
   @media (max-width: 600px) {
+    margin-top: -2rem;
     font-size:2rem;
   }
   @media (min-width: 600px) and (max-width: 800px) {
@@ -93,5 +89,9 @@ header {
   @media (min-width: 800px) and (max-width: 1200px) {
     font-size: 3.5rem;
   }
+}
+.hero__image {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
