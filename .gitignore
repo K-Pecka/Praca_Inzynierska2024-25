@@ -37,4 +37,7 @@ backend/.venv
 db.sqlite3
 */migrations/*
 */*/migrations/*
+!*/*/migrations/
+!*/migrations/
+!*/*/migrations/__init__.py
 !*/migrations/__init__.py
