@@ -86,7 +86,10 @@ class CustomUser(AbstractBaseUser, BaseModel):
         return True
 
     def get_default_profile(self):
-        return UserProfile.objects.get(user=self, is_default=True)
+        try:
+            return UserProfile.objects.get(user=self, is_default=True)
+        except UserProfile.DoesNotExist:
+            return None
 
 
 class UserProfile(BaseModel):

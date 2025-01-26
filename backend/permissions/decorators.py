@@ -18,7 +18,7 @@ def required_permission(permission_code, action):
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
-            profile = UserProfile.objects.get(pk=request.session.get('profile_id')) if request.session.get('profile_id') else None
+            profile = request.user.get_default_profile()
 
             if profile is None:
                 raise PermissionDenied

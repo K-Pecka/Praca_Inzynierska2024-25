@@ -1,18 +1,21 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 
 from dicts.models import BaseModel
+from trips.validators import validate_positive
 from users.models import UserProfile
 
 
 class Trip(BaseModel):
     name = models.CharField(
+        unique=True,
         max_length=50,
         verbose_name=_("Nazwa"), help_text=_("Nazwa")
     )
-    creator = models.OneToOneField(
+    creator = models.ForeignKey(
         UserProfile,
         on_delete=models.CASCADE,
         related_name="trips_as_creator",
@@ -28,7 +31,8 @@ class Trip(BaseModel):
         max_digits=7,
         decimal_places=2,
         default=0,
-        verbose_name=_("Budżet"), help_text=_("Budżet")
+        verbose_name=_("Budżet"),
+        help_text=_("Budżet")
     )
     start_date = models.DateField(
         auto_now_add=True, # TODO: zmienić na czas lokalny a nie serwerowy
@@ -46,8 +50,10 @@ class Trip(BaseModel):
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
-        elif self.creator in self.members:
+        if self.creator in self.members:
             raise ValidationError(_("Twórca wycieczki nie może być jednocześnie jej członkiem."))
+        if self.budget < 0:
+            raise ValidationError(_("Budżet nie może być ujemny."))
 
 
     @property
@@ -104,19 +110,19 @@ class Ticket(BaseModel):
         upload_to="tickets/",
         verbose_name=_("Bilet"), help_text=_("Bilet")
     )
-    profile = models.OneToOneField(
+    profile = models.ForeignKey(
         UserProfile,
         on_delete=models.CASCADE,
         related_name="tickets",
         verbose_name=_("Profil"), help_text=_("Profil")
     )
-    trip = models.OneToOneField(
+    trip = models.ForeignKey(
         Trip,
         on_delete=models.CASCADE,
         related_name="tickets",
         verbose_name=_("Wycieczka"), help_text=_("Wycieczka")
     )
-    activity = models.OneToOneField(
+    activity = models.ForeignKey(
         TripActivity,
         on_delete=models.CASCADE,
         related_name="tickets",

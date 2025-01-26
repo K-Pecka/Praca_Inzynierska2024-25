@@ -8,7 +8,7 @@ class IsGuideProfile(BasePermission):
     message = 'Tylko przewodnik może wykonywać tę akcje.'
 
     def has_permission(self, request, view):
-        profile = getattr(request, 'user_profile', None)
+        profile = request.user.get_default_profile()
 
         if not profile:
             return False

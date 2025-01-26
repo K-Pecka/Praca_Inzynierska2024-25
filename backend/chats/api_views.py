@@ -36,7 +36,7 @@ class ChatroomListAPIView(ListAPIView):
     serializer_class = ChatroomSerializer
 
     def get_queryset(self):
-        profile = self.request.user.profiles.filter(is_active=True)
+        profile = self.request.user.get_default_profile()
         return Chatroom.objects.filter(Q(creator=profile) | Q(members=profile)).distinct()
 
 
