@@ -30,6 +30,10 @@ class TripCreateSerializer(serializers.ModelSerializer):
         if not request.user.is_guide:
             if Trip.objects.filter(creator=request.user.get_default_profile()).count() > 2:
                 raise serializers.ValidationError("Osiągnąłeś limit wycieczek dla swojego profilu.")
+        if data["budget"] < 0:
+            raise serializers.ValidationError("Budżet nie może być ujemny.")
+        if data["members"] and data["creator"] in data["members"]:
+            raise serializers.ValidationError("Właściciel nie może być uczestnikiem wycieczki.")
         return data
 
     class Meta:
