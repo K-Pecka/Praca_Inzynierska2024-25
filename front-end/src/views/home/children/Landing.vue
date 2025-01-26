@@ -2,13 +2,12 @@
 import Hero from "@/components/home/Hero.vue";
 import Sections from "@/components/home/section/Sections.vue";
 import { usePageStore } from "@/stores/pageContentStore";
-const useStore = usePageStore();
 
-const heroPhrases = useStore.heroTestData();
+const { heroTestData } = usePageStore();
 </script>
 
 <template>
-  <Hero :phrases="heroPhrases">
+  <Hero :phrases="heroTestData()">
     <template #hero>
       <img src="@/assets/hero.svg" alt="Hero image" />
     </template>

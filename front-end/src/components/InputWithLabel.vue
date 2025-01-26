@@ -3,29 +3,33 @@
     <label :for="inputData.name" class="input-label">{{ inputData.label }}</label>
 
     <input
+      :name="inputData.name"
       :id="inputData.name"
       :type="inputData.type"
       :placeholder="inputData.placeholder"
       :value="modelValue"
       @input="handleInput"
       class="input"
+      :class="{ error: inputData.error && inputData.error.length > 0 }"
     />
-    <span :class="{showError:showError}"  v-if="inputData.errorMessage">{{ inputData.errorMessage }}</span>
+    <div>
+      <span v-for="(error, index) in inputData.error" :key="index" class="showError">{{ error }}</span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-const showError = ref(false);
+import { defineEmits, defineProps } from 'vue';
+
 interface InputData {
   name: string;
   label: string;
   type?: string;
   placeholder: string;
-  onInput?: (value: string) => Boolean;
-  errorMessage?: string;
+  error?: string[];
 }
 
+const emit = defineEmits(['update']);
 const props = defineProps({
   inputData: {
     type: Object as () => InputData,
@@ -37,22 +41,27 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:modelValue']);
-
-const updateValue = (event: Event) => {
-  emit('update:modelValue', (event.target as HTMLInputElement).value);
-};
-
 const handleInput = (event: Event) => {
-  updateValue(event);
+  const name = (event.target as HTMLInputElement).name;
   const value = (event.target as HTMLInputElement).value;
-  if(props.inputData.onInput?.(value))showError.value=true;
-  else showError.value=false;
+  
+  emit('update', name, value);
 };
 </script>
 
 <style scoped lang="scss">
 @use "@/assets/style" as *;
+
+.error {
+  border: 1px solid red;
+}
+input:focus + div {
+  display: inline-block;
+}
+input + div {
+  display: none;
+}
+
 .input-wrapper {
   display: flex;
   flex-direction: column;
@@ -66,11 +75,11 @@ const handleInput = (event: Event) => {
   padding: 0.5rem;
   font-size: 1rem;
 }
-span{
+
+span {
   position: relative;
 }
-.showError
-{
+.showError {
   display: block;
 }
 </style>
