@@ -1,6 +1,6 @@
 <template>
   <div class="input-wrapper">
-    <label :for="inputData.name" class="input-label">{{ inputData.label }}</label>
+    <label :for="inputData.name" class="input-label" :class="{ required: inputData.config?.required }">{{ inputData.label }}</label>
 
     <input
       :name="inputData.name"
@@ -26,7 +26,11 @@ interface InputData {
   label: string;
   type?: string;
   placeholder: string;
+  config?: Config;
   error?: string[];
+}
+interface Config{
+  required: Boolean
 }
 
 const emit = defineEmits(['update']);
@@ -34,6 +38,9 @@ const props = defineProps({
   inputData: {
     type: Object as () => InputData,
     required: true
+  },
+  config:{
+    type: Object as () => Config
   },
   modelValue: {
     type: String,
@@ -51,17 +58,13 @@ const handleInput = (event: Event) => {
 
 <style scoped lang="scss">
 @use "@/assets/style" as *;
-
-.error {
+.error{
   border: 1px solid red;
 }
-input:focus + div {
-  display: inline-block;
+.required::after{
+  content: " *";
+  color:red;
 }
-input + div {
-  display: none;
-}
-
 .input-wrapper {
   display: flex;
   flex-direction: column;
@@ -80,6 +83,7 @@ span {
   position: relative;
 }
 .showError {
+  font-size:0.7rem;
   display: block;
 }
 </style>

@@ -38,7 +38,7 @@ const routes: RouteRecordRaw[] = [
     meta: { title: 'Panel' },
     children: [
       {
-        path: '/roleSelection',
+        path: 'roleSelection',
         name: 'roleSelection',
         component: RoleSelection,
       },

@@ -17,13 +17,18 @@
 
 <script lang="ts" setup>
 import InputWithLabel from "@/components/InputWithLabel.vue";
-import { ref } from "vue";
 
-interface InputData {
+interface Config {
+  required: Boolean;
+}
+
+export interface InputData {
   name: string;
+  related?: string[];
   label: string;
   placeholder: string;
   validation: any;
+  config?: Config;
   error: string[];
 }
 
@@ -40,7 +45,17 @@ const handleFieldUpdate = (name: string, value: string) => {
 
   const input = props.inputs.find(input => input.name === name);
   if (input) {
+    console.log(">>========================")
     input.error = input.validation.validate(value);
+    input.related?.forEach(el=>{
+      let related = props.inputs.find(input => input.name === el);
+      console.log(related)
+      if (related) {
+        related.error = related.validation.isEqual(value).validate(props.formValues[el]);
+      }
+    });
+    
+    console.log("========================<<")
   }
   emit("submitForm", props.formValues);
 };

@@ -24,19 +24,24 @@ import { usePageStore } from "@/stores/pageContentStore";
 const { getSectionTitle, errorMessage } = usePageStore();
 const sectionTitle = getSectionTitle("login");
 
-const validator = new Validator(errorMessage()).isEmpty().minLength(6).save();
+const validator = new Validator({...errorMessage(),...{isEqual:"Hasła muszą być takie same"}}).isEmpty().minLength(6).save();
 
 const inputStyle = {
   color: "var(--primary-color)",
   fontSize: "2rem",
 };
 
+interface Config {
+  required: boolean;
+}
 interface Input {
   name: string;
+  related?: string[];
   label: string;
   type: string;
   placeholder: string;
   validation: Validator;
+  config?: Config,
   error: string[];
 }
 
@@ -47,6 +52,7 @@ const inputs = ref<Input[]>([
     type: "text",
     placeholder: "Wprowadź imie",
     validation: validator.createNew().minLength(3),
+    config:{required:true},
     error: [],
   },
   {
@@ -55,6 +61,7 @@ const inputs = ref<Input[]>([
     type: "text",
     placeholder: "Wprowadź nazwisko",
     validation: validator.createNew().minLength(3),
+    config:{required:true},
     error: [],
   },
   {
@@ -63,36 +70,34 @@ const inputs = ref<Input[]>([
     type: "email",
     placeholder: "Wprowadź e-mail",
     validation: validator.createNew().email(),
+    config:{required:true},
     error: [],
   },
   {
     name: "pass_1",
+    related:["pass_2"],
     label: "Podaj hasło:",
-    type: "password",
+    type: "text",
     placeholder: "Wprowadź hasło",
-    validation: validator.createNew(),
+    validation: validator,
+    config:{required:true},
     error: [],
   },
   {
     name: "pass_2",
+    related:["pass_1"],
     label: "Podaj ponownie hasło:",
-    type: "password",
+    type: "text",
     placeholder: "Wprowadź hasło",
-    validation: validator.createNew(),
+    validation: validator,
+    config:{required:true},
     error: [],
   },
 ]);
-
 const formValues = ref<Record<string, string>>(
   Object.fromEntries(inputs.value.map((input) => [input.name, ""]))
 );
 
-watch(
-  () => formValues.value.pass_1,
-  (newPass1) => {
-    inputs.value[4].validation = validator.createNew().isEqual(newPass1);
-  }
-);
 
 const validateForm = computed(() => {
   return inputs.value
@@ -105,17 +110,16 @@ const validateForm = computed(() => {
 });
 
 const handleSubmit = (_: any, config: any) => {
-  console.log(config)
   if (config?.send && validateForm.value) {
     console.log("Wartości formularza:");
     console.table(formValues.value);
   } else {
-    console.log("Wykryto błędy:");
-    const errorFields = inputs.value.map((input) => [
-      input.name,
-      ...input.error,
-    ]);
-    console.log(errorFields);
+    // console.log("Wykryto błędy:");
+    // const errorFields = inputs.value.map((input) => [
+    //   input.name,
+    //   ...input.error,
+    // ]);
+    // console.log(errorFields);
   }
 };
 </script>
