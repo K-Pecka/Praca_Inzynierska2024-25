@@ -6,21 +6,22 @@ from dicts.helpers import get_admin_change_link
 
 @admin.register(Chatroom)
 class ChatroomAdmin(admin.ModelAdmin):
-    list_select_related = ("trip", "guide", "tourists")
-    list_display = ("pk", "name", "type", "get_trip_link", "get_guide_link")
+    list_select_related = ("trip", "creator")
+    list_display = ("pk", "name", "type", "get_trip_link", "get_creator_link")
 
     def get_trip_link(self, obj):
         return get_admin_change_link(obj.trip)
 
-    def get_guide_link(self, obj):
-        return get_admin_change_link(obj.guide)
+    def get_creator_link(self, obj):
+        return get_admin_change_link(obj.creator)
 
-    def get_tourists_link(self, obj):
-        return get_admin_change_link(obj.tourists)
+    def get_members_link(self, obj):
+        return get_admin_change_link(obj.members)
 
     get_trip_link.short_description = 'Trip'
-    get_guide_link.short_description = 'Guide'
-    get_tourists_link.short_description = 'Tourists'
+    get_creator_link.short_description = 'Creator'
+    get_members_link.short_description = 'Members'
+
 
 @admin.register(ChatMessage)
 class ChatMessageAdmin(admin.ModelAdmin):

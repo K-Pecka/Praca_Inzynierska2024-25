@@ -2,9 +2,13 @@
 Django settings for server project.
 """
 import os
+import dj_database_url
+
 from datetime import timedelta
 
 from pathlib import Path
+
+import psycopg2
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -99,13 +103,12 @@ CACHES = {
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASE_URL = os.environ['DATABASE_URL']
 
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+DATABASES = {
+    'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=True)
+}
 # Rest framework
 
 REST_FRAMEWORK = {
@@ -203,3 +206,4 @@ CONN_MAX_AGE = 0
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
