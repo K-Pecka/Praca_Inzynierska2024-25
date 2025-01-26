@@ -1,133 +1,91 @@
-<template>
-  <Section class="logIn">
-    <template #title>
-      <h1 :style="inputStyle">Logowanie</h1>
-    </template>
-    <template #content>
-      <div class="container">
-        <div class="form-container">
-          <div class="wrapper">
-            <form @submit.prevent="handleSubmit">
-              <div v-for="(inputsData, index) in inputs" :key="index">
-                <InputWithLabel
-                  :inputData="inputsData"
-                  v-model="formValues[inputsData.name]"
-                />
-              </div>
-              <button type="submit">Zaloguj się</button>
-            </form>
-            <div class="extraOption">
-              <div v-for="(option, index) in extraOption" :key="index">
-                <a :href="option.href">{{ option.label }}</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="more-action">
-          <Btn v-for="(option, index) in moreOption" :key="index">
-            <template #icon>
-              <img src="@/assets/vue.svg" />
-            </template>
-            <template #text>
-              {{ option.text }}
-            </template>
-          </Btn>
-        </div>
-      </div>
-    </template>
-  </Section>
-</template>
-
 <script lang="ts" setup>
 import { ref } from "vue";
-import InputWithLabel from "@/components/InputWithLabel.vue";
+import Form from "@/components/Form.vue";
 import Section from "@/components/Section.vue";
-import Btn from "@/components/Btn.vue";
 import { Validator } from "@/utils/validator/validation";
-const validation = new Validator().isEmpty().save();
-var validate ={
-  login: validation.createNew().email(),
-  password: validation.createNew()
-}
-console.log(validate.login.validate(""));
-console.log(validate.password.validate(""));
+import { usePageStore } from "@/stores/pageContentStore";
+
+const { getSectionTitle, errorMessage } = usePageStore();
+const sectionTitle = getSectionTitle("login");
+
+const validator = new Validator(errorMessage()).isEmpty().minLength(6).save();
 
 const inputStyle = {
   color: "var(--primary-color)",
   fontSize: "2rem",
 };
-const moreOption = [
-  { icon: "@/assets/vue.svg", text: "Zaloguj się za pomocą Google" },
-];
-const inputs = ref([
+
+interface Input {
+  name: string;
+  label: string;
+  type: string;
+  placeholder: string;
+  validation: Validator;
+  error: string[];
+}
+
+const inputs = ref<Input[]>([
   {
     name: "email",
     label: "Podaj Email:",
-    type: "email",
+    type: "text",
     placeholder: "Wprowadź email",
+    validation: validator.createNew().email(),
+    error: [],
   },
   {
     name: "password",
     label: "Podaj Hasło:",
     type: "password",
     placeholder: "Wprowadź hasło",
+    validation: validator,
+    error: [],
   },
 ]);
-const extraOption = [
-  { label: "Zapomniałeś hasła?", href: "/" },
-  { label: "Nie masz konta? Zarejestruj się.", href: "/" },
-];
+
 const formValues = ref<Record<string, string>>(
   Object.fromEntries(inputs.value.map((input) => [input.name, ""]))
 );
 
+const validateForm = () => {
+  inputs.value.forEach((input) => {
+    const value = formValues.value[input.name];
+    if (input.validation) {
+      const errorList = input.validation.validate(value);
+      input.error =  errorList;
+    } else {
+      input.error = [];
+    }
+  });
+
+  return inputs.value.every((input) => input.error.length === 0);
+};
+
 const handleSubmit = () => {
-  console.log("Wartości formularza:", formValues.value);
+  if (validateForm()) {
+    console.log("Wartości formularza:");
+    console.table(formValues.value); 
+  } else {
+    console.log("Wykryto błędy:");
+    const errorFields = inputs.value.map((input) => [input.name,...input.error]);
+    console.log(errorFields);
+  }
 };
 </script>
 
-<style scoped lang="scss">
-.container {
-  width: 50%;
-  margin: auto;
-}
-.form-container {
-  width: 100%;
-  background-color: rgba(var(--rgb-secondary-color), 0.9);
-  margin: auto;
-  padding: 0.25rem;
-  margin-bottom: 1rem;
-  border-radius: 0.5rem;
-}
-.extraOption a {
-  color: var(--text-color);
-}
-.extraOption div {
-  margin: 2rem auto;
-}
-.wrapper {
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-button {
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin: auto;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  border: none;
-  padding: 1rem;
-  cursor: pointer;
-}
-.more-action{
-  img {
-    width: 1.5rem;
-    height: 1.5rem;
-    padding: 0.25rem;
-}
-}
-</style>
+<template>
+  <Section class="logIn">
+    <template #title>
+      <h1 :style="inputStyle">{{ sectionTitle }}</h1>
+    </template>
+    <template #content>
+      <Form
+        :submitButtonLabel="sectionTitle"
+        :inputs="inputs"
+        :formValues="formValues"
+        @submitForm="handleSubmit"
+      
+      />
+    </template>
+  </Section>
+</template>
