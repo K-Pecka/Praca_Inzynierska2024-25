@@ -2,13 +2,9 @@
 Django settings for server project.
 """
 import os
-
 from datetime import timedelta
+
 from pathlib import Path
-
-import django_heroku
-import dj_database_url
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,10 +20,7 @@ ALLOWED_HOSTS = [
     '0.0.0.0',
     '127.0.0.1',
     'localhost',
-    'plannder-69ddef817c80.herokuapp.com',
-    'plannder',
-    'plannder.com',
-    'api.plannder.com'
+    'testserver',
 ]
 
 # Application definition
@@ -59,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ] + INSTALLED_ADDITIONAL_APPS + OWN_ADDITIONAL_APPS
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -67,7 +61,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'server.urls'
@@ -104,9 +97,13 @@ CACHES = {
 
 
 # Database
+# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config()
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # Rest framework
@@ -125,7 +122,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
 }
@@ -187,7 +184,6 @@ LOGIN_URL = 'user_auth/login/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
@@ -207,5 +203,3 @@ CONN_MAX_AGE = 0
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-django_heroku.settings(locals())

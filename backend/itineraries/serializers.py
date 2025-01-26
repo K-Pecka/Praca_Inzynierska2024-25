@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 
 from rest_framework import serializers
-from .models import Itinerary
+from .models import Itinerary, ItineraryActivity
 
 
 class ItinerarySerializer(serializers.ModelSerializer):
@@ -14,4 +14,15 @@ class ItinerarySerializer(serializers.ModelSerializer):
         if data['end_date'] < data['start_date']:
             raise serializers.ValidationError(
                 "Data zakończenia wycieczki nie może być wcześniejsza niż data rozpoczęcia.")
+        return data
+
+
+class ItineraryActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ItineraryActivity
+        fields = ['id', 'name', 'type', 'description', 'location', 'start_time', 'duration', 'itinerary']
+
+    def validate(self, data):
+        if data['start_time'] is None:
+            raise serializers.ValidationError("Czas rozpoczęcia aktywności nie może być pusty.")
         return data

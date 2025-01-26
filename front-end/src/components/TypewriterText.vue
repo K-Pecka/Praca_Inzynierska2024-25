@@ -1,24 +1,5 @@
-<template>
-  <div ref="typewriterRef">
-    <div>
-      <span v-for="(item, index) in phrases" :key="index">
-        <span class="animated word">
-          <span
-            v-for="(word, wordIndex) in Array.isArray(item.word)
-              ? item.word
-              : [item.word]"
-            :key="wordIndex"
-          >
-            {{ word }}
-          </span>
-        </span>
-      </span>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
-import { ref, onMounted,PropType } from "vue";
+import { ref, onMounted } from "vue";
 import Typewriter from "typewriter-effect/dist/core";
 
 interface Phrase {
@@ -27,9 +8,9 @@ interface Phrase {
 
 const props = defineProps({
   phrases: {
-    type: Array as PropType<Phrase[]>,
+    type: Array as () => Phrase[],
     required: true,
-  }
+  },
 });
 
 const typewriterRef = ref<HTMLDivElement | null>(null);
@@ -60,8 +41,28 @@ onMounted(() => {
   animateText();
 });
 </script>
+
+<template>
+  <div ref="typewriterRef">
+    <div>
+      <span v-for="(item, index) in phrases" :key="index">
+        <span class="animated">
+          <span
+            v-for="(word, wordIndex) in Array.isArray(item.word)
+              ? item.word
+              : [item.word]"
+            :key="wordIndex"
+          >
+            {{ word }}
+          </span>
+        </span>
+      </span>
+    </div>
+  </div>
+</template>
+
 <style>
-.Typewriter__cursor{
-    color:var(--accent);
+.Typewriter__cursor {
+  color: var(--accent);
 }
 </style>

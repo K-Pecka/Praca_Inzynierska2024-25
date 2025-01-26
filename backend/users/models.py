@@ -15,30 +15,43 @@ class CustomUser(AbstractBaseUser, BaseModel):
     email = models.EmailField(
         unique=True,
         validators=[validate_email],
-        verbose_name=_("Adres email"), help_text=_("Adres email użytkownika"))
+        verbose_name=_("Adres email"),
+        help_text=_("Adres email użytkownika")
+    )
     first_name = models.CharField(
         max_length=32,
         blank=True,
         validators=[validate_only_alphabetic],
-        verbose_name=_("Imię"), help_text=_("Imię użytkownika"))
+        verbose_name=_("Imię"),
+        help_text=_("Imię użytkownika")
+    )
     last_name = models.CharField(
         max_length=32,
         blank=True,
         validators=[validate_only_alphabetic],
-        verbose_name=_("Nazwisko"), help_text=_("Nazwisko użytkownika"))
+        verbose_name=_("Nazwisko"),
+        help_text=_("Nazwisko użytkownika")
+    )
     date_of_birth = models.DateField(
-        blank=False,
-        null=False,
-        verbose_name=_("Data urodzenia"), help_text=_("Data urodzenia"))
+        blank=True, null=True,
+        verbose_name=_("Data urodzenia"),
+        help_text=_("Data urodzenia")
+    )
     is_active = models.BooleanField(
         default=False,
-        verbose_name=_("Czy aktywny"), help_text=_("Czy użytkownik aktywny"))
+        verbose_name=_("Czy aktywny"),
+        help_text=_("Czy użytkownik aktywny")
+    )
     is_staff = models.BooleanField(
         default=False,
-        verbose_name=_("Czy dostęp do admina"), help_text=_("Czy użytkownik ma dostęp do admina"))
+        verbose_name=_("Czy dostęp do admina"),
+        help_text=_("Czy użytkownik ma dostęp do admina")
+    )
     is_superuser = models.BooleanField(
         default=False,
-        verbose_name=_("Czy super użytkownik"), help_text=_("Czy super użytkownik"))
+        verbose_name=_("Czy super użytkownik"),
+        help_text=_("Czy super użytkownik")
+    )
 
     objects = CustomUserManager()
 
@@ -50,6 +63,10 @@ class CustomUser(AbstractBaseUser, BaseModel):
     @property
     def is_admin(self):
         return hasattr(self, "adminprofile")
+
+    @property
+    def is_guide(self):
+        return self.get_default_profile().type == 'Przewodnik'
 
     @property
     def full_name(self):
@@ -68,6 +85,12 @@ class CustomUser(AbstractBaseUser, BaseModel):
         """
         return True
 
+    def get_default_profile(self):
+        try:
+            return UserProfile.objects.get(user=self, is_default=True)
+        except UserProfile.DoesNotExist:
+            return None
+
 
 class UserProfile(BaseModel):
     class ProfileType(models.TextChoices):
@@ -75,12 +98,13 @@ class UserProfile(BaseModel):
         GUIDE = 'guide', _("Przewodnik")
         ADMIN = 'admin', _("Administrator")
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         CustomUser,
         on_delete=models.PROTECT,
-        related_name="profile",
+        related_name="profiles",
         verbose_name=_("Użytkownik"),
-        help_text=_("Użytkownik"))
+        help_text=_("Użytkownik")
+    )
     type = models.CharField(
         max_length=32,
         blank=False,
@@ -88,12 +112,13 @@ class UserProfile(BaseModel):
         choices=ProfileType.choices,
         default=ProfileType.CLIENT,
         verbose_name=_("Typ"),
-        help_text=_("Typ profilu"))
+        help_text=_("Typ profilu")
+    )
     is_default = models.BooleanField(
         default=False,
-        verbose_name=_("Czy jest podstawowym profilem"), help_text=_("Czy jest podstawowym profilem"))
-
-    # objects = CustomProfileManager()
+        verbose_name=_("Czy jest podstawowym profilem"),
+        help_text=_("Czy jest podstawowym profilem")
+    )
 
     def __str__(self):
         return f"{self.user}({str(self.type).upper()})"
@@ -107,8 +132,15 @@ class UserProfile(BaseModel):
         return self.trips_as_member.all()
 
     def save(self, *args, **kwargs):
-        if UserProfile.objects.filter(user=self.user, type=kwargs.get('type')).exists():
-            raise ValidationError(_("Użytkownik może mieć tylko jeden profil (klient, przewodnik lub administrator)."))
+        if self.pk:
+            if self.is_default:
+                UserProfile.objects.filter(user=self.user, is_default=True).update(is_default=False)
+        else:
+            if UserProfile.objects.filter(user=self.user, type=kwargs.get('type')).exists():
+                raise ValidationError(_("Użytkownik może mieć tylko jeden profil (klient, przewodnik lub administrator)."))
+            if not UserProfile.objects.filter(user=self.user, is_default=True):
+                self.is_default = True
+
         super().save(*args, **kwargs)
 
     class Meta:

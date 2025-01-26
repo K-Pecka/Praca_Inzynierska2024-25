@@ -8,6 +8,8 @@ const app = createApp(App);
 import { createVuetify } from "vuetify";
 import "vuetify/styles";
 
+import { createPinia } from 'pinia';
+
 const vuetify = createVuetify();
 
-app.use(router).use(vuetify).mount('#app');
+app.use(router).use(vuetify).use(createPinia()).mount('#app');
