@@ -1,3 +1,23 @@
+<script lang="ts" setup>
+import { ref } from 'vue';
+
+interface Link {
+  label: string;
+  href: string;
+  className?: string | string[];
+  style?: Record<string, string>;
+  active?: boolean;
+}
+
+defineProps<{ links: Link[] }>();
+
+const menuOpen = ref(false);
+
+const toggleMenu = () => {
+  menuOpen.value = !menuOpen.value;
+};
+</script>
+
 <template>
   <nav class="navbar">
     <div class="navbar__container">
@@ -18,10 +38,7 @@
         :class="{ open: menuOpen }"
       >
         <li v-for="(link, index) in links" :key="index" class="navbar__item"
-        :class="[
-        ...(Array.isArray(link.className) ? link.className : link.className ? [link.className] : [])
-    ]"
-        >
+        :class="[...(Array.isArray(link.className) ? link.className : link.className ? [link.className] : [])]">
           <a
             :href="link.href"
             class="navbar__link"
@@ -39,31 +56,12 @@
   </nav>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue';
-
-interface Link {
-  label: string;
-  href: string;
-  className?: string | string[];
-  style?: Record<string, string>;
-  active?: boolean;
-}
-
-defineProps<{ links: Link[] }>();
-
-const menuOpen = ref(false);
-
-const toggleMenu = () => {
-  menuOpen.value = !menuOpen.value;
-};
-</script>
 <style lang="scss" scoped>
 @use "@/assets/style" as *;
 
 .navbar {
   margin: .5rem auto;
-  position:sticky;
+  position: sticky;
   padding: 1rem;
   height: 6rem;
   background-color: var(--background-color);
@@ -120,10 +118,8 @@ const toggleMenu = () => {
     display: none;
     cursor: pointer;
   }
+
   @media (max-width: 768px) {
-    ul{
-      display: none;
-    }
     .navbar__links {
       display: none;
       flex-direction: column;
@@ -134,8 +130,9 @@ const toggleMenu = () => {
       background-color: var(--background-color);
       border-top: 2px solid var(--primary-color);
     }
-    &{
-      margin-top:1vh;
+
+    .navbar {
+      margin-top: 1vh;
     }
 
     .navbar__hamburger {

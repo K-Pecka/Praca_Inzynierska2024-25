@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import TypewriterText from "./TypewriterText.vue";
+import TypewriterText from "@/components/TypewriterText.vue";
 
 interface Phrase {
   word: string | string[];
@@ -42,14 +42,13 @@ const props = defineProps({
 </template>
 <style scoped lang="scss">
 @use "@/assets/style" as *;
+
 .hero {
   padding: 1rem 0;
+
+  @include font-large;
+
   &__text {
-    &__word{
-      @include gradient-text;
-    }
-    @include font-large;
-    padding: 2rem 0;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: -4px;
@@ -58,6 +57,12 @@ const props = defineProps({
     align-items: flex-start;
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s ease;
+    padding: 2rem 0;
+
+    &__word {
+      @include gradient-text;
+    }
+
     @media (max-width: 600px) {
       margin-top: -2rem;
       font-size: 2rem;
@@ -69,6 +74,7 @@ const props = defineProps({
       font-size: 3.5rem;
     }
   }
+
   &__image {
     display: flex;
     justify-content: flex-end;

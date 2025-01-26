@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Section from "@/components/Section.vue";
-import FAQ from "@/components/section/FAQ/FAQ.vue";
-import Advantage from "@/components/section/Advantage/Advantage.vue";
+import FAQ from "@/components/home/section/FAQ/FAQ.vue";
+import Advantage from "@/components/home/section/Advantage/Advantage.vue";
 import { usePageStore } from "@/stores/pageContentStore";
 const useStore = usePageStore();
 const faqList = useStore.FQAData(10);

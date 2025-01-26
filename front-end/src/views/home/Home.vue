@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import Navbar from "@/components/main/Navbar.vue";
-import Footer from "@/components/main/Footer.vue";
+import Navbar from "@/components/home/Navbar.vue";
+import Footer from "@/components/home/Footer.vue";
 import { usePageStore } from '@/stores/pageContentStore';
 const useStore = usePageStore();
 

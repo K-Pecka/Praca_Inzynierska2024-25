@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import SubSection from "@/components/section/Advantage/SubSection.vue";
+import SubSection from "@/components/home/section/Advantage/SubSection.vue";
 
 interface SubSectionData {
   title: string;
