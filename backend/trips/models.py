@@ -18,11 +18,9 @@ class Trip(BaseModel):
         related_name="trips_as_creator",
         verbose_name=_("Właściciel"), help_text=_("Właściciel")
     )
-    members = models.ForeignKey(
+    members = models.ManyToManyField(
         UserProfile,
         blank=True,
-        null=True,
-        on_delete=models.PROTECT,
         related_name="trips_as_member",
         verbose_name=_("Profil"), help_text=_("Profil")
     )
@@ -49,14 +47,12 @@ class Trip(BaseModel):
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
-        if self.members and hasattr(self.members, 'filter'):
-            if self.members.filter(id=self.creator.id).exists():
-                raise ValidationError(_("Twórca wycieczki nie może być jednocześnie jej członkiem."))
-        elif self.members == self.creator:
-            raise ValidationError(_("Twórca wycieczki nie może być jednocześnie jej członkiem."))
         if self.budget < 0:
             raise ValidationError(_("Budżet nie może być ujemny."))
 
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     class Meta:
         db_table = "trips"
