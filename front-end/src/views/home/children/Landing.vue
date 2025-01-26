@@ -1,3 +1,12 @@
+<script lang="ts" setup>
+import Hero from "@/components/home/Hero.vue";
+import Sections from "@/components/home/section/Sections.vue";
+import { usePageStore } from "@/stores/pageContentStore";
+const useStore = usePageStore();
+
+const heroPhrases = useStore.heroTestData();
+</script>
+
 <template>
   <Hero :phrases="heroPhrases">
     <template #hero>
@@ -8,32 +17,20 @@
   <Sections />
 </template>
 
-<script lang="ts" setup>
-import Hero from "@/components/home/Hero.vue";
-import Sections from "@/components/section/Sections.vue";
-
-const heroPhrases = [
-  { word: "Zaplanuj" },
-  { word: ["przygodę", "podróż"], animation: true },
-  { word: "która" },
-  { word: "zapadnie" },
-  { word: "w pamięć" },
-  { word: "na zawsze" },
-];
-</script>
 <style scoped lang="scss">
 img {
+  transform-origin: top left;
   transition: transform 0.3s ease;
-  transform: scale(1.1) translate(10%, 0);
+  transform: scale(1.1) translateX(-10%);
 
   @media (max-width: 600px) {
-    transform: scale(0.5) translate(-40%, -40%);
+    transform: scale(0.5) translateX(100%);
   }
   @media (min-width: 600px) and (max-width: 800px) {
-    transform: scale(0.75) translate(-10%, -10%);
+    transform: scale(0.75) translateX(30%);
   }
   @media (min-width: 800px) and (max-width: 1200px) {
-    transform: scale(1) translate(0, 0);
+    transform: scale(1);
   }
 }
 </style>

@@ -44,6 +44,15 @@ import { ref } from "vue";
 import InputWithLabel from "@/components/InputWithLabel.vue";
 import Section from "@/components/Section.vue";
 import Btn from "@/components/Btn.vue";
+import { Validator } from "@/utils/validator/validation";
+const validation = new Validator().isEmpty().save();
+var validate ={
+  login: validation.createNew().email(),
+  password: validation.createNew()
+}
+console.log(validate.login.validate(""));
+console.log(validate.password.validate(""));
+
 const inputStyle = {
   color: "var(--primary-color)",
   fontSize: "2rem",

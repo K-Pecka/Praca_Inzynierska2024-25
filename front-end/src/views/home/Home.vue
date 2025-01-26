@@ -1,29 +1,13 @@
 <script lang="ts" setup>
-import Navbar from "@/components/main/Navbar.vue";
-import Footer from "@/components/main/Footer.vue";
+import Navbar from "@/components/home/Navbar.vue";
+import Footer from "@/components/home/Footer.vue";
+import { usePageStore } from '@/stores/pageContentStore';
+const useStore = usePageStore();
 
-const SiteName = import.meta.env.VITE_APP_SITE_NAME || "Plannder";
+const SiteName = useStore.SiteName();
 
-const navLinksBase = [
-  { label: "Oferta", href: "/", className: ["navbar__link--base"] },
-  { label: "O nas", href: "/", className: ["navbar__link--base"] },
-  { label: "Kontakt", href: "/", className: ["navbar__link--base"] },
-];
-const user = localStorage.getItem("user") || false;
-const navLinks = [
-  ...navLinksBase,
-  ...(user
-    ? [{ label: "Panel", href: "/", active: true }]
-    : [
-        { label: "Zaloguj się", href: "/logIn" },
-        { label: "Zarejestruj się", href: "/register", active: true },
-      ]),
-];
-const footerData = {
-  links: [...navLinksBase, { label: "Panel", href: "/" }],
-  footerText: `© 2025 Plannder Wszystkie prawa zastrzeżone `,
-  subSection: `ostatnia modyfikacja: ${new Date().toLocaleDateString()}`,
-};
+const navData = useStore.navLinks();
+const footerData = useStore.footerData();
 </script>
 
 <template>
@@ -31,9 +15,9 @@ const footerData = {
     <v-container fluid class="full-width-container">
       <v-row class="sticky-top fixed-center">
         <v-col cols="12" md="10" offset-md="1">
-          <Navbar :links="navLinks">
+          <Navbar :links="navData">
             <template #logo>
-              <img src="@/assets/vue.svg" alt="App Logo" />
+              {{ SiteName }}
             </template>
           </Navbar>
         </v-col>
