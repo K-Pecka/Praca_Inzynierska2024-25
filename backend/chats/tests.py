@@ -149,7 +149,6 @@ class ChatAPITestCase(TestCase):
         view = ChatroomUpdateAPIView.as_view()
         request = self.factory.patch(f'{self.chatroom.id}/', data, format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, pk=self.chatroom.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -170,7 +169,6 @@ class ChatAPITestCase(TestCase):
         view = ChatroomUpdateAPIView.as_view()
         request = self.factory.patch(f'{self.chatroom2.id}/', data, format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, pk=self.chatroom2.id)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -200,7 +198,6 @@ class ChatAPITestCase(TestCase):
         view = ChatroomDestroyAPIView.as_view()
         request = self.factory.delete(f'{self.chatroom.id}/', format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, pk=self.chatroom.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -212,7 +209,6 @@ class ChatAPITestCase(TestCase):
         view = ChatroomDestroyAPIView.as_view()
         request = self.factory.delete(f'{self.chatroom2.id}/', format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, pk=self.chatroom2.id)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -234,7 +230,6 @@ class ChatAPITestCase(TestCase):
         view = ChatroomRetrieveAPIView.as_view()
         request = self.factory.get(f'{self.chatroom.id}/', format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, pk=self.chatroom.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -246,7 +241,6 @@ class ChatAPITestCase(TestCase):
         view = ChatroomRetrieveAPIView.as_view()
         request = self.factory.get(f'{self.chatroom2.id}/', format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, pk=self.chatroom2.id)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -268,7 +262,6 @@ class ChatAPITestCase(TestCase):
         view = ChatroomListAPIView.as_view()
         request = self.factory.get(f'all/', format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, pk=self.chatroom.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -297,7 +290,6 @@ class ChatAPITestCase(TestCase):
         view = ChatMessageCreateAPIView.as_view()
         request = self.factory.post(f'chat/{self.chatroom.id}/chat-message/', data, format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, pk=self.chatroom.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -331,7 +323,6 @@ class ChatAPITestCase(TestCase):
         view = ChatMessageUpdateAPIView.as_view()
         request = self.factory.patch(f'chat/{self.chat_message.id}/', data, format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, room_pk=self.chatroom.id, pk=self.chat_message.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -361,7 +352,6 @@ class ChatAPITestCase(TestCase):
         path = f'chat/{self.chatroom.id}/chat-message/{self.chat_message.id}/'
         request = self.factory.delete(path, format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, room_pk=self.chatroom.id, pk=self.chat_message.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -385,7 +375,6 @@ class ChatAPITestCase(TestCase):
         path = f'chat/{self.chatroom.id}/chat-message/{self.chat_message.id}/'
         request = self.factory.get(path, format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, room_pk=self.chatroom.id, pk=self.chat_message.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -409,7 +398,6 @@ class ChatAPITestCase(TestCase):
         path = f'chat/{self.chatroom.id}/chat-message/all/'
         request = self.factory.get(path, format='json')
         force_authenticate(request, user=self.user)
-        request.user_profile = self.user_profile
         response = view(request, room_pk=self.chatroom.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

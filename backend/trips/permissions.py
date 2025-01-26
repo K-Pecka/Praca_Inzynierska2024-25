@@ -11,7 +11,7 @@ class IsTripParticipant(BasePermission):
 
     def has_permission(self, request, view):
         obj = view.get_object()
-        profile = getattr(request, 'user_profile', None)
+        profile = request.user.get_default_profile()
         if isinstance(obj, Trip):
             return obj.creator == profile or profile in obj.members.all()
         elif isinstance(obj, TripActivity) or isinstance(obj, Ticket):
@@ -27,7 +27,7 @@ class IsTripCreator(BasePermission):
 
     def has_permission(self, request, view):
         obj = view.get_object()
-        profile = getattr(request, 'user_profile', None)
+        profile = request.user.get_default_profile()
         if isinstance(obj, Trip):
             return obj.creator == profile
         if isinstance(obj, TripActivity) or isinstance(obj, Ticket):
@@ -43,7 +43,7 @@ class IsTicketOwner(BasePermission):
 
     def has_permission(self, request, view):
         obj = view.get_object()
-        profile = getattr(request, 'user_profile', None)
+        profile = request.user.get_default_profile()
         if isinstance(obj, Ticket):
             return obj.profile == profile
         return False

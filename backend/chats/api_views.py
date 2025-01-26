@@ -36,7 +36,7 @@ class ChatroomListAPIView(ListAPIView):
     serializer_class = ChatroomSerializer
 
     def get_queryset(self):
-        profile = self.request.user_profile
+        profile = self.request.user.get_default_profile()
         return Chatroom.objects.filter(Q(creator=profile) | Q(members=profile)).distinct()
 
 
@@ -84,7 +84,7 @@ class ChatMessageListAPIView(ListAPIView):
     serializer_class = ChatMessageSerializer
 
     def get_queryset(self):
-        return ChatMessage.objects.filter(chatroom=self.kwargs['room_pk'], profile=self.request.user_profile)
+        return ChatMessage.objects.filter(chatroom=self.kwargs['room_pk'], profile=self.request.user.get_default_profile())
 
 
 class ChatMessageUpdateAPIView(UpdateAPIView):

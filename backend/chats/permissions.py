@@ -11,7 +11,7 @@ class IsCreatorForChatroom(BasePermission):
     def has_permission(self, request, view):
         obj = view.get_object()
         if isinstance(obj, Chatroom):
-            profile = getattr(request, 'user_profile', None)
+            profile = request.user.get_default_profile()
             return obj.creator == profile
         return False
 
@@ -35,7 +35,7 @@ class IsParticipantForChatroom(BasePermission):
             if chatroom_id:
                 obj = Chatroom.objects.filter(pk=chatroom_id).first()
 
-        profile = getattr(request, 'user_profile', None)
+        profile = request.user.get_default_profile()
 
         if isinstance(obj, Chatroom):
             return obj.creator == profile or profile in obj.members.all()
@@ -53,6 +53,6 @@ class IsCreatorForChatMessage(BasePermission):
     def has_permission(self, request, view):
         obj = view.get_object()
         if isinstance(obj, ChatMessage):
-            profile = getattr(request, 'user_profile', None)
+            profile = request.user.get_default_profile()
             return obj.profile == profile
         return False

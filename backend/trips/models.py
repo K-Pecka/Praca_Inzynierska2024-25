@@ -1,6 +1,6 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from dicts.models import BaseModel
@@ -18,9 +18,11 @@ class Trip(BaseModel):
         related_name="trips_as_creator",
         verbose_name=_("Właściciel"), help_text=_("Właściciel")
     )
-    members = models.ManyToManyField(
+    members = models.ForeignKey(
         UserProfile,
         blank=True,
+        null=True,
+        on_delete=models.PROTECT,
         related_name="trips_as_member",
         verbose_name=_("Profil"), help_text=_("Profil")
     )
@@ -28,7 +30,8 @@ class Trip(BaseModel):
         max_digits=7,
         decimal_places=2,
         default=0,
-        verbose_name=_("Budżet"), help_text=_("Budżet")
+        verbose_name=_("Budżet"),
+        help_text=_("Budżet")
     )
     start_date = models.DateField(
         auto_now_add=True, # TODO: zmienić na czas lokalny a nie serwerowy
@@ -46,19 +49,13 @@ class Trip(BaseModel):
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
-        elif self.creator in self.members:
+        if self.members and hasattr(self.members, 'filter'):
+            if self.members.filter(id=self.creator.id).exists():
+                raise ValidationError(_("Twórca wycieczki nie może być jednocześnie jej członkiem."))
+        elif self.members == self.creator:
             raise ValidationError(_("Twórca wycieczki nie może być jednocześnie jej członkiem."))
-
-
-    @property
-    def all_members(self):
-        """
-        Returns a combined list of the creator and all members.
-        """
-        members_list = list(self.members.all())
-        if self.creator:
-            members_list.insert(0, self.creator)
-        return members_list
+        if self.budget < 0:
+            raise ValidationError(_("Budżet nie może być ujemny."))
 
 
     class Meta:

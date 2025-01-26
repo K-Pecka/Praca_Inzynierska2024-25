@@ -118,6 +118,31 @@ export const usePageStore = defineStore("page", () => {
     ];
     return type == undefined ? data : type == "tourist" ? [data[0]] : [data[1]];
   };
+  const getSectionTitle = (type: string): string | undefined => {
+    const pageTitles: Record<string, string> = {
+      login: "Zaloguj się",
+      register: "Zarejestruj się",
+    };
+
+    return pageTitles[type] || "";
+  };
+  const errorMessage = () => {
+    return {
+      unknow: "Nieznany błąd",
+      required: "Pole nie może być puste",
+      minLength: "Minimalna wymagana długość to {0} znaków",
+      maxLength: "Pole nie może być dłuższe niż {0} znaków",
+      forbiddenChars: "Pole zawiera niedozwolony znak: {0}",
+      equalLength: "Pole musi mieć dokładnie {0} znaków",
+      pattern: "Pole nie pasuje do wymaganego wzorca",
+      email: "Nieprawidłowy format emaila",
+      number: "Pole musi być liczbą",
+      startsWith: "Pole musi zaczynać się od {0}",
+      endsWith: "Pole musi kończyć się na {0}",
+      isEqual: "Pola muszą być równe",
+      isInRange: "Pole musi mieścić się w zakresie od {0} do {1}",
+    };
+  };
   return {
     SiteName,
     navLinks,
@@ -125,5 +150,7 @@ export const usePageStore = defineStore("page", () => {
     heroTestData,
     FQAData,
     advantagesData,
+    getSectionTitle,
+    errorMessage
   };
 });

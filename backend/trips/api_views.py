@@ -34,7 +34,7 @@ class TripListAPIView(ListAPIView):
     serializer_class = TripSerializer
 
     def get_queryset(self):
-        profile = self.request.user_profile
+        profile = self.request.user.get_default_profile()
         return Trip.objects.filter(
             Q(creator=profile) | Q(members=profile)
         ).distinct().select_related('creator').prefetch_related('members')
@@ -131,7 +131,7 @@ class TicketListAPIView(ListAPIView):
     serializer_class = TicketSerializer
 
     def get_queryset(self):
-        return Ticket.objects.filter(profile=self.request.user_profile)
+        return Ticket.objects.filter(profile=self.request.user.get_default_profile())
 
 
 class TicketUpdateAPIView(UpdateAPIView):
