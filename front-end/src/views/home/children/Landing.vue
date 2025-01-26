@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import Hero from "@/components/Hero.vue";
+import Hero from "@/components/home/Hero.vue";
 import Sections from "@/components/section/Sections.vue";
 
 const heroPhrases = [
