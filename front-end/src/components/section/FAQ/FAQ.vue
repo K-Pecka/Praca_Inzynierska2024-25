@@ -1,30 +1,5 @@
-<template>
-  <div class="faq">
-    <div class="faq-items">
-      <div
-        v-for="(item, index) in faqList"
-        :key="index"
-        class="faq-item"
-        :class="{ open: openIndex === index }"
-        @click="toggle(index)"
-      >
-        <div class="faq-question">
-          <slot name="question" :question="item.question">{{
-            item.question
-          }}</slot>
-          <span class="toggle-icon">{{ openIndex === index ? "-" : "+" }}</span>
-        </div>
-        <div v-if="openIndex === index" class="faq-answer">
-          <slot name="answer" :answer="item.answer">{{ item.answer }}</slot>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
-import { ref, PropType } from "vue";
-
+import { ref } from "vue";
 interface FAQItem {
   question: string;
   answer: string;
@@ -32,7 +7,7 @@ interface FAQItem {
 
 const props = defineProps({
   faqList: {
-    type: Array as PropType<FAQItem[]>,
+    type:  Array as () => FAQItem[],
     required: true,
   },
 });
@@ -44,11 +19,40 @@ const toggle = (index: number) => {
 };
 </script>
 
+<template>
+  <div class="faq">
+    <div class="faq__items">
+      <div
+        v-for="(item, index) in faqList"
+        :key="index"
+        class="faq__item"
+        :class="{ open: openIndex === index }"
+        @click="toggle(index)"
+      >
+        <div class="faq__question">
+          {{ item.question }}
+          <span
+            :class="{
+              toggle__icon: true,
+              'toggle__icon--open': openIndex === index,
+            }"
+            >+</span
+          >
+        </div>
+        <div v-show="openIndex === index" class="faq__answer">
+          {{ item.answer }}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped lang="scss">
 .faq {
   padding: 2rem 0;
-  .faq-items {
-    .faq-item {
+  .faq__items {
+    .faq__item {
+      transition: all 0.3s;
       border: 1px solid var(--primary-color);
       width: 100%;
       padding: 1rem;
@@ -56,9 +60,8 @@ const toggle = (index: number) => {
       border-radius: 0.5rem;
       background-color: var(--secondary-color);
       cursor: pointer;
-      .faq-question {
+      .faq__question {
         color: var(--primary-color);
-        transition: all 0.3s;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -66,18 +69,22 @@ const toggle = (index: number) => {
         cursor: pointer;
       }
 
-      .faq-answer {
+      .faq__answer {
         margin-top: 0.5rem;
         color: var(--primary-color);
       }
 
-      .toggle-icon {
+      .toggle__icon {
+        transition: all 0.3s;
         font-size: 1.5rem;
         line-height: 1;
+        &--open {
+          transform: rotate(45deg);
+        }
       }
     }
 
-    .faq-item.open .faq-question {
+    .faq__item.open .faq__question {
       color: var(--primary-color, #007bff);
     }
   }
