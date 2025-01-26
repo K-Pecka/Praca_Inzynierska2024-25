@@ -8,6 +8,13 @@ class TripSerializer(serializers.ModelSerializer):
     creator = serializers.PrimaryKeyRelatedField(required=True, queryset=UserProfile.objects.all())
     members = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=UserProfile.objects.all())
 
+    def validate(self, data):
+        members = data.get("members", [])
+
+        if members and data.get("creator") in members:
+            raise serializers.ValidationError("Właściciel nie może być uczestnikiem wycieczki.")
+        return data
+
     class Meta:
         model = Trip
         fields = [
@@ -27,12 +34,12 @@ class TripCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         request = self.context['request']
+        members = data.get("members", [])
+
         if not request.user.is_guide:
             if Trip.objects.filter(creator=request.user.get_default_profile()).count() > 2:
                 raise serializers.ValidationError("Osiągnąłeś limit wycieczek dla swojego profilu.")
-        if data["budget"] < 0:
-            raise serializers.ValidationError("Budżet nie może być ujemny.")
-        if data["members"] and data["creator"] in data["members"]:
+        if members and data.get("creator") in members:
             raise serializers.ValidationError("Właściciel nie może być uczestnikiem wycieczki.")
         return data
 
