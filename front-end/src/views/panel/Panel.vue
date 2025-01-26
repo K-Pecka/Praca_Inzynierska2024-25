@@ -15,7 +15,9 @@ const form = ref({
             <v-card-title>
               <h1>Panel</h1>
             </v-card-title>
-            <v-card-text> hej </v-card-text>
+            <v-card-text>
+              <router-view />
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>

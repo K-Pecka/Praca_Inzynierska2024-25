@@ -5,6 +5,7 @@ import Panel from '@/views/panel/Panel.vue';
 import Landing from '@/views/home/children/Landing.vue';
 import LogIn from '@/views/home/children/LogIn.vue';
 import Register from '@/views/home/children/Register.vue';
+import RoleSelection from "@/views/panel/children/RoleSelection.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -36,6 +37,11 @@ const routes: RouteRecordRaw[] = [
     component: Panel,
     meta: { title: 'Panel' },
     children: [
+      {
+        path: '/roleSelection',
+        name: 'roleSelection',
+        component: RoleSelection,
+      },
     ],
   }
 ];
