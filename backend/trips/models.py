@@ -12,7 +12,7 @@ class Trip(BaseModel):
         max_length=50,
         verbose_name=_("Nazwa"), help_text=_("Nazwa")
     )
-    creator = models.ForeignKey(
+    creator = models.OneToOneField(
         UserProfile,
         on_delete=models.CASCADE,
         related_name="trips_as_creator",
@@ -104,19 +104,19 @@ class Ticket(BaseModel):
         upload_to="tickets/",
         verbose_name=_("Bilet"), help_text=_("Bilet")
     )
-    profile = models.ForeignKey(
+    profile = models.OneToOneField(
         UserProfile,
         on_delete=models.CASCADE,
         related_name="tickets",
         verbose_name=_("Profil"), help_text=_("Profil")
     )
-    trip = models.ForeignKey(
+    trip = models.OneToOneField(
         Trip,
         on_delete=models.CASCADE,
         related_name="tickets",
         verbose_name=_("Wycieczka"), help_text=_("Wycieczka")
     )
-    activity = models.ForeignKey(
+    activity = models.OneToOneField(
         TripActivity,
         on_delete=models.CASCADE,
         related_name="tickets",

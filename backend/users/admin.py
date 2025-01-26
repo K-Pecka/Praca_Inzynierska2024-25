@@ -28,10 +28,10 @@ class CustomUserAdmin(admin.ModelAdmin):
     )
 
     def get_profile_link(self, obj):
-        if obj.profile:
+        if obj.get_default_profile() is not None:
             # Using reverse to generate the URL for the profile change page
-            url = reverse('admin:users_userprofile_change', args=[obj.profile.pk])
-            return mark_safe(f'<a href="{url}">{obj.profile}</a>')  # Make it a hyperlink
+            url = reverse('admin:users_userprofile_change', args=[obj.get_default_profile().pk])
+            return mark_safe(f'<a href="{url}">{obj.get_default_profile()}</a>')  # Make it a hyperlink
         return "No profile"
 
     get_profile_link.short_description = 'Profile'

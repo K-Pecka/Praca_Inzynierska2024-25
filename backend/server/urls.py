@@ -30,4 +30,5 @@ urlpatterns = [
     path('user/', include('users.api_urls')),
     path('itinerary/', include('itineraries.api_urls')),
     path('chat/', include('chats.api_urls')),
+    path('trip/', include('trips.api_urls')),
 ]

@@ -52,9 +52,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ] + INSTALLED_ADDITIONAL_APPS + OWN_ADDITIONAL_APPS
 
-OWN_MIDDLEWARE = [
-    'user_auth.middleware.AttachProfileMiddleware',
-]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,7 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-] + OWN_MIDDLEWARE
+]
 
 ROOT_URLCONF = 'server.urls'
 
