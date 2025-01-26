@@ -1,7 +1,6 @@
 from django.db import models
 
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ValidationError
 
 from dicts.models import BaseModel
 from users.models import UserProfile
@@ -29,32 +28,22 @@ class Chatroom(BaseModel):
         related_name="chat_rooms",
         verbose_name=_("Wycieczka"), help_text=_("Wycieczka")
     )
-    creator = models.ForeignKey(
+    guide = models.ForeignKey(
         UserProfile,
         on_delete=models.PROTECT,
-        related_name="chat_rooms_creator",
+        related_name="chat_rooms_guide",
         verbose_name=_("Przewodnik"), help_text=_("Przewodnik")
     )
-    members = models.ManyToManyField(
+    tourists = models.ForeignKey(
         UserProfile,
+        on_delete=models.PROTECT,
         related_name="chat_rooms",
-        blank=True,
         verbose_name=_("Turysta"), help_text=_("Turyści")
     )
     settings = models.JSONField(
         default=dict,
         verbose_name=_("Ustawienia"), help_text=_("Ustawienia")
     )
-
-    def clean(self):
-        if not self.pk:
-            self.save()
-
-        if self.type == self.ChatroomType.PRIVATE and self.members.count() > 1:
-            raise ValidationError(_("A private chatroom can only have one tourist."))
-
-        if self.creator and self.members.filter(id=self.creator.id).exists():
-            raise ValidationError(_("The creator cannot also be a tourist in the same chatroom."))
 
     class Meta:
         db_table = "chat_rooms"
@@ -75,12 +64,11 @@ class ChatMessage(BaseModel):
     )
     file = models.FileField(
         upload_to="chat_files/",
-        blank=True, null=True,
         verbose_name=_("Plik"), help_text=_("Plik")
     )
     chatroom = models.ForeignKey(
         Chatroom,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="chat_messages",
         verbose_name=_("Pokój do czatowania"), help_text=_("Pokój do czatowania")
     )

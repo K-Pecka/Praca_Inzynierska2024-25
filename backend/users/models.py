@@ -98,7 +98,7 @@ class UserProfile(BaseModel):
         GUIDE = 'guide', _("Przewodnik")
         ADMIN = 'admin', _("Administrator")
 
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         CustomUser,
         on_delete=models.PROTECT,
         related_name="profiles",
