@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Trip, TripActivity, Ticket
+from .models import Trip, TripActivity, Ticket, Budget, Expense
 from users.models import UserProfile
 
 
@@ -94,3 +94,26 @@ class TicketSerializer(BaseTicketSerializer):
 
     class Meta(BaseTicketSerializer.Meta):
         read_only_fields = ['id', 'profile', 'trip', 'activity']
+
+
+class BudgetSerializer(serializers.ModelSerializer):
+    trip = serializers.PrimaryKeyRelatedField(required=True, queryset=Trip.objects.all())
+
+    class Meta:
+        model = Budget
+        fields = [
+            'id', 'amount', 'currency', 'trip'
+        ]
+        read_only_fields = ['id']
+
+
+class ExpenseSerializer(serializers.ModelSerializer):
+    trip = serializers.PrimaryKeyRelatedField(required=True, queryset=Trip.objects.all())
+    user = serializers.PrimaryKeyRelatedField(required=True, queryset=UserProfile.objects.all())
+
+    class Meta:
+        model = Expense
+        fields = [
+            'id', 'amount', 'date', 'description', 'trip', 'user', 'type'
+        ]
+        read_only_fields = ['id']

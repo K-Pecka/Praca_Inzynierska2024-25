@@ -21,8 +21,3 @@ class ItineraryActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = ItineraryActivity
         fields = ['id', 'name', 'type', 'description', 'location', 'start_time', 'duration', 'itinerary']
-
-    def validate(self, data):
-        if data['start_time'] is None:
-            raise serializers.ValidationError("Czas rozpoczęcia aktywności nie może być pusty.")
-        return data

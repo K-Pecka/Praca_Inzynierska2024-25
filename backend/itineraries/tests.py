@@ -215,7 +215,7 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         data = {
             'name': 'Louvre Museum Visit',
-            'type': 'Museum',
+            'type': 'test1',
             'description': 'Visit to the Louvre Museum.',
             'location': 'Paris',
             'start_time': '12:00:00',
@@ -245,7 +245,7 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         data = {
             'name': 'Updated Eiffel Tower Visit',
-            'type': 'Tour',
+            'type': 'test1',
             'description': 'An updated guided tour.',
             'location': 'Paris',
             'start_time': '11:00:00',

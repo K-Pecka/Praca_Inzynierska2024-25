@@ -5,10 +5,10 @@ from rest_framework.generics import (
 )
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Trip, TripActivity, Ticket
+from .models import Trip, TripActivity, Ticket, Budget, Expense
 from server.permissions import IsTripParticipant, IsTripCreator, IsTicketOwner
 from .serializers import (
-    TripSerializer, TripActivitySerializer, TicketSerializer, TripCreateSerializer
+    TripSerializer, TripActivitySerializer, TicketSerializer, TripCreateSerializer, BudgetSerializer, ExpenseSerializer
 )
 
 
@@ -134,3 +134,95 @@ class TicketDestroyAPIView(DestroyAPIView):
 
     def get_object(self):
         return Ticket.objects.by_id(self.kwargs['pk']).select_related('profile', 'trip', 'activity')
+
+
+class BudgetCreateAPIView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = BudgetSerializer
+
+
+class BudgetRetrieveAPIView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = BudgetSerializer
+
+    def get_object(self):
+        try:
+            return Budget.objects.get(pk=self.kwargs['pk'])
+        except Budget.DoesNotExist:
+            raise NotFound(detail="Nie znaleziono budżetu o podanym ID")
+
+
+class BudgetListAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = BudgetSerializer
+
+    def get_queryset(self):
+        return Budget.objects.filter(trip=self.kwargs['trip_id']).select_related('trip')
+
+
+class BudgetUpdateAPIView(UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = BudgetSerializer
+
+    def get_object(self):
+        try:
+            return Budget.objects.get(pk=self.kwargs['pk'])
+        except Budget.DoesNotExist:
+            raise NotFound(detail="Nie znaleziono budżetu o podanym ID")
+
+
+class BudgetDestroyAPIView(DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = BudgetSerializer
+
+    def get_object(self):
+        try:
+            return Budget.objects.get(pk=self.kwargs['pk'])
+        except Budget.DoesNotExist:
+            raise NotFound(detail="Nie znaleziono budżetu o podanym ID")
+
+
+class ExpenseCreateAPIView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ExpenseSerializer
+
+
+class ExpenseRetrieveAPIView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ExpenseSerializer
+
+    def get_object(self):
+        try:
+            return Expense.objects.get(pk=self.kwargs['pk'])
+        except Expense.DoesNotExist:
+            raise NotFound(detail="Nie znaleziono wydatku o podanym ID")
+
+
+class ExpenseListAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ExpenseSerializer
+
+    def get_queryset(self):
+        return Expense.objects.filter(trip=self.kwargs['trip_id']).select_related('trip', 'user')
+
+
+class ExpenseUpdateAPIView(UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ExpenseSerializer
+
+    def get_object(self):
+        try:
+            return Expense.objects.get(pk=self.kwargs['pk'])
+        except Expense.DoesNotExist:
+            raise NotFound(detail="Nie znaleziono wydatku o podanym ID")
+
+
+class ExpenseDestroyAPIView(DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ExpenseSerializer
+
+    def get_object(self):
+        try:
+            return Expense.objects.get(pk=self.kwargs['pk'])
+        except Expense.DoesNotExist:
+            raise NotFound(detail="Nie znaleziono wydatku o podanym ID")

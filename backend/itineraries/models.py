@@ -17,9 +17,13 @@ class Itinerary(BaseModel):
 
 
 class ItineraryActivity(BaseModel):
-
+    CHOICES = [
+        ("test1", "test1"),
+        ("test2", "test2"),
+        ("test3", "test3")
+    ]
     name = models.CharField(max_length=255)
-    type = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, choices=CHOICES)
     description = models.TextField(max_length=5120)
     location = models.CharField(max_length=255)
     start_time = models.TimeField()

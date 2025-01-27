@@ -16,7 +16,7 @@ class BaseChatroomSerializer(serializers.ModelSerializer):
     trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
     creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
     members = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=UserProfile.objects.all())
-    settings = serializers.JSONField(max_length=1000)
+    settings = serializers.JSONField()
 
     class Meta:
         model = Chatroom

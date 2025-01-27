@@ -9,12 +9,11 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'xkudmt1*h-go&u1@&!396=@_m-bly^@446q@e2^yjeg&8e(h$7' # TODO: Pozniej bedzie to trzeba zmienic na: os.environ["SECRET_KEY"]
+SECRET_KEY = 'xkudmt1*h-go&u1@&!396=@_m-bly^@446q@e2^yjeg&8e(h$7'  # TODO: Pozniej bedzie to trzeba zmienic na: os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # TODO: False, aby włączyć produkcję
+DEBUG = True  # TODO: False, aby włączyć produkcję
 
 ALLOWED_HOSTS = [
     '0.0.0.0',
@@ -51,7 +50,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ] + INSTALLED_ADDITIONAL_APPS + OWN_ADDITIONAL_APPS
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -94,7 +92,6 @@ CACHES = {
         }
     }
 }
-
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -164,7 +161,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -180,21 +176,20 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 LOGIN_URL = 'user_auth/login/'
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/graph_models/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "graph_models"),
 ]
 
-MEDIA_URL = '' # TODO: ustawić
-MEDIA_ROOT = '' # TODO: ustawić
+MEDIA_URL = ''  # TODO: ustawić
+MEDIA_ROOT = ''  # TODO: ustawić
 
-CSRF_COOKIE_SECURE = False # TODO: zmienić na True jak już będzie na https
-SESSION_COOKIE_SECURE = False # TODO: zmienić na True jak już będzie na https
+CSRF_COOKIE_SECURE = False  # TODO: zmienić na True jak już będzie na https
+SESSION_COOKIE_SECURE = False  # TODO: zmienić na True jak już będzie na https
 
 # Database settings
 CONN_MAX_AGE = 0

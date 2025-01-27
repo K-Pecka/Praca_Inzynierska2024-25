@@ -1,10 +1,10 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from dicts.models import BaseModel
-from trips.managers import TripManager, TripActivityManager, TicketManager
 from users.models import UserProfile
 
 
@@ -33,19 +33,17 @@ class Trip(BaseModel):
         help_text=_("Budżet")
     )
     start_date = models.DateField(
-        auto_now_add=True, # TODO: zmienić na czas lokalny a nie serwerowy
+        auto_now_add=True,  # TODO: zmienić na czas lokalny a nie serwerowy
         verbose_name=_("Data rozpoczęcia"), help_text=_("Data rozpoczęcia")
     )
     end_date = models.DateField(
-        auto_now=True, # TODO: zmienić na czas lokalny a nie serwerowy
+        auto_now=True,  # TODO: zmienić na czas lokalny a nie serwerowy
         verbose_name=_("Data zakończenia"), help_text=_("Data zakończenia")
     )
     settings = models.JSONField(
-        default=dict, # TODO: stworzyć defaultowe, customowe ustawienia
+        default=dict,  # TODO: stworzyć defaultowe, customowe ustawienia
         verbose_name=_("Ustawienia"), help_text=_("Ustawienia")
     )
-
-    objects = TripManager()
 
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
@@ -79,7 +77,7 @@ class TripActivity(BaseModel):
         verbose_name=_("Opis"), help_text=_("Opis")
     )
     date = models.DateTimeField(
-        auto_now_add=True, # TODO: zmienić na czas lokalny a nie serwerowy
+        auto_now_add=True,  # TODO: zmienić na czas lokalny a nie serwerowy
         verbose_name=_("Data"), help_text=_("Data")
     )
     trip = models.ForeignKey(
@@ -88,8 +86,6 @@ class TripActivity(BaseModel):
         related_name="activities",
         verbose_name=_("Wycieczka"), help_text=_("Wycieczka")
     )
-
-    objects = TripActivityManager()
 
     class Meta:
         db_table = "trip_activities"
@@ -121,8 +117,6 @@ class Ticket(BaseModel):
         verbose_name=_("Aktywność"), help_text=_("Aktywność")
     )
 
-    objects = TicketManager()
-
     class Meta:
         db_table = "tickets"
         verbose_name = "Bilet"
@@ -134,3 +128,82 @@ class FYQ(BaseModel):
         db_table = "fyq"
         verbose_name = "FYQ"
         verbose_name_plural = "FYQ"
+
+
+class Budget(BaseModel):
+    amount = models.DecimalField(
+        max_digits=7,
+        decimal_places=2,
+        default=0,
+        validators=[MinValueValidator(0)],
+        verbose_name=_("Kwota budżetu"),
+        help_text=_("Kwota budżetu")
+    )
+    currency = models.CharField(
+        max_length=10,
+        verbose_name=_("Waluta"),
+        help_text=_("Waluta (np. USD, PLN)")
+    )
+    trip = models.ForeignKey(
+        Trip,
+        on_delete=models.CASCADE,
+        related_name="budżet",
+        verbose_name=_("Wycieczka"),
+        help_text=_("Powiązana wycieczka")
+    )
+
+    class Meta:
+        db_table = "budgets"
+        verbose_name = "Budżet"
+
+
+class Expense(BaseModel):
+    EXPENSE_CHOICES = [
+        ("test1", "test1"),
+        ("test2", "test2"),
+        ("test2", "test2"),
+    ]
+
+    amount = models.DecimalField(
+        max_digits=7,
+        decimal_places=2,
+        default=0,
+        validators=[MinValueValidator(0)],
+        verbose_name=_("Kwota wydatku"),
+        help_text=_("Kwota wydatku")
+    )
+    date = models.DateField(
+        verbose_name=_("Data"),
+        help_text=_("Data wydatku")
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name=_("Opis"),
+        help_text=_("Opis wydatku (opcjonalne)")
+    )
+    trip = models.ForeignKey(
+        Trip,
+        on_delete=models.CASCADE,
+        related_name="expenses",
+        verbose_name=_("Wycieczka"),
+        help_text=_("Powiązana wycieczka")
+    )
+    user = models.ForeignKey(
+        UserProfile,
+        on_delete=models.CASCADE,
+        related_name="expenses",
+        verbose_name=_("Użytkownik"),
+        help_text=_("Osoba, która poniosła wydatek")
+    )
+    type = models.CharField(
+        max_length=50,
+        choices=EXPENSE_CHOICES,
+        default="other",
+        verbose_name=_("Rodzaj wydatku"),
+        help_text=_("Rodzaj wydatku")
+    )
+
+    class Meta:
+        db_table = "expenses"
+        verbose_name = "Wydatek"
+        verbose_name_plural = "Wydatki"
