@@ -72,7 +72,7 @@ class ChatMessageRetrieveAPIView(RetrieveAPIView):
 
 
 class ChatMessageListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
     serializer_class = ChatMessageSerializer
 
     def get_queryset(self):
@@ -84,7 +84,7 @@ class ChatMessageListAPIView(ListAPIView):
 
 
 class ChatMessageUpdateAPIView(UpdateAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant, IsCreatorForChatMessage]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatMessage]
     serializer_class = ChatMessageUpdateSerializer
 
     def get_object(self):
@@ -94,7 +94,7 @@ class ChatMessageUpdateAPIView(UpdateAPIView):
 
 
 class ChatMessageDestroyAPIView(DestroyAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant, IsCreatorForChatMessage]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatMessage]
     serializer_class = ChatMessageSerializer
 
     def get_object(self):
