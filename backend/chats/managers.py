@@ -22,5 +22,5 @@ class ChatMessageManager(models.Manager):
         except self.model.DoesNotExist:
             raise NotFound(detail="Nie znaleziono wiadomości o podanym ID")
 
-    def for_user_and_chatroom(self, profile, room_pk):
+    def by_user_and_chatroom(self, profile, room_pk):
         return self.filter(profile=profile, chatroom=room_pk)

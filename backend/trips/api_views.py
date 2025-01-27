@@ -1,18 +1,20 @@
 from django.db.models import Q
 from rest_framework.exceptions import NotFound
 from rest_framework.generics import (
-    CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView, get_object_or_404
+    CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView
 )
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Trip, TripActivity, Ticket
-from .permissions import IsTripParticipant, IsTripCreator, IsTicketOwner
+from server.permissions import IsTripParticipant, IsTripCreator, IsTicketOwner
 from .serializers import (
     TripSerializer, TripActivitySerializer, TicketSerializer, TripCreateSerializer
 )
 
 
-# Trip Views
+#############################################################################
+# Trip
+#############################################################################
 class TripCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = TripCreateSerializer
@@ -23,10 +25,7 @@ class TripRetrieveAPIView(RetrieveAPIView):
     serializer_class = TripSerializer
 
     def get_object(self):
-        try:
-            return Trip.objects.get(pk=self.kwargs['pk'])
-        except Trip.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono wycieczki o podanym ID")
+        return Trip.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
 
 
 class TripListAPIView(ListAPIView):
@@ -35,9 +34,8 @@ class TripListAPIView(ListAPIView):
 
     def get_queryset(self):
         profile = self.request.user.get_default_profile()
-        return Trip.objects.filter(
-            Q(creator=profile) | Q(members=profile)
-        ).distinct().select_related('creator').prefetch_related('members')
+
+        return Trip.objects.by_user_and_trip(profile).select_related('creator').prefetch_related('members')
 
 
 class TripUpdateAPIView(UpdateAPIView):
@@ -45,10 +43,7 @@ class TripUpdateAPIView(UpdateAPIView):
     serializer_class = TripSerializer
 
     def get_object(self):
-        try:
-            return Trip.objects.get(pk=self.kwargs['pk'])
-        except Trip.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono wycieczki o podanym ID")
+        return Trip.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
 
 
 class TripDestroyAPIView(DestroyAPIView):
@@ -56,13 +51,12 @@ class TripDestroyAPIView(DestroyAPIView):
     serializer_class = TripSerializer
 
     def get_object(self):
-        try:
-            return Trip.objects.get(pk=self.kwargs['pk'])
-        except Trip.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono wycieczki o podanym ID")
+        return Trip.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
 
 
-# TripActivity Views
+#############################################################################
+# TripActivity
+#############################################################################
 class TripActivityCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
     serializer_class = TripActivitySerializer
@@ -73,10 +67,7 @@ class TripActivityRetrieveAPIView(RetrieveAPIView):
     serializer_class = TripActivitySerializer
 
     def get_object(self):
-        try:
-            return TripActivity.objects.get(trip=self.kwargs['trip_id'], pk=self.kwargs['pk'])
-        except TripActivity.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono aktywności wycieczki o podanym ID")
+        return TripActivity.objects.by_id_and_trip(self.kwargs['pk'], self.kwargs['trip_id']).select_related('trip')
 
 
 class TripActivityListAPIView(ListAPIView):
@@ -84,7 +75,7 @@ class TripActivityListAPIView(ListAPIView):
     serializer_class = TripActivitySerializer
 
     def get_queryset(self):
-        return TripActivity.objects.filter(trip=self.kwargs['trip_id']).select_related('trip')
+        return TripActivity.objects.by_trip(self.kwargs['trip_id']).select_related('trip')
 
 
 class TripActivityUpdateAPIView(UpdateAPIView):
@@ -92,10 +83,7 @@ class TripActivityUpdateAPIView(UpdateAPIView):
     serializer_class = TripActivitySerializer
 
     def get_object(self):
-        try:
-            return TripActivity.objects.get(trip=self.kwargs['trip_id'], pk=self.kwargs['pk'])
-        except TripActivity.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono aktywności wycieczki o podanym ID")
+        return TripActivity.objects.by_id_and_trip(self.kwargs['pk'], self.kwargs['trip_id']).select_related('trip')
 
 
 class TripActivityDestroyAPIView(DestroyAPIView):
@@ -103,54 +91,46 @@ class TripActivityDestroyAPIView(DestroyAPIView):
     serializer_class = TripActivitySerializer
 
     def get_object(self):
-        try:
-            return TripActivity.objects.get(trip=self.kwargs['trip_id'], pk=self.kwargs['pk'])
-        except TripActivity.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono aktywności wycieczki o podanym ID")
+        return TripActivity.objects.by_id_and_trip(self.kwargs['pk'], self.kwargs['trip_id']).select_related('trip')
 
 
-# Ticket Views
+#############################################################################
+# Ticket
+#############################################################################
 class TicketCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = TicketSerializer
 
 
 class TicketRetrieveAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated, IsTicketOwner]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsTicketOwner]
     serializer_class = TicketSerializer
 
     def get_object(self):
-        try:
-            return Ticket.objects.get(pk=self.kwargs['pk'])
-        except Ticket.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono biletu o podanym ID")
+        return Ticket.objects.by_id(self.kwargs['pk']).select_related('profile', 'trip', 'activity')
 
 
 class TicketListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = TicketSerializer
 
     def get_queryset(self):
-        return Ticket.objects.filter(profile=self.request.user.get_default_profile())
+        profile = self.request.user.get_default_profile()
+
+        return Ticket.objects.by_user(profile).select_related('profile', 'trip', 'activity')
 
 
 class TicketUpdateAPIView(UpdateAPIView):
-    permission_classes = [IsAuthenticated, IsTicketOwner]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsTicketOwner]
     serializer_class = TicketSerializer
 
     def get_object(self):
-        try:
-            return Ticket.objects.get(pk=self.kwargs['pk'])
-        except Ticket.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono biletu o podanym ID")
+        return Ticket.objects.by_id(self.kwargs['pk']).select_related('profile', 'trip', 'activity')
 
 
 class TicketDestroyAPIView(DestroyAPIView):
-    permission_classes = [IsAuthenticated, IsTicketOwner]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsTicketOwner]
     serializer_class = TicketSerializer
 
     def get_object(self):
-        try:
-            return Ticket.objects.get(pk=self.kwargs['pk'])
-        except Ticket.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono biletu o podanym ID")
+        return Ticket.objects.by_id(self.kwargs['pk']).select_related('profile', 'trip', 'activity')

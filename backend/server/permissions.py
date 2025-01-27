@@ -83,6 +83,8 @@ class IsTripParticipant(BasePermission):
             return obj.trip.creator == profile or profile in obj.members.all()
         if isinstance(obj, ChatMessage):
             return obj.chatroom.trip.creator == profile or profile in obj.chatroom.members.all()
+        if isinstance(obj, Ticket):
+            return obj.trip.creator == profile or profile in obj.trip.members.all()
         return False
 
 
@@ -104,6 +106,8 @@ class IsTripCreator(BasePermission):
             return obj.trip.creator == profile
         if isinstance(obj, ChatMessage):
             return obj.chatroom.trip.creator == profile
+        if isinstance(obj, Ticket):
+            return obj.trip.creator == profile
         return False
 
 

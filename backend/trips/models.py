@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from dicts.models import BaseModel
+from trips.managers import TripManager, TripActivityManager, TicketManager
 from users.models import UserProfile
 
 
@@ -43,6 +44,8 @@ class Trip(BaseModel):
         default=dict, # TODO: stworzyć defaultowe, customowe ustawienia
         verbose_name=_("Ustawienia"), help_text=_("Ustawienia")
     )
+
+    objects = TripManager()
 
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
@@ -86,6 +89,8 @@ class TripActivity(BaseModel):
         verbose_name=_("Wycieczka"), help_text=_("Wycieczka")
     )
 
+    objects = TripActivityManager()
+
     class Meta:
         db_table = "trip_activities"
         verbose_name = "Aktywność na wycieczce"
@@ -115,6 +120,8 @@ class Ticket(BaseModel):
         related_name="tickets",
         verbose_name=_("Aktywność"), help_text=_("Aktywność")
     )
+
+    objects = TicketManager()
 
     class Meta:
         db_table = "tickets"

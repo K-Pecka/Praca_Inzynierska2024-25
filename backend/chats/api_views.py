@@ -78,7 +78,7 @@ class ChatMessageListAPIView(ListAPIView):
     def get_queryset(self):
         profile = self.request.user.get_user_permissions()
 
-        return ChatMessage.objects.for_user_and_chatroom(
+        return ChatMessage.objects.by_user_and_chatroom(
             profile, self.kwargs['room_pk']
         ).select_related('profile', 'chatroom').prefetch_related('chatroom__members',)
 
