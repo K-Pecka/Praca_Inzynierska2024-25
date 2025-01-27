@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 
+from chats.managers import ChatroomManager, ChatMessageManager
 from dicts.models import BaseModel
 from users.models import UserProfile
 from trips.models import Trip
@@ -46,15 +47,13 @@ class Chatroom(BaseModel):
         verbose_name=_("Ustawienia"), help_text=_("Ustawienia")
     )
 
+    objects = ChatroomManager()
+
     def clean(self):
         if not self.pk:
             self.save()
-
-        if self.type == self.ChatroomType.PRIVATE and self.members.count() > 1:
-            raise ValidationError(_("A private chatroom can only have one tourist."))
-
-        if self.creator and self.members.filter(id=self.creator.id).exists():
-            raise ValidationError(_("The creator cannot also be a tourist in the same chatroom."))
+        # if self.type == self.ChatroomType.PRIVATE and self.members.count() > 1:
+        #     raise ValidationError(_("A private chatroom can only have one tourist."))
 
     class Meta:
         db_table = "chat_rooms"
@@ -84,6 +83,8 @@ class ChatMessage(BaseModel):
         related_name="chat_messages",
         verbose_name=_("Pokój do czatowania"), help_text=_("Pokój do czatowania")
     )
+
+    objects = ChatMessageManager()
 
     class Meta:
         db_table = "chat_messages"
