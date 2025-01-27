@@ -19,39 +19,44 @@ defineProps({
 </template>
 
 <style scoped lang="scss">
-@use "@/assets/style" as *;
-
 .role-button {
-  background-color: rgba(var(--secondary-color),0.5);
-  border: 1px solid var(--secondary-color);
-  border-radius: var(--border-radius);
-  padding: 24px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(var(--rgb-secondary-color), 0.5);
+  border: none;
+  border-radius: 15px;
+  padding: 2rem 1.5rem;
   cursor: pointer;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  width: 260px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 15rem;
+  max-width: 25rem;
+  flex: 1 1 auto;
 
   &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: scale(1.03);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.35);
   }
 
   .role-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 16px;
+    width: 153px;
+    height: 153px;
+    margin-bottom: 1rem;
+    object-fit: contain;
   }
 
   .role-title {
-    @include font-large;
-    font-size: 20px;
-    margin-bottom: 8px;
+    font-size: 1.9rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
   }
 
   .role-description {
-    @include font-regular;
-    font-size: 14px;
+    font-size: 1rem;
+    color: var(--text-color);
+    line-height: 1.5;
+    text-align: center;
   }
 }
 </style>

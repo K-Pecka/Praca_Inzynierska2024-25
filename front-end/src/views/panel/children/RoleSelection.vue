@@ -23,51 +23,41 @@ const {roleSelection} = panelContentStore;
 </template>
 
 <style scoped lang="scss">
-@use "@/assets/style" as *;
-
 .role-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem auto;
   text-align: center;
-  margin-top: 20px;
 
-  h2 {
-    font-size: 1.5rem;
+  .title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
     color: var(--text-color);
   }
 
-  .roles {
+  .subtitle {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 3.5rem;
+    color: var(--text-color);
+  }
+
+  .roles-container {
     display: flex;
     justify-content: center;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 7rem;
+  }
 
-    .role-card {
-      background-color: var(--secondary-color);
-      border-radius: var(--secondary-color);
-      padding: 1rem;
-      width: 240px;
-      text-align: center;
-      box-shadow: var(--text-color);
-      transition: transform 0.3s;
-
-      &:hover {
-        transform: scale(1.05);
-      }
-
-      .role-icon {
-        height: 64px;
-        margin-bottom: 1rem;
-      }
-
-      h3 {
-        font-size: 1.25rem;
-        margin-bottom: 0.5rem;
-        color: var(--text-color);
-      }
-
-      p {
-        font-size: 0.875rem;
-        color: var(--text-color);
-      }
+  @media (max-width: 800px) {
+    .roles-container {
+      gap: 2rem;
+    }
+    .title, .subtitle {
+      font-size: 1.8rem;
     }
   }
 }

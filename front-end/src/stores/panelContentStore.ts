@@ -2,7 +2,7 @@ import {reactive} from "vue";
 
 export const panelContentStore = reactive({
     roleSelection: {
-        title: "Witaj w aplikacji Plannnder",
+        title: "Witaj w aplikacji Plannder",
         subtitle: "W jakiej roli planujesz zorganizować podróż?",
         roles: [
             {
@@ -13,7 +13,7 @@ export const panelContentStore = reactive({
             {
                 title: "Przewodnik",
                 description: "Tworzenie i zarządzanie wycieczkami dla grup turystycznych",
-                image: "./picture/p1.svg",
+                image: "./picture/guide.svg",
             },
         ],
     },
