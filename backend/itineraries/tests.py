@@ -110,7 +110,7 @@ class ItineraryAPITestCase(TestCase):
         Test listing all itineraries when the user is authenticated.
         """
         view = ItineraryListAPIView.as_view()
-        request = self.factory.get('/itineraries/')
+        request = self.factory.get('/itineraries/all')
         force_authenticate(request, user=self.user)
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -223,9 +223,10 @@ class ItineraryActivityAPITestCase(TestCase):
             'itinerary': self.itinerary.id
         }
         view = ItineraryActivityCreateAPIView.as_view()
-        request = self.factory.post('/activities/', data)
+        url = f'/itineraries/{self.itinerary.id}/activities/create/'
+        request = self.factory.post(url, data)
         force_authenticate(request, user=self.user)
-        response = view(request)
+        response = view(request, itinerary_pk=self.itinerary.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_activity_retrieve(self):
@@ -276,9 +277,9 @@ class ItineraryActivityAPITestCase(TestCase):
         Test listing all itinerary activities when the user is authenticated.
         """
         view = ItineraryActivityListAPIView.as_view()
-        request = self.factory.get('/activities/')
+        request = self.factory.get(f'/itineraries/{self.itinerary.id}/activities/all/')
         force_authenticate(request, user=self.user)
-        response = view(request)
+        response = view(request, itinerary_pk=self.itinerary.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(len(response.data) > 0)
 

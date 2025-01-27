@@ -1,6 +1,7 @@
 from rest_framework.permissions import BasePermission
 from chats.models import Chatroom, ChatMessage
-from trips.models import Trip, TripActivity, Ticket
+from trips.models import Trip, Ticket
+from itineraries.models import Itinerary, ItineraryActivity
 
 
 ##################################################################################3
@@ -77,14 +78,16 @@ class IsTripParticipant(BasePermission):
 
         if isinstance(obj, Trip):
             return obj.creator == profile or profile in obj.members.all()
-        if isinstance(obj, TripActivity) or isinstance(obj, Ticket):
-            return obj.trip.creator == profile or profile in obj.trip.members.all()
         if isinstance(obj, Chatroom):
             return obj.trip.creator == profile or profile in obj.members.all()
         if isinstance(obj, ChatMessage):
             return obj.chatroom.trip.creator == profile or profile in obj.chatroom.members.all()
         if isinstance(obj, Ticket):
             return obj.trip.creator == profile or profile in obj.trip.members.all()
+        if isinstance(obj, Itinerary):
+            return obj.trip.creator == profile or profile in obj.trip.members.all()
+        if isinstance(obj, ItineraryActivity):
+            return obj.itinerary.trip.creator == profile or profile in obj.itinerary.trip.members.all()
         return False
 
 
@@ -100,14 +103,16 @@ class IsTripCreator(BasePermission):
 
         if isinstance(obj, Trip):
             return obj.creator == profile
-        if isinstance(obj, TripActivity) or isinstance(obj, Ticket):
-            return obj.trip.creator == profile
         if isinstance(obj, Chatroom):
             return obj.trip.creator == profile
         if isinstance(obj, ChatMessage):
             return obj.chatroom.trip.creator == profile
         if isinstance(obj, Ticket):
             return obj.trip.creator == profile
+        if isinstance(obj, Itinerary):
+            return obj.trip.creator == profile
+        if isinstance(obj, ItineraryActivity):
+            return obj.itinerary.trip.creator == profile
         return False
 
 
