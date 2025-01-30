@@ -1,109 +1,103 @@
-from django.db.models import Q
-from rest_framework.exceptions import NotFound
-
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import (
-    CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView, get_object_or_404
+    CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView
 )
 
 from .models import Chatroom, ChatMessage
-from .permissions import IsCreatorForChatroom, IsParticipantForChatroom, IsCreatorForChatMessage
+from server.permissions import IsCreatorForChatroom, IsParticipantForChatroom, IsCreatorForChatMessage, \
+    IsTripParticipant, IsTripCreator
 from .serializers import (
     ChatroomCreateSerializer, ChatroomUpdateSerializer, ChatMessageCreateSerializer, ChatroomSerializer,
     ChatMessageSerializer, ChatMessageUpdateSerializer
 )
 
 
+#####################################################################
 # Chatroom Views
+#####################################################################
 class ChatroomCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = ChatroomCreateSerializer
 
 
 class ChatroomRetrieveAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated, IsParticipantForChatroom]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
     serializer_class = ChatroomSerializer
 
     def get_object(self):
-        try:
-            return Chatroom.objects.get(pk=self.kwargs['pk'])
-        except Chatroom.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono czatu o podanym ID")
-
+        return Chatroom.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
 
 class ChatroomListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = ChatroomSerializer
 
     def get_queryset(self):
         profile = self.request.user.get_default_profile()
-        return Chatroom.objects.filter(Q(creator=profile) | Q(members=profile)).distinct()
+
+        return Chatroom.objects.for_user(profile).select_related('creator').prefetch_related('members')
 
 
 class ChatroomUpdateAPIView(UpdateAPIView):
-    permission_classes = [IsAuthenticated, IsCreatorForChatroom]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsCreatorForChatroom]
     serializer_class = ChatroomUpdateSerializer
 
     def get_object(self):
-        try:
-            return Chatroom.objects.get(pk=self.kwargs['pk'])
-        except Chatroom.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono czatu o podanym ID")
+        return Chatroom.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
 
 
 class ChatroomDestroyAPIView(DestroyAPIView):
-    permission_classes = [IsAuthenticated, IsCreatorForChatroom]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsCreatorForChatroom]
     serializer_class = ChatroomSerializer
 
     def get_object(self):
-        try:
-            return Chatroom.objects.get(pk=self.kwargs['pk'])
-        except Chatroom.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono czatu o podanym ID")
+        return Chatroom.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
 
 
+#####################################################################
 # ChatMessage Views
+#####################################################################
 class ChatMessageCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated, IsParticipantForChatroom]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
     serializer_class = ChatMessageCreateSerializer
 
 
 class ChatMessageRetrieveAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated, IsParticipantForChatroom]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
     serializer_class = ChatMessageSerializer
 
     def get_object(self):
-        try:
-            return ChatMessage.objects.get(chatroom=self.kwargs['room_pk'], pk=self.kwargs['pk'])
-        except ChatMessage.DoesNotExist:
-            raise NotFound("Nie znaleziono wiadomości o podanym ID")
+        return ChatMessage.objects.by_room_and_id(
+            self.kwargs['pk'], self.kwargs['room_pk']
+        ).select_related('profile', 'chatroom').prefetch_related('chatroom__members',)
 
 
 class ChatMessageListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
     serializer_class = ChatMessageSerializer
 
     def get_queryset(self):
-        return ChatMessage.objects.filter(chatroom=self.kwargs['room_pk'], profile=self.request.user.get_default_profile())
+        profile = self.request.user.get_user_permissions()
+
+        return ChatMessage.objects.by_user_and_chatroom(
+            profile, self.kwargs['room_pk']
+        ).select_related('profile', 'chatroom').prefetch_related('chatroom__members',)
 
 
 class ChatMessageUpdateAPIView(UpdateAPIView):
-    permission_classes = [IsAuthenticated, IsCreatorForChatMessage]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatMessage]
     serializer_class = ChatMessageUpdateSerializer
 
     def get_object(self):
-        try:
-            return ChatMessage.objects.get(chatroom=self.kwargs['room_pk'], pk=self.kwargs['pk'])
-        except ChatMessage.DoesNotExist:
-            raise NotFound("Nie znaleziono wiadomości o podanym ID")
+        return ChatMessage.objects.by_room_and_id(
+            self.kwargs['pk'], self.kwargs['room_pk']
+        ).select_related('profile', 'chatroom').prefetch_related('chatroom__members',)
 
 
 class ChatMessageDestroyAPIView(DestroyAPIView):
-    permission_classes = [IsAuthenticated, IsCreatorForChatMessage]
+    permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatMessage]
     serializer_class = ChatMessageSerializer
 
     def get_object(self):
-        try:
-            return ChatMessage.objects.get(chatroom=self.kwargs['room_pk'], pk=self.kwargs['pk'])
-        except ChatMessage.DoesNotExist:
-            raise NotFound("Nie znaleziono wiadomości o podanym ID")
+        return ChatMessage.objects.by_room_and_id(
+            self.kwargs['pk'], self.kwargs['room_pk']
+        ).select_related('profile', 'chatroom').prefetch_related('chatroom__members',)

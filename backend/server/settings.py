@@ -20,6 +20,13 @@ SECRET_KEY = 'xkudmt1*h-go&u1@&!396=@_m-bly^@446q@e2^yjeg&8e(h$7' # TODO: Poznie
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # TODO: False, aby włączyć produkcję
 
+CORS_ALLOWED_ORIGINS = [
+    "https://localhost.com",
+    "http://localhost:5173",
+    "http://localhost:8080",
+    "http://127.0.0.1:9000",
+]
+
 ALLOWED_HOSTS = [
     '0.0.0.0',
     '127.0.0.1',
@@ -36,6 +43,7 @@ INSTALLED_ADDITIONAL_APPS = [
     'sslserver',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
 ]
 
 OWN_ADDITIONAL_APPS = [
@@ -67,6 +75,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'server.urls'
