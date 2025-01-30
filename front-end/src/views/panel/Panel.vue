@@ -11,7 +11,6 @@ const form = ref({
     <v-container>
       <v-row>
         <v-col>
-              <h1>Panel</h1>
               <router-view />
         </v-col>
       </v-row>

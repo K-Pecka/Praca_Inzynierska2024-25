@@ -4,11 +4,12 @@ import Form from "@/components/Form.vue";
 import Section from "@/components/Section.vue";
 import { Validator } from "@/utils/validator/validation";
 import { usePageStore } from "@/stores/pageContentStore";
-
+import { computed } from "vue";
+import ListLink from "@/components/ListLink.vue";
 const { getSectionTitle, errorMessage } = usePageStore();
 const sectionTitle = getSectionTitle("login");
 
-const validator = new Validator(errorMessage()).isEmpty().minLength(6).save();
+const validator = new Validator(errorMessage()).isEmpty().save();
 
 const inputStyle = {
   color: "var(--primary-color)",
@@ -30,7 +31,7 @@ const inputs = ref<Input[]>([
     label: "Podaj Email:",
     type: "text",
     placeholder: "Wprowadź email",
-    validation: validator.createNew().email(),
+    validation: validator,
     error: [],
   },
   {
@@ -42,33 +43,39 @@ const inputs = ref<Input[]>([
     error: [],
   },
 ]);
-
+const moreOption = [
+  {
+    label:"Zapomniałeś hasła?",
+    href:"/",
+  },{
+    label:"Nie masz konta? Zarejestruj się.",
+    href:"/register",
+  }
+];
 const formValues = ref<Record<string, string>>(
   Object.fromEntries(inputs.value.map((input) => [input.name, ""]))
 );
+const validateForm = computed(() => {
+  return inputs.value
+    .map((input) => {
+      const value = formValues.value[input.name];
+      input.error = input.validation ? input.validation.validate(value) : [];
+      return input.error.length === 0;
+    })
+    .every(Boolean);
+});
 
-const validateForm = () => {
-  inputs.value.forEach((input) => {
-    const value = formValues.value[input.name];
-    if (input.validation) {
-      const errorList = input.validation.validate(value);
-      input.error =  errorList;
-    } else {
-      input.error = [];
-    }
-  });
-
-  return inputs.value.every((input) => input.error.length === 0);
-};
-
-const handleSubmit = () => {
-  if (validateForm()) {
+const handleSubmit = (_: any, config: any) => {
+  if (config?.send && validateForm.value) {
     console.log("Wartości formularza:");
-    console.table(formValues.value); 
+    console.table(formValues.value);
   } else {
-    console.log("Wykryto błędy:");
-    const errorFields = inputs.value.map((input) => [input.name,...input.error]);
-    console.log(errorFields);
+    // console.log("Wykryto błędy:");
+    // const errorFields = inputs.value.map((input) => [
+    //   input.name,
+    //   ...input.error,
+    // ]);
+    // console.log(errorFields);
   }
 };
 </script>
@@ -84,8 +91,11 @@ const handleSubmit = () => {
         :inputs="inputs"
         :formValues="formValues"
         @submitForm="handleSubmit"
-      
-      />
+      >
+      <template #moreOption v-if="moreOption.length>0">
+        <ListLink :links="moreOption"/>
+      </template>
+      </Form>
     </template>
   </Section>
 </template>

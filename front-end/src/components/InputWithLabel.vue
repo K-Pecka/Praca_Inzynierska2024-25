@@ -8,7 +8,7 @@
       :type="inputData.type"
       :placeholder="inputData.placeholder"
       :value="modelValue"
-      @input="handleInput"
+      @blur="handleInput"
       class="input"
       :class="{ error: inputData.error && inputData.error.length > 0 }"
     />
@@ -19,7 +19,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue';
 
 interface InputData {
   name: string;
@@ -68,7 +67,7 @@ const handleInput = (event: Event) => {
 .input-wrapper {
   display: flex;
   flex-direction: column;
-  margin: 1.5rem auto;
+  margin: 1.5rem;
 }
 .input-label {
   margin-bottom: 0.5rem;
@@ -78,7 +77,10 @@ const handleInput = (event: Event) => {
   padding: 0.5rem;
   font-size: 1rem;
 }
-
+input{
+  padding:1rem 0.75rem;
+  border-radius: .5rem;
+}
 span {
   position: relative;
 }

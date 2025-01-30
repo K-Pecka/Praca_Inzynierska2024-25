@@ -22,7 +22,7 @@ import { Validator } from "@/utils/validator/validation";
 import { usePageStore } from "@/stores/pageContentStore";
 
 const { getSectionTitle, errorMessage } = usePageStore();
-const sectionTitle = getSectionTitle("login");
+const sectionTitle = getSectionTitle("register");
 
 const validator = new Validator({...errorMessage(),...{isEqual:"Hasła muszą być takie same"}}).isEmpty().minLength(6).save();
 
