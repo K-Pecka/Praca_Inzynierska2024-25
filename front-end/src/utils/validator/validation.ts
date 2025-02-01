@@ -1,12 +1,15 @@
-import { ValidationRule, ValidationRules } from './validationRules';
-import { defaultMessages } from './validationMessages';
+import { ValidationRule, ValidationRules } from "./validationRules";
+import { defaultMessages } from "./validationMessages";
 
 export class Validator {
   private rules: { [key: string]: ValidationRule } = {};
   private errorMessage: ValidationRules = {};
   private rulesBase: { [key: string]: ValidationRule } = {};
 
-  public constructor(errorMessage?: ValidationRules, rules?: { [key: string]: ValidationRule }) {
+  public constructor(
+    errorMessage?: ValidationRules,
+    rules?: { [key: string]: ValidationRule }
+  ) {
     if (rules) {
       this.rules = { ...rules };
     }
@@ -17,7 +20,7 @@ export class Validator {
   }
 
   private formatMessage(template: string, ...args: any[]): string {
-    return template.replace(/{(\d+)}/g, (_, index) => args[index] || '');
+    return template.replace(/{(\d+)}/g, (_, index) => args[index] || "");
   }
 
   private addRule(key: string, rule: ValidationRule): this {
@@ -26,13 +29,13 @@ export class Validator {
   }
 
   isEmpty(): this {
-    return this.addRule('isEmpty', (value: string) => {
-      return value.trim() === '' ? this.errorMessage.required : null;
+    return this.addRule("isEmpty", (value: string) => {
+      return value.trim() === "" ? this.errorMessage.required : null;
     });
   }
 
   minLength(length: number): this {
-    return this.addRule('minLength', (value: string) => {
+    return this.addRule("minLength", (value: string) => {
       return value.length < length
         ? this.formatMessage(this.errorMessage.minLength, length)
         : null;
@@ -40,7 +43,7 @@ export class Validator {
   }
 
   maxLength(length: number): this {
-    return this.addRule('maxLength', (value: string) => {
+    return this.addRule("maxLength", (value: string) => {
       return value.length > length
         ? this.formatMessage(this.errorMessage.maxLength, length)
         : null;
@@ -48,7 +51,7 @@ export class Validator {
   }
 
   equalLength(length: number): this {
-    return this.addRule('equalLength', (value: string) => {
+    return this.addRule("equalLength", (value: string) => {
       return value.length !== length
         ? this.formatMessage(this.errorMessage.equalLength, length)
         : null;
@@ -56,7 +59,7 @@ export class Validator {
   }
 
   forbiddenChars(chars: string[]): this {
-    return this.addRule('forbiddenChars', (value: string) => {
+    return this.addRule("forbiddenChars", (value: string) => {
       const found = chars.find((char) => value.includes(char));
       return found
         ? this.formatMessage(this.errorMessage.forbiddenChars, found)
@@ -65,26 +68,26 @@ export class Validator {
   }
 
   pattern(regex: RegExp): this {
-    return this.addRule('pattern', (value: string) => {
+    return this.addRule("pattern", (value: string) => {
       return !regex.test(value) ? this.errorMessage.pattern : null;
     });
   }
 
   email(): this {
-    return this.addRule('email', (value: string) => {
+    return this.addRule("email", (value: string) => {
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
       return !emailRegex.test(value) ? this.errorMessage.email : null;
     });
   }
 
   number(): this {
-    return this.addRule('number', (value: string) => {
+    return this.addRule("number", (value: string) => {
       return isNaN(Number(value)) ? this.errorMessage.number : null;
     });
   }
 
   startsWith(prefix: string): this {
-    return this.addRule('startsWith', (value: string) => {
+    return this.addRule("startsWith", (value: string) => {
       return !value.startsWith(prefix)
         ? this.formatMessage(this.errorMessage.startsWith, prefix)
         : null;
@@ -92,7 +95,7 @@ export class Validator {
   }
 
   endsWith(suffix: string): this {
-    return this.addRule('endsWith', (value: string) => {
+    return this.addRule("endsWith", (value: string) => {
       return !value.endsWith(suffix)
         ? this.formatMessage(this.errorMessage.endsWith, suffix)
         : null;
@@ -100,20 +103,26 @@ export class Validator {
   }
 
   isEqual(compareValue: string): this {
-    return this.addRule('isEqual', (value: string) => {
+    return this.addRule("isEqual", (value: string) => {
       return value !== compareValue ? this.errorMessage.isEqual : null;
     });
   }
 
   isInRange(min: number, max: number): this {
-    return this.addRule('isInRange', (value: string) => {
+    return this.addRule("isInRange", (value: string) => {
       const numericValue = Number(value);
       return numericValue < min || numericValue > max
         ? this.formatMessage(this.errorMessage.isInRange, min, max)
         : null;
     });
   }
-
+  doCheckbox(): this {
+    return this.addRule("doCheckbox", (value: string) => {
+      return !(value === "true" || value === "1" || value === "on")
+        ? this.errorMessage.doCheckbox
+        : null;
+    });
+  }
   addCustomRule(key: string, rule: ValidationRule, message: string): this {
     return this.addRule(key, (value: string) => {
       const error = rule(value);
@@ -136,4 +145,3 @@ export class Validator {
       .filter((error): error is string => error !== null);
   }
 }
-

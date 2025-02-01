@@ -32,7 +32,7 @@ export interface InputData {
   name: string;
   related?: string[];
   label: string;
-  placeholder: string;
+  placeholder?: string;
   validation: any;
   config?: Config;
   error: string[];

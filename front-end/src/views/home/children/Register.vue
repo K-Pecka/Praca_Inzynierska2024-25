@@ -24,7 +24,12 @@ import { usePageStore } from "@/stores/pageContentStore";
 const { getSectionTitle, errorMessage } = usePageStore();
 const sectionTitle = getSectionTitle("register");
 
-const validator = new Validator({...errorMessage(),...{isEqual:"Hasła muszą być takie same"}}).isEmpty().minLength(6).save();
+const validator = new Validator({
+  ...errorMessage(),
+  ...{ isEqual: "Hasła muszą być takie same" },
+})
+  .isEmpty()
+  .save();
 
 const inputStyle = {
   color: "var(--primary-color)",
@@ -39,9 +44,9 @@ interface Input {
   related?: string[];
   label: string;
   type: string;
-  placeholder: string;
+  placeholder?: string;
   validation: Validator;
-  config?: Config,
+  config?: Config;
   error: string[];
 }
 
@@ -52,7 +57,7 @@ const inputs = ref<Input[]>([
     type: "text",
     placeholder: "Wprowadź imie",
     validation: validator.createNew().minLength(3),
-    config:{required:true},
+    config: { required: true },
     error: [],
   },
   {
@@ -61,7 +66,7 @@ const inputs = ref<Input[]>([
     type: "text",
     placeholder: "Wprowadź nazwisko",
     validation: validator.createNew().minLength(3),
-    config:{required:true},
+    config: { required: true },
     error: [],
   },
   {
@@ -70,34 +75,40 @@ const inputs = ref<Input[]>([
     type: "email",
     placeholder: "Wprowadź e-mail",
     validation: validator.createNew().email(),
-    config:{required:true},
+    config: { required: true },
     error: [],
   },
   {
     name: "pass_1",
-    related:["pass_2"],
+    related: ["pass_2"],
     label: "Podaj hasło:",
     type: "text",
     placeholder: "Wprowadź hasło",
     validation: validator,
-    config:{required:true},
+    config: { required: true },
     error: [],
   },
   {
     name: "pass_2",
-    related:["pass_1"],
+    related: ["pass_1"],
     label: "Podaj ponownie hasło:",
     type: "text",
     placeholder: "Wprowadź hasło",
     validation: validator,
-    config:{required:true},
+    config: { required: true },
+    error: [],
+  },
+  {
+    name: "checkbox",
+    label: "Zapoznałem się z regulamine.",
+    type:"checkbox",
+    validation: validator,
     error: [],
   },
 ]);
 const formValues = ref<Record<string, string>>(
   Object.fromEntries(inputs.value.map((input) => [input.name, ""]))
 );
-
 
 const validateForm = computed(() => {
   return inputs.value

@@ -4,9 +4,11 @@ import Form from "@/components/Form.vue";
 import Section from "@/components/Section.vue";
 import { Validator } from "@/utils/validator/validation";
 import { usePageStore } from "@/stores/pageContentStore";
+import { useUserStore } from "@/stores/userStore";
 import { computed } from "vue";
 import ListLink from "@/components/ListLink.vue";
 const { getSectionTitle, errorMessage } = usePageStore();
+const { login } = useUserStore();
 const sectionTitle = getSectionTitle("login");
 
 const validator = new Validator(errorMessage()).isEmpty().save();
@@ -45,12 +47,13 @@ const inputs = ref<Input[]>([
 ]);
 const moreOption = [
   {
-    label:"Zapomniałeś hasła?",
-    href:"/",
-  },{
-    label:"Nie masz konta? Zarejestruj się.",
-    href:"/register",
-  }
+    label: "Zapomniałeś hasła?",
+    href: "/",
+  },
+  {
+    label: "Nie masz konta? Zarejestruj się.",
+    href: "/register",
+  },
 ];
 const formValues = ref<Record<string, string>>(
   Object.fromEntries(inputs.value.map((input) => [input.name, ""]))
@@ -67,6 +70,7 @@ const validateForm = computed(() => {
 
 const handleSubmit = (_: any, config: any) => {
   if (config?.send && validateForm.value) {
+    login(formValues.value);
     console.log("Wartości formularza:");
     console.table(formValues.value);
   } else {
@@ -92,9 +96,9 @@ const handleSubmit = (_: any, config: any) => {
         :formValues="formValues"
         @submitForm="handleSubmit"
       >
-      <template #moreOption v-if="moreOption.length>0">
-        <ListLink :links="moreOption"/>
-      </template>
+        <template #moreOption v-if="moreOption.length > 0">
+          <ListLink :links="moreOption" />
+        </template>
       </Form>
     </template>
   </Section>

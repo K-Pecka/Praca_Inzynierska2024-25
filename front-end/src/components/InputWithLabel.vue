@@ -24,7 +24,7 @@ interface InputData {
   name: string;
   label: string;
   type?: string;
-  placeholder: string;
+  placeholder?: string;
   config?: Config;
   error?: string[];
 }

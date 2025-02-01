@@ -6,13 +6,13 @@ import Landing from '@/views/home/children/Landing.vue';
 import LogIn from '@/views/home/children/LogIn.vue';
 import Register from '@/views/home/children/Register.vue';
 import RoleSelection from "@/views/panel/children/RoleSelection.vue";
-
+import { useUserStore } from '@/stores/userStore';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
     component: Home,
-    meta: { title: 'Home' },
+    meta: { title: 'Home'},
     children: [
       {
         path: '',
@@ -35,7 +35,7 @@ const routes: RouteRecordRaw[] = [
     path: '/panel',
     name: 'panel',
     component: Panel,
-    meta: { title: 'Panel' },
+    meta: { title: 'Panel',requiresAuth: true },
     children: [
       {
         path: '',
@@ -54,6 +54,14 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const siteName = import.meta.env.VITE_APP_SITE_TITLE;
   document.title = to.meta.title ? `${to.meta.title} - ${siteName}` : siteName;
-  next();
+
+  const {isLogin} = useUserStore();
+
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  if (requiresAuth && !isLogin()) {
+    next({ name: 'logIn' });
+  } else {
+    next();
+  }
 });
 export default router;

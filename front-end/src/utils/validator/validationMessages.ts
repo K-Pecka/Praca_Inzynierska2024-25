@@ -14,4 +14,5 @@ export const defaultMessages: ValidationRules = {
   endsWith: 'Field must end with {0}',
   isEqual: 'Fields must be equal',
   isInRange: 'Field must be between {0} and {1}',
+  doCheckbox: 'You must check this box.'
 };
