@@ -8,7 +8,7 @@ from .serializers import ItinerarySerializer, ItineraryActivitySerializer, Itine
 
 
 class ItineraryCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator]
+    permission_classes = [IsAuthenticated]
     serializer_class = ItineraryCreateSerializer
 
 

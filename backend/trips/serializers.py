@@ -87,12 +87,12 @@ class BudgetSerializer(serializers.ModelSerializer):
 # Expense
 #################################################################
 class ExpenseSerializer(serializers.ModelSerializer):
-    trip = serializers.PrimaryKeyRelatedField(required=True, queryset=Trip.objects.all())
+    budget = serializers.PrimaryKeyRelatedField(required=True, queryset=Budget.objects.all())
     user = serializers.PrimaryKeyRelatedField(required=True, queryset=UserProfile.objects.all())
 
     class Meta:
         model = Expense
         fields = [
-            'id', 'amount', 'date', 'description', 'trip', 'user', 'type'
+            'id', 'amount', 'date', 'description', 'budget', 'user', 'type'
         ]
         read_only_fields = ['id']

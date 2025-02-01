@@ -97,12 +97,12 @@ class TicketDestroyAPIView(DestroyAPIView):
 
 
 class BudgetCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator]
+    permission_classes = [IsAuthenticated]
     serializer_class = BudgetSerializer
 
 
 class BudgetRetrieveAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator, IsTripParticipant]
+    permission_classes = [IsAuthenticated]
     serializer_class = BudgetSerializer
 
     def get_object(self):
@@ -113,7 +113,7 @@ class BudgetRetrieveAPIView(RetrieveAPIView):
 
 
 class BudgetUpdateAPIView(UpdateAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator]
+    permission_classes = [IsAuthenticated]
     serializer_class = BudgetSerializer
 
     def get_object(self):
@@ -124,7 +124,7 @@ class BudgetUpdateAPIView(UpdateAPIView):
 
 
 class BudgetDestroyAPIView(DestroyAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator]
+    permission_classes = [IsAuthenticated]
     serializer_class = BudgetSerializer
 
     def get_object(self):
@@ -135,12 +135,12 @@ class BudgetDestroyAPIView(DestroyAPIView):
 
 
 class ExpenseCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator, IsTripParticipant]
+    permission_classes = [IsAuthenticated]
     serializer_class = ExpenseSerializer
 
 
 class ExpenseRetrieveAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator, IsTripParticipant]
+    permission_classes = [IsAuthenticated]
     serializer_class = ExpenseSerializer
 
     def get_object(self):
@@ -151,7 +151,7 @@ class ExpenseRetrieveAPIView(RetrieveAPIView):
 
 
 class ExpenseListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator, IsTripParticipant]
+    permission_classes = [IsAuthenticated]
     serializer_class = ExpenseSerializer
 
     def get_queryset(self):
@@ -159,7 +159,7 @@ class ExpenseListAPIView(ListAPIView):
 
 
 class ExpenseUpdateAPIView(UpdateAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator, IsTripParticipant]
+    permission_classes = [IsAuthenticated]
     serializer_class = ExpenseSerializer
 
     def get_object(self):
@@ -170,7 +170,7 @@ class ExpenseUpdateAPIView(UpdateAPIView):
 
 
 class ExpenseDestroyAPIView(DestroyAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator, IsTripParticipant]
+    permission_classes = [IsAuthenticated]
     serializer_class = ExpenseSerializer
 
     def get_object(self):

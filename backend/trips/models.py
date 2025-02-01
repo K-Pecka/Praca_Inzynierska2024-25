@@ -121,9 +121,10 @@ class Budget(BaseModel):
 
 class Expense(BaseModel):
     EXPENSE_CHOICES = [
-        ("test1", "test1"),
-        ("test2", "test2"),
-        ("test2", "test2"),
+        ("food", "Jedzenie"),
+        ("transport", "Transport"),
+        ("accommodation", "Nocleg"),
+        ("other", "Inne"),
     ]
 
     amount = models.DecimalField(
@@ -143,12 +144,12 @@ class Expense(BaseModel):
         verbose_name=_("Opis"),
         help_text=_("Opis wydatku (opcjonalne)")
     )
-    trip = models.ForeignKey(
-        Trip,
+    budget = models.ForeignKey(
+        Budget,
         on_delete=models.CASCADE,
         related_name="expenses",
-        verbose_name=_("Wycieczka"),
-        help_text=_("Powiązana wycieczka")
+        verbose_name=_("budzet"),
+        help_text=_("Powiązany budzet")
     )
     user = models.ForeignKey(
         UserProfile,
