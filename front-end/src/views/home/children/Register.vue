@@ -28,7 +28,6 @@ const validator = new Validator({
   ...errorMessage(),
   ...{ isEqual: "Hasła muszą być takie same" },
 })
-  .isEmpty()
   .save();
 
 const inputStyle = {
@@ -97,14 +96,7 @@ const inputs = ref<Input[]>([
     validation: validator,
     config: { required: true },
     error: [],
-  },
-  {
-    name: "checkbox",
-    label: "Zapoznałem się z regulamine.",
-    type:"checkbox",
-    validation: validator,
-    error: [],
-  },
+  }
 ]);
 const formValues = ref<Record<string, string>>(
   Object.fromEntries(inputs.value.map((input) => [input.name, ""]))

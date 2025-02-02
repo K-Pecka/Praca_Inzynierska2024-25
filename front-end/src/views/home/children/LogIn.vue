@@ -7,6 +7,8 @@ import { usePageStore } from "@/stores/pageContentStore";
 import { useUserStore } from "@/stores/userStore";
 import { computed } from "vue";
 import ListLink from "@/components/ListLink.vue";
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const { getSectionTitle, errorMessage } = usePageStore();
 const { login } = useUserStore();
 const sectionTitle = getSectionTitle("login");
@@ -26,7 +28,7 @@ interface Input {
   validation: Validator;
   error: string[];
 }
-
+const errorShow=ref(false);
 const inputs = ref<Input[]>([
   {
     name: "email",
@@ -68,9 +70,14 @@ const validateForm = computed(() => {
     .every(Boolean);
 });
 
-const handleSubmit = (_: any, config: any) => {
+const handleSubmit = async (_: any, config: any) => {
   if (config?.send && validateForm.value) {
-    login(formValues.value);
+    if(await login(formValues.value) == true)
+    { 
+      router.push('/panel');
+    }else{
+      errorShow.value=true;
+    }
     console.log("Wartości formularza:");
     console.table(formValues.value);
   } else {
@@ -99,7 +106,17 @@ const handleSubmit = (_: any, config: any) => {
         <template #moreOption v-if="moreOption.length > 0">
           <ListLink :links="moreOption" />
         </template>
+        
       </Form>
+      <span v-if="errorShow">Błędny login lub hasło.</span>
     </template>
   </Section>
 </template>
+<style lang="scss" scoped>
+span{
+  display: block;
+  margin: auto;
+  text-align: center;
+  color:red;
+}
+</style>

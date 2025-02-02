@@ -51,7 +51,6 @@ const handleFieldUpdate = (name: string, value: string) => {
 
   const input = props.inputs.find((input) => input.name === name);
   if (input) {
-    console.log(">>========================");
     input.error = input.validation.validate(value);
     input.related?.forEach((el) => {
       let related = props.inputs.find((input) => input.name === el);
@@ -62,8 +61,6 @@ const handleFieldUpdate = (name: string, value: string) => {
           .validate(props.formValues[el]);
       }
     });
-
-    console.log("========================<<");
   }
   emit("submitForm", props.formValues);
 };

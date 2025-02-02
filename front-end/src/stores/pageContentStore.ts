@@ -8,7 +8,7 @@ export const usePageStore = defineStore("page", () => {
   ];
 
   const SiteName = () => import.meta.env.VITE_APP_SITE_NAME || "Plannder";
-  const isLogin = () => !!localStorage.getItem("user") || false;
+  const isLogin = () => !!localStorage.getItem("jwt") || false;
 
   const navLinks = () => {
     let baseList = [
@@ -19,7 +19,7 @@ export const usePageStore = defineStore("page", () => {
     return [
       ...baseList,
       ...(isLogin()
-        ? [{ label: "Panel", href: "/panel", active: true }]
+        ? [{ label: "wyloguj się", href: "/logOut" },{label: "Panel", href: "/panel", active: true }]
         : [
             { label: "Zaloguj się", href: "/logIn" },
             { label: "Zarejestruj się", href: "/register", active: true },

@@ -1,49 +1,57 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import type { RouteRecordRaw } from 'vue-router'; 
-import Home from '@/views/home/Home.vue';
-import Panel from '@/views/panel/Panel.vue';
-import Landing from '@/views/home/children/Landing.vue';
-import LogIn from '@/views/home/children/LogIn.vue';
-import Register from '@/views/home/children/Register.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
+import Home from "@/views/home/Home.vue";
+import Panel from "@/views/panel/Panel.vue";
+import Landing from "@/views/home/children/Landing.vue";
+import LogIn from "@/views/home/children/LogIn.vue";
+import Register from "@/views/home/children/Register.vue";
 import RoleSelection from "@/views/panel/children/RoleSelection.vue";
-import { useUserStore } from '@/stores/userStore';
+import LogOut from "@/views/logOut/LogOut.vue";
+import { useUserStore } from "@/stores/userStore";
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
-    name: 'home',
+    path:"/logOut",
+    name:"logOut",
+    component:LogOut,
+  },
+  {
+    path: "/",
+    name: "home",
     component: Home,
-    meta: { title: 'Home'},
+    meta: { title: "Home" },
     children: [
       {
-        path: '',
-        name: 'landing',
+        path: "",
+        name: "landing",
         component: Landing,
       },
       {
-        path: 'logIn',
-        name: 'logIn',
+        path: "logIn",
+        name: "logIn",
         component: LogIn,
+        meta: { goBack: true },
       },
       {
-        path: 'register',
-        name: 'register',
+        path: "register",
+        name: "register",
         component: Register,
+        meta: { goBack: true },
       },
     ],
   },
   {
-    path: '/panel',
-    name: 'panel',
+    path: "/panel",
+    name: "panel",
     component: Panel,
-    meta: { title: 'Panel',requiresAuth: true },
+    meta: { title: "Panel", requiresAuth: true },
     children: [
       {
-        path: '',
-        name: 'roleSelection',
+        path: "",
+        name: "roleSelection",
         component: RoleSelection,
       },
     ],
-  }
+  },
 ];
 
 const router = createRouter({
@@ -51,17 +59,22 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const siteName = import.meta.env.VITE_APP_SITE_TITLE;
   document.title = to.meta.title ? `${to.meta.title} - ${siteName}` : siteName;
 
-  const {isLogin} = useUserStore();
+  const { isLogin } = useUserStore();
 
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  if (requiresAuth && !isLogin()) {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const goBack = to.matched.some((record) => record.meta.goBack);
+
+  if (requiresAuth && !(await isLogin())) {
     next({ name: 'logIn' });
+  } else if (goBack && (await isLogin())) {
+    next(from.name ? { name: from.name } : { name: "panel" });
   } else {
     next();
   }
 });
+
 export default router;

@@ -57,6 +57,12 @@ const handleInput = (event: Event) => {
 
 <style scoped lang="scss">
 @use "@/assets/style" as *;
+.input-wrapper > input[type='checkbox']{
+  flex-direction: row-reverse;
+}
+input[type="checkbox"]{
+  margin:1rem;
+}
 .error{
   border: 1px solid red;
 }

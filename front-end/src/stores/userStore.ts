@@ -16,9 +16,8 @@ export const useUserStore = defineStore("user", () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            //"Bearer":token
+            "Bearer":tokenRefresh,
           },
-          body: JSON.stringify({ refresh: tokenRefresh }),
         }
       );
       if (!response.ok) {
@@ -26,6 +25,7 @@ export const useUserStore = defineStore("user", () => {
         throw new Error("refresh error");
       }
       const data: TOKEN = await response.json();
+      console.log(data);
       localStorage.setItem("jwt", JSON.stringify(data));
       return true;
     } catch (error) {
@@ -61,14 +61,14 @@ export const useUserStore = defineStore("user", () => {
       return false;
     }
   };
-  const isLogin = () => {
+  const isLogin = async () => {
     let token: TOKEN | null = !localStorage.getItem("jwt")
-      ? null: localStorage.getItem("jwt");
+      ? null : JSON.parse(localStorage.getItem("jwt") as string) as TOKEN;
       console.log(token);
     if (token) {
-      return getToken(token.refresh);
+      return true;//getToken(token.refresh);
     }
-    return true;
+    return false;
   };
   const logout = () => {
     token.value = null;
