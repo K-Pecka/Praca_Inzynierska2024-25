@@ -7,6 +7,8 @@ import LogIn from "@/views/home/children/LogIn.vue";
 import Register from "@/views/home/children/Register.vue";
 import RoleSelection from "@/views/panel/children/RoleSelection.vue";
 import LogOut from "@/views/logOut/LogOut.vue";
+import Trip from "@/views/panel/children/Trip.vue";
+
 import { useUserStore } from "@/stores/userStore";
 const routes: RouteRecordRaw[] = [
   {
@@ -50,6 +52,11 @@ const routes: RouteRecordRaw[] = [
         name: "roleSelection",
         component: RoleSelection,
       },
+      {
+        path: "/trip",
+        name: "trip",
+        component: Trip,
+      },
     ],
   },
 ];
@@ -71,7 +78,7 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth && !(await isLogin())) {
     next({ name: 'logIn' });
   } else if (goBack && (await isLogin())) {
-    next(from.name ? { name: from.name } : { name: "panel" });
+    next(from.name ? { name: from.name } : { name: "landing" });
   } else {
     next();
   }
