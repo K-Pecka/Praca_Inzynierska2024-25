@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import {panelContentStore} from "@/stores/panelContentStore";
+import {usePanelContentStore} from "@/stores/panelContentStore";
 import RoleButton from "@/components/trip/RoleButton.vue";
 
-const {roleSelection} = panelContentStore;
+const panelContentStore = usePanelContentStore();
 
+const { roleSelection } = panelContentStore;
 </script>
 
 <template>

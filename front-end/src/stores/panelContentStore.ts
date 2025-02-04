@@ -1,13 +1,13 @@
-import {reactive} from "vue";
+import { defineStore } from "pinia";
 
-export const panelContentStore = reactive({
-    roleSelection: {
+export const usePanelContentStore = defineStore("panelContent", () => {
+    const roleSelection = {
         title: "Witaj w aplikacji Plannder",
         subtitle: "W jakiej roli planujesz zorganizować podróż?",
         roles: [
             {
                 title: "Turysta",
-                description: "Planowanie indywidualnego planu podróży dla siebie i rodziny",
+                description: "Planowanie indywidualnych podróży dla siebie i rodziny",
                 image: "./picture/tourist.svg",
             },
             {
@@ -16,5 +16,14 @@ export const panelContentStore = reactive({
                 image: "./picture/guide.svg",
             },
         ],
-    },
+    };
+    const navbar = {
+        accountIcon: "./picture/myAccount.svg",
+    };
+
+
+    return {
+        roleSelection,
+        navbar,
+    };
 });
