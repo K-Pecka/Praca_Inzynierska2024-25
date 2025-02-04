@@ -53,7 +53,7 @@ const routes: RouteRecordRaw[] = [
         component: RoleSelection,
       },
       {
-        path: "/trip",
+        path: "trip",
         name: "trip",
         component: Trip,
       },

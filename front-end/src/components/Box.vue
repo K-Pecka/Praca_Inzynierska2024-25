@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineProps, ref, onMounted, watchEffect } from 'vue';
+import { ref, onMounted} from 'vue';
 
 interface Box {
   title: string;
