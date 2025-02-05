@@ -1,92 +1,41 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+
 import Form from "@/components/Form.vue";
+import ListLink from "@/components/ListLink.vue";
 import Section from "@/components/Section.vue";
-import { Validator } from "@/utils/validator/validation";
+
 import { usePageStore } from "@/stores/pageContentStore";
 import { useUserStore } from "@/stores/userStore";
-import { computed } from "vue";
-import ListLink from "@/components/ListLink.vue";
-import { useRouter } from 'vue-router';
+import { useFormStore } from "@/stores/formStore";
+
+import { Input } from "@/type/interface";
+
 const router = useRouter();
-const { getSectionTitle, errorMessage } = usePageStore();
+
+const { getSectionTitle } = usePageStore();
 const { login } = useUserStore();
+const { getLoginInput, validateForm,getMoreOptions } = useFormStore();
+
 const sectionTitle = getSectionTitle("login");
 
-const validator = new Validator(errorMessage()).isEmpty().save();
+const inputs = ref<Input[]>(getLoginInput());
 
-const inputStyle = {
-  color: "var(--primary-color)",
-  fontSize: "2rem",
-};
-
-interface Input {
-  name: string;
-  label: string;
-  type: string;
-  placeholder: string;
-  validation: Validator;
-  error: string[];
-}
-const errorShow=ref(false);
-const inputs = ref<Input[]>([
-  {
-    name: "email",
-    label: "Podaj Email:",
-    type: "text",
-    placeholder: "Wprowadź email",
-    validation: validator,
-    error: [],
-  },
-  {
-    name: "password",
-    label: "Podaj Hasło:",
-    type: "password",
-    placeholder: "Wprowadź hasło",
-    validation: validator,
-    error: [],
-  },
-]);
-const moreOption = [
-  {
-    label: "Zapomniałeś hasła?",
-    href: "/",
-  },
-  {
-    label: "Nie masz konta? Zarejestruj się.",
-    href: "/register",
-  },
-];
 const formValues = ref<Record<string, string>>(
   Object.fromEntries(inputs.value.map((input) => [input.name, ""]))
 );
-const validateForm = computed(() => {
-  return inputs.value
-    .map((input) => {
-      const value = formValues.value[input.name];
-      input.error = input.validation ? input.validation.validate(value) : [];
-      return input.error.length === 0;
-    })
-    .every(Boolean);
-});
+
+const errorShow = ref(false);
 
 const handleSubmit = async (_: any, config: any) => {
-  if (config?.send && validateForm.value) {
-    if(await login(formValues.value) == true)
-    { 
-      router.push('/panel');
-    }else{
-      errorShow.value=true;
+  if (config?.send && validateForm(inputs.value, formValues.value)) {
+    const isLoggedIn = await login(formValues.value);
+    if (isLoggedIn) {
+      router.push("/panel");
+    } else {
+      errorShow.value = true;
     }
-    console.log("Wartości formularza:");
-    console.table(formValues.value);
-  } else {
-    // console.log("Wykryto błędy:");
-    // const errorFields = inputs.value.map((input) => [
-    //   input.name,
-    //   ...input.error,
-    // ]);
-    // console.log(errorFields);
   }
 };
 </script>
@@ -94,7 +43,7 @@ const handleSubmit = async (_: any, config: any) => {
 <template>
   <Section class="logIn">
     <template #title>
-      <h1 :style="inputStyle">{{ sectionTitle }}</h1>
+      <h1>{{ sectionTitle }}</h1>
     </template>
     <template #content>
       <Form
@@ -103,20 +52,25 @@ const handleSubmit = async (_: any, config: any) => {
         :formValues="formValues"
         @submitForm="handleSubmit"
       >
-        <template #moreOption v-if="moreOption.length > 0">
-          <ListLink :links="moreOption" />
+        <template #moreOption v-if="getMoreOptions().length > 0">
+          <ListLink :links="getMoreOptions()" />
         </template>
-        
       </Form>
       <span v-if="errorShow">Błędny login lub hasło.</span>
     </template>
   </Section>
 </template>
+
 <style lang="scss" scoped>
-span{
+h1 {
+  color: var(--primary-color);
+  font-size: 2rem;
+}
+
+span {
   display: block;
   margin: auto;
   text-align: center;
-  color:red;
+  color: red;
 }
 </style>
