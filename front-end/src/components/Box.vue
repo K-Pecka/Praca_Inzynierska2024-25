@@ -3,7 +3,7 @@ import { ref, onMounted} from 'vue';
 
 interface Box {
   title: string;
-  content: string | string[];
+  content: () => string | string[];
   set: {
     size: {
       sm?: { col: number, row: number };
@@ -105,21 +105,20 @@ const getGridRows = () => {
       {{ props.title }}
     </v-card-title>
     <v-card-text>
-      <template v-if="Array.isArray(props.content)">
+      <template v-if="Array.isArray(props.content())">
         <v-list>
-          <v-list-item v-for="(item, index) in props.content" :key="index">
-            <v-list-item-content>
-              {{ item }}
-            </v-list-item-content>
+          <v-list-item v-for="(item, index) in props.content()" :key="index">
+            <v-list-item-content>{{ item }}</v-list-item-content>
           </v-list-item>
         </v-list>
       </template>
       <template v-else>
-        {{ props.content }}
+        {{ props.content() }}
       </template>
     </v-card-text>
   </v-card>
 </template>
+
 
 <style scoped>
 .v-card {

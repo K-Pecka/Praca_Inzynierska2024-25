@@ -8,17 +8,17 @@ export const usePanelContentStore = defineStore("panelContent", () => {
             {
                 title: "Turysta",
                 description: "Planowanie indywidualnych podróży dla siebie i rodziny",
-                image: "./picture/tourist.svg",
+                image: "/picture/tourist.svg",
             },
             {
                 title: "Przewodnik",
                 description: "Tworzenie i zarządzanie wycieczkami dla grup turystycznych",
-                image: "./picture/guide.svg",
+                image: "/picture/guide.svg",
             },
         ],
     };
     const navbar = {
-        accountIcon: "./picture/myAccount.svg",
+        accountIcon: "/picture/myAccount.svg",
     };
 
 

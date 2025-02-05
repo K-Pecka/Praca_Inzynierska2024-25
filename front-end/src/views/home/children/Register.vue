@@ -83,7 +83,7 @@ const inputs = ref<Input[]>([
     label: "Podaj hasło:",
     type: "text",
     placeholder: "Wprowadź hasło",
-    validation: validator,
+    validation: validator.isEmpty(),
     config: { required: true },
     error: [],
   },
@@ -93,7 +93,7 @@ const inputs = ref<Input[]>([
     label: "Podaj ponownie hasło:",
     type: "text",
     placeholder: "Wprowadź hasło",
-    validation: validator,
+    validation: validator.isEmpty(),
     config: { required: true },
     error: [],
   }

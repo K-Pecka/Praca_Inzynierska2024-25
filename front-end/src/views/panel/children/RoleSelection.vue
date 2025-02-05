@@ -2,9 +2,8 @@
 import {usePanelContentStore} from "@/stores/panelContentStore";
 import RoleButton from "@/components/trip/RoleButton.vue";
 
-const panelContentStore = usePanelContentStore();
+const { roleSelection } = usePanelContentStore();
 
-const { roleSelection } = panelContentStore;
 </script>
 
 <template>

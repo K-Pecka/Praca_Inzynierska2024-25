@@ -1,102 +1,56 @@
 <script lang="ts" setup>
-import Box from "@/components/Box.vue"
+import Box from "@/components/Box.vue";
+
+const getTripTime = () => "12.12.2025 - 12.01.2026";
+const getBudget = () => "12000 PLN";
+const getParticipantCount = () => "0 Uczestników";
+const getActivityCount = () => "28 Aktywności";
+const getUpcomingActivities = () => [
+  "18:30 - 19:30 Zbieranie truskawek",
+  "20:00 - 23:00 Impreza",
+];
+
 const boxes = [
   {
     title: "Czas trwania",
-    content: "12.12.2025 - 12.01.2026",
+    content: getTripTime,
     set: {
       order: 1,
-      size: {
-        sm: { col: 12, row: 1 },
-        md: { col: 6, row: 1 },
-        lg: { col: 3, row: 1 },
-      },
+      size: { sm: { col: 12, row: 1 }, md: { col: 6, row: 1 }, lg: { col: 3, row: 1 } },
     },
   },
   {
     title: "Budżet",
-    content: "12000 PLN",
+    content: getBudget,
     set: {
       order: 2,
-      size: {
-        sm: { col: 12, row: 1 },
-        md: { col: 6, row: 1 },
-        lg: { col: 3, row: 1 },
-      },
+      size: { sm: { col: 12, row: 1 }, md: { col: 6, row: 1 }, lg: { col: 3, row: 1 } },
     },
-  },,
+  },
   {
     title: "Uczestnicy",
-    content: "0 Uczestników",
+    content: getParticipantCount,
     set: {
       order: 3,
-      size: {
-        sm: { col: 12, row: 1 },
-        md: { col: 6, row: 1 },
-        lg: { col: 3, row: 1 },
-      },
+      size: { sm: { col: 12, row: 1 }, md: { col: 6, row: 1 }, lg: { col: 3, row: 1 } },
     },
   },
   {
     title: "Aktywności",
-    content: "28 Aktywności",
+    content: getActivityCount,
     set: {
       order: 4,
-      size: {
-        sm: { col: 12, row: 1 },
-        md: { col: 6, row: 1 },
-        lg: { col: 3, row: 1 },
-      },
+      size: { sm: { col: 12, row: 1 }, md: { col: 6, row: 1 }, lg: { col: 3, row: 1 } },
     },
   },
   {
-    title: "Nadchdzące aktywności",
-    content: ["18:30 - 19:30 Zbieranie trukawek","20:00 - 23:00 impreza"],
+    title: "Nadchodzące aktywności",
+    content: getUpcomingActivities,
     set: {
       order: 5,
-      size: {
-        sm: { col: 12, row: 2 },
-        md: { col: 6, row: 2 },
-        lg: { col: 6, row: 2 },
-      },
+      size: { sm: { col: 12, row: 2 }, md: { col: 6, row: 2 }, lg: { col: 6, row: 2 } },
     },
   },
-  {
-    title: "Nadchdzące aktywności",
-    content: ["18:30 - 19:30 Zbieranie trukawek","20:00 - 23:00 impreza"],
-    set: {
-      order: 5,
-      size: {
-        sm: { col: 12, row: 2 },
-        md: { col: 6, row: 2 },
-        lg: { col: 6, row: 2 },
-      },
-    },
-  },
-  {
-    title: "Nadchdzące aktywności",
-    content: ["18:30 - 19:30 Zbieranie trukawek","20:00 - 23:00 impreza"],
-    set: {
-      order: 5,
-      size: {
-        sm: { col: 12, row: 2 },
-        md: { col: 6, row: 2 },
-        lg: { col: 6, row: 2 },
-      },
-    },
-  },
-  {
-    title: "Nadchdzące aktywności",
-    content: ["18:30 - 19:30 Zbieranie trukawek","20:00 - 23:00 impreza"],
-    set: {
-      order: 5,
-      size: {
-        sm: { col: 12, row: 2 },
-        md: { col: 6, row: 2 },
-        lg: { col: 6, row: 2 },
-      },
-    },
-  }
 ];
 </script>
 

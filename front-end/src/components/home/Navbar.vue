@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import router from "@/router";
+import { ref } from "vue";
 
 interface Link {
   label: string;
@@ -14,7 +15,7 @@ defineProps<{ links: Link[] }>();
 const menuOpen = ref(false);
 
 const toggleMenu = () => {
-  document.documentElement.style.overflow = menuOpen.value ? 'auto' : 'hidden';
+  document.documentElement.style.overflow = menuOpen.value ? "auto" : "hidden";
   menuOpen.value = !menuOpen.value;
 };
 </script>
@@ -22,22 +23,27 @@ const toggleMenu = () => {
 <template>
   <nav class="navbar">
     <div class="navbar__container">
-      <div class="navbar__logo">
+      
+      <router-link to="/" class="navbar__logo">
         <slot name="logo">
           <h1>Logo</h1>
         </slot>
-      </div>
+      </router-link>
 
-      <div class="navbar__hamburger" @click="toggleMenu">
-        &#9776;
-      </div>
+      <div class="navbar__hamburger" @click="toggleMenu">&#9776;</div>
 
       <ul class="navbar__links" :class="{ open: menuOpen }">
         <li
           v-for="(link, index) in links"
           :key="index"
           class="navbar__item"
-          :class="[...(Array.isArray(link.className) ? link.className : link.className ? [link.className] : [])]"
+          :class="[
+            ...(Array.isArray(link.className)
+              ? link.className
+              : link.className
+              ? [link.className]
+              : []),
+          ]"
         >
           <a
             :href="link.href"
@@ -58,13 +64,15 @@ const toggleMenu = () => {
               v-for="(link, index) in links"
               :key="index"
               class="navbar__item"
-              :class="[...(Array.isArray(link.className) ? link.className : link.className ? [link.className] : [])]"
+              :class="[
+                ...(Array.isArray(link.className)
+                  ? link.className
+                  : link.className
+                  ? [link.className]
+                  : []),
+              ]"
             >
-              <a
-                :href="link.href"
-                class="navbar__link"
-                :style="link.style"
-              >
+              <a :href="link.href" class="navbar__link" :style="link.style">
                 {{ link.label }}
               </a>
             </div>
@@ -76,11 +84,14 @@ const toggleMenu = () => {
 </template>
 <style lang="scss" scoped>
 @use "@/assets/style" as *;
+a {
+  text-decoration: none;
+}
 .navbar__logo {
-    @include font-large;
-    @include gradient-text;
-    font-size: 2rem;
-    padding: 1rem;
+  @include font-large;
+  @include gradient-text;
+  font-size: 2rem;
+  padding: 1rem;
 }
 </style>
 <style>
