@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 import Form from "@/components/Form.vue";
@@ -9,27 +9,28 @@ import Section from "@/components/Section.vue";
 import { usePageStore } from "@/stores/pageContentStore";
 import { useUserStore } from "@/stores/userStore";
 import { useFormStore } from "@/stores/formStore";
-
-import { Input } from "@/type/interface";
+import { useMessageStore } from "@/stores/messageStore";
+import {FormType,Input} from "@/type/interface";
 
 const router = useRouter();
 
 const { getSectionTitle } = usePageStore();
 const { login } = useUserStore();
-const { getLoginInput, validateForm,getMoreOptions } = useFormStore();
+const { getFormInputs, validateForm, getMoreOptions } = useFormStore();
+const { loginError } = useMessageStore();
 
-const sectionTitle = getSectionTitle("login");
-
-const inputs = ref<Input[]>(getLoginInput());
+const sectionTitle = getSectionTitle(FormType.LOGIN);
+const inputs = ref<Input[]>(getFormInputs(FormType.LOGIN));
 
 const formValues = ref<Record<string, string>>(
-  Object.fromEntries(inputs.value.map((input) => [input.name, ""]))
+  Object.fromEntries(inputs.value.map((input: { name: string; }) => [input.name, ""]))
 );
 
 const errorShow = ref(false);
+const moreOptions = ref(getMoreOptions());
 
 const handleSubmit = async (_: any, config: any) => {
-  if (config?.send && validateForm(inputs.value, formValues.value)) {
+  if (config?.send && validateForm(FormType.LOGIN, formValues.value)) {
     const isLoggedIn = await login(formValues.value);
     if (isLoggedIn) {
       router.push("/panel");
@@ -52,11 +53,11 @@ const handleSubmit = async (_: any, config: any) => {
         :formValues="formValues"
         @submitForm="handleSubmit"
       >
-        <template #moreOption v-if="getMoreOptions().length > 0">
-          <ListLink :links="getMoreOptions()" />
+        <template #moreOption v-if="moreOptions.length > 0">
+          <ListLink :links="moreOptions" />
         </template>
       </Form>
-      <span v-if="errorShow">Błędny login lub hasło.</span>
+      <span v-if="errorShow">{{ loginError() }}</span>
     </template>
   </Section>
 </template>

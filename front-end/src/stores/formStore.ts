@@ -1,52 +1,113 @@
-// formStore.ts
 import { defineStore } from "pinia";
 import { Validator } from "@/utils/validator/validation";
-import { Input } from "@/type/interface";
 import { usePageStore } from "@/stores/pageContentStore";
+import {FormType,Input} from "@/type/interface";
+
+export enum InputType {
+  TEXT = "text",
+  PASSWORD = "password",
+  EMAIL = "email",
+}
 
 export const useFormStore = defineStore("form", () => {
   const { errorMessage } = usePageStore();
 
-  // Stwórz instancję Validatora, aby była bardziej elastyczna
   const getValidator = (errorMessage: () => Record<string, string>): Validator => {
     return new Validator(errorMessage()).isEmpty().save();
   };
 
-  const getLoginInput = (): Input[] => {
+  const getLoginInput = (): Input[] => [
+    {
+      name: "email",
+      label: "Podaj Email:",
+      type: InputType.EMAIL,
+      placeholder: "Wprowadź email",
+      validation: getValidator(errorMessage),
+      error: [],
+    },
+    {
+      name: "password",
+      label: "Podaj Hasło:",
+      type: InputType.PASSWORD,
+      placeholder: "Wprowadź hasło",
+      validation: getValidator(errorMessage),
+      error: [],
+    },
+  ];
+
+  const getRegisterInput = (): Input[] => {
+    const validator = new Validator({
+      ...errorMessage(),
+      isEqual: "Hasła muszą być takie same",
+    }).save();
+
     return [
       {
-        name: "email",
-        label: "Podaj Email:",
-        type: "text",
-        placeholder: "Wprowadź email",
-        validation: getValidator(errorMessage),
+        name: "name",
+        label: "Podaj Imię:",
+        type: InputType.TEXT,
+        placeholder: "Wprowadź imię",
+        validation: validator.createNew().minLength(3),
+        config: { required: true },
         error: [],
       },
       {
-        name: "password",
-        label: "Podaj Hasło:",
-        type: "password",
+        name: "surname",
+        label: "Podaj Nazwisko:",
+        type: InputType.TEXT,
+        placeholder: "Wprowadź nazwisko",
+        validation: validator.createNew().minLength(3),
+        config: { required: true },
+        error: [],
+      },
+      {
+        name: "email",
+        label: "Podaj e-mail:",
+        type: InputType.EMAIL,
+        placeholder: "Wprowadź e-mail",
+        validation: validator.createNew().email(),
+        config: { required: true },
+        error: [],
+      },
+      {
+        name: "pass_1",
+        related: ["pass_2"],
+        label: "Podaj hasło:",
+        type: InputType.PASSWORD,
         placeholder: "Wprowadź hasło",
-        validation: getValidator(errorMessage),
+        validation: validator.isEmpty(),
+        config: { required: true },
+        error: [],
+      },
+      {
+        name: "pass_2",
+        related: ["pass_1"],
+        label: "Podaj ponownie hasło:",
+        type: InputType.PASSWORD,
+        placeholder: "Wprowadź hasło",
+        validation: validator.isEmpty(),
+        config: { required: true },
         error: [],
       },
     ];
   };
-  const getMoreOptions = () => [
-    { label: "Zapomniałeś hasła?", href: "/" },
-    { label: "Nie masz konta? Zarejestruj się.", href: "/register" },
-  ]
-  const validateForm = (
-    inputs: Input[],
-    formValues: Record<string, string>
-  ) => {
-    return inputs.every((input) => {
+
+  const getFormInputs = (type: FormType): Input[] => {
+    return type === FormType.LOGIN ? getLoginInput() : getRegisterInput();
+  };
+
+  const validateForm = (type: FormType, formValues: Record<string, string>) => {
+    return getFormInputs(type).every((input) => {
       const value = formValues[input.name];
       const errors = input.validation ? input.validation.validate(value) : [];
       input.error = errors;
       return errors.length === 0;
     });
   };
-
-  return { getLoginInput, validateForm,getMoreOptions };
+  const getMoreOptions = () => [
+    { label: "Zapomniałeś hasła?", href: "/" },
+    { label: "Nie masz konta? Zarejestruj się.", href: "/register" },
+  ]
+  return { getFormInputs, validateForm, getMoreOptions };
 });
+

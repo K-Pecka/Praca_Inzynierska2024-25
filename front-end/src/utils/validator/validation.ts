@@ -1,5 +1,5 @@
 import { ValidationRule, ValidationRules } from "./validationRules";
-import { defaultMessages } from "./validationMessages";
+import { getDefaultMessages } from "./validationMessages";
 
 export class Validator {
   private rules: { [key: string]: ValidationRule } = {};
@@ -14,7 +14,7 @@ export class Validator {
       this.rules = { ...rules };
     }
     this.errorMessage = {
-      ...defaultMessages,
+      ...getDefaultMessages,
       ...errorMessage,
     };
   }
