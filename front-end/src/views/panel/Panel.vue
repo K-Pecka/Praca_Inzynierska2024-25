@@ -1,15 +1,17 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 import PanelNavbar from "@/components/trip/PanelNavbar.vue";
+import SideNav from "@/components/trip/SideNav.vue";
 import {usePageStore} from "@/stores/pageContentStore";
 import {usePanelContentStore} from "@/stores/panelContentStore";
+
 
 const useStore = usePageStore();
 const SiteName = useStore.SiteName()
 
 const panelContentStore = usePanelContentStore();
 
-const {navbar} = panelContentStore;
+const {navbar, sideNavItems} = panelContentStore;
 
 const form = ref({
   email: "",
@@ -28,10 +30,11 @@ const form = ref({
         </PanelNavbar>
       </v-col>
     </v-row>
-      <v-row>
-<!--        <v-col>
-        </v-col>-->
-        <v-col>
+      <v-row style="height: calc(100vh - 64px); margin: 0;">
+        <v-col cols="12" sm="3" md="2" class="side-nav-col">
+          <SideNav :items="sideNavItems" class="full-height" />
+        </v-col>
+        <v-col cols="12" sm="9" md="10" class="full-height">
           <main>
           <router-view/>
           </main>
@@ -45,4 +48,15 @@ const form = ref({
 * {
   transition: all 0.3s ease;
 }
+
+.side-nav-col {
+  padding: 0;
+}
+.full-height {
+  height: 100%;
+  overflow: auto;
+}
+
+
+
 </style>
