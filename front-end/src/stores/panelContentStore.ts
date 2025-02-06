@@ -21,9 +21,57 @@ export const usePanelContentStore = defineStore("panelContent", () => {
         accountIcon: "/picture/myAccount.svg",
     };
 
+    const sideNavItems = [
+        {
+            label: "Panel",
+            icon: "/picture/sideNav/panel.svg",
+            route: "/panel/trip",
+        },
+        {
+            label: "Plany",
+            icon: "/picture/sideNav/plans.svg",
+            children: [
+                { label: "Utworzone", route: "/" },
+                { label: "Dodaj", route: "/" },
+            ],
+        },
+        {
+            label: "Bilety",
+            icon: "/picture/sideNav/tickets.svg",
+            children: [
+                { label: "Dodane", route: "/" },
+                { label: "Dodaj", route: "/" },
+            ],
+        },
+        {
+            label: "Budżet",
+            icon: "/picture/sideNav/budget.svg",
+            children: [
+                { label: "?", route: "/" },
+                { label: "?", route: "/" },
+            ],
+        },
+        {
+            label: "Uczestnicy",
+            icon: "/picture/sideNav/participants.svg",
+            children: [
+                { label: "?", route: "/" },
+                { label: "?", route: "/" },
+            ],
+        },
+        {
+            label: "Ustawienia",
+            icon: "/picture/sideNav/settings.svg",
+            children: [
+                { label: "?", route: "/" },
+                { label: "?", route: "/" },
+            ],
+        },
+    ];
 
     return {
         roleSelection,
         navbar,
+        sideNavItems,
     };
 });
