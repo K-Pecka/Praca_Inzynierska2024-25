@@ -1,6 +1,17 @@
 import { defineStore } from "pinia";
+import { ref } from "vue";
 
 export const useMessageStore = defineStore("message", () => {
+  const errorCurrentMessage = ref("");
+  const successCurrentMessage = ref("");
+  const successMessage ={
+    default:{
+      login:"Nie znany błąd",
+      logOut:"Nie znany błąd",
+    },
+    login:"Zalogowanie pomyślnie",
+    logOut:"Wylogowano pomyślnie"
+  }
   const errorMessage = {
     default: {
       response: "nie znany błąd",
@@ -9,6 +20,7 @@ export const useMessageStore = defineStore("message", () => {
     login: {
       response: "Błąd logowania",
       wrongLoginAndPass: "Błędny login lub hasło.",
+      
     },
     validationRules: {
       unknow: "Unknown error",
@@ -25,16 +37,33 @@ export const useMessageStore = defineStore("message", () => {
       isEqual: "Fields must be equal",
       isInRange: "Field must be between {0} and {1}",
       doCheckbox: "You must check this box.",
-    }
+    },
   };
   const responseError = (type: keyof typeof errorMessage) =>
-    'response' in errorMessage[type] ? errorMessage[type].response : errorMessage.default.response;
+    "response" in errorMessage[type]
+      ? errorMessage[type].response
+      : errorMessage.default.response;
 
   const loginError = () =>
     errorMessage.login.wrongLoginAndPass ||
     errorMessage.default.wrongLoginAndPass;
-
+  const loginSuccess = () => successMessage.login || successMessage.default.login;
+  const logOutSuccess = () => successMessage.logOut || successMessage.default.logOut;
   const getValidationRules = () => errorMessage.validationRules;
 
-  return { responseError, loginError, getValidationRules };
+  const setErrorCurrentMessage = (error: string) =>
+    (errorCurrentMessage.value = error);
+  const setSuccessCurrentMessage = (success: string) =>
+    (successCurrentMessage.value = success);
+  return {
+    responseError,
+    loginError,
+    loginSuccess,
+    getValidationRules,
+    setErrorCurrentMessage,
+    errorCurrentMessage,
+    setSuccessCurrentMessage,
+    successCurrentMessage,
+    logOutSuccess,
+  };
 });

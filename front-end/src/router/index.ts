@@ -10,6 +10,7 @@ import LogOut from "@/views/logOut/LogOut.vue";
 import Trip from "@/views/panel/children/Trip.vue";
 
 import { useUserStore } from "@/stores/userStore";
+import { useMessageStore } from "@/stores/messageStore";
 const routes: RouteRecordRaw[] = [
   {
     path:"/logOut",
@@ -71,12 +72,14 @@ router.beforeEach(async (to, from, next) => {
   document.title = to.meta.title ? `${to.meta.title} - ${siteName}` : siteName;
 
   const { isLogin } = useUserStore();
+  const { setErrorCurrentMessage } = useMessageStore();
 
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const goBack = to.matched.some((record) => record.meta.goBack);
 
   if (requiresAuth && !(await isLogin())) {
-    next({ name: 'logIn' });
+    setErrorCurrentMessage('Wymagana jest autoryzacja. Proszę się zalogować.')
+    next({name: 'logIn'});
   } else if (goBack && (await isLogin())) {
     next(from.name ? { name: from.name } : { name: "landing" });
   } else {

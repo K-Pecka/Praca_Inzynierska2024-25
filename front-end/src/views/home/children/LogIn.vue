@@ -17,7 +17,7 @@ const router = useRouter();
 const { getSectionTitle } = usePageStore();
 const { login } = useUserStore();
 const { getFormInputs, validateForm, getMoreOptions } = useFormStore();
-const { loginError } = useMessageStore();
+const { loginError,loginSuccess,setErrorCurrentMessage,setSuccessCurrentMessage } = useMessageStore();
 
 const sectionTitle = getSectionTitle(FormType.LOGIN);
 const inputs = ref<Input[]>(getFormInputs(FormType.LOGIN));
@@ -33,8 +33,10 @@ const handleSubmit = async (_: any, config: any) => {
   if (config?.send && validateForm(FormType.LOGIN, formValues.value)) {
     const isLoggedIn = await login(formValues.value);
     if (isLoggedIn) {
+      setSuccessCurrentMessage(loginSuccess())
       router.push("/panel");
     } else {
+      setErrorCurrentMessage(loginError())
       errorShow.value = true;
     }
   }
@@ -57,7 +59,6 @@ const handleSubmit = async (_: any, config: any) => {
           <ListLink :links="moreOptions" />
         </template>
       </Form>
-      <span v-if="errorShow">{{ loginError() }}</span>
     </template>
   </Section>
 </template>
@@ -66,12 +67,5 @@ const handleSubmit = async (_: any, config: any) => {
 h1 {
   color: var(--primary-color);
   font-size: 2rem;
-}
-
-span {
-  display: block;
-  margin: auto;
-  text-align: center;
-  color: red;
 }
 </style>
