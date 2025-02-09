@@ -8,7 +8,7 @@ from .serializers import ItinerarySerializer, ItineraryActivitySerializer, Itine
 
 
 class ItineraryCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsTripCreator]
     serializer_class = ItineraryCreateSerializer
 
 
@@ -45,8 +45,9 @@ class ItineraryListAPIView(ListAPIView):
 
 
 class ItineraryActivityCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsTripCreator]
     serializer_class = ItineraryActivityCreateSerializer
+
 
 class ItineraryActivityRetrieveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
@@ -76,5 +77,6 @@ class ItineraryActivityListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = ItineraryActivitySerializer
     lookup_url_kwarg = "itinerary_pk"
+
     def get_queryset(self):
         return ItineraryActivity.objects.by_itinerary(self.kwargs[self.lookup_url_kwarg])

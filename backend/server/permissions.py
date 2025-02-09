@@ -1,3 +1,4 @@
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import BasePermission
 from chats.models import Chatroom, ChatMessage
 from trips.models import Trip, Ticket
@@ -68,13 +69,18 @@ class IsCreatorForChatMessage(BasePermission):
 ##################################################################################3
 class IsTripParticipant(BasePermission):
     """
-    Custom permission to check if the user is the creator for the chatroom.
+    Custom permission to check if the user is a participant of the trip.
     """
-    message = "Tylko uczestnicy wycieczki mogą wykonać tę akcje."
+    message = "Tylko uczestnicy wycieczki mogą wykonać tę akcję."
 
     def has_permission(self, request, view):
-        obj = view.get_object()
+        try:
+            obj = view.get_object()
+        except Exception:
+            return False
         profile = request.user.get_default_profile()
+        if not profile:
+            return False
 
         if isinstance(obj, Trip):
             return obj.creator == profile or profile in obj.members.all()
@@ -93,27 +99,52 @@ class IsTripParticipant(BasePermission):
 
 class IsTripCreator(BasePermission):
     """
-    Custom permission to check if the user is the creator for the chatroom.
+    Custom permission to check if the user is the creator of the trip.
     """
-    message = "Tylko stwórca wycieczki może wykonać tę akcje."
+    message = "Tylko twórca wycieczki może wykonać tę akcję."
 
     def has_permission(self, request, view):
-        obj = view.get_object()
         profile = request.user.get_default_profile()
+        if not profile:
+            return False
 
-        if isinstance(obj, Trip):
-            return obj.creator == profile
-        if isinstance(obj, Chatroom):
-            return obj.trip.creator == profile
-        if isinstance(obj, ChatMessage):
-            return obj.chatroom.trip.creator == profile
-        if isinstance(obj, Ticket):
-            return obj.trip.creator == profile
-        if isinstance(obj, Itinerary):
-            return obj.trip.creator == profile
-        if isinstance(obj, ItineraryActivity):
-            return obj.itinerary.trip.creator == profile
-        return False
+        if request.method == 'POST':
+            trip_id = request.data.get('trip')
+            if trip_id:
+                try:
+                    trip = Trip.objects.get(pk=trip_id)
+                except Trip.DoesNotExist:
+                    raise NotFound(detail="Wycieczka o podanym ID nie istnieje.")
+            else:
+                itinerary_id = request.data.get('itinerary')
+                if not itinerary_id:
+                    return False
+                try:
+                    itinerary = Itinerary.objects.get(pk=itinerary_id)
+                except Itinerary.DoesNotExist:
+                    raise NotFound(detail="Plan wycieczki o podanym ID nie istnieje.")
+                trip = itinerary.trip
+
+            return trip.creator == profile
+        else:
+            try:
+                obj = view.get_object()
+            except Exception:
+                return False
+
+            if isinstance(obj, Trip):
+                return obj.creator == profile
+            if isinstance(obj, Chatroom):
+                return obj.trip.creator == profile
+            if isinstance(obj, ChatMessage):
+                return obj.chatroom.trip.creator == profile
+            if isinstance(obj, Ticket):
+                return obj.trip.creator == profile
+            if isinstance(obj, Itinerary):
+                return obj.trip.creator == profile
+            if isinstance(obj, ItineraryActivity):
+                return obj.itinerary.trip.creator == profile
+            return False
 
 
 class IsTicketOwner(BasePermission):

@@ -29,7 +29,7 @@ class TripRetrieveAPIView(RetrieveAPIView):
 
 
 class TripListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = TripSerializer
 
     def get_queryset(self):
