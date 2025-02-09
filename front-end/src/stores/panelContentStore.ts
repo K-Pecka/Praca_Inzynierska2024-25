@@ -9,11 +9,13 @@ export const usePanelContentStore = defineStore("panelContent", () => {
                 title: "Turysta",
                 description: "Planowanie indywidualnych podróży dla siebie i rodziny",
                 image: "/picture/tourist.svg",
+                path:"YourTrip"
             },
             {
                 title: "Przewodnik",
                 description: "Tworzenie i zarządzanie wycieczkami dla grup turystycznych",
                 image: "/picture/guide.svg",
+                path:"/"
             },
         ],
     };

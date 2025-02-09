@@ -1,20 +1,25 @@
 <script setup lang="ts">
 
-defineProps({
+
+const props = defineProps({
   title: String,
   description: String,
   image: String,
+  path: {type: String,default: '/'}
 });
 
 
 </script>
 
 <template>
-  <button class="role-button">
-    <img :src="image" alt="" class="role-icon" />
-    <h2 class="role-title">{{ title }}</h2>
-    <p class="role-description">{{ description }}</p>
-  </button>
+  <router-link :to="path">
+    <button class="role-button">
+      <img :src="image" alt="" class="role-icon" />
+      <h2 class="role-title">{{ title }}</h2>
+      <p class="role-description">{{ description }}</p>
+    </button>
+  </router-link>
+  
 </template>
 
 <style scoped lang="scss">

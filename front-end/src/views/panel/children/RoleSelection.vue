@@ -17,6 +17,7 @@ const { roleSelection } = usePanelContentStore();
           :title="role.title"
           :description="role.description"
           :image="role.image"
+          :path="role.path"
       />
     </div>
   </div>

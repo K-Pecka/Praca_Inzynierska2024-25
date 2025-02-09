@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import {ref} from "vue";
+import {ref, computed} from "vue";
 import PanelNavbar from "@/components/trip/PanelNavbar.vue";
 import SideNav from "@/components/trip/SideNav.vue";
 import {usePageStore} from "@/stores/pageContentStore";
 import {usePanelContentStore} from "@/stores/panelContentStore";
-
+import { useRoute } from "vue-router";
 
 const useStore = usePageStore();
 const SiteName = useStore.SiteName()
@@ -12,10 +12,14 @@ const SiteName = useStore.SiteName()
 const panelContentStore = usePanelContentStore();
 
 const {navbar, sideNavItems} = panelContentStore;
-
+const route = useRoute();
 const form = ref({
   email: "",
   password: "",
+});
+const hiddenNavRoutes = ["roleSelection", "yourTrip"];
+const showNavigation = computed(() => {
+  return !hiddenNavRoutes.includes(route.name as string);
 });
 </script>
 <template>
@@ -23,7 +27,7 @@ const form = ref({
     <v-container fluid class="full-width-container">
     <v-row>
       <v-col>
-        <PanelNavbar :account-icon="navbar.accountIcon">
+        <PanelNavbar :account-icon="navbar.accountIcon" >
           <template #logo>
             {{ SiteName }}
           </template>
@@ -31,10 +35,10 @@ const form = ref({
       </v-col>
     </v-row>
       <v-row style="height: calc(100vh - 64px); margin: 0;">
-        <v-col cols="12" sm="3" md="2" class="side-nav-col">
+        <v-col v-if="showNavigation" cols="12" sm="3" md="2" class="side-nav-col">
           <SideNav :items="sideNavItems" class="full-height" />
         </v-col>
-        <v-col cols="12" sm="9" md="10" class="full-height">
+        <v-col :cols="showNavigation ? 9 : 12" :md="showNavigation ? 10 : 12" class="full-height">
           <main>
           <router-view/>
           </main>

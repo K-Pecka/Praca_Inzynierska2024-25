@@ -24,6 +24,7 @@ function toggleAccountMenu() {
 
 
     <div class="panel-navbar__account">
+      <v-icon>fa-solid fa-house</v-icon>
       <img :src="accountIcon" alt="Ikona konta" class="panel-navbar__icon" />
       <a href="#" class="panel-navbar__account-l">Moje Konto</a>
     </div>
