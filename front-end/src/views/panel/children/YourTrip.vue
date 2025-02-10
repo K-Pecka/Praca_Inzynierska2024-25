@@ -34,7 +34,7 @@ const { yourTrips } = useTripStore();
   </v-container>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 h1 {
   font-size: 2.25rem;
   text-align: left;

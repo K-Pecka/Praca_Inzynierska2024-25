@@ -41,7 +41,7 @@ const handleSubmit = (_: any, config: any) => {
 
 <style scoped lang="scss">
 h1 {
-  color: var(--primary-color);
+  color: rgb(var(--v-theme-primary));
   font-size: 2rem;
 }
 .container {
@@ -50,14 +50,14 @@ h1 {
 }
 .form-container {
   width: 100%;
-  background-color: rgba(var(--rgb-secondary-color), 0.9);
+  background-color: rgb(var(--v-theme-secondary), 0.9);
   margin: auto;
   padding: 0.25rem;
   margin-bottom: 1rem;
   border-radius: 0.5rem;
 }
 .extraOption a {
-  color: var(--text-color);
+  color: rgb(var(--v-theme-text));
 }
 .extraOption div {
   margin: 2rem auto;
@@ -66,8 +66,8 @@ h1 {
   padding: 2rem;
 }
 button {
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
+  background-color: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-secondary));
   display: flex;
   align-items: center;
   justify-content: center;

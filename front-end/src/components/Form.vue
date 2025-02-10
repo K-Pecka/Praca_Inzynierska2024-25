@@ -72,14 +72,14 @@ const handleSubmit = () => {
 
 <style scoped lang="scss">
 .form-container {
-  background-color: rgba(var(--rgb-secondary-color), 0.9);
+  background-color: rgb(var(--v-theme-secondary), 0.9);
   padding: 0.25rem;
   border-radius: 0.5rem;
 }
 
 button {
-  background-color: var(--primary-color);
-  color: var(--secondary-color);
+  background-color: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-secondary));
   width: calc(100% - 3rem);
   padding: 0.75rem;
   margin: 1.5rem;

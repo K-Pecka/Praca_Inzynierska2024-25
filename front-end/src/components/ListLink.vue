@@ -23,6 +23,6 @@ defineProps({
     margin-top: 2rem;
   }
   a{
-    color:var(--text-color);
+    color:rgb(var(--v-theme-text));
   }
 </style>

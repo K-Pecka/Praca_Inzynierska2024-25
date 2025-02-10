@@ -18,13 +18,13 @@
     text-align: center;
     font-size: 1.5rem;
     margin-bottom: 1rem;
-    color: var(--text-color, #333);
+    color: var(--v-theme-text, #333);
   }
 
   &__content {
     font-size: 1rem;
     line-height: 1.5;
-    color: var(--text-color, #666);
+    color: var(--v-theme-text, #666);
     width: 100%;
   }
 }

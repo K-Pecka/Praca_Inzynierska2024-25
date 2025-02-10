@@ -17,7 +17,7 @@
   display: flex;
   padding: 1rem;
   border: none;
-  background-color: var(--secondary-color);
+  background-color: rgb(var(--v-theme-secondary));
   color: var(--color-text);
   width: 80%;
   border-radius: 4px;
@@ -27,7 +27,7 @@
 }
 
 .btn:hover {
-  background-color: var(--primary-color);
+  background-color: rgb(var(--v-theme-primary));
 }
 
 .btn-icon {

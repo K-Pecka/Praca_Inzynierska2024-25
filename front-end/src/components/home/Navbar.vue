@@ -101,13 +101,13 @@ a {
   top: 0;
   padding: 1rem;
   height: 6rem;
-  background-color: var(--background-color);
-  border: 2px solid var(--primary-color);
-  border-radius: var(--border-radius);
+  background-color: rgb(var(--v-theme-background),0.75);
+  border: 2px solid rgb(var(--v-theme-primary));
+  border-radius: var(--v-borderRadius);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-family: var(--font-family);
+  font-family: var(--v-fontFamily);
   z-index: 1000;
 }
 
@@ -127,7 +127,7 @@ a {
   display: none;
   font-size: 2rem;
   cursor: pointer;
-  color: var(--primary-color);
+  color: rgb(var(--v-theme-primary));
 }
 
 ul.navbar__links {
@@ -145,7 +145,7 @@ ul .navbar__item {
 ul .navbar__link {
   padding: 10px;
   text-decoration: none;
-  color: var(--text-color);
+  color: rgb(var(--v-theme-text));
   font-weight: bold;
   transition: color 0.3s ease, background-color 0.3s ease;
 }
@@ -153,8 +153,8 @@ ul .navbar__link {
 ul .navbar__link--active {
   color: #fff;
   padding: calc(1rem + 4px);
-  background-color: var(--primary-color);
-  border-radius: calc(var(--border-radius) - 9px);
+  background-color: rgb(var(--v-theme-primary));
+  border-radius: calc(var(--v-borderRadius) - 9px);
 }
 
 @media (max-width: 768px) {
@@ -207,7 +207,7 @@ ul .navbar__link--active {
 }
 
 .mobile .navbar__item:hover {
-  background-color: var(--primary-color);
+  background-color: rgb(var(--v-theme-primary));
   color: white;
 }
 

@@ -44,6 +44,9 @@ const footerData = useStore.footerData();
   </v-app>
 </template>
 <style lang="scss" scoped>
+.v-application{
+  background-color: rgba(var(--v-theme-background),0.1);
+}
 *
 {
   transition: all 0.3s ease;

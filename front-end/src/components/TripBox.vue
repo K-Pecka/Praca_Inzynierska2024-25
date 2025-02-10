@@ -66,12 +66,12 @@ const props = defineProps({
 <style lang="scss" scoped>
 .v-card-title {
   font-size: 1.5rem;
-  font-family: var(--font-family);
+  font-family: var(--v-fontFamily);
   font-weight: bold;
 }
 .v-card-subtitle {
   font-size: 1rem;
-  font-family: var(--font-family);
+  font-family: var(--v-fontFamily);
   font-weight: bold;
 }
 .trip-detail {
@@ -84,10 +84,10 @@ const props = defineProps({
   margin-top: 0.6rem;
 }
 .primary button {
-  background-color: var(--primary-color);
+  background-color: rgb(var(--v-theme-primary));
 }
 .accent button {
-  background-color: var(--accent);
+  background-color: rgb(var(--v-theme-accent));
 }
 button {
   color: #eee;

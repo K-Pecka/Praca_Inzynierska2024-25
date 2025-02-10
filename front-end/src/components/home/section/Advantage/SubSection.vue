@@ -81,10 +81,10 @@ img {
   }
   &__caption {
     font-size: 1rem;
-    color: var(--text-color);
+    color: rgb(var(--v-theme-text));
     letter-spacing: 2px;
     font-weight: 700;
-    font-family: var(--font-family);
+    font-family: var(--v-fontFamily);
   }
 }
 </style>

@@ -38,7 +38,7 @@ function toggleAccountMenu() {
   align-items: center;
   justify-content: space-between;
   background-color: rgba(#F5F4FC,0.75);
-  border-bottom: 2px solid var(--primary-color);
+  border-bottom: 2px solid rgb(var(--v-theme-primary));
   padding: 1rem 2rem;
   z-index: 1000;
 }
@@ -64,12 +64,12 @@ function toggleAccountMenu() {
 
 .panel-navbar__account-l {
   text-decoration: none;
-  color: var(--text-color);
+  color: rgb(var(--v-theme-text));
   font-weight: 500;
   transition: color 0.3s;
 
   &:hover {
-    color: var(--primary-color);
+    color: rgb(var(--v-theme-primary));
   }
 }
 </style>

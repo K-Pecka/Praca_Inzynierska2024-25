@@ -65,7 +65,7 @@ const handleSubmit = async (_: any, config: any) => {
 
 <style lang="scss" scoped>
 h1 {
-  color: var(--primary-color);
+  color: rgb(var(--v-theme-primary));
   font-size: 2rem;
 }
 </style>

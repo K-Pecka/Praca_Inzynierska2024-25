@@ -64,15 +64,15 @@ const props = defineProps({
   margin-top: 0.25rem;
 }
 * {
-  color: var(--text-color);
-  font-family: var(--font-family);
+  color: rgb(var(--v-theme-text));
+  font-family: var(--v-fontFamily);
 }
 
 .footer {
   @include section-width;
   padding: 3rem 0 1rem 0;
-  background-color: var(--secondary-color);
-  font-family: var(--font-family);
+  background-color: rgb(var(--v-theme-secondary));
+  font-family: var(--v-fontFamily);
   &__top {
     display: flex;
     justify-content: space-between;

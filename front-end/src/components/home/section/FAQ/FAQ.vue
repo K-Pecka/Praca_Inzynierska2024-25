@@ -53,15 +53,15 @@ const toggle = (index: number) => {
   .faq__items {
     .faq__item {
       transition: all 0.3s;
-      border: 1px solid var(--primary-color);
+      border: 1px solid rgb(var(--v-theme-primary));
       width: 100%;
       padding: 1rem;
       margin: 1rem 0;
       border-radius: 0.5rem;
-      background-color: var(--secondary-color);
+      background-color: rgb(var(--v-theme-secondary));
       cursor: pointer;
       .faq__question {
-        color: var(--primary-color);
+        color: rgb(var(--v-theme-primary));
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -71,7 +71,7 @@ const toggle = (index: number) => {
 
       .faq__answer {
         margin-top: 0.5rem;
-        color: var(--primary-color);
+        color: rgb(var(--v-theme-primary));
       }
 
       .toggle__icon {

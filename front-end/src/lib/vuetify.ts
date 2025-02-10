@@ -1,0 +1,40 @@
+import { createVuetify } from 'vuetify';
+import 'vuetify/styles';
+
+export default createVuetify({
+  theme: {
+    defaultTheme: 'light',
+    themes: {
+      light: {
+        dark: false,
+        colors: {
+          primary: '#2f27ce',
+          secondary: '#dedcff',
+          accent: '#ac6ed9',
+          text: '#030309',
+          background: '#eeeeee',
+        },
+        variables: {
+          borderRadius: '24px',
+          gradientText: 'linear-gradient(to right, #2f27ce, #ac6ed9)',
+          fontFamily: '"Inter", sans-serif',
+        },
+      },
+      dark: {
+        dark: true,
+        colors: {
+          primary: '#BB86FC',
+          secondary: '#03DAC6',
+          accent: '#FF4081',
+          background: '#121212',
+          text: '#FFFFFF',
+        },
+        variables: {
+          borderRadius: '24px',
+          gradientText: 'linear-gradient(to right, #BB86FC, #FF4081)',
+          fontFamily: '"Inter", sans-serif',
+        },
+      },
+    },
+  },
+});

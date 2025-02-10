@@ -63,6 +63,6 @@ onMounted(() => {
 
 <style>
 .Typewriter__cursor {
-  color: var(--accent);
+  color: rgb(var(--v-theme-accent));
 }
 </style>

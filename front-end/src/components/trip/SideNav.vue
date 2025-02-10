@@ -92,7 +92,7 @@ const arrowIcon = "/picture/sideNav/arrow.svg";
 .side-nav {
   left: 0;
   background: rgba(#F5F4FC,0.75);
-  border-right: 2px solid var(--primary-color);
+  border-right: 2px solid rgb(var(--v-theme-primary));
   padding: 1rem;
 }
 
@@ -112,7 +112,7 @@ const arrowIcon = "/picture/sideNav/arrow.svg";
   gap: 0.5rem;
   cursor: pointer;
   font-weight: 600;
-  color: var(--text-color);
+  color: rgb(var(--v-theme-text));
 }
 
 .side-nav__icon {
@@ -144,9 +144,9 @@ const arrowIcon = "/picture/sideNav/arrow.svg";
 .side-nav__sub-link,
 .side-nav__item-link {
   text-decoration: none;
-  color: var(--text-color);
+  color: rgb(var(--v-theme-text));
   &:hover {
-    color: var(--primary-color);
+    color: rgb(var(--v-theme-primary));
   }
 }
 

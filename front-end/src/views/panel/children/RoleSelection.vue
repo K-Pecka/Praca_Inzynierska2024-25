@@ -35,14 +35,14 @@ const { roleSelection } = usePanelContentStore();
     font-size: 2.5rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--text-color);
+    color: rgb(var(--v-theme-text));
   }
 
   .subtitle {
     font-size: 2.5rem;
     font-weight: 600;
     margin-bottom: 3.5rem;
-    color: var(--text-color);
+    color: rgb(var(--v-theme-text));
   }
 
   .roles-container {

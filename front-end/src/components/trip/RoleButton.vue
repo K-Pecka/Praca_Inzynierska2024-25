@@ -27,7 +27,7 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(var(--rgb-secondary-color), 0.5);
+  background-color: rgb(var(--v-theme-secondary), 0.5);
   border: none;
   border-radius: 15px;
   padding: 2rem 1.5rem;
@@ -52,13 +52,13 @@ const props = defineProps({
 
   .role-title {
     font-size: 1.9rem;
-    color: var(--text-color);
+    color: rgb(var(--v-theme-text));
     margin-bottom: 0.5rem;
   }
 
   .role-description {
     font-size: 1rem;
-    color: var(--text-color);
+    color: rgb(var(--v-theme-text));
     line-height: 1.5;
     text-align: center;
   }

@@ -9,7 +9,7 @@ export const usePanelContentStore = defineStore("panelContent", () => {
                 title: "Turysta",
                 description: "Planowanie indywidualnych podróży dla siebie i rodziny",
                 image: "/picture/tourist.svg",
-                path:"YourTrip"
+                path:"panel/YourTrip"
             },
             {
                 title: "Przewodnik",
