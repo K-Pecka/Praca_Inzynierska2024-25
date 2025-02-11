@@ -19,22 +19,31 @@ import { ref } from "vue";
 import Section from "@/components/Section.vue";
 import Form from "@/components/Form.vue";
 import { usePageStore } from "@/stores/pageContentStore";
-import { Input,FormType } from "@/type/interface";
+import { Input, FormType,Register } from "@/type/interface";
 import { useFormStore } from "@/stores/formStore";
-
+import { useUserStore } from "@/stores/userStore";
 
 const { getSectionTitle } = usePageStore();
+const { registerMutation } = useUserStore();
 const { getFormInputs, validateForm } = useFormStore();
 
 const sectionTitle = getSectionTitle(FormType.REGISTER);
 const inputs = ref<Input[]>(getFormInputs(FormType.REGISTER));
 const formValues = ref<Record<string, string>>(
-  Object.fromEntries(inputs.value.map((input: { name: string; }) => [input.name, ""]))
+  Object.fromEntries(
+    inputs.value.map((input: { name: string }) => [input.name, ""])
+  )
 );
 
-const handleSubmit = (_: any, config: any) => {
+const handleSubmit = async (_: any, config: any) => {
   if (config?.send && validateForm(FormType.REGISTER, formValues.value)) {
-    console.log("Wartości formularza:", formValues.value);
+    const { pass_2, ...registrationData } = formValues.value;
+    
+    try {
+      await registerMutation.mutateAsync(registrationData as unknown as Register);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
   }
 };
 </script>

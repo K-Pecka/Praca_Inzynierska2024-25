@@ -9,15 +9,13 @@ import Section from "@/components/Section.vue";
 import { usePageStore } from "@/stores/pageContentStore";
 import { useUserStore } from "@/stores/userStore";
 import { useFormStore } from "@/stores/formStore";
-import { useMessageStore } from "@/stores/messageStore";
-import {FormType,Input} from "@/type/interface";
+import { FormType, Input } from "@/type/interface";
 
 const router = useRouter();
 
 const { getSectionTitle } = usePageStore();
-const { login } = useUserStore();
+const { loginMutation } = useUserStore();
 const { getFormInputs, validateForm, getMoreOptions } = useFormStore();
-const { loginError,loginSuccess,setErrorCurrentMessage,setSuccessCurrentMessage } = useMessageStore();
 
 const sectionTitle = getSectionTitle(FormType.LOGIN);
 const inputs = ref<Input[]>(getFormInputs(FormType.LOGIN));
@@ -26,18 +24,14 @@ const formValues = ref<Record<string, string>>(
   Object.fromEntries(inputs.value.map((input: { name: string; }) => [input.name, ""]))
 );
 
-const errorShow = ref(false);
 const moreOptions = ref(getMoreOptions());
 
 const handleSubmit = async (_: any, config: any) => {
   if (config?.send && validateForm(FormType.LOGIN, formValues.value)) {
-    const isLoggedIn = await login(formValues.value);
-    if (isLoggedIn) {
-      setSuccessCurrentMessage(loginSuccess())
-      router.push("/panel");
-    } else {
-      setErrorCurrentMessage(loginError())
-      errorShow.value = true;
+    try {
+      await loginMutation.mutateAsync(formValues.value);
+    } catch (error) {
+      console.log("ERROR");
     }
   }
 };

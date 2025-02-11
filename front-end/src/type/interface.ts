@@ -18,3 +18,10 @@ export interface Input {
     config?:Config,
     error: string[];
   }
+export interface Register{
+    email: String,
+    first_name: String,
+    last_name: String,
+    date_of_birth: String,
+    password: String
+  }
