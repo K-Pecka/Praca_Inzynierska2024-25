@@ -3,6 +3,7 @@ import { Validator } from "@/utils/validator/validation";
 export enum FormType {
   LOGIN = "login",
   REGISTER = "register",
+  PLAN = "plan",
 }
 
 interface Config {

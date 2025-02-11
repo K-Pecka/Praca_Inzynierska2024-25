@@ -102,8 +102,51 @@ export const useFormStore = defineStore("form", () => {
     ];
   };
 
+  const getPlanInput = (): Input[] => {
+    const validator = new Validator({
+      ...errorMessage(),
+      dateRange: "Data zakończenia nie może być wcześniejsza niż rozpoczęcia",
+    }).save();
+
+    return [
+      {
+        name: "tripName",
+        label: "Nazwa",
+        type: "text",
+        placeholder: "Zwiedzanie Paryża",
+        validation: validator.createNew().isEmpty(),
+        config: { required: true },
+        error: [],
+      },
+      {
+        name: "city",
+        label: "Miasto",
+        type: "text",
+        placeholder: "np. Paryż",
+        validation: validator.createNew().isEmpty(),
+        config: { required: true },
+        error: [],
+      },
+      {
+        name: "tripDates",
+        label: "Data podróży",
+        type: "date",
+        placeholder: "dd.mm.rrrr - dd.mm.rrrr",
+        validation: validator.createNew().isEmpty(),
+        config: { required: true },
+        error: [],
+      },
+
+    ];
+  };
+
+
   const getFormInputs = (type: FormType): Input[] => {
-    return type === FormType.LOGIN ? getLoginInput() : getRegisterInput();
+    if (type === FormType.LOGIN) return getLoginInput();
+    if (type === FormType.REGISTER) return getRegisterInput();
+    if (type === FormType.PLAN) return getPlanInput();
+
+    return [];
   };
 
   const validateForm = (type: FormType, formValues: Record<string, string>) => {
