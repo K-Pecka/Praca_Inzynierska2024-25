@@ -7,6 +7,7 @@ export enum InputType {
   TEXT = "text",
   PASSWORD = "password",
   EMAIL = "email",
+  DATE = "date"
 }
 
 export const useFormStore = defineStore("form", () => {
@@ -43,7 +44,7 @@ export const useFormStore = defineStore("form", () => {
 
     return [
       {
-        name: "name",
+        name: "first_name",
         label: "Podaj Imię:",
         type: InputType.TEXT,
         placeholder: "Wprowadź imię",
@@ -52,7 +53,7 @@ export const useFormStore = defineStore("form", () => {
         error: [],
       },
       {
-        name: "surname",
+        name: "last_name",
         label: "Podaj Nazwisko:",
         type: InputType.TEXT,
         placeholder: "Wprowadź nazwisko",
@@ -70,7 +71,16 @@ export const useFormStore = defineStore("form", () => {
         error: [],
       },
       {
-        name: "pass_1",
+        name: "date_of_birth",
+        label: "Data urodzenia:",
+        type: InputType.DATE,
+        placeholder: "Wprowadź date urodzenia",
+        validation: validator,
+        config: { required: true },
+        error: [],
+      },
+      {
+        name: "password",
         related: ["pass_2"],
         label: "Podaj hasło:",
         type: InputType.PASSWORD,
@@ -81,7 +91,7 @@ export const useFormStore = defineStore("form", () => {
       },
       {
         name: "pass_2",
-        related: ["pass_1"],
+        related: ["password"],
         label: "Podaj ponownie hasło:",
         type: InputType.PASSWORD,
         placeholder: "Wprowadź hasło",
