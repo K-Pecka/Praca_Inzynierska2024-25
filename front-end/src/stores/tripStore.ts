@@ -5,7 +5,9 @@ export const useTripStore = defineStore("trip", () => {
   const deleteTrip = (id: number) => {
     alert(`usuń id:${id}`)
   };
-
+  const getAllTrip = () =>{
+    
+  }
   const yourTrips = computed(() => {
     return {
       btn: [

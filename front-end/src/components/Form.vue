@@ -23,23 +23,11 @@
 
 <script lang="ts" setup>
 import InputWithLabel from "@/components/InputWithLabel.vue";
+import { Input } from "@/type/interface";
 
-interface Config {
-  required: Boolean;
-}
-
-export interface InputData {
-  name: string;
-  related?: string[];
-  label: string;
-  placeholder?: string;
-  validation: any;
-  config?: Config;
-  error: string[];
-}
 
 const props = defineProps<{
-  inputs: InputData[];
+  inputs: Input[];
   formValues: Record<string, string>;
   submitButtonLabel: string | undefined;
 }>();

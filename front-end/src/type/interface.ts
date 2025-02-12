@@ -7,7 +7,8 @@ export enum FormType {
 }
 
 interface Config {
-  required: boolean;
+  required?: boolean;
+  multiple?:true;
 }
 export interface Input {
     name: string;

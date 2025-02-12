@@ -1,22 +1,25 @@
 <template>
   <div class="input-wrapper">
-    <label :for="inputData.name" class="input-label"
-           :class="{ required: inputData.config?.required }">{{ inputData.label }}</label>
+    <label
+      :for="inputData.name"
+      class="input-label"
+      :class="{ required: inputData.config?.required }"
+      >{{ inputData.label }}</label
+    >
 
     <template v-if="inputData.type === 'date'">
       <v-date-input
-          v-model="localRange"
-          :label="inputData.placeholder"
-          multiple="range"
-          max-width=auto
-          variant="outlined"
-          prepend-icon="mdi-calendar"
-          class="date-range-field"
-          @change="onRangeChange"
+        v-model="localRange"
+        :label="inputData.placeholder"
+        :multiple="inputData.config?.multiple ? 'range' : false"
+        max-width="auto"
+        variant="outlined"
+        class="date-range-field"
+        @update:modelValue="onRangeChange"
       />
     </template>
     <template v-else>
-    <input
+      <input
         :name="inputData.name"
         :id="inputData.name"
         :type="inputData.type"
@@ -25,60 +28,50 @@
         @blur="handleInput"
         class="input"
         :class="{ error: inputData.error && inputData.error.length > 0 }"
-    />
+      />
     </template>
     <div>
-      <span v-for="(error, index) in inputData.error" :key="index" class="showError">{{ error }}</span>
+      <span
+        v-for="(error, index) in inputData.error"
+        :key="index"
+        class="showError"
+        >{{ error }}</span
+      >
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, defineProps } from "vue";
+import { ref, watch } from "vue";
 import { VDateInput } from "vuetify/labs/components";
-
-
-interface Config {
-  required: boolean;
-}
-interface InputData {
-  name: string;
-  label: string;
-  type?: string;
-  placeholder?: string;
-  config?: Config;
-  error?: string[];
-}
+import { Input } from "@/type/interface";
 
 const props = defineProps({
   inputData: {
-    type: Object as () => InputData,
-    required: true
-  },
-  config: {
-    type: Object as () => Config
+    type: Object as () => Input,
+    required: true,
   },
   modelValue: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 const emit = defineEmits(["update"]);
 
 const localRange = ref<string[]>(
-    Array.isArray(props.modelValue) ? props.modelValue : []
+  Array.isArray(props.modelValue) ? props.modelValue : []
 );
 
 watch(
-    () => props.modelValue,
-    (newVal) => {
-      if (Array.isArray(newVal)) {
-        localRange.value = newVal;
-      }
+  () => props.modelValue,
+  (newVal) => {
+    if (Array.isArray(newVal)) {
+      localRange.value = newVal;
     }
+  }
 );
 
-function onRangeChange(value: string[]) {
+function onRangeChange(value: string[] | string) {
   emit("update", props.inputData.name, value);
 }
 
@@ -86,14 +79,14 @@ const handleInput = (event: Event) => {
   const name = (event.target as HTMLInputElement).name;
   const value = (event.target as HTMLInputElement).value;
 
-  emit('update', name, value);
+  emit("update", name, value);
 };
 </script>
 
 <style scoped lang="scss">
 @use "@/assets/style" as *;
 
-.input-wrapper > input[type='checkbox'] {
+.input-wrapper > input[type="checkbox"] {
   flex-direction: row-reverse;
 }
 
@@ -128,7 +121,8 @@ input[type="checkbox"] {
 
 input {
   padding: 1rem 0.75rem;
-  border-radius: .5rem;
+  border-radius: 0.5rem;
+  width: 100%;
 }
 
 span {

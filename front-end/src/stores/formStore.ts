@@ -99,6 +99,15 @@ export const useFormStore = defineStore("form", () => {
         config: { required: true },
         error: [],
       },
+      {
+        name: "regulamin",
+        label: "Data podróży",
+        type: "checkbox",
+        placeholder: "dd.mm.rrrr - dd.mm.rrrr",
+        validation: validator.createNew().isEmpty(),
+        config: { required: true },
+        error: [],
+      }
     ];
   };
 
@@ -133,10 +142,9 @@ export const useFormStore = defineStore("form", () => {
         type: "date",
         placeholder: "dd.mm.rrrr - dd.mm.rrrr",
         validation: validator.createNew().isEmpty(),
-        config: { required: true },
+        config: { required: true, multiple:true },
         error: [],
-      },
-
+      }
     ];
   };
 

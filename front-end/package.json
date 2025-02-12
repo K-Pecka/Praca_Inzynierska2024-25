@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mdi/font": "^7.4.47",
     "@tanstack/vue-query": "^5.66.0",
     "axios": "^1.7.9",
     "pinia": "^2.3.1",
