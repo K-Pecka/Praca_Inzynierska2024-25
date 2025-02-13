@@ -3,44 +3,48 @@
 interface Button {
   title: string;
   class: String[];
-  onclick: (id?: number) => void;
+  onclick: (id: number) => void;
 }
 
 interface Trip {
   id: number;
-  title: string;
-  date: string;
-  image: string;
+  name: string;
+  start_date: string;
+  end_date: string;
 }
 
 const props = defineProps({
   btn: {
     type: Array as () => Button[],
-    required: true,
+    required: false,
   },
   trip: {
     type: Array as () => Trip[],
     required: true,
+    default: () => []
   },
+  image:{
+    type: String,
+  }
 });
 </script>
 
 <template>
-  <v-container>
+  <v-container  fluid class="full-width-container">
     <v-row>
       <v-col v-for="trip in props.trip" :key="trip.id" cols="12" sm="12" md="12" lg="6">
         <v-card>
           <v-row>
             <v-col cols="12" sm="6">
-              <v-img :src="trip.image" aspect-ratio="1.5" contain></v-img>
+              <v-img :src="image" aspect-ratio="1.5" contain></v-img>
             </v-col>
             <v-col cols="12" sm="6" >
               <div class="trip-detail">
                 <v-card-title>
-                  {{ trip.title }}
+                  {{ trip.name }}
                 </v-card-title>
                 <v-card-subtitle>
-                  {{ trip.date }}
+                  {{ `${trip.start_date} - ${trip.end_date}` }}
                 </v-card-subtitle>
                 <div>
                   <div

@@ -3,10 +3,11 @@ import Section from "@/components/Section.vue";
 import TripBox from "@/components/TripBox.vue";
 import { useTripStore } from "@/stores/tripStore";
 const { yourTrips } = useTripStore();
+const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
 </script>
 
 <template>
-  <v-container>
+  <v-container  fluid class="full-width-container">
     <v-row>
       <v-col cols="12" md="10" offset-md="1">
         <Section>
@@ -14,7 +15,9 @@ const { yourTrips } = useTripStore();
             <h1>Zarządzaj wycieczami</h1>
           </template>
           <template #content>
-            <TripBox :btn="yourTrips.btn" :trip="yourTrips.trip" />
+            <p v-if="isLoading">Ładowanie...</p>
+            <p v-else-if="error">Błąd: {{ error.message }}</p>
+            <TripBox :btn="yourTrips.btn" :trip="trips ?? []" image="/picture/p1.svg" />
           </template>
         </Section>
       </v-col>
@@ -26,7 +29,9 @@ const { yourTrips } = useTripStore();
             <h1>Archiwum</h1>
           </template>
           <template #content>
-            <TripBox :btn="yourTrips.btn" :trip="yourTrips.trip" />
+            <p v-if="isLoading">Ładowanie...</p>
+            <p v-else-if="error">Błąd: {{ error.message }}</p>
+            <TripBox :btn="yourTrips.btn" :trip="trips ?? []" image="/picture/p2.svg" />
           </template>
         </Section>
       </v-col>

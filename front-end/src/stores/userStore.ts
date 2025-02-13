@@ -15,7 +15,7 @@ export const useUserStore = defineStore("user", () => {
   const token = ref<TOKEN | null>(
     localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt") as string) : null
   );
-
+  const getToken = () => token.value?.access || "";
   const saveToken = (data: TOKEN) => {
     token.value = data;
     localStorage.setItem("jwt", JSON.stringify(data));
@@ -94,7 +94,7 @@ export const useUserStore = defineStore("user", () => {
     registerMutation, 
     logout, 
     isAuthenticated, 
-    token,
-    isLogin
+    isLogin,
+    getToken
   };
 });
