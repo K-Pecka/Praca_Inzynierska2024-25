@@ -15,13 +15,23 @@ export const useUserStore = defineStore("user", () => {
   const token = ref<TOKEN | null>(
     localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt") as string) : null
   );
-  const fetchRefresh = () =>{
-    
+  const fetchRefresh = async () =>{
+    const response = await fetch("https://api.plannder.com/user_auth/token/refresh/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({refresh:token.value?.refresh}),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log(errorData);
+      throw new Error(errorData || "error");
+    }
+    return response.json();
   }
-  const getToken = () => {
-    
-    token.value?.access || "";
-
+  const getToken = async () => {
+    //token.value = await fetchRefresh();
+    //console.log(token.value);
+    return token.value?.access || "";
   }
   const saveToken = (data: TOKEN) => {
     token.value = data;

@@ -17,7 +17,7 @@ export const useTripStore = defineStore("trip", () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()}`,
+        Authorization: `Bearer ${await getToken()}`,
       },
     });
 
@@ -32,7 +32,7 @@ export const useTripStore = defineStore("trip", () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()}`,
+        Authorization: `Bearer ${await getToken()}`,
       },
     });
 

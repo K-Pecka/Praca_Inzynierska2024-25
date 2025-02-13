@@ -13,6 +13,7 @@ import YourTrip from "@/views/panel/children/YourTrip.vue";
 import { useUserStore } from "@/stores/userStore";
 import { useMessageStore } from "@/stores/messageStore";
 import PlanForm from "@/components/trip/PlanForm.vue";
+import YourPlan from "@/views/panel/children/YourPlan.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -62,9 +63,14 @@ const routes: RouteRecordRaw[] = [
         component: YourTrip,
       },
       {
-        path: "yourTrip/:id",
+        path: "yourTrip/:tripId",
         name: "tripDashboard",
         component: TripDashboard,
+      },
+      {
+        path: "yourTrip/:tripId/yourPlan",
+        name: "yourPlan",
+        component: YourPlan,
       },
       {
         path: "planForm",

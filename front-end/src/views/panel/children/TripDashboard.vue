@@ -6,7 +6,7 @@ import { useTripStore } from "@/stores/tripStore";
 const { getTripDetails } = useTripStore();
 
 const route = useRoute();
-const id = Number(route.params.id);
+const id = Number(route.params.tripId);
 
 const { data: trip, isLoading, error, isSuccess } = getTripDetails(id);
 

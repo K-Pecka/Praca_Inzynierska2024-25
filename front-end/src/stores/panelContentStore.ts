@@ -33,7 +33,7 @@ export const usePanelContentStore = defineStore("panelContent", () => {
             label: "Plany",
             icon: "/picture/sideNav/plans.svg",
             children: [
-                { label: "Utworzone", route: "/" },
+                { label: "Utworzone", route: "/panel/yourTrip/:tripId/yourPlan" },
                 { label: "Dodaj", route: "/" },
             ],
         },

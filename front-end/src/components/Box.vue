@@ -110,7 +110,7 @@ const getGridRows = () => {
         <template v-if="Array.isArray(props.content(props.id))">
           <v-list>
             <v-list-item v-for="(item, index) in props.content(props.id)" :key="index">
-              <v-list-item-content>{{ item }}</v-list-item-content>
+              <v-list-item-title>{{ item }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </template>
