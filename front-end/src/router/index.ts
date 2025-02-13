@@ -9,10 +9,12 @@ import RoleSelection from "@/views/panel/children/RoleSelection.vue";
 import LogOut from "@/views/logOut/LogOut.vue";
 import Trip from "@/views/panel/children/Trip.vue";
 import YourTrip from "@/views/panel/children/YourTrip.vue";
+import PlanForm from "@/components/trip/PlanForm.vue";
+import TripForm from "@/components/trip/TripForm.vue";
 
 import { useUserStore } from "@/stores/userStore";
 import { useMessageStore } from "@/stores/messageStore";
-import PlanForm from "@/components/trip/PlanForm.vue";
+
 
 const routes: RouteRecordRaw[] = [
   {
@@ -70,6 +72,11 @@ const routes: RouteRecordRaw[] = [
         path: "planForm",
         name: "PlanForm",
         component: PlanForm,
+      },
+      {
+        path: "tripForm",
+        name: "TripForm",
+        component: TripForm,
       }
     ],
   },

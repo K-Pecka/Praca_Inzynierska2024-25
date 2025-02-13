@@ -4,6 +4,7 @@ export enum FormType {
   LOGIN = "login",
   REGISTER = "register",
   PLAN = "plan",
+  TRIP = "trip",
 }
 
 interface Config {

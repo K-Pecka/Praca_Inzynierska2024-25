@@ -34,7 +34,7 @@ export const usePanelContentStore = defineStore("panelContent", () => {
             icon: "/picture/sideNav/plans.svg",
             children: [
                 { label: "Utworzone", route: "/" },
-                { label: "Dodaj", route: "/" },
+                { label: "Dodaj", route: "/panel/planForm" },
             ],
         },
         {
