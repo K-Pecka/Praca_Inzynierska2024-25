@@ -13,6 +13,7 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
         <Section>
           <template #title>
             <h1>Zarządzaj wycieczami</h1>
+            <RouterLink to="/"></RouterLink>
           </template>
           <template #content>
             <p v-if="isLoading">Ładowanie...</p>
@@ -31,7 +32,7 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
           <template #content>
             <p v-if="isLoading">Ładowanie...</p>
             <p v-else-if="error">Błąd: {{ error.message }}</p>
-            <TripBox :btn="yourTrips.btn" :trip="trips ?? []" image="/picture/p2.svg" />
+            <TripBox v-else :btn="yourTrips.btn" :trip="[]" image="/picture/p2.svg" />
           </template>
         </Section>
       </v-col>

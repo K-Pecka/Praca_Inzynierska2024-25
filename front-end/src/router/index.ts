@@ -7,7 +7,7 @@ import LogIn from "@/views/home/children/LogIn.vue";
 import Register from "@/views/home/children/Register.vue";
 import RoleSelection from "@/views/panel/children/RoleSelection.vue";
 import LogOut from "@/views/logOut/LogOut.vue";
-import Trip from "@/views/panel/children/Trip.vue";
+import TripDashboard from "@/views/panel/children/TripDashboard.vue";
 import YourTrip from "@/views/panel/children/YourTrip.vue";
 
 import { useUserStore } from "@/stores/userStore";
@@ -57,14 +57,14 @@ const routes: RouteRecordRaw[] = [
         component: RoleSelection,
       },
       {
-        path: "trip",
-        name: "trip",
-        component: Trip,
-      },
-      {
         path: "yourTrip",
         name: "yourTrip",
         component: YourTrip,
+      },
+      {
+        path: "yourTrip/:id",
+        name: "tripDashboard",
+        component: TripDashboard,
       },
       {
         path: "planForm",

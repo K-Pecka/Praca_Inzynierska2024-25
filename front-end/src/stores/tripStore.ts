@@ -27,7 +27,21 @@ export const useTripStore = defineStore("trip", () => {
 
     return response.json();
   };
+  const fetchTripDetails = async (id:Number) => {
+    const response = await fetch(`https://api.plannder.com/trip/${id}/itinerary/all/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
 
+    if (!response.ok) {
+      throw new Error("Błąd podczas pobierania wycieczek");
+    }
+
+    return response.json();
+  };
   const deleteTrip = (id: number) => {
     alert(`Usuń wycieczkę o ID: ${id}`);
   };
@@ -38,13 +52,18 @@ export const useTripStore = defineStore("trip", () => {
       queryFn: fetchTrips,
     });
   };
-
+  const getTripDetails = (id: number) => {
+    return useQuery({
+      queryKey: ["trip", id],
+      queryFn: () => fetchTripDetails(id),
+    });
+  };
   const yourTrips = computed(() => {
     return {btn: [
       {
         title: "Zarządzaj wycieczką",
         class:['primary'],
-        onclick: (id: Number) => router.push(`planel/YourTrip/${id}`),
+        onclick: (id: Number) => router.push(`/panel/YourTrip/${id}`),
       },
       {
         title: "Zarządzaj wycieczką",
@@ -56,5 +75,5 @@ export const useTripStore = defineStore("trip", () => {
   }
 });
 
-  return { yourTrips };
+  return { yourTrips,getTripDetails };
 });

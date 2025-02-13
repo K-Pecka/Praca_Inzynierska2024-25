@@ -60,7 +60,9 @@ const showNavigation = computed(() => {
   height: 100%;
   overflow: auto;
 }
-
+main{
+  height: 90%;
+}
 
 
 </style>
