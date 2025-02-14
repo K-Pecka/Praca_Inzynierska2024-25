@@ -11,6 +11,12 @@ class TripManager(models.Manager):
         except self.model.DoesNotExist:
             raise NotFound(detail="Nie znaleziono wycieczki o podanym ID")
 
+    def by_user(self, profile):
+        return self.filter(Q(creator=profile) | Q(members=profile)).distinct()
+
+    def by_user_and_trip(self, profile):
+        return self.by_user(profile)
+
 
 class TicketManager(models.Manager):
     def by_id(self, pk):

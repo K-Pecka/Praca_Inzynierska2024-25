@@ -1,4 +1,5 @@
 from rest_framework.exceptions import NotFound
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import BasePermission
 from chats.models import Chatroom, ChatMessage
 from trips.models import Trip, Ticket
@@ -74,6 +75,8 @@ class IsTripParticipant(BasePermission):
     message = "Tylko uczestnicy wycieczki mogą wykonać tę akcję."
 
     def has_permission(self, request, view):
+        if isinstance(view, ListAPIView):
+            return True
         try:
             obj = view.get_object()
         except Exception:
@@ -81,6 +84,8 @@ class IsTripParticipant(BasePermission):
         profile = request.user.get_default_profile()
         if not profile:
             return False
+        if isinstance(view, ListAPIView):
+            return True
 
         if isinstance(obj, Trip):
             return obj.creator == profile or profile in obj.members.all()
