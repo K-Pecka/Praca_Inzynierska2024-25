@@ -21,7 +21,7 @@ class TripCreateAPIView(CreateAPIView):
 
 
 class TripRetrieveAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant]
+    permission_classes = [IsAuthenticated, IsTripCreator, IsTripParticipant]
     serializer_class = TripSerializer
 
     def get_object(self):
