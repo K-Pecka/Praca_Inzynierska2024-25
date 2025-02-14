@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from dicts.models import BaseModel
+from trips.managers import TripManager
 from users.models import UserProfile
 
 
@@ -54,6 +55,8 @@ class Trip(BaseModel):
     def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)
+
+    objects = TripManager()
 
     class Meta:
         db_table = "trips"

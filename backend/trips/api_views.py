@@ -21,11 +21,11 @@ class TripCreateAPIView(CreateAPIView):
 
 
 class TripRetrieveAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator, IsTripParticipant]
+    permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = TripSerializer
 
     def get_object(self):
-        return Trip.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
+        return Trip.objects.by_id(self.kwargs['pk'])
 
 
 class TripListAPIView(ListAPIView):
