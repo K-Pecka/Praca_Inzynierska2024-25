@@ -28,7 +28,7 @@ export const useTripStore = defineStore("trip", () => {
     return response.json();
   };
   const fetchTripDetails = async (id:Number) => {
-    const response = await fetch(`https://api.plannder.com/trip/${id}/itinerary/all/`, {
+    const response = await fetch(`https://api.plannder.com/trip/${id}/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

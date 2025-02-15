@@ -1,25 +1,24 @@
 <script lang="ts" setup>
-import { ref, onMounted} from 'vue';
+import { ref, onMounted, defineProps } from "vue";
 
 interface Box {
   title: string;
-  content: (id: number | undefined) => string | string[];
+  content: string | string[];
   set: {
     size: {
-      sm?: { col: number, row: number };
-      md?: { col: number, row: number };
-      lg?: { col: number, row: number };
-      xl?: { col: number, row: number };
+      sm?: { col: number; row: number };
+      md?: { col: number; row: number };
+      lg?: { col: number; row: number };
+      xl?: { col: number; row: number };
     };
     order: number;
   };
-  id?: number;
 }
 
 const props = defineProps<Box>();
 
 const screenWidth = ref(window.innerWidth);
-const screenBreakpoint = ref('');
+const screenBreakpoint = ref("");
 
 const breakpoints = {
   xs: 0,
@@ -31,20 +30,20 @@ const breakpoints = {
 
 const checkBreakpoint = () => {
   if (screenWidth.value < breakpoints.sm) {
-    screenBreakpoint.value = 'xs';
+    screenBreakpoint.value = "xs";
   } else if (screenWidth.value < breakpoints.md) {
-    screenBreakpoint.value = 'sm';
+    screenBreakpoint.value = "sm";
   } else if (screenWidth.value < breakpoints.lg) {
-    screenBreakpoint.value = 'md';
+    screenBreakpoint.value = "md";
   } else if (screenWidth.value < breakpoints.xl) {
-    screenBreakpoint.value = 'lg';
+    screenBreakpoint.value = "lg";
   } else {
-    screenBreakpoint.value = 'xl';
+    screenBreakpoint.value = "xl";
   }
 };
 
 onMounted(() => {
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     screenWidth.value = window.innerWidth;
     checkBreakpoint();
   });
@@ -55,40 +54,14 @@ const getGridCols = () => {
   const { size } = props.set;
   const breakpoint = screenBreakpoint.value;
 
-  switch (breakpoint) {
-    case 'xs':
-      return size?.sm?.col || 12;
-    case 'sm':
-      return size?.sm?.col || size?.md?.col || 12;
-    case 'md':
-      return size?.md?.col || size?.lg?.col || 12;
-    case 'lg':
-      return size?.lg?.col || size?.md?.col || 12;
-    case 'xl':
-      return size?.xl?.col || size?.lg?.col || 12;
-    default:
-      return 12;
-  }
+  return size[breakpoint]?.col || size.lg?.col || 12;
 };
 
 const getGridRows = () => {
   const { size } = props.set;
   const breakpoint = screenBreakpoint.value;
 
-  switch (breakpoint) {
-    case 'xs':
-      return size?.sm?.row || 1;
-    case 'sm':
-      return size?.sm?.row || size?.md?.row || 1;
-    case 'md':
-      return size?.md?.row || size?.lg?.row || 1;
-    case 'lg':
-      return size?.lg?.row || size?.md?.row || 1;
-    case 'xl':
-      return size?.xl?.row || size?.lg?.row || 1;
-    default:
-      return 1;
-  }
+  return size[breakpoint]?.row || size.lg?.row || 1;
 };
 </script>
 
@@ -106,27 +79,36 @@ const getGridRows = () => {
       {{ props.title }}
     </v-card-title>
     <v-card-text>
-
-        <template v-if="Array.isArray(props.content(props.id))">
-          <v-list>
-            <v-list-item v-for="(item, index) in props.content(props.id)" :key="index">
-              <v-list-item-title>{{ item }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </template>
-        <template v-else>
-          {{ props.content(props.id) }}
-        </template>
-      
+      <template v-if="Array.isArray(props.content)">
+        <v-list v-if="props.content.length>0">
+          <v-list-item v-for="(item, index) in props.content" :key="index">
+            <v-list-item-title>{{ item }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </template>
+      <template v-else>
+        {{ props.content }}
+      </template>
     </v-card-text>
   </v-card>
 </template>
 
-
 <style scoped>
 .v-card {
   transition: transform 0.2s, box-shadow 0.2s;
+  background-color: rgb(var(--v-theme-secondary),50%);
   height: 100%;
+  border-radius: 1.5rem;
+}
+.v-card-title{
+  font-size: 20px;
+  font-weight: bold;
+  font-family: var(--v-fontFamily);
+  padding-bottom: 2rem;
+}
+.v-card-text{
+  font-size: 20px;
+  font-family: var(--v-fontFamily);
 }
 .v-card:hover {
   transform: translateY(-3px);

@@ -14,7 +14,6 @@ import TripForm from "@/components/trip/TripForm.vue";
 
 import { useUserStore } from "@/stores/userStore";
 import { useMessageStore } from "@/stores/messageStore";
-import PlanForm from "@/components/trip/PlanForm.vue";
 import YourPlan from "@/views/panel/children/YourPlan.vue";
 
 const routes: RouteRecordRaw[] = [

@@ -2,131 +2,84 @@
 import Box from "@/components/Box.vue";
 import { useRoute } from "vue-router";
 import { useTripStore } from "@/stores/tripStore";
+import { computed } from "vue";
 
 const { getTripDetails } = useTripStore();
-
 const route = useRoute();
 const id = Number(route.params.tripId);
 
-const { data: trip, isLoading, error, isSuccess } = getTripDetails(id);
+const { data: trip, isLoading, error } = getTripDetails(id);
+console.log(trip);
+const tripTime = computed(() => `${trip.value?.start_date ?? "..."} - ${trip.value?.end_date ?? "..."}`);
+const budget = computed(() => `${trip.value?.budget ?? "..."} PLN`);
+const participantCount = computed(() => `${trip.value?.members.length ?? "..."} Uczestników`);
+const activityCount = computed(() => "0 Aktywności");
+const upcomingActivities = computed(() => []);
 
-const getTripTime = (id: Number) =>
-  `${trip.value?.start_date} - ${trip.value?.end_date}`;
-const getBudget = (id: Number) => `${trip.value?.budget} PLN`;
-const getParticipantCount = (id: Number) =>
-  `${trip.value?.members} Uczestników`;
-const getActivityCount = (id: Number) => "28 Aktywności";
-const getUpcomingActivities = (id: Number) => [
-  "18:30 - 19:30 Zbieranie truskawek",
-  "20:00 - 23:00 Impreza",
-];
-const boxes = [
+const boxes = computed(() => [
   {
     title: "Czas trwania",
-    content: (id: Number) => getTripTime(id),
+    content: tripTime.value,
     set: {
       order: 1,
-      size: {
-        sm: { col: 12, row: 1 },
-        md: { col: 6, row: 1 },
-        lg: { col: 3, row: 1 },
-      },
+      size: { sm: { col: 12, row: 1 }, md: { col: 6, row: 1 }, lg: { col: 3, row: 1 } },
     },
   },
   {
     title: "Budżet",
-    content: (id: Number) => getBudget(id),
+    content: budget.value,
     set: {
       order: 2,
-      size: {
-        sm: { col: 12, row: 1 },
-        md: { col: 6, row: 1 },
-        lg: { col: 3, row: 1 },
-      },
+      size: { sm: { col: 12, row: 1 }, md: { col: 6, row: 1 }, lg: { col: 3, row: 1 } },
     },
   },
   {
     title: "Uczestnicy",
-    content: (id: Number) => getParticipantCount(id),
+    content: participantCount.value,
     set: {
       order: 3,
-      size: {
-        sm: { col: 12, row: 1 },
-        md: { col: 6, row: 1 },
-        lg: { col: 3, row: 1 },
-      },
+      size: { sm: { col: 12, row: 1 }, md: { col: 6, row: 1 }, lg: { col: 3, row: 1 } },
     },
   },
   {
     title: "Aktywności",
-    content: (id: Number) => getActivityCount(id),
+    content: activityCount.value,
     set: {
       order: 4,
-      size: {
-        sm: { col: 12, row: 1 },
-        md: { col: 6, row: 1 },
-        lg: { col: 3, row: 1 },
-      },
+      size: { sm: { col: 12, row: 1 }, md: { col: 6, row: 1 }, lg: { col: 3, row: 1 } },
     },
   },
   {
     title: "Nadchodzące aktywności",
-    content: (id: Number) => getUpcomingActivities(id),
+    content: upcomingActivities.value,
     set: {
       order: 5,
-      size: {
-        sm: { col: 12, row: 2 },
-        md: { col: 6, row: 2 },
-        lg: { col: 6, row: 2 },
-      },
+      size: { sm: { col: 12, row: 2 }, md: { col: 6, row: 2 }, lg: { col: 6, row: 2 } },
     },
   },
-];
+  {
+    title: "Ważne informacje",
+    content: upcomingActivities.value,
+    set: {
+      order: 5,
+      size: { sm: { col: 12, row: 2 }, md: { col: 6, row: 2 }, lg: { col: 6, row: 2 } },
+    },
+  },
+]);
 </script>
 
 <template>
   <div class="grid-container">
     <template v-if="isLoading">
-      <Box
-        title="loading..."
-        :content="() => 'Pobieranie danych'"
-        :set="{
-        order: 1,
-        size: {
-          sm: { col: 12, row: 4 },
-          md: { col: 12, row: 4 },
-          lg: { col: 12, row: 4 },
-        },
-      }"
-      />
+      <Box title="Ładowanie..." content="Pobieranie danych..." :set="{ order: 1, size: { sm: { col: 12, row: 4 }, md: { col: 12, row: 4 }, lg: { col: 12, row: 4 } } }" />
     </template>
     <template v-else-if="error">
-      <Box
-        title="Error"
-        :content="() => `Błąd: ${error.message}`"
-        :set="{
-        order: 1,
-        size: {
-          sm: { col: 12, row: 4 },
-          md: { col: 12, row: 4 },
-          lg: { col: 12, row: 4 },
-        },
-      }"
-      />
+      <Box title="Błąd" :content="`Błąd: ${error.message}`" :set="{ order: 1, size: { sm: { col: 12, row: 4 }, md: { col: 12, row: 4 }, lg: { col: 12, row: 4 } } }" />
     </template>
     <template v-else>
       <template v-for="(box, index) in boxes" :key="index">
-      <Box
-        v-if="box?.title"
-        :title="box.title"
-        :content="box.content"
-        :set="box.set"
-        :id="id"
-        :isLoading="isLoading"
-        :error="error"
-      />
-    </template>
-    
+        <Box :title="box.title" :content="box.content" :set="box.set" />
+      </template>
     </template>
   </div>
 </template>
@@ -135,7 +88,9 @@ const boxes = [
 .grid-container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 1rem;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2rem;
   height: 100%;
+  font-size: 2rem;
 }
 </style>
