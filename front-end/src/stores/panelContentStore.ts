@@ -9,7 +9,7 @@ export const usePanelContentStore = defineStore("panelContent", () => {
                 title: "Turysta",
                 description: "Planowanie indywidualnych podróży dla siebie i rodziny",
                 image: "/picture/tourist.svg",
-                path:"panel/YourTrip"
+                path:"/panel/YourTrip"
             },
             {
                 title: "Przewodnik",
@@ -49,8 +49,8 @@ export const usePanelContentStore = defineStore("panelContent", () => {
             label: "Budżet",
             icon: "/picture/sideNav/budget.svg",
             children: [
-                { label: "?", route: "/" },
-                { label: "?", route: "/" },
+                { label: "Pokaż", route: "/panel/:tripId/expenseTracker" },
+                { label: "zmień budżet", route: "/panel/:tripId/budget" },
             ],
         },
         {

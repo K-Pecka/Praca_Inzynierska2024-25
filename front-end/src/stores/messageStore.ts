@@ -37,6 +37,7 @@ export const useMessageStore = defineStore("message", () => {
       isEqual: "Fields must be equal",
       isInRange: "Field must be between {0} and {1}",
       doCheckbox: "You must check this box.",
+      minValue: "Value must be greater than {0}"
     },
   };
   const responseError = (type: keyof typeof errorMessage) =>

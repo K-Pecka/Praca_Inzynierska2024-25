@@ -9,12 +9,14 @@ import RoleSelection from "@/views/panel/children/RoleSelection.vue";
 import LogOut from "@/views/logOut/LogOut.vue";
 import TripDashboard from "@/views/panel/children/TripDashboard.vue";
 import YourTrip from "@/views/panel/children/YourTrip.vue";
-import PlanForm from "@/components/trip/PlanForm.vue";
-import TripForm from "@/components/trip/TripForm.vue";
+import PlanForm from "@/views/panel/children/PlanForm.vue";
+import TripForm from "@/views/panel/children/TripForm.vue";
+import ExpenseTracker from "@/views/panel/children/ExpenseTracker.vue";
 
 import { useUserStore } from "@/stores/userStore";
 import { useMessageStore } from "@/stores/messageStore";
 import YourPlan from "@/views/panel/children/YourPlan.vue";
+import BugdetForm from "@/views/panel/children/BugdetForm.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -82,6 +84,16 @@ const routes: RouteRecordRaw[] = [
         path: "tripForm",
         name: "TripForm",
         component: TripForm,
+      },
+      {
+        path: ":tripId/expenseTracker",
+        name: "ExpenseTracker",
+        component: ExpenseTracker,
+      },
+      {
+        path: ":tripId/budget",
+        name: "budget",
+        component: BugdetForm,
       }
     ],
   },

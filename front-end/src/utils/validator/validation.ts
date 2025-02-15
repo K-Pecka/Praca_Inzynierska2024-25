@@ -49,7 +49,14 @@ export class Validator {
         : null;
     });
   }
-
+  minValue(minValue: number): this {
+    return this.addRule("minValue", (value: string) => {
+      console.log(Number(value),"<",minValue);
+      return Number(value) <= Number(minValue)
+        ? this.formatMessage(this.errorMessage.minValue, String(minValue))
+        : null;
+    });
+  }
   equalLength(length: number): this {
     return this.addRule("equalLength", (value: string) => {
       return value.length !== length

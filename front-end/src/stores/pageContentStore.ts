@@ -141,6 +141,7 @@ export const usePageStore = defineStore("page", () => {
       endsWith: "Pole musi kończyć się na {0}",
       isEqual: "Pola muszą być równe",
       isInRange: "Pole musi mieścić się w zakresie od {0} do {1}",
+      minValue: "Wartość musi być większa niż {0}"
     };
   };
   return {

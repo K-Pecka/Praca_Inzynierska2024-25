@@ -7,7 +7,7 @@ export enum InputType {
   TEXT = "text",
   PASSWORD = "password",
   EMAIL = "email",
-  DATE = "date"
+  DATE = "date",
 }
 
 export const useFormStore = defineStore("form", () => {
@@ -175,14 +175,37 @@ export const useFormStore = defineStore("form", () => {
       }
     ];
   };
+  const getBudgetInput = ():Input[] =>{
+    const validator = new Validator({
+      ...errorMessage(),
+      isEqual: "Hasła muszą być takie same",
+    }).save();
 
+    return [
+      {
+        name: "amount",
+        label: "Kwota:",
+        type: InputType.TEXT,
+        placeholder: "np. 6000",
+        validation: validator.createNew().minValue(0),
+        error: [],
+      },
+      {
+        name: "currency",
+        label: "Waluta:",
+        type: InputType.TEXT,
+        placeholder: "PLN",
+        validation: validator.createNew().isEmpty(),
+        error: [],
+      }];
+  }
 
   const getFormInputs = (type: FormType): Input[] => {
     if (type === FormType.LOGIN) return getLoginInput();
     if (type === FormType.REGISTER) return getRegisterInput();
     if (type === FormType.PLAN) return getPlanInput();
     if (type === FormType.TRIP) return getTripInput();
-
+    if (type === FormType.BUDGET) return getBudgetInput();
     return [];
   };
 
