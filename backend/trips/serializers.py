@@ -10,10 +10,13 @@ class BaseTripSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False)
     members = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=UserProfile.objects.all())
-    budget = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    budget = serializers.SerializerMethodField()
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     settings = serializers.JSONField(required=False)
+
+    def get_budget(self, obj):
+        return obj.budget
 
     class Meta:
         model = Trip
@@ -82,17 +85,21 @@ class BudgetSerializer(serializers.ModelSerializer):
     currency = serializers.CharField(max_length=64)
     trip = serializers.PrimaryKeyRelatedField(required=False, queryset=Trip.objects.all())
 
-    def create(self, validated_data):
-        view = self.context['view']
-        validated_data['trip'] = view.kwargs['trip']
-        return super().create(validated_data)
-
     class Meta:
         model = Budget
         fields = [
             'id', 'amount', 'currency', 'trip'
         ]
         read_only_fields = ['id', 'trip']
+
+class BudgetCreateSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        view = self.context['view']
+        validated_data['trip'] = view.kwargs['trip']
+        return super().create(validated_data)
+
+    class Meta(BudgetSerializer.Meta):
+        read_only_fields = ['id',]
 
 
 #################################################################

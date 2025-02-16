@@ -31,7 +31,6 @@ class ItineraryAPITestCase(TestCase):
 
         self.trip = Trip.objects.create(
             creator=self.user_profile,
-            budget=1000.00,
             settings={"currency": "USD"},
             start_date="2025-06-01",
             end_date="2025-06-10"
@@ -184,7 +183,6 @@ class ItineraryActivityAPITestCase(TestCase):
 
         self.trip = Trip.objects.create(
             creator=self.user_profile,
-            budget=2000.00,
             settings={"currency": "USD"},
             start_date="2025-06-01",
             end_date="2025-06-15"

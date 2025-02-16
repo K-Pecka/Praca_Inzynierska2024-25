@@ -36,14 +36,12 @@ class ChatAPITestCase(TestCase):
         self.user_profile2 = self.user2.profile
         self.trip = Trip.objects.create(
             creator=self.user_profile,
-            budget=1000.00,
             settings={"currency": "USD", "guide_price": 1000.00},
             start_date="2025-06-01",
             end_date="2025-06-10"
         )
         self.trip2 = Trip.objects.create(
             creator=self.user_profile2,
-            budget=1000.00,
             settings={"currency": "USD", "guide_price": 1000.00},
             start_date="2025-06-01",
             end_date="2025-06-10"

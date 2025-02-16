@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Trip, Ticket, Budget, Expense
 from server.permissions import IsTripParticipant, IsTripCreator, IsTicketOwner
 from .serializers import (
-    TripSerializer, TicketSerializer, TripCreateSerializer, BudgetSerializer, ExpenseSerializer
+    TripSerializer, TicketSerializer, TripCreateSerializer, BudgetSerializer, ExpenseSerializer, BudgetCreateSerializer
 )
 
 
@@ -98,7 +98,7 @@ class TicketDestroyAPIView(DestroyAPIView):
 
 class BudgetCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = BudgetSerializer
+    serializer_class = BudgetCreateSerializer
 
 
 class BudgetRetrieveAPIView(RetrieveAPIView):

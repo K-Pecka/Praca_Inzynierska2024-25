@@ -26,13 +26,6 @@ class Trip(BaseModel):
         related_name="trips_as_member",
         verbose_name=_("Profil"), help_text=_("Profil")
     )
-    budget = models.DecimalField(
-        max_digits=7,
-        decimal_places=2,
-        default=0,
-        verbose_name=_("Budżet"),
-        help_text=_("Budżet")
-    )
     start_date = models.DateField(
         auto_now_add=True,  # TODO: zmienić na czas lokalny a nie serwerowy
         verbose_name=_("Data rozpoczęcia"), help_text=_("Data rozpoczęcia")
@@ -48,11 +41,14 @@ class Trip(BaseModel):
 
     objects = TripManager()
 
+    @property
+    def budget(self):
+        return self.budżet.all()
+
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
-        if self.budget < 0:
-            raise ValidationError(_("Budżet nie może być ujemny."))
+
 
     def save(self, *args, **kwargs):
         self.clean()
