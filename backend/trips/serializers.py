@@ -78,14 +78,21 @@ class TicketSerializer(BaseTicketSerializer):
 #################################################################
 # TODO: rozdzielić serializery
 class BudgetSerializer(serializers.ModelSerializer):
-    trip = serializers.PrimaryKeyRelatedField(required=True, queryset=Trip.objects.all())
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    currency = serializers.CharField(max_length=64)
+    trip = serializers.PrimaryKeyRelatedField(required=False, queryset=Trip.objects.all())
+
+    def create(self, validated_data):
+        view = self.context['view']
+        validated_data['trip'] = view.kwargs['trip']
+        return super().create(validated_data)
 
     class Meta:
         model = Budget
         fields = [
             'id', 'amount', 'currency', 'trip'
         ]
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'trip']
 
 
 #################################################################
