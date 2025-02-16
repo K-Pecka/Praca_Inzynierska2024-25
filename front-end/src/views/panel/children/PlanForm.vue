@@ -17,7 +17,6 @@ const formValues = ref<Record<string, string>>(
 const handleSubmit = (_formData: any, config: any) => {
   if (config?.send && validateForm(FormType.PLAN, formValues.value)) {
     console.log("Plan został utworzony. Dane:", formValues.value);
-
   }
 };
 </script>

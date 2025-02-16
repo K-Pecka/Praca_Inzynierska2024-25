@@ -31,7 +31,7 @@ const props = defineProps<{
   formValues: Record<string, string>;
   submitButtonLabel: string | undefined;
 }>();
-
+console.log(props);
 const emit = defineEmits(["submitForm"]);
 
 const handleFieldUpdate = (name: string, value: string) => {

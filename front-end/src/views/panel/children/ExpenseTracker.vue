@@ -11,10 +11,10 @@ const { data: trip, isLoading, error } = getTripDetails(id);
 
 const budget = computed(() => (trip.value?.budget ?? 0));
 const expenses = ref([
-  { id: 1, category: 'Obiad w restauracji', amount: -17.97, currency: 'PLN', date: '17.12.2024' },
-  { id: 2, category: 'Obiad w restauracji', amount: -7.97, currency: 'PLN', date: '17.12.2024' },
-  { id: 3, category: 'Obiad w restauracji', amount: -222.97, currency: 'PLN', date: '17.12.2024' },
-  { id: 4, category: 'Obiad w restauracji', amount: -17.97, currency: 'PLN', date: '17.12.2024' }
+  { id: 1, category: 'Obiad w restauracji', amount: -17.97, currency: 'PLN', date: '17.02.2024' },
+  { id: 2, category: 'Obiad w restauracji', amount: -7.97, currency: 'PLN', date: '17.02.2024' },
+  { id: 3, category: 'Obiad w restauracji', amount: -222.97, currency: 'PLN', date: '17.02.2024' },
+  { id: 4, category: 'Obiad w restauracji', amount: -17.97, currency: 'PLN', date: '17.02.2024' }
 ]);
 
 const spent = computed(() => Math.abs(expenses.value.reduce((acc, exp) => acc + exp.amount, 0)));

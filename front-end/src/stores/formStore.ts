@@ -212,7 +212,12 @@ export const useFormStore = defineStore("form", () => {
   const validateForm = (type: FormType, formValues: Record<string, string>) => {
     return getFormInputs(type).every((input) => {
       const value = formValues[input.name];
-      const errors = input.validation ? input.validation.validate(value) : [];
+      let errors: string[] = [];
+  
+      if (input.validation && "validate" in input.validation) {
+        errors = input.validation.validate(value);
+      }
+  
       input.error = errors;
       return errors.length === 0;
     });

@@ -4,19 +4,29 @@ import Section from "@/components/Section.vue";
 import Form from "@/components/Form.vue";
 import { useFormStore } from "@/stores/formStore";
 import { FormType } from "@/type/interface";
-
+import { useRoute } from "vue-router";
 const { getFormInputs, validateForm } = useFormStore();
-
+import {useTripStore} from "@/stores/tripStore"
+const {tripMutationBudget} = useTripStore();
 const inputs = ref(getFormInputs(FormType.BUDGET));
 
 const formValues = ref<Record<string, string>>(
     Object.fromEntries(inputs.value.map(input => [input.name, ""]))
 );
-
+const route = useRoute();
 
 const handleSubmit = (_formData: any, config: any) => {
-  if (config?.send && validateForm(FormType.PLAN, formValues.value)) {
-    console.log("Plan został utworzony. Dane:", formValues.value);
+  if (config?.send && validateForm(FormType.BUDGET, formValues.value)) {
+    const data = {
+        amount: formValues.value?.amount,
+        currency: formValues.value?.currency,
+        trip: Number(route?.params?.tripId)
+      }
+      try {
+        tripMutationBudget.mutateAsync(data);
+      } catch (error) {
+      console.log("ERROR");
+    }
   }
 };
 </script>

@@ -18,7 +18,7 @@ export interface Input {
     related?:string[],
     type: string;
     placeholder: string;
-    validation: Validator;
+    validation: Validator | any; //TODO: naprawić użycie any<tymczasowo>
     config?:Config,
     error: string[];
   }

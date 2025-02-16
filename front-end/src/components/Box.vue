@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted, defineProps } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
 interface Box {
   title: string;
@@ -42,24 +42,30 @@ const checkBreakpoint = () => {
   }
 };
 
-onMounted(() => {
-  window.addEventListener("resize", () => {
-    screenWidth.value = window.innerWidth;
-    checkBreakpoint();
-  });
+const handleResize = () => {
+  screenWidth.value = window.innerWidth;
   checkBreakpoint();
+};
+
+onMounted(() => {
+  window.addEventListener("resize", handleResize);
+  checkBreakpoint();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", handleResize);
 });
 
 const getGridCols = () => {
   const { size } = props.set;
-  const breakpoint = screenBreakpoint.value;
+  const breakpoint = screenBreakpoint.value as keyof typeof size;
 
   return size[breakpoint]?.col || size.lg?.col || 12;
 };
 
 const getGridRows = () => {
   const { size } = props.set;
-  const breakpoint = screenBreakpoint.value;
+  const breakpoint = screenBreakpoint.value as keyof typeof size;
 
   return size[breakpoint]?.row || size.lg?.row || 1;
 };
@@ -80,7 +86,7 @@ const getGridRows = () => {
     </v-card-title>
     <v-card-text>
       <template v-if="Array.isArray(props.content)">
-        <v-list v-if="props.content.length>0">
+        <v-list v-if="props.content.length > 0">
           <v-list-item v-for="(item, index) in props.content" :key="index">
             <v-list-item-title>{{ item }}</v-list-item-title>
           </v-list-item>
@@ -96,17 +102,17 @@ const getGridRows = () => {
 <style scoped>
 .v-card {
   transition: transform 0.2s, box-shadow 0.2s;
-  background-color: rgb(var(--v-theme-secondary),50%);
+  background-color: rgb(var(--v-theme-secondary), 50%);
   height: 100%;
   border-radius: 1.5rem;
 }
-.v-card-title{
+.v-card-title {
   font-size: 20px;
   font-weight: bold;
   font-family: var(--v-fontFamily);
   padding-bottom: 2rem;
 }
-.v-card-text{
+.v-card-text {
   font-size: 20px;
   font-family: var(--v-fontFamily);
 }
