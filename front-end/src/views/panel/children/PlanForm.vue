@@ -4,7 +4,10 @@ import Section from "@/components/Section.vue";
 import Form from "@/components/Form.vue";
 import { useFormStore } from "@/stores/formStore";
 import { FormType } from "@/type/interface";
+import { useTripStore } from "@/stores/tripStore";
+import { useRoute } from "vue-router";
 
+const { planMutationAdd } = useTripStore();
 const { getFormInputs, validateForm } = useFormStore();
 
 const inputs = ref(getFormInputs(FormType.PLAN));
@@ -13,10 +16,24 @@ const formValues = ref<Record<string, string>>(
     Object.fromEntries(inputs.value.map(input => [input.name, ""]))
 );
 
-
+const route = useRoute();
+const id = Number(route.params.tripId);
 const handleSubmit = (_formData: any, config: any) => {
   if (config?.send && validateForm(FormType.PLAN, formValues.value)) {
+    const data = {
+      "name": formValues.value.tripName,
+      "country":formValues.value.city,
+      "start_date": formValues.value?.tripDates_object?.start_date,
+      "end_date": formValues.value?.tripDates_object?.end_date
+    }
+    try {
+      console.log(id);
+      planMutationAdd.mutateAsync({data:data,tripId:id});
+    } catch (error) {
+      console.log("ERROR");
+    }
     console.log("Plan został utworzony. Dane:", formValues.value);
+
   }
 };
 </script>

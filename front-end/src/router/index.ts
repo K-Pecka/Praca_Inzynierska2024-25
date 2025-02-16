@@ -76,7 +76,7 @@ const routes: RouteRecordRaw[] = [
         component: YourPlan,
       },
       {
-        path: "planForm",
+        path: ":tripId/planForm",
         name: "PlanForm",
         component: PlanForm,
       },

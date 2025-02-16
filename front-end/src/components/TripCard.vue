@@ -2,26 +2,30 @@
 import { defineProps } from "vue";
 
 interface Trip {
-  title: string;
-  location: string;
-  dateRange: string;
+  name: string,
+  country: string,
+  start_date: string,
+  end_date: string,
+}
+interface Btn{
   actions: {
-    label: string;
-    color: string;
-    onClick: () => void;
+    title: string,
+    class: String[],
+    onclick: (id: Number) => void,
   }[];
 }
-
-defineProps<{
-  trips: Trip[];
+const props = defineProps<{
+  plans: any;
+  btn:any;
 }>();
+console.log(props);
 </script>
 
 <template>
   <v-container fluid class="trip-container">
-    <v-row :gap="6.25">
+    <v-row :gap="6.25" v-if="plans.length>0">
       <v-col
-        v-for="(trip, index) in trips"
+        v-for="(trip, index) in plans"
         :key="index"
         cols="12"
         sm="6"
@@ -30,20 +34,20 @@ defineProps<{
       >
         <v-card class="trip-card pa-4" elevation="3">
           <v-card-title class="text-h6 font-weight-medium text-center">
-            {{ trip.title }}
+            {{ trip.name }}
           </v-card-title>
 
           <v-card-subtitle class="text-center">
-            <v-icon class="mr-1">mdi-map-marker</v-icon> {{ trip.location }}
+            <v-icon class="mr-1">mdi-map-marker</v-icon> {{ trip.country }}
           </v-card-subtitle>
 
           <v-card-text class="text-center">
-            {{ trip.dateRange }}
+            {{ `${trip.start_date} - ${trip.end_date}` }}
           </v-card-text>
 
           <v-card-actions class="justify-center">
             <v-btn
-              v-for="(action, i) in trip.actions"
+              v-for="(action, i) in actions"
               :key="i"
               :class="['action-btn', action.color]"
               class="action-btn"

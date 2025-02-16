@@ -77,6 +77,7 @@ const props = defineProps({
 
   &__image {
     display: flex;
+    padding-top: 3%;
     justify-content: flex-end;
   }
 }

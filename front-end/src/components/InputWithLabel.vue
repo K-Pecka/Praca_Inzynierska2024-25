@@ -70,17 +70,35 @@ watch(
     }
   }
 );
-
-  function onRangeChange(value: string[] | string) {
+function formatDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+function onRangeChange(value: string[] | string) {
   if (Array.isArray(value) && value.length >= 2) {
-    const startDate = new Date(value[0]).toLocaleDateString();
-    const endDate = new Date(value[value.length-1]).toLocaleDateString();
+    const startDate = formatDate(new Date(value[0]));
+    const endDate = formatDate(new Date(value[value.length - 1]));
     const formattedRange = `${startDate} - ${endDate}`;
+
+    const dateRangeObject = {
+      start_date: startDate,
+      end_date: endDate
+    };
     emit("update", props.inputData.name, formattedRange);
+    emit("update", props.inputData.name + "_object", dateRangeObject);
   } else {
-    emit("update", props.inputData.name, value);
+    const singleDate = formatDate(new Date(value[0]));
+
+    emit("update", props.inputData.name, singleDate);
+    emit("update", props.inputData.name + "_object", {
+      start_date: singleDate,
+      end_date: singleDate
+    });
   }
 }
+
 
 const handleInput = (event: Event) => {
   const name = (event.target as HTMLInputElement).name;

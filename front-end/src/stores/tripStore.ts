@@ -1,22 +1,39 @@
-import { useMutation, useQuery, UseQueryOptions } from "@tanstack/vue-query";
+import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/vue-query";
 import { defineStore } from "pinia";
 import { computed } from "vue";
 import { useUserStore } from "./userStore";
 import router from "@/router";
 import { useMessageStore } from "./messageStore";
-
 interface Button {
   title: string;
   class: String[];
   onclick: (id: number | undefined) => void;
 }
 export const useTripStore = defineStore("trip", () => {
+  const queryClient = useQueryClient();
+
   const { setErrorCurrentMessage, setSuccessCurrentMessage } =
     useMessageStore();
   const { getToken } = useUserStore();
 
   const fetchTrips = async () => {
     const response = await fetch("https://api.plannder.com/trip/all/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${await getToken()}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Błąd podczas pobierania wycieczek");
+    }
+
+    return response.json();
+  };
+  const fetchPlans = async (id:Number) => {
+    console.log(id);
+    const response = await fetch(`https://api.plannder.com/trip/${id}/itinerary/all/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -57,30 +74,18 @@ export const useTripStore = defineStore("trip", () => {
     if (!response.ok) {
       const errorData = await response.json();
       console.log(errorData);
-      throw new Error("błąd usuwania");
+      throw new Error(errorData);
     }
-    return response.json();
+    return response;
   };
-  
   const deleteTripMutation = useMutation({
     mutationFn: deleteTrip,
     onSuccess: () => {
       setSuccessCurrentMessage("Pomyślnie usunięto wycieczkę");
+      queryClient.invalidateQueries({ queryKey: ["trips"] });
     },
     onError: (err) => {
-      console.table(err.message);
-      if (err && typeof err === 'object' && err.message) {
-        if (typeof err.message === 'object') {
-          Object.entries(err.message).forEach(([key, value]) => {
-            console.log(`${key}: ${value}`);
-            setErrorCurrentMessage(`${value}`);
-          });
-        } else {
-          setErrorCurrentMessage(err.message);
-        }
-      } else {
-        setErrorCurrentMessage("An unexpected error occurred.");
-      }
+      setErrorCurrentMessage(err.message);
     }    
   });
   const handleDeleteTrip = async (id: Number) => {
@@ -90,17 +95,23 @@ export const useTripStore = defineStore("trip", () => {
       console.error("Failed to delete trip:", err);
     }
   };
-
-  const getTrips = () => {
-    return useQuery({
-      queryKey: ["trips"],
-      queryFn: fetchTrips,
-    });
-  };
+  
   const getTripDetails = (id: number) => {
     return useQuery({
       queryKey: ["trip", id],
       queryFn: () => fetchTripDetails(id),
+    });
+  };
+  const getPlans = (id: number) => {
+    return useQuery({
+      queryKey: ["plans", id],
+      queryFn: () => fetchPlans(id),
+    });
+  };
+  const getTrips = () => {
+    return useQuery({
+      queryKey: ["trips"],
+      queryFn: fetchTrips,
     });
   };
   const yourTrips = computed(() => {
@@ -120,13 +131,30 @@ export const useTripStore = defineStore("trip", () => {
       trips: getTrips,
     };
   });
+  const yourPlans = computed(() => {
+    return {
+      btn: [
+        {
+          title: "Zarządzaj wycieczką",
+          class: ["primary"],
+          onclick: (id: Number) => router.push(`/panel/YourTrip/${id}`),
+        },
+        {
+          title: "usuń wycieczkę",
+          class: ["accent"],
+          onclick: (id: number) => handleDeleteTrip(id),
+        },
+      ],
+      plans: getPlans,
+    };
+  });
   const saveBudget = async (data: {
     amount: string;
     currency: string;
     trip: Number;
   }) => {
-    const response = await fetch(`https://api.plannder.com/trip/${data.trip}/budget/`, {
-      method: "POST",
+    const response = await fetch(`https://api.plannder.com/trip/${data.trip}/budget/update/`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${await getToken()}`,
@@ -151,5 +179,77 @@ export const useTripStore = defineStore("trip", () => {
       setErrorCurrentMessage("błąd");
     },
   });
-  return { yourTrips, getTripDetails, tripMutationBudget };
+  const addTrip = async (data: {
+    name: string;
+    start_date: Date;
+    end_date: Date;
+  }) => {
+    const response = await fetch(`https://api.plannder.com/trip/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${await getToken()}`,
+      },
+      body: JSON.stringify(data),
+    });
+    console.log(data);
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log(errorData);
+      throw new Error(errorData || "unknow");
+    }
+
+    return response.json();
+  };
+  const addPlan = async ({
+    data,
+    tripId
+  }: {
+    data: {
+      name: string;
+      start_date: Date;
+      end_date: Date;
+    };
+    tripId: number;
+  })  => {
+    console.log( data,
+      tripId);
+    const response = await fetch(`https://api.plannder.com/trip/${tripId}/itinerary/create/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${await getToken()}`,
+      },
+      body: JSON.stringify(data),
+    });
+    console.log(data);
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log(errorData);
+      throw new Error(errorData || "unknow");
+    }
+
+    return response.json();
+  };
+  const planMutationAdd = useMutation({
+    mutationFn: addPlan,
+    onSuccess: (data) => {
+      router.back();
+      setSuccessCurrentMessage("dodano planu");
+    },
+    onError: (err) => {
+      setErrorCurrentMessage("błąd");
+    },
+  });
+  const tripMutationAdd = useMutation({
+    mutationFn: addTrip,
+    onSuccess: (data) => {
+      router.back();
+      setSuccessCurrentMessage("dodano wycieczkę");
+    },
+    onError: (err) => {
+      setErrorCurrentMessage("błąd");
+    },
+  });
+  return { yourTrips,yourPlans, getTripDetails,tripMutationAdd, tripMutationBudget,planMutationAdd };
 });

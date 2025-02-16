@@ -20,7 +20,7 @@ const { heroTestData } = usePageStore();
 img {
   transform-origin: top left;
   transition: transform 0.3s ease;
-  transform: scale(1.1) translateX(-10%);
+  transform: scale(0.8) translateX(-10%);
 
   @media (max-width: 600px) {
     transform: scale(0.5) translateX(100%);

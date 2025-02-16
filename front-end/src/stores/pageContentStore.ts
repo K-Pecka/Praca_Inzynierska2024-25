@@ -38,10 +38,9 @@ export const usePageStore = defineStore("page", () => {
   const heroTestData = () => [
     { word: "Zaplanuj" },
     { word: ["przygodę", "podróż"], animation: true },
-    { word: "która" },
-    { word: "zapadnie" },
-    { word: "w pamięć" },
-    { word: "na zawsze" },
+    { word: "która zapadnie" },
+    { word: "w pamięć na" },
+    { word: "zawsze" },
   ];
   const FQAData = (limit?: number) => {
     let fqa = [

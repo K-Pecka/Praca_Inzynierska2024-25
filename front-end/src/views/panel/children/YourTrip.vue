@@ -2,8 +2,11 @@
 import Section from "@/components/Section.vue";
 import TripBox from "@/components/TripBox.vue";
 import { useTripStore } from "@/stores/tripStore";
+import { watchEffect } from "vue";
+
 const { yourTrips } = useTripStore();
 const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
+
 </script>
 
 <template>
@@ -12,7 +15,16 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
       <v-col cols="12" md="10" offset-md="1">
         <Section>
           <template #title>
-            <h1>Zarządzaj wycieczami</h1>
+            <div class="d-flex justify-between align-center justify-space-between">
+              <h1>Zarządzaj wycieczkami</h1>
+              <router-link to="/panel/tripForm">
+                 <v-btn  outlined class="text-primary p-5">
+                  Dodaj wycieczkę
+                </v-btn>
+              </router-link>
+             
+            </div>
+            
             <RouterLink to="/"></RouterLink>
           </template>
           <template #content>
@@ -44,5 +56,9 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
 h1 {
   font-size: 2.25rem;
   text-align: left;
+}
+.v-btn{
+  font-weight: bold;
+  border:2px solid rgb(var(--v-theme-primary));
 }
 </style>

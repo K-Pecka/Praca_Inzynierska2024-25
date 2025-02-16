@@ -4,6 +4,9 @@ import Section from "@/components/Section.vue";
 import Form from "@/components/Form.vue";
 import { useFormStore } from "@/stores/formStore";
 import { FormType } from "@/type/interface";
+import { useTripStore } from "@/stores/tripStore";
+
+const { tripMutationAdd } = useTripStore();
 
 const { getFormInputs, validateForm } = useFormStore();
 
@@ -15,14 +18,17 @@ const formValues = ref<Record<string, string>>(
 
 
 const handleSubmit = (_formData: any, config: any) => {
-  console.log(formValues.value);
   if (config?.send && validateForm(FormType.TRIP, formValues.value)) {
-    console.log("Wycieczka została utworzona. Dane:", formValues.value);
-//     {
-//   "name": "Włochy",
-//   "start_date": "2025-02-01",
-//   "end_date": "2025-03-01"
-// }
+    const data = {
+      "name": formValues.value.tripName,
+      "start_date": formValues.value?.tripDates_object?.start_date,
+      "end_date": formValues.value?.tripDates_object?.end_date
+    }
+    try {
+      tripMutationAdd.mutateAsync(data);
+    } catch (error) {
+      console.log("ERROR");
+    }
   }
 };
 </script>

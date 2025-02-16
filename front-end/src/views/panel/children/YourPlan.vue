@@ -2,47 +2,15 @@
 import Section from "@/components/Section.vue";
 import TripBox from "@/components/TripBox.vue";
 import { useTripStore } from "@/stores/tripStore";
-const { yourTrips } = useTripStore();
-//const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
-
 import TripCard from "@/components/TripCard.vue";
 
-const trips = [
-  {
-    title: "Wycieczka po Berlinie",
-    location: "Berlin",
-    dateRange: "12.12.2025 - 15.12.2025",
-    actions: [
-      {
-        label: "Edytuj",
-        color: "bg-primary",
-        onClick: () => alert("Edytowanie wycieczki"),
-      },
-      {
-        label: "Usuń",
-        color: "bg-accent",
-        onClick: () => alert("Usuwanie wycieczki"),
-      },
-    ],
-  },
-  {
-    title: "Weekend w Paryżu",
-    location: "Paryż",
-    dateRange: "05.05.2025 - 07.05.2025",
-    actions: [
-    {
-        label: "Edytuj",
-        color: "bg-primary",
-        onClick: () => alert("Edytowanie wycieczki"),
-      },
-      {
-        label: "Usuń",
-        color: "bg-accent",
-        onClick: () => alert("Usuwanie wycieczki"),
-      },
-    ],
-  },
-];
+const { yourPlans } = useTripStore();
+import { useRoute } from "vue-router";
+import {computed} from 'vue';
+const route = useRoute();
+const id = Number(route.params.tripId);
+const { data: rawPlans, isLoading, error, isSuccess } = yourPlans.plans(id);
+
 </script>
 
 <template>
@@ -51,9 +19,9 @@ const trips = [
       <v-col cols="12" md="10" offset-md="1">
         <Section>
           <template #content>
-            <!--p v-if="isLoading">Ładowanie...</!--p>
-            <p-- v-else-if="error">Błąd: {{ error.message }}</p-->
-            <TripCard :trips="trips" />
+            <p v-if="isLoading">Ładowanie...</p>
+            <p v-else-if="error">Błąd: {{ error.message }}</p>
+            <TripCard v-else :plans="rawPlans.plans ?? []" :btn="yourPlans.btn ?? []" />
           </template>
         </Section>
       </v-col>

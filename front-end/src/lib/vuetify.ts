@@ -17,7 +17,7 @@ export default createVuetify({
         variables: {
           borderRadius: '24px',
           gradientText: 'linear-gradient(to right, #2f27ce, #ac6ed9)',
-          fontFamily: '"Inter", sans-serif',
+          fontFamily: '"Roboto", serif',
         },
       },
       dark: {
@@ -32,7 +32,7 @@ export default createVuetify({
         variables: {
           borderRadius: '24px',
           gradientText: 'linear-gradient(to right, #BB86FC, #FF4081)',
-          fontFamily: '"Inter", sans-serif',
+          fontFamily: '"Quicksand", serif',
         },
       },
     },
