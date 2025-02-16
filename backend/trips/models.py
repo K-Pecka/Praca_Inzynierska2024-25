@@ -46,7 +46,7 @@ class Trip(BaseModel):
         try:
             return Budget.objects.get(trip=self)
         except Budget.DoesNotExist:
-            return 0
+            return Budget.objects.create(trip=self, currency='PLN')
 
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:

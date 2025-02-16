@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 
-from trips.api_views import BudgetCreateAPIView, BudgetRetrieveAPIView, BudgetUpdateAPIView, BudgetDestroyAPIView,\
+from trips.api_views import BudgetCreateAPIView, BudgetUpdateAPIView, BudgetDestroyAPIView,\
     ExpenseUpdateAPIView, ExpenseDestroyAPIView, ExpenseRetrieveAPIView, ExpenseListAPIView, ExpenseCreateAPIView
 from users.models import CustomUser, UserProfile
 from trips.models import Trip, Budget, Expense
@@ -55,16 +55,6 @@ class BudgetAPITestCase(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_budget_retrieve(self):
-        """
-        Test retrieving a budget.
-        """
-        view = BudgetRetrieveAPIView.as_view()
-        request = self.factory.get(f'/trips/{self.trip.id}/budget/{self.budget.id}/')
-        force_authenticate(request, user=self.user)
-        response = view(request, pk=self.budget.id)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['amount'], "1000.00")
 
     def test_budget_update(self):
         """

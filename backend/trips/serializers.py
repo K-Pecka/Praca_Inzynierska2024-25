@@ -38,22 +38,20 @@ class BaseTripSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False)
     members = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=UserProfile.objects.all())
-    budget = BudgetSerializer()
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     settings = serializers.JSONField(required=False)
 
-    def get_budget(self, obj):
-        return obj.budget
-
     class Meta:
         model = Trip
         fields = [
-            'id', 'name', 'creator', 'members', 'budget', 'start_date', 'end_date', 'settings'
+            'id', 'name', 'creator', 'members', 'start_date', 'end_date', 'settings'
         ]
 
 
 class TripSerializer(BaseTripSerializer):
+    budget = BudgetSerializer()
+
     def validate(self, data):
         members = data.get("members", [])
 
@@ -61,8 +59,11 @@ class TripSerializer(BaseTripSerializer):
             raise serializers.ValidationError("Właściciel nie może być uczestnikiem wycieczki.")
         return data
 
+    def get_budget(self, obj):
+        return obj.budget
+
     class Meta(BaseTripSerializer.Meta):
-        read_only_fields = ['id', 'name', 'creator', 'members', 'budget', 'start_date', 'end_date', 'settings']
+        fields = ['id', 'name', 'creator', 'members', 'budget', 'start_date', 'end_date', 'settings']
 
 
 class TripCreateSerializer(BaseTripSerializer):
