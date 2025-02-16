@@ -17,7 +17,7 @@ const form = ref({
   email: "",
   password: "",
 });
-const hiddenNavRoutes = ["roleSelection", "yourTrip"];
+const hiddenNavRoutes = ["roleSelection", "yourTrip","TripForm"];
 const showNavigation = computed(() => {
   return !hiddenNavRoutes.includes(route.name as string);
 });

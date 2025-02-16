@@ -19,11 +19,14 @@ const formValues = ref<Record<string, string>>(
 
 const handleSubmit = (_formData: any, config: any) => {
   if (config?.send && validateForm(FormType.TRIP, formValues.value)) {
+    const { tripName, tripDates } = formValues.value;
+    const [start_date, end_date] = tripDates.split(' - ');
     const data = {
-      "name": formValues.value.tripName,
-      "start_date": formValues.value?.tripDates_object?.start_date,
-      "end_date": formValues.value?.tripDates_object?.end_date
+      name: formValues.value.tripName,
+      start_date: start_date || '',
+      end_date: end_date || ''
     }
+  
     try {
       tripMutationAdd.mutateAsync(data);
     } catch (error) {

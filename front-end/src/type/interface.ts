@@ -12,6 +12,7 @@ interface Config {
   required?: boolean;
   multiple?:true;
 }
+
 export interface Input {
     name: string;
     label: string;

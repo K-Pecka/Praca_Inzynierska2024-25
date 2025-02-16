@@ -80,22 +80,11 @@ function onRangeChange(value: string[] | string) {
   if (Array.isArray(value) && value.length >= 2) {
     const startDate = formatDate(new Date(value[0]));
     const endDate = formatDate(new Date(value[value.length - 1]));
-    const formattedRange = `${startDate} - ${endDate}`;
-
-    const dateRangeObject = {
-      start_date: startDate,
-      end_date: endDate
-    };
-    emit("update", props.inputData.name, formattedRange);
-    emit("update", props.inputData.name + "_object", dateRangeObject);
+    emit("update", props.inputData.name, `${startDate} - ${endDate}`);
   } else {
     const singleDate = formatDate(new Date(value[0]));
 
-    emit("update", props.inputData.name, singleDate);
-    emit("update", props.inputData.name + "_object", {
-      start_date: singleDate,
-      end_date: singleDate
-    });
+    emit("update", props.inputData.name, `${singleDate} - ${singleDate}`);
   }
 }
 

@@ -181,8 +181,8 @@ export const useTripStore = defineStore("trip", () => {
   });
   const addTrip = async (data: {
     name: string;
-    start_date: Date;
-    end_date: Date;
+    start_date: string;
+    end_date: string;
   }) => {
     const response = await fetch(`https://api.plannder.com/trip/`, {
       method: "POST",
@@ -207,8 +207,8 @@ export const useTripStore = defineStore("trip", () => {
   }: {
     data: {
       name: string;
-      start_date: Date;
-      end_date: Date;
+      start_date: string;
+      end_date: string;
     };
     tripId: number;
   })  => {

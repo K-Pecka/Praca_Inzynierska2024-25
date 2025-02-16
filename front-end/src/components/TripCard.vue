@@ -23,7 +23,7 @@ console.log(props);
 
 <template>
   <v-container fluid class="trip-container">
-    <v-row :gap="6.25" v-if="plans.length>0">
+    <v-row :gap="6.25" v-if="props.plans.length>0">
       <v-col
         v-for="(trip, index) in plans"
         :key="index"
@@ -47,7 +47,7 @@ console.log(props);
 
           <v-card-actions class="justify-center">
             <v-btn
-              v-for="(action, i) in actions"
+              v-for="(action, i) in btn"
               :key="i"
               :class="['action-btn', action.color]"
               class="action-btn"
