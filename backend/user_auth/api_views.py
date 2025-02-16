@@ -1,15 +1,7 @@
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
-
-class LoginView(TokenObtainPairView):
-    """
-    Custom login view that returns JWT token on successful login.
-    """
-    pass
 
 
 class LogoutView(APIView):
