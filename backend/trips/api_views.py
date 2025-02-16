@@ -101,25 +101,6 @@ class BudgetCreateAPIView(CreateAPIView):
     serializer_class = BudgetCreateSerializer
 
 
-class BudgetRetrieveAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = BudgetSerializer
-
-    def get_object(self):
-        try:
-            return Budget.objects.get(pk=self.kwargs['pk'])
-        except Budget.DoesNotExist:
-            raise NotFound(detail="Nie znaleziono budżetu o podanym ID")
-
-
-class BudgetListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = BudgetSerializer
-
-    def get_queryset(self):
-        return Budget.objects.filter(trip=self.kwargs['trip_id'])
-
-
 class BudgetUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = BudgetSerializer

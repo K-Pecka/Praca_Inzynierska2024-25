@@ -1,6 +1,34 @@
 from rest_framework import serializers
+from rest_framework.exceptions import NotFound
+
 from .models import Trip, Ticket, Budget, Expense
 from users.models import UserProfile
+
+
+#################################################################
+# Budget
+#################################################################
+# TODO: rozdzielić serializery
+class BudgetSerializer(serializers.ModelSerializer):
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    currency = serializers.CharField(max_length=64)
+
+    class Meta:
+        model = Budget
+        fields = [
+            'id', 'amount', 'currency'
+        ]
+        read_only_fields = ['id',]
+
+class BudgetCreateSerializer(BudgetSerializer):
+    def create(self, validated_data):
+        view = self.context['view']
+        validated_data['trip'] = Trip.objects.get(pk=view.kwargs['trip_id'])
+        return super().create(validated_data)
+
+    class Meta(BudgetSerializer.Meta):
+        read_only_fields = ['id',]
+
 
 
 #################################################################
@@ -10,7 +38,7 @@ class BaseTripSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False)
     members = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=UserProfile.objects.all())
-    budget = serializers.SerializerMethodField()
+    budget = BudgetSerializer()
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     settings = serializers.JSONField(required=False)
@@ -50,9 +78,14 @@ class TripCreateSerializer(BaseTripSerializer):
         return data
 
     def create(self, validated_data):
-        request = self.context['request']
-        validated_data['creator'] = request.user.get_default_profile()
-        return super().create(validated_data)
+        try:
+            request = self.context['request']
+            validated_data['creator'] = request.user.get_default_profile()
+            trip = super().create(validated_data)
+            Budget.objects.create(currency='PLN', trip=trip)
+            return trip
+        except Exception as e:
+            raise e
 
     class Meta(BaseTripSerializer.Meta):
         read_only_fields = ['id', 'creator']
@@ -74,33 +107,6 @@ class BaseTicketSerializer(serializers.ModelSerializer):
 class TicketSerializer(BaseTicketSerializer):
     class Meta(BaseTicketSerializer.Meta):
         read_only_fields = ['id', 'ticket', 'profile', 'trip']
-
-
-#################################################################
-# Budget
-#################################################################
-# TODO: rozdzielić serializery
-class BudgetSerializer(serializers.ModelSerializer):
-    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
-    currency = serializers.CharField(max_length=64)
-    trip = serializers.PrimaryKeyRelatedField(required=False, queryset=Trip.objects.all())
-
-    class Meta:
-        model = Budget
-        fields = [
-            'id', 'amount', 'currency', 'trip'
-        ]
-        read_only_fields = ['id', 'trip']
-
-class BudgetCreateSerializer(BudgetSerializer):
-    def create(self, validated_data):
-        view = self.context['view']
-        validated_data['trip'] = Trip.objects.get(pk=view.kwargs['trip_id'])
-        return super().create(validated_data)
-
-    class Meta(BudgetSerializer.Meta):
-        read_only_fields = ['id',]
-
 
 #################################################################
 # Expense

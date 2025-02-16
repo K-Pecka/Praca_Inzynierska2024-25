@@ -43,7 +43,10 @@ class Trip(BaseModel):
 
     @property
     def budget(self):
-        return sum([i.amount for i in self.budżet.all()])
+        try:
+            return Budget.objects.get(trip=self)
+        except Budget.DoesNotExist:
+            return 0
 
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
@@ -107,7 +110,7 @@ class Budget(BaseModel):
         verbose_name=_("Waluta"),
         help_text=_("Waluta (np. USD, PLN)")
     )
-    trip = models.ForeignKey(
+    trip = models.OneToOneField(
         Trip,
         on_delete=models.CASCADE,
         related_name="budżet",
