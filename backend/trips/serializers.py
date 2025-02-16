@@ -92,10 +92,10 @@ class BudgetSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'trip']
 
-class BudgetCreateSerializer(serializers.ModelSerializer):
+class BudgetCreateSerializer(BudgetSerializer):
     def create(self, validated_data):
         view = self.context['view']
-        validated_data['trip'] = view.kwargs['trip']
+        validated_data['trip'] = Trip.objects.get(pk=view.kwargs['trip_id'])
         return super().create(validated_data)
 
     class Meta(BudgetSerializer.Meta):

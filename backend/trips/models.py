@@ -43,7 +43,7 @@ class Trip(BaseModel):
 
     @property
     def budget(self):
-        return self.budżet.all()
+        return sum([i.amount for i in self.budżet.all()])
 
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
