@@ -15,9 +15,14 @@ const formValues = ref<Record<string, string>>(
 
 
 const handleSubmit = (_formData: any, config: any) => {
+  console.log(formValues.value);
   if (config?.send && validateForm(FormType.TRIP, formValues.value)) {
     console.log("Wycieczka została utworzona. Dane:", formValues.value);
-
+//     {
+//   "name": "Włochy",
+//   "start_date": "2025-02-01",
+//   "end_date": "2025-03-01"
+// }
   }
 };
 </script>

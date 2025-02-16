@@ -29,8 +29,9 @@ export const useUserStore = defineStore("user", () => {
     return response.json();
   }
   const getToken = async () => {
-    //token.value = await fetchRefresh();
-    //console.log(token.value);
+    const tokenRefresh = await fetchRefresh();
+    saveToken(tokenRefresh);
+    token.value = tokenRefresh;
     return token.value?.access || "";
   }
   const saveToken = (data: TOKEN) => {
@@ -58,14 +59,15 @@ export const useUserStore = defineStore("user", () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),
     });
+    
     if (!response.ok) {
       const errorData = await response.json();
       console.log(errorData);
-      throw new Error(errorData || loginError());
+      throw new Error(errorData.message || 'An error occurred');
     }
     return response.json();
   };
-
+  
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
@@ -74,10 +76,20 @@ export const useUserStore = defineStore("user", () => {
       router.push("/panel");
     },
     onError: (err) => {
-      setErrorCurrentMessage(err.message);
+      if (err && typeof err === 'object' && err.message) {
+        if (typeof err.message === 'object') {
+          Object.entries(err.message).forEach(([key, value]) => {
+            console.log(`${key}: ${value}`);
+            setErrorCurrentMessage(`${key}: ${value}`);
+          });
+        } else {
+          setErrorCurrentMessage(err.message);
+        }
+      } else {
+        setErrorCurrentMessage("An unexpected error occurred.");
+      }
     },
   });
-
   const register = async (userData: Register) => {
     const response = await fetch("https://api.plannder.com/user/", {
       method: "POST",
@@ -87,6 +99,7 @@ export const useUserStore = defineStore("user", () => {
     console.log(userData);
     if (!response.ok) {
       const errorData = await response.json();
+      console.log(errorData);
       throw new Error(errorData || "unknow");
     }
 
@@ -98,7 +111,7 @@ export const useUserStore = defineStore("user", () => {
     onSuccess: (data) => {
       setSuccessCurrentMessage("Success");
       console.log(data);
-      //router.push("/logIn");
+      router.push("/logIn");
     },
     onError: (err) => {
       console.log(err);

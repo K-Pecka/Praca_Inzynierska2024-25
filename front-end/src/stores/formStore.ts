@@ -8,6 +8,7 @@ export enum InputType {
   PASSWORD = "password",
   EMAIL = "email",
   DATE = "date",
+  DATA_RENGE = "data_range"
 }
 
 export const useFormStore = defineStore("form", () => {
@@ -98,15 +99,6 @@ export const useFormStore = defineStore("form", () => {
         validation: validator.isEmpty(),
         config: { required: true },
         error: [],
-      },
-      {
-        name: "regulamin",
-        label: "Data podróży",
-        type: "checkbox",
-        placeholder: "dd.mm.rrrr - dd.mm.rrrr",
-        validation: validator.createNew().isEmpty(),
-        config: { required: true },
-        error: [],
       }
     ];
   };
@@ -130,7 +122,7 @@ export const useFormStore = defineStore("form", () => {
       {
         name: "city",
         label: "Miasto",
-        type: "text",
+        type: InputType.TEXT,
         placeholder: "np. Paryż",
         validation: validator.createNew().isEmpty(),
         config: { required: true },
@@ -139,7 +131,7 @@ export const useFormStore = defineStore("form", () => {
       {
         name: "tripDates",
         label: "Data podróży",
-        type: "date",
+        type: InputType.DATA_RENGE,
         placeholder: "dd.mm.rrrr - dd.mm.rrrr",
         validation: validator.createNew().isEmpty(),
         config: { required: true, multiple:true },
@@ -158,7 +150,7 @@ export const useFormStore = defineStore("form", () => {
       {
         name: "tripName",
         label: "Nazwa",
-        type: "text",
+        type: InputType.TEXT,
         placeholder: "Bałkany",
         validation: validator.createNew().isEmpty(),
         config: { required: true },
@@ -167,7 +159,7 @@ export const useFormStore = defineStore("form", () => {
       {
         name: "tripDates",
         label: "Data wycieczki",
-        type: "date",
+        type: InputType.DATA_RENGE,
         placeholder: "dd.mm.rrrr - dd.mm.rrrr",
         validation: validator.createNew().isEmpty(),
         config: { required: true, multiple:true },

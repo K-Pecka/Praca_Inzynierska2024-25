@@ -7,7 +7,7 @@
       >{{ inputData.label }}</label
     >
 
-    <template v-if="inputData.type === 'date'">
+    <template v-if="inputData.type === 'data_range'">
       <v-date-input
         v-model="localRange"
         :label="inputData.placeholder"
@@ -71,8 +71,15 @@ watch(
   }
 );
 
-function onRangeChange(value: string[] | string) {
-  emit("update", props.inputData.name, value);
+  function onRangeChange(value: string[] | string) {
+  if (Array.isArray(value) && value.length >= 2) {
+    const startDate = new Date(value[0]).toLocaleDateString();
+    const endDate = new Date(value[value.length-1]).toLocaleDateString();
+    const formattedRange = `${startDate} - ${endDate}`;
+    emit("update", props.inputData.name, formattedRange);
+  } else {
+    emit("update", props.inputData.name, value);
+  }
 }
 
 const handleInput = (event: Event) => {

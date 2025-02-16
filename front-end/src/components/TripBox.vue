@@ -85,6 +85,7 @@ const props = defineProps({
 }
 .v-btn {
   margin-top: 0.6rem;
+  width: 100%;
 }
 .primary button {
   background-color: rgb(var(--v-theme-primary));

@@ -45,8 +45,50 @@ export const useTripStore = defineStore("trip", () => {
 
     return response.json();
   };
-  const deleteTrip = (id: number) => {
-    alert(`Usuń wycieczkę o ID: ${id}`);
+  const deleteTrip = async (tripId: Number) => {
+    const response = await fetch(`https://api.plannder.com/trip/${tripId}/delete/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${await getToken()}`,
+      },
+    });
+  
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log(errorData);
+      throw new Error("błąd usuwania");
+    }
+    return response.json();
+  };
+  
+  const deleteTripMutation = useMutation({
+    mutationFn: deleteTrip,
+    onSuccess: () => {
+      setSuccessCurrentMessage("Pomyślnie usunięto wycieczkę");
+    },
+    onError: (err) => {
+      console.table(err.message);
+      if (err && typeof err === 'object' && err.message) {
+        if (typeof err.message === 'object') {
+          Object.entries(err.message).forEach(([key, value]) => {
+            console.log(`${key}: ${value}`);
+            setErrorCurrentMessage(`${value}`);
+          });
+        } else {
+          setErrorCurrentMessage(err.message);
+        }
+      } else {
+        setErrorCurrentMessage("An unexpected error occurred.");
+      }
+    }    
+  });
+  const handleDeleteTrip = async (id: Number) => {
+    try {
+      await deleteTripMutation.mutateAsync(id);
+    } catch (err) {
+      console.error("Failed to delete trip:", err);
+    }
   };
 
   const getTrips = () => {
@@ -70,9 +112,9 @@ export const useTripStore = defineStore("trip", () => {
           onclick: (id: Number) => router.push(`/panel/YourTrip/${id}`),
         },
         {
-          title: "Zarządzaj wycieczką",
+          title: "usuń wycieczkę",
           class: ["accent"],
-          onclick: (id: number) => deleteTrip(id),
+          onclick: (id: number) => handleDeleteTrip(id),
         },
       ],
       trips: getTrips,
