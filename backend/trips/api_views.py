@@ -35,7 +35,7 @@ class TripListAPIView(ListAPIView):
     def get_queryset(self):
         profile = self.request.user.get_default_profile()
 
-        return Trip.objects.by_user_and_trip(profile).select_related('creator').prefetch_related('members')
+        return Trip.objects.by_user(profile).select_related('creator').prefetch_related('members')
 
 
 class TripUpdateAPIView(UpdateAPIView):
@@ -43,7 +43,7 @@ class TripUpdateAPIView(UpdateAPIView):
     serializer_class = TripSerializer
 
     def get_object(self):
-        return Trip.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
+        return Trip.objects.by_id(self.kwargs['pk'])
 
 
 class TripDestroyAPIView(DestroyAPIView):
@@ -51,7 +51,7 @@ class TripDestroyAPIView(DestroyAPIView):
     serializer_class = TripSerializer
 
     def get_object(self):
-        return Trip.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
+        return Trip.objects.by_id(self.kwargs['pk'])
 
 
 #############################################################################

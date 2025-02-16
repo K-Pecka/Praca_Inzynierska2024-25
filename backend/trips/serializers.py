@@ -8,7 +8,7 @@ from users.models import UserProfile
 #################################################################
 class BaseTripSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
-    creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
+    creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False)
     members = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=UserProfile.objects.all())
     budget = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
     start_date = serializers.DateField()
@@ -45,6 +45,11 @@ class TripCreateSerializer(BaseTripSerializer):
         if members and data.get("creator") in members:
             raise serializers.ValidationError("Właściciel nie może być uczestnikiem wycieczki.")
         return data
+
+    def create(self, validated_data):
+        request = self.context['request']
+        validated_data['creator'] = request.user.get_default_profile()
+        return super().create(validated_data)
 
     class Meta(BaseTripSerializer.Meta):
         read_only_fields = ['id', 'creator']

@@ -110,6 +110,7 @@ class IsTripCreator(BasePermission):
 
     def has_permission(self, request, view):
         profile = request.user.get_default_profile()
+        print('profile', profile)
         if not profile:
             return False
 
@@ -129,7 +130,6 @@ class IsTripCreator(BasePermission):
                 except Itinerary.DoesNotExist:
                     raise NotFound(detail="Plan wycieczki o podanym ID nie istnieje.")
                 trip = itinerary.trip
-
             return trip.creator == profile
         else:
             try:
