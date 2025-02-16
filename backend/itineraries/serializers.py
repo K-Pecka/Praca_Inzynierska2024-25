@@ -13,6 +13,7 @@ class BaseItinerarySerializer(serializers.ModelSerializer):
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     trip = serializers.PrimaryKeyRelatedField(
+        required=False,
         queryset=Trip.objects.all(),
     )
 
@@ -34,6 +35,12 @@ class ItinerarySerializer(BaseItinerarySerializer):
 
 
 class ItineraryCreateSerializer(BaseItinerarySerializer):
+    def create(self, validated_data):
+        view = self.context['view']
+        trip = Trip.objects.get(pk=view.kwargs.get('trip_pk'))
+        validated_data['trip'] = trip
+        return Itinerary.objects.create(**validated_data)
+
     class Meta(BaseItinerarySerializer.Meta):
         read_only_fields = ['id']
 
@@ -55,7 +62,7 @@ class BaseItineraryActivitySerializer(serializers.ModelSerializer):
     location = serializers.CharField(max_length=100)
     start_time = serializers.TimeField()
     duration = serializers.IntegerField()
-    itinerary = serializers.PrimaryKeyRelatedField(queryset=Itinerary.objects.all())
+    itinerary = serializers.PrimaryKeyRelatedField(required=False, queryset=Itinerary.objects.all())
 
     class Meta:
         model = ItineraryActivity
@@ -63,12 +70,17 @@ class BaseItineraryActivitySerializer(serializers.ModelSerializer):
 
 
 class ItineraryActivitySerializer(BaseItineraryActivitySerializer):
-
     class Meta(BaseItineraryActivitySerializer.Meta):
         read_only_fields = ['id', 'name', 'type', 'description', 'location', 'start_time', 'duration', 'itinerary']
 
 
 class ItineraryActivityCreateSerializer(BaseItineraryActivitySerializer):
+    def create(self, validated_data):
+        view = self.context['view']
+        itinerary_id = view.kwargs.get('itinerary_pk')
+        validated_data['itinerary'] = Itinerary.objects.get(pk=itinerary_id)
+        return ItineraryActivity.objects.create(**validated_data)
+
     class Meta(BaseItineraryActivitySerializer.Meta):
         read_only_fields = ['id']
 

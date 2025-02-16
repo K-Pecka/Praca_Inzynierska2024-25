@@ -115,14 +115,14 @@ class IsTripCreator(BasePermission):
             return False
 
         if request.method == 'POST':
-            trip_id = request.data.get('trip')
+            trip_id = view.kwargs.get('trip_pk')
             if trip_id:
                 try:
                     trip = Trip.objects.get(pk=trip_id)
                 except Trip.DoesNotExist:
                     raise NotFound(detail="Wycieczka o podanym ID nie istnieje.")
             else:
-                itinerary_id = request.data.get('itinerary')
+                itinerary_id = view.kwargs.get('itinerary_pk')
                 if not itinerary_id:
                     return False
                 try:

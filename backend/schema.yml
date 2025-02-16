@@ -1,7 +1,2257 @@
 openapi: 3.0.3
 info:
-  title: Your Project API
+  title: Plannder API
   version: 1.0.0
-  description: Your project description
-paths: {}
-components: {}
+  description: Engineering thesis PJATK
+paths:
+  /chat/:
+    post:
+      operationId: chat_create
+      tags:
+      - chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatroomCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChatroomCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChatroomCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatroomCreate'
+          description: ''
+  /chat/{id}/:
+    get:
+      operationId: chat_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - chat
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chatroom'
+          description: ''
+  /chat/{id}/delete/:
+    delete:
+      operationId: chat_delete_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - chat
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /chat/{id}/update/:
+    put:
+      operationId: chat_update_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatroomUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChatroomUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChatroomUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatroomUpdate'
+          description: ''
+    patch:
+      operationId: chat_update_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedChatroomUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedChatroomUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedChatroomUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatroomUpdate'
+          description: ''
+  /chat/{room_pk}/chat-message/:
+    post:
+      operationId: chat_chat_message_create
+      parameters:
+      - in: path
+        name: room_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChatMessageCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChatMessageCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageCreate'
+          description: ''
+  /chat/{room_pk}/chat-message/{id}/:
+    get:
+      operationId: chat_chat_message_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: room_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - chat
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessage'
+          description: ''
+  /chat/{room_pk}/chat-message/{id}/delete/:
+    delete:
+      operationId: chat_chat_message_delete_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: room_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - chat
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /chat/{room_pk}/chat-message/{id}/update/:
+    put:
+      operationId: chat_chat_message_update_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: room_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessageUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChatMessageUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChatMessageUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageUpdate'
+          description: ''
+    patch:
+      operationId: chat_chat_message_update_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: room_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedChatMessageUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedChatMessageUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedChatMessageUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessageUpdate'
+          description: ''
+  /chat/{room_pk}/chat-message/all/:
+    get:
+      operationId: chat_chat_message_all_list
+      parameters:
+      - in: path
+        name: room_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - chat
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatMessage'
+          description: ''
+  /chat/all/:
+    get:
+      operationId: chat_all_list
+      tags:
+      - chat
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chatroom'
+          description: ''
+  /trip/:
+    post:
+      operationId: trip_create
+      tags:
+      - Trip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TripCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TripCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripCreate'
+          description: ''
+  /trip/{id}/:
+    get:
+      operationId: trip_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Trip
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+          description: ''
+  /trip/{id}/delete/:
+    delete:
+      operationId: trip_delete_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Trip
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /trip/{id}/update/:
+    put:
+      operationId: trip_update_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Trip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trip'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Trip'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Trip'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+          description: ''
+    patch:
+      operationId: trip_update_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Trip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTrip'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTrip'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTrip'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+          description: ''
+  /trip/{trip_id}/budget/{id}/delete/:
+    delete:
+      operationId: trip_budget_delete_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budget
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /trip/{trip_id}/budget/update/:
+    put:
+      operationId: trip_budget_update_update
+      parameters:
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budget
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Budget'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Budget'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Budget'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Budget'
+          description: ''
+    patch:
+      operationId: trip_budget_update_partial_update
+      parameters:
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budget
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBudget'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBudget'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBudget'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Budget'
+          description: ''
+  /trip/{trip_id}/expense/:
+    post:
+      operationId: trip_expense_create
+      parameters:
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expense
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Expense'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Expense'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Expense'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+          description: ''
+  /trip/{trip_id}/expense/{id}/:
+    get:
+      operationId: trip_expense_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expense
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+          description: ''
+  /trip/{trip_id}/expense/{id}/delete/:
+    delete:
+      operationId: trip_expense_delete_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expense
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /trip/{trip_id}/expense/{id}/update/:
+    put:
+      operationId: trip_expense_update_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expense
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Expense'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Expense'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Expense'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+          description: ''
+    patch:
+      operationId: trip_expense_update_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expense
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedExpense'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedExpense'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedExpense'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+          description: ''
+  /trip/{trip_id}/expense/all/:
+    get:
+      operationId: trip_expense_all_list
+      parameters:
+      - in: path
+        name: trip_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expense
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Expense'
+          description: ''
+  /trip/{trip_pk}/itinerary/{itinerary_pk}/activities/{id}/:
+    get:
+      operationId: trip_itinerary_activities_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: itinerary_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItineraryActivity'
+          description: ''
+  /trip/{trip_pk}/itinerary/{itinerary_pk}/activities/{id}/delete/:
+    delete:
+      operationId: trip_itinerary_activities_delete_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: itinerary_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /trip/{trip_pk}/itinerary/{itinerary_pk}/activities/{id}/update/:
+    put:
+      operationId: trip_itinerary_activities_update_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: itinerary_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItineraryActivityUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ItineraryActivityUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ItineraryActivityUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItineraryActivityUpdate'
+          description: ''
+    patch:
+      operationId: trip_itinerary_activities_update_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: itinerary_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedItineraryActivityUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedItineraryActivityUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedItineraryActivityUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItineraryActivityUpdate'
+          description: ''
+  /trip/{trip_pk}/itinerary/{itinerary_pk}/activities/all/:
+    get:
+      operationId: trip_itinerary_activities_all_list
+      parameters:
+      - in: path
+        name: itinerary_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItineraryActivity'
+          description: ''
+  /trip/{trip_pk}/itinerary/{itinerary_pk}/activities/create/:
+    post:
+      operationId: trip_itinerary_activities_create_create
+      parameters:
+      - in: path
+        name: itinerary_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItineraryActivityCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ItineraryActivityCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ItineraryActivityCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItineraryActivityCreate'
+          description: ''
+  /trip/{trip_pk}/itinerary/{id}/:
+    get:
+      operationId: trip_itinerary_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Itinerary'
+          description: ''
+  /trip/{trip_pk}/itinerary/{id}/delete/:
+    delete:
+      operationId: trip_itinerary_delete_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /trip/{trip_pk}/itinerary/{id}/update/:
+    put:
+      operationId: trip_itinerary_update_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItineraryUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ItineraryUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ItineraryUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItineraryUpdate'
+          description: ''
+    patch:
+      operationId: trip_itinerary_update_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedItineraryUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedItineraryUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedItineraryUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItineraryUpdate'
+          description: ''
+  /trip/{trip_pk}/itinerary/all/:
+    get:
+      operationId: trip_itinerary_all_list
+      parameters:
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Itinerary'
+          description: ''
+  /trip/{trip_pk}/itinerary/create/:
+    post:
+      operationId: trip_itinerary_create_create
+      parameters:
+      - in: path
+        name: trip_pk
+        schema:
+          type: integer
+        required: true
+      tags:
+      - trip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItineraryCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ItineraryCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ItineraryCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItineraryCreate'
+          description: ''
+  /trip/all/:
+    get:
+      operationId: trip_all_list
+      tags:
+      - Trip
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trip'
+          description: ''
+  /trip/ticket/:
+    post:
+      operationId: trip_ticket_create
+      tags:
+      - Ticket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ticket'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Ticket'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Ticket'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+          description: ''
+  /trip/ticket/{id}/:
+    get:
+      operationId: trip_ticket_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ticket
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+          description: ''
+  /trip/ticket/{id}/delete/:
+    delete:
+      operationId: trip_ticket_delete_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ticket
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /trip/ticket/{id}/update/:
+    put:
+      operationId: trip_ticket_update_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ticket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ticket'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Ticket'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Ticket'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+          description: ''
+    patch:
+      operationId: trip_ticket_update_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Ticket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTicket'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTicket'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTicket'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+          description: ''
+  /trip/ticket/all/:
+    get:
+      operationId: trip_ticket_all_list
+      tags:
+      - Ticket
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+          description: ''
+  /user/:
+    post:
+      operationId: user_create
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreate'
+          description: ''
+    put:
+      operationId: user_update
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserUpdate'
+          description: ''
+    patch:
+      operationId: user_partial_update
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserUpdate'
+          description: ''
+  /user/password/:
+    put:
+      operationId: user_password_update
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdatePassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserUpdatePassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserUpdatePassword'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserUpdatePassword'
+          description: ''
+    patch:
+      operationId: user_password_partial_update
+      tags:
+      - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdatePassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdatePassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserUpdatePassword'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserUpdatePassword'
+          description: ''
+  /user_auth/login/:
+    post:
+      operationId: user_auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - user_auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /user_auth/logout/:
+    post:
+      operationId: user_auth_logout_create
+      description: Invalidate JWT tokens (log out).
+      tags:
+      - user_auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /user_auth/token/refresh/:
+    post:
+      operationId: user_auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - user_auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /user_auth/token/verify/:
+    post:
+      operationId: user_auth_token_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - user_auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
+components:
+  schemas:
+    Budget:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        currency:
+          type: string
+          maxLength: 64
+      required:
+      - amount
+      - currency
+      - id
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        text:
+          type: string
+          maxLength: 512
+        profile:
+          type: integer
+        file:
+          type: string
+          format: uri
+        chatroom:
+          type: integer
+      required:
+      - chatroom
+      - id
+      - profile
+      - text
+    ChatMessageCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        text:
+          type: string
+          maxLength: 512
+        profile:
+          type: integer
+        file:
+          type: string
+          format: uri
+        chatroom:
+          type: integer
+      required:
+      - chatroom
+      - id
+      - profile
+      - text
+    ChatMessageUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        text:
+          type: string
+          maxLength: 512
+        profile:
+          type: integer
+        file:
+          type: string
+          format: uri
+        chatroom:
+          type: integer
+      required:
+      - chatroom
+      - id
+      - profile
+      - text
+    Chatroom:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        type:
+          type: string
+          maxLength: 32
+        trip:
+          type: integer
+        creator:
+          type: integer
+        members:
+          type: array
+          items:
+            type: integer
+        settings: {}
+      required:
+      - creator
+      - id
+      - name
+      - settings
+      - trip
+      - type
+    ChatroomCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        type:
+          type: string
+          maxLength: 32
+        trip:
+          type: integer
+        creator:
+          type: integer
+        members:
+          type: array
+          items:
+            type: integer
+        settings: {}
+      required:
+      - creator
+      - id
+      - name
+      - settings
+      - trip
+      - type
+    ChatroomUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        type:
+          type: string
+          maxLength: 32
+        trip:
+          type: integer
+        creator:
+          type: integer
+        members:
+          type: array
+          items:
+            type: integer
+        settings: {}
+      required:
+      - creator
+      - id
+      - name
+      - settings
+      - trip
+      - type
+    Expense:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,5}(?:\.\d{0,2})?$
+          title: Kwota wydatku
+          description: Kwota wydatku
+        date:
+          type: string
+          format: date
+          title: Data
+          description: Data wydatku
+        description:
+          type: string
+          title: Opis
+          description: Opis wydatku (opcjonalne)
+        budget:
+          type: integer
+        user:
+          type: integer
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeEnum'
+          title: Rodzaj wydatku
+          description: |-
+            Rodzaj wydatku
+
+            * `food` - Jedzenie
+            * `transport` - Transport
+            * `accommodation` - Nocleg
+            * `other` - Inne
+      required:
+      - budget
+      - date
+      - id
+      - user
+    Itinerary:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        country:
+          type: string
+          maxLength: 100
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        trip:
+          type: integer
+      required:
+      - country
+      - end_date
+      - id
+      - name
+      - start_date
+      - trip
+    ItineraryActivity:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        type:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 5120
+        location:
+          type: string
+          maxLength: 100
+        start_time:
+          type: string
+          format: time
+        duration:
+          type: integer
+        itinerary:
+          type: integer
+      required:
+      - description
+      - duration
+      - id
+      - itinerary
+      - location
+      - name
+      - start_time
+      - type
+    ItineraryActivityCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        type:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 5120
+        location:
+          type: string
+          maxLength: 100
+        start_time:
+          type: string
+          format: time
+        duration:
+          type: integer
+        itinerary:
+          type: integer
+      required:
+      - description
+      - duration
+      - id
+      - itinerary
+      - location
+      - name
+      - start_time
+      - type
+    ItineraryActivityUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        type:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 5120
+        location:
+          type: string
+          maxLength: 100
+        start_time:
+          type: string
+          format: time
+        duration:
+          type: integer
+        itinerary:
+          type: integer
+      required:
+      - description
+      - duration
+      - id
+      - itinerary
+      - location
+      - name
+      - start_time
+      - type
+    ItineraryCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        country:
+          type: string
+          maxLength: 100
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        trip:
+          type: integer
+      required:
+      - country
+      - end_date
+      - id
+      - name
+      - start_date
+      - trip
+    ItineraryUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        country:
+          type: string
+          maxLength: 100
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        trip:
+          type: integer
+      required:
+      - country
+      - end_date
+      - id
+      - name
+      - start_date
+      - trip
+    PatchedBudget:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        currency:
+          type: string
+          maxLength: 64
+    PatchedChatMessageUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        text:
+          type: string
+          maxLength: 512
+        profile:
+          type: integer
+        file:
+          type: string
+          format: uri
+        chatroom:
+          type: integer
+    PatchedChatroomUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        type:
+          type: string
+          maxLength: 32
+        trip:
+          type: integer
+        creator:
+          type: integer
+        members:
+          type: array
+          items:
+            type: integer
+        settings: {}
+    PatchedExpense:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,5}(?:\.\d{0,2})?$
+          title: Kwota wydatku
+          description: Kwota wydatku
+        date:
+          type: string
+          format: date
+          title: Data
+          description: Data wydatku
+        description:
+          type: string
+          title: Opis
+          description: Opis wydatku (opcjonalne)
+        budget:
+          type: integer
+        user:
+          type: integer
+        type:
+          allOf:
+          - $ref: '#/components/schemas/TypeEnum'
+          title: Rodzaj wydatku
+          description: |-
+            Rodzaj wydatku
+
+            * `food` - Jedzenie
+            * `transport` - Transport
+            * `accommodation` - Nocleg
+            * `other` - Inne
+    PatchedItineraryActivityUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        type:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 5120
+        location:
+          type: string
+          maxLength: 100
+        start_time:
+          type: string
+          format: time
+        duration:
+          type: integer
+        itinerary:
+          type: integer
+    PatchedItineraryUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        country:
+          type: string
+          maxLength: 100
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        trip:
+          type: integer
+    PatchedTicket:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        ticket:
+          type: string
+          format: uri
+        profile:
+          type: integer
+        trip:
+          type: integer
+    PatchedTrip:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        creator:
+          type: integer
+        members:
+          type: array
+          items:
+            type: integer
+        budget:
+          $ref: '#/components/schemas/Budget'
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        settings: {}
+    PatchedUserUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          title: Adres email
+          description: Adres email użytkownika
+          maxLength: 254
+        first_name:
+          type: string
+          title: Imię
+          description: Imię użytkownika
+          pattern: ^[a-zA-Z]+$
+          maxLength: 32
+        last_name:
+          type: string
+          title: Nazwisko
+          description: Nazwisko użytkownika
+          pattern: ^[a-zA-Z]+$
+          maxLength: 32
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+          title: Data urodzenia
+          description: Data urodzenia
+    PatchedUserUpdatePassword:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        ticket:
+          type: string
+          format: uri
+        profile:
+          type: integer
+        trip:
+          type: integer
+      required:
+      - id
+      - profile
+      - ticket
+      - trip
+    TokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - email
+      - password
+      - refresh
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
+    Trip:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        creator:
+          type: integer
+        members:
+          type: array
+          items:
+            type: integer
+        budget:
+          $ref: '#/components/schemas/Budget'
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        settings: {}
+      required:
+      - budget
+      - end_date
+      - id
+      - name
+      - start_date
+    TripCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        creator:
+          type: integer
+        members:
+          type: array
+          items:
+            type: integer
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        settings: {}
+      required:
+      - end_date
+      - id
+      - name
+      - start_date
+    TypeEnum:
+      enum:
+      - food
+      - transport
+      - accommodation
+      - other
+      type: string
+      description: |-
+        * `food` - Jedzenie
+        * `transport` - Transport
+        * `accommodation` - Nocleg
+        * `other` - Inne
+    UserCreate:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          title: Adres email
+          description: Adres email użytkownika
+          maxLength: 254
+        first_name:
+          type: string
+          title: Imię
+          description: Imię użytkownika
+          pattern: ^[a-zA-Z]+$
+          maxLength: 32
+        last_name:
+          type: string
+          title: Nazwisko
+          description: Nazwisko użytkownika
+          pattern: ^[a-zA-Z]+$
+          maxLength: 32
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+          title: Data urodzenia
+          description: Data urodzenia
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+      required:
+      - email
+      - password
+    UserUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          title: Adres email
+          description: Adres email użytkownika
+          maxLength: 254
+        first_name:
+          type: string
+          title: Imię
+          description: Imię użytkownika
+          pattern: ^[a-zA-Z]+$
+          maxLength: 32
+        last_name:
+          type: string
+          title: Nazwisko
+          description: Nazwisko użytkownika
+          pattern: ^[a-zA-Z]+$
+          maxLength: 32
+        date_of_birth:
+          type: string
+          format: date
+          nullable: true
+          title: Data urodzenia
+          description: Data urodzenia
+      required:
+      - email
+      - id
+    UserUpdatePassword:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - id
+      - password
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+tags:
+- name: Trip
+  description: Endpoints for managing trips.
+- name: Ticket
+  description: Endpoints for managing tickets.
+- name: Budget
+  description: Endpoints for managing budgets.
+- name: Expense
+  description: Endpoints for managing expenses.

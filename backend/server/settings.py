@@ -150,6 +150,15 @@ SPECTACULAR_SETTINGS = {
     'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
+    'DISABLE_DEFAULT_SCHEMA_GROUPING': True,
+    'TAGS': [
+        {'name': 'Trip', 'description': 'Endpoints for managing trips.'},
+        {'name': 'Ticket', 'description': 'Endpoints for managing tickets.'},
+        {'name': 'Budget', 'description': 'Endpoints for managing budgets.'},
+        {'name': 'Expense', 'description': 'Endpoints for managing expenses.'},
+        {'name': 'Itinerary', 'description': 'Endpoints for managing itineraries.'},
+        {'name': 'Itinerary Activity', 'description': 'Endpoints for managing itinerary activities.'},
+    ],
 }
 
 # Password validation

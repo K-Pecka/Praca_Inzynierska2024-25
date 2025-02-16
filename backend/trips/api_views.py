@@ -123,7 +123,7 @@ class BudgetUpdateAPIView(UpdateAPIView):
     serializer_class = BudgetSerializer
 
     def get_object(self):
-        trip = Trip.objects.by_id(self.kwargs['pk'])
+        trip = Trip.objects.by_id(self.kwargs['trip_id'])
         try:
             return trip.budżet
         except Budget.DoesNotExist:
@@ -136,8 +136,9 @@ class BudgetDestroyAPIView(DestroyAPIView):
     serializer_class = BudgetSerializer
 
     def get_object(self):
+        trip = Trip.objects.by_id(self.kwargs['trip_id'])
         try:
-            return Budget.objects.get(pk=self.kwargs['pk'])
+            return trip.budżet
         except Budget.DoesNotExist:
             raise NotFound(detail="Nie znaleziono budżetu o podanym ID")
 

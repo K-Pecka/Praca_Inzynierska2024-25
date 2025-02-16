@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from server.permissions import IsTripCreator, IsTripParticipant
@@ -7,11 +8,13 @@ from .serializers import ItinerarySerializer, ItineraryActivitySerializer, Itine
     ItineraryActivityUpdateSerializer, ItineraryActivityDeleteSerializer
 
 
+@extend_schema(tags=['Itinerary'])
 class ItineraryCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
     serializer_class = ItineraryCreateSerializer
 
 
+@extend_schema(tags=['Itinerary'])
 class ItineraryRetrieveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = ItinerarySerializer
@@ -20,6 +23,7 @@ class ItineraryRetrieveAPIView(RetrieveAPIView):
         return Itinerary.objects.by_id(self.kwargs['pk'])
 
 
+@extend_schema(tags=['Itinerary'])
 class ItineraryUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
     serializer_class = ItineraryUpdateSerializer
@@ -28,6 +32,7 @@ class ItineraryUpdateAPIView(UpdateAPIView):
         return Itinerary.objects.by_id(self.kwargs['pk'])
 
 
+@extend_schema(tags=['Itinerary'])
 class ItineraryDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
     serializer_class = ItineraryDeleteSerializer
@@ -36,6 +41,7 @@ class ItineraryDestroyAPIView(DestroyAPIView):
         return Itinerary.objects.by_id(self.kwargs['pk'])
 
 
+@extend_schema(tags=['Itinerary'])
 class ItineraryListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = ItinerarySerializer
@@ -44,11 +50,13 @@ class ItineraryListAPIView(ListAPIView):
         return Itinerary.objects.by_trip(self.kwargs['trip_pk'])
 
 
+@extend_schema(tags=['Itinerary Activity'])
 class ItineraryActivityCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
     serializer_class = ItineraryActivityCreateSerializer
 
 
+@extend_schema(tags=['Itinerary Activity'])
 class ItineraryActivityRetrieveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = ItineraryActivitySerializer
@@ -57,6 +65,7 @@ class ItineraryActivityRetrieveAPIView(RetrieveAPIView):
         return ItineraryActivity.objects.by_id(self.kwargs['pk'])
 
 
+@extend_schema(tags=['Itinerary Activity'])
 class ItineraryActivityUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
     serializer_class = ItineraryActivityUpdateSerializer
@@ -65,6 +74,7 @@ class ItineraryActivityUpdateAPIView(UpdateAPIView):
         return ItineraryActivity.objects.by_id(self.kwargs['pk'])
 
 
+@extend_schema(tags=['Itinerary Activity'])
 class ItineraryActivityDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
     serializer_class = ItineraryActivityDeleteSerializer
@@ -73,6 +83,7 @@ class ItineraryActivityDestroyAPIView(DestroyAPIView):
         return ItineraryActivity.objects.by_id(self.kwargs['pk'])
 
 
+@extend_schema(tags=['Itinerary Activity'])
 class ItineraryActivityListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = ItineraryActivitySerializer
