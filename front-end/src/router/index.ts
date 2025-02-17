@@ -1,103 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
-import Home from "@/views/home/Home.vue";
-import Panel from "@/views/panel/Panel.vue";
-import Landing from "@/views/home/children/Landing.vue";
-import LogIn from "@/views/home/children/LogIn.vue";
-import Register from "@/views/home/children/Register.vue";
-import RoleSelection from "@/views/panel/children/RoleSelection.vue";
-import LogOut from "@/views/logOut/LogOut.vue";
-import TripDashboard from "@/views/panel/children/TripDashboard.vue";
-import YourTrip from "@/views/panel/children/YourTrip.vue";
-import PlanForm from "@/views/panel/children/PlanForm.vue";
-import TripForm from "@/views/panel/children/TripForm.vue";
-import ExpenseTracker from "@/views/panel/children/ExpenseTracker.vue";
-
+import homeRoutes from "./homeRoutes";
+import panelRoutes from "./panelRoutes";
+import authRoutes from "./authRoutes";
 import { useUserStore } from "@/stores/userStore";
 import { useMessageStore } from "@/stores/messageStore";
-import YourPlan from "@/views/panel/children/YourPlan.vue";
-import BugdetForm from "@/views/panel/children/BugdetForm.vue";
 
-const routes: RouteRecordRaw[] = [
-  {
-    path:"/logOut",
-    name:"logOut",
-    component:LogOut,
-  },
-  {
-    path: "/",
-    name: "home",
-    component: Home,
-    meta: { title: "Home" },
-    children: [
-      {
-        path: "",
-        name: "landing",
-        component: Landing,
-      },
-      {
-        path: "logIn",
-        name: "logIn",
-        component: LogIn,
-        meta: { goBack: true,title: "Logowanie" },
-      },
-      {
-        path: "register",
-        name: "register",
-        component: Register,
-        meta: { goBack: true,title: "rejestracja" },
-      },
-    ],
-  },
-  {
-    path: "/panel",
-    name: "panel",
-    component: Panel,
-    meta: { title: "Panel", requiresAuth: true },
-    children: [
-      {
-        path: "",
-        name: "roleSelection",
-        component: RoleSelection,
-      },
-      {
-        path: "yourTrip",
-        name: "yourTrip",
-        component: YourTrip,
-      },
-      {
-        path: "yourTrip/:tripId",
-        name: "tripDashboard",
-        component: TripDashboard,
-      },
-      {
-        path: "yourTrip/:tripId/yourPlan",
-        name: "yourPlan",
-        component: YourPlan,
-      },
-      {
-        path: ":tripId/planForm",
-        name: "PlanForm",
-        component: PlanForm,
-      },
-      {
-        path: "tripForm",
-        name: "TripForm",
-        component: TripForm,
-      },
-      {
-        path: ":tripId/expenseTracker",
-        name: "ExpenseTracker",
-        component: ExpenseTracker,
-      },
-      {
-        path: ":tripId/budget",
-        name: "budget",
-        component: BugdetForm,
-      }
-    ],
-  },
-];
+const routes: RouteRecordRaw[] = [authRoutes, homeRoutes, panelRoutes];
 
 const router = createRouter({
   history: createWebHistory(),
@@ -115,8 +24,8 @@ router.beforeEach(async (to, from, next) => {
   const goBack = to.matched.some((record) => record.meta.goBack);
 
   if (requiresAuth && !(await isLogin())) {
-    setErrorCurrentMessage('Wymagana jest autoryzacja. Proszę się zalogować.')
-    next({name: 'logIn'});
+    setErrorCurrentMessage('Wymagana jest autoryzacja. Proszę się zalogować.');
+    next({ name: 'logIn' });
   } else if (goBack && (await isLogin())) {
     next(from.name ? { name: from.name } : { name: "landing" });
   } else {
