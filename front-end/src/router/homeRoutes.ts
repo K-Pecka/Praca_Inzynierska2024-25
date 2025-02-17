@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from "vue-router";
-import { Home, Landing, LogIn, Register } from "@/views/home";
+import { Home, Landing } from "@/views/home";
 
 const homeRoutes: RouteRecordRaw = {
   path: "/",
@@ -11,19 +11,7 @@ const homeRoutes: RouteRecordRaw = {
       path: "",
       name: "landing",
       component: Landing,
-    },
-    {
-      path: "logIn",
-      name: "logIn",
-      component: LogIn,
-      meta: { goBack: true, title: "Logowanie" },
-    },
-    {
-      path: "register",
-      name: "register",
-      component: Register,
-      meta: { goBack: true, title: "Rejestracja" },
-    },
+    }
   ],
 };
 

@@ -6,7 +6,7 @@
 import { useToast } from 'vue-toastification';
 import { watch } from 'vue';
 import { useMessageStore } from "@/stores";
-import {toastConfig} from '@/lib/toast.ts';
+import {toastConfig} from '@/lib';
 import 'vue-toastification/dist/index.css';
 
 const toast = useToast();

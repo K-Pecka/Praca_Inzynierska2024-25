@@ -19,10 +19,10 @@ export const usePageStore = defineStore("page", () => {
     return [
       ...baseList,
       ...(isLogin()
-        ? [{ label: "wyloguj się", href: "/logOut" },{label: "Panel", href: "/panel", active: true }]
+        ? [{ label: "wyloguj się", href: { name: 'logOut'} },{label: "Panel", href: { name: 'panel'}, active: true }]
         : [
-            { label: "Zaloguj się", href: "/logIn" },
-            { label: "Zarejestruj się", href: "/register", active: true },
+            { label: "Zaloguj się", href: { name: 'logIn'} },
+            { label: "Zarejestruj się", href: { name: 'register'}, active: true },
           ]),
     ];
   };

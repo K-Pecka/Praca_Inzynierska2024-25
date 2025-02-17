@@ -4,7 +4,7 @@ import { ref } from "vue";
 
 interface Link {
   label: string;
-  href: string;
+  href: string | { name: string };
   className?: string | string[];
   style?: Record<string, string>;
   active?: boolean;
@@ -45,14 +45,14 @@ const toggleMenu = () => {
               : []),
           ]"
         >
-          <a
-            :href="link.href"
+          <router-link
+            :to="link.href"
             class="navbar__link"
             :class="{ 'navbar__link--active': link.active }"
             :style="link.style"
           >
             {{ link.label }}
-          </a>
+          </router-link>
         </li>
       </ul>
 
@@ -72,9 +72,9 @@ const toggleMenu = () => {
                   : []),
               ]"
             >
-              <a :href="link.href" class="navbar__link" :style="link.style">
+              <router-link :to="link.href" class="navbar__link" :style="link.style">
                 {{ link.label }}
-              </a>
+              </router-link>
             </div>
           </div>
         </div>
