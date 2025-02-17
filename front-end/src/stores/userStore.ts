@@ -1,38 +1,27 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useMutation } from "@tanstack/vue-query";
-import { Register } from "@/type/interface";
 import { useMessageStore } from "./messageStore";
 import router from "@/router";
-
-interface TOKEN {
-  refresh: string;
-  access: string;
-}
+import { TOKEN } from "@/type";
+import {loginFetch,registerFetch,fetchRefreshToken} from "@/api/auth"
 
 export const useUserStore = defineStore("user", () => {
-  const { loginError, loginSuccess, setErrorCurrentMessage, setSuccessCurrentMessage } = useMessageStore();
+  const { loginSuccess, setErrorCurrentMessage, setSuccessCurrentMessage,logOutSuccess } = useMessageStore();
   const token = ref<TOKEN | null>(
     localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt") as string) : null
   );
-  const fetchRefresh = async () =>{
-    const response = await fetch("https://api.plannder.com/user_auth/token/refresh/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({refresh:token.value?.refresh}),
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.log(errorData);
-      throw new Error(errorData || "error");
-    }
-    return response.json();
-  }
   const getToken = async () => {
-    const tokenRefresh = await fetchRefresh();
-    saveToken(tokenRefresh);
-    token.value = tokenRefresh;
-    return token.value?.access || "";
+    if (token.value) {
+      const tokenRefresh = await fetchRefreshToken(token.value);
+      saveToken(tokenRefresh);
+      token.value = tokenRefresh;
+      return token.value?.access || "";
+    }
+    else{
+      router.push({name:'landing'});
+    }
+    return "";
   }
   const saveToken = (data: TOKEN) => {
     token.value = data;
@@ -42,6 +31,8 @@ export const useUserStore = defineStore("user", () => {
   const logout = () => {
     token.value = null;
     localStorage.removeItem("jwt");
+    setSuccessCurrentMessage(logOutSuccess())
+    router.push({name:'landing'});
   };
   const isLogin = async () => {
     let token: TOKEN | null = !localStorage.getItem("jwt")
@@ -51,66 +42,22 @@ export const useUserStore = defineStore("user", () => {
     }
     return false;
   };
-  const isAuthenticated = () => !!token.value;
-
-  const login = async (credentials: Record<string, string>) => {
-    const response = await fetch("https://api.plannder.com/user_auth/login/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.log(errorData);
-      throw new Error(errorData.message || 'An error occurred');
-    }
-    return response.json();
-  };
-  
   const loginMutation = useMutation({
-    mutationFn: login,
+    mutationFn: loginFetch,
     onSuccess: (data) => {
       setSuccessCurrentMessage(loginSuccess());
       saveToken(data);
       router.push("/panel");
     },
     onError: (err) => {
-      if (err && typeof err === 'object' && err.message) {
-        if (typeof err.message === 'object') {
-          Object.entries(err.message).forEach(([key, value]) => {
-            console.log(`${key}: ${value}`);
-            setErrorCurrentMessage(`${key}: ${value}`);
-          });
-        } else {
-          setErrorCurrentMessage(err.message);
-        }
-      } else {
-        setErrorCurrentMessage("An unexpected error occurred.");
-      }
+      setErrorCurrentMessage("An unexpected error occurred.");
     },
   });
-  const register = async (userData: Register) => {
-    const response = await fetch("https://api.plannder.com/user/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-    console.log(userData);
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.log(errorData);
-      throw new Error(errorData || "unknow");
-    }
-
-    return response.json();
-  };
 
   const registerMutation = useMutation({
-    mutationFn: register,
+    mutationFn: registerFetch,
     onSuccess: (data) => {
       setSuccessCurrentMessage("Success");
-      console.log(data);
       router.push("/logIn");
     },
     onError: (err) => {
@@ -123,7 +70,6 @@ export const useUserStore = defineStore("user", () => {
     loginMutation, 
     registerMutation, 
     logout, 
-    isAuthenticated, 
     isLogin,
     getToken
   };

@@ -5,7 +5,7 @@ import panelRoutes from "./panelRoutes";
 import authRoutes from "./authRoutes";
 import { useUserStore, useMessageStore } from "@/stores";
 
-const routes: RouteRecordRaw[] = [authRoutes, homeRoutes, panelRoutes];
+const routes: RouteRecordRaw[] = [...authRoutes, homeRoutes, panelRoutes];
 console.log(routes);
 const router = createRouter({
   history: createWebHistory(),

@@ -7,7 +7,10 @@ export enum FormType {
   TRIP = "trip",
   BUDGET = "budget"
 }
-
+export interface TOKEN {
+  refresh: string;
+  access: string;
+}
 interface Config {
   required?: boolean;
   multiple?:boolean;
