@@ -10,7 +10,7 @@ export enum FormType {
 
 interface Config {
   required?: boolean;
-  multiple?:true;
+  multiple?:boolean;
 }
 
 export interface Input {

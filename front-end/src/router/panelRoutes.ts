@@ -1,8 +1,10 @@
 import type { RouteRecordRaw } from "vue-router";
+
 import { 
-  Panel, RoleSelection, TripDashboard, YourTrip, YourPlan, ExpenseTracker,
-  PlanForm, TripForm, BugdetForm
+  Panel, RoleSelection, TripDashboard, YourTrip, YourPlan, ExpenseTracker
 } from "@/views/panel";
+
+import { PlanForm, TripForm, BugdetForm } from "@/views/panel/children/form";
 
 const panelRoutes: RouteRecordRaw = {
   path: "/panel",
@@ -10,46 +12,16 @@ const panelRoutes: RouteRecordRaw = {
   component: Panel,
   meta: { title: "Panel", requiresAuth: true },
   children: [
-    {
-      path: "",
-      name: "roleSelection",
-      component: RoleSelection,
-    },
-    {
-      path: "yourTrip",
-      name: "yourTrip",
-      component: YourTrip,
-    },
-    {
-      path: "yourTrip/:tripId",
-      name: "tripDashboard",
-      component: TripDashboard,
-    },
-    {
-      path: "yourTrip/:tripId/yourPlan",
-      name: "yourPlan",
-      component: YourPlan,
-    },
-    {
-      path: ":tripId/planForm",
-      name: "PlanForm",
-      component: PlanForm,
-    },
-    {
-      path: "tripForm",
-      name: "TripForm",
-      component: TripForm,
-    },
-    {
-      path: ":tripId/expenseTracker",
-      name: "ExpenseTracker",
-      component: ExpenseTracker,
-    },
-    {
-      path: ":tripId/budget",
-      name: "budget",
-      component: BugdetForm,
-    },
+    { path: "", name: "roleSelection", component: RoleSelection },
+
+    { path: "yourTrip", name: "yourTrip", component: YourTrip },
+    { path: "yourTrip/:tripId", name: "tripDashboard", component: TripDashboard },
+    { path: "yourTrip/:tripId/yourPlan", name: "yourPlan", component: YourPlan },
+    { path: ":tripId/expenseTracker", name: "ExpenseTracker", component: ExpenseTracker },
+
+    { path: "tripForm", name: "TripForm", component: TripForm },
+    { path: ":tripId/planForm", name: "PlanForm", component: PlanForm },
+    { path: ":tripId/budget", name: "budget", component: BugdetForm },
   ],
 };
 

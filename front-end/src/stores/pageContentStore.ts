@@ -125,7 +125,7 @@ export const usePageStore = defineStore("page", () => {
 
     return pageTitles[type] || "";
   };
-  const errorMessage = () => {
+  const errorMessage = (extraError: Record<string, string>= {}) => {
     return {
       unknow: "Nieznany błąd",
       required: "Pole nie może być puste",
@@ -140,7 +140,8 @@ export const usePageStore = defineStore("page", () => {
       endsWith: "Pole musi kończyć się na {0}",
       isEqual: "Pola muszą być równe",
       isInRange: "Pole musi mieścić się w zakresie od {0} do {1}",
-      minValue: "Wartość musi być większa niż {0}"
+      minValue: "Wartość musi być większa niż {0}",
+      ...extraError
     };
   };
   return {
