@@ -35,7 +35,7 @@ export const usePageStore = defineStore("page", () => {
     };
   };
 
-  const heroTestData = () => [
+  const heroText = () => [
     { word: "Zaplanuj" },
     { word: ["przygodę", "podróż"], animation: true },
     { word: "która zapadnie" },
@@ -147,7 +147,7 @@ export const usePageStore = defineStore("page", () => {
     SiteName,
     navLinks,
     footerData,
-    heroTestData,
+    heroText,
     FQAData,
     advantagesData,
     getSectionTitle,

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Navbar from "@/components/home/Navbar.vue";
 import Footer from "@/components/home/Footer.vue";
-import { usePageStore } from '@/stores/pageContentStore';
+import { usePageStore } from '@/stores/';
 const useStore = usePageStore();
 
 const SiteName = useStore.SiteName();
@@ -40,14 +40,16 @@ const footerData = useStore.footerData();
           </Footer>
         </v-col>
       </v-row>
+
     </v-container>
   </v-app>
 </template>
 <style lang="scss" scoped>
+
 .v-application{
   background-color: rgba(var(--v-theme-background),0.1);
 }
-*
+* //TODO: przetestować brak tego zapisu
 {
   transition: all 0.3s ease;
 }

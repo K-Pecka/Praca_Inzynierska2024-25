@@ -1,22 +1,21 @@
 <script lang="ts" setup>
-import Hero from "@/components/home/Hero.vue";
-import Sections from "@/components/home/section/Sections.vue";
-import { usePageStore } from "@/stores/pageContentStore";
-
-const { heroTestData } = usePageStore();
+import {Hero,Sections} from "@/components";
+import { usePageStore } from "@/stores";
+import {image} from "@/lib"
+const { heroText } = usePageStore();
 </script>
 
 <template>
-  <Hero :phrases="heroTestData()">
+  <Hero :phrases="heroText()">
     <template #hero>
-      <img src="@/assets/hero.svg" alt="Hero image" />
+      <img :src="image.hero.img" :alt=image.hero.alt />
     </template>
   </Hero>
 
   <Sections />
 </template>
 
-<style scoped lang="scss">
+<style scoped lang="scss">//TODO: style poprawić
 img {
   transform-origin: top left;
   transition: transform 0.3s ease;

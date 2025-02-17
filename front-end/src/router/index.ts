@@ -3,8 +3,7 @@ import type { RouteRecordRaw } from "vue-router";
 import homeRoutes from "./homeRoutes";
 import panelRoutes from "./panelRoutes";
 import authRoutes from "./authRoutes";
-import { useUserStore } from "@/stores/userStore";
-import { useMessageStore } from "@/stores/messageStore";
+import { useUserStore, useMessageStore } from "@/stores";
 
 const routes: RouteRecordRaw[] = [authRoutes, homeRoutes, panelRoutes];
 
