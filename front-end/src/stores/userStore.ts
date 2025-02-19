@@ -4,47 +4,70 @@ import { useMutation } from "@tanstack/vue-query";
 import { useMessageStore } from "./messageStore";
 import router from "@/router";
 import { TOKEN } from "@/type";
-import {loginFetch,registerFetch,fetchRefreshToken} from "@/api/auth"
+import {loginFetch,registerFetch,fetchRefreshToken,fetchVerify} from "@/api/auth"
 
 export const useUserStore = defineStore("user", () => {
   const { loginSuccess, setErrorCurrentMessage, setSuccessCurrentMessage,logOutSuccess } = useMessageStore();
-  const token = ref<TOKEN | null>(
-    localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt") as string) : null
-  );
-  const getToken = async () => {
+  const token = ref<TOKEN | null>(null);
+  const validToken = async (): Promise<boolean> => {
     if (token.value) {
-      const tokenRefresh = await fetchRefreshToken(token.value);
-      saveToken(tokenRefresh);
-      token.value = tokenRefresh;
-      return token.value?.access || "";
+      try {
+        const verify = await fetchVerify(getToken() || {access:"",refresh:""});
+        if (verify) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        return false;
+      }
     }
-    else{
-      router.push({name:'landing'});
+    return false;
+  };
+  
+  const refreshToken = async (): Promise<Boolean> => {
+    if (token.value) {
+      try {
+        const tokenRefresh:TOKEN = await fetchRefreshToken(token.value);
+        if(tokenRefresh){
+          console.log(`${tokenRefresh}`);
+          saveToken(tokenRefresh);
+          return true
+        }
+  
+      } catch (error) {
+        setErrorCurrentMessage("Wystąpił błąd podczas odświeżania tokena");
+        console.error("Error refreshing token:", error);
+        return false;
+      }
+    } else {
+      setErrorCurrentMessage("Brak tokena");
+      return false;
     }
-    return "";
-  }
+  
+    return false;
+  };
+  
   const saveToken = (data: TOKEN) => {
     token.value = data;
-    localStorage.setItem("jwt", JSON.stringify(data));
   };
-
+  const getToken = () =>{
+    return token.value
+  }
   const logout = () => {
     token.value = null;
-    localStorage.removeItem("jwt");
     setSuccessCurrentMessage(logOutSuccess())
     router.push({name:'landing'});
   };
   const isLogin = async () => {
-    let token: TOKEN | null = !localStorage.getItem("jwt")
-      ? null : JSON.parse(localStorage.getItem("jwt") as string) as TOKEN;
-    if (token) {
+    if (!!token) {
       return true;
     }
     return false;
   };
   const loginMutation = useMutation({
     mutationFn: loginFetch,
-    onSuccess: (data) => {
+    onSuccess: (data:TOKEN) => {
       setSuccessCurrentMessage(loginSuccess());
       saveToken(data);
       router.push("/panel");
@@ -65,12 +88,19 @@ export const useUserStore = defineStore("user", () => {
       setErrorCurrentMessage("Error");
     },
   });
-
   return { 
+    token,
     loginMutation, 
     registerMutation, 
     logout, 
     isLogin,
-    getToken
+    validToken,
+    getToken,
+    refreshToken
   };
+},{
+  persist: {
+    storage: localStorage,
+    pick: ['token'],
+  },
 });

@@ -5,7 +5,6 @@ import { usePageStore } from '@/stores/';
 const useStore = usePageStore();
 
 const SiteName = useStore.SiteName();
-
 const navData = useStore.navLinks();
 const footerData = useStore.footerData();
 </script>

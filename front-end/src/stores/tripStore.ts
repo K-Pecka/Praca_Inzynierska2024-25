@@ -17,11 +17,12 @@ export const useTripStore = defineStore("trip", () => {
   const { getToken } = useUserStore();
 
   const fetchTrips = async () => {
+    console.log(getToken()?.access);
     const response = await fetch("https://api.plannder.com/trip/all/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${await getToken()}`,
+        Authorization: `Bearer ${getToken()?.access}`,
       },
     });
 
@@ -37,7 +38,7 @@ export const useTripStore = defineStore("trip", () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${await getToken()}`,
+        Authorization: `Bearer ${getToken()?.access}`,
       },
     });
 
@@ -52,7 +53,7 @@ export const useTripStore = defineStore("trip", () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${await getToken()}`,
+        Authorization: `Bearer ${getToken()?.access}`,
       },
     });
 
@@ -67,7 +68,7 @@ export const useTripStore = defineStore("trip", () => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${await getToken()}`,
+        Authorization: `Bearer ${getToken()?.access}`,
       },
     });
   
@@ -157,7 +158,7 @@ export const useTripStore = defineStore("trip", () => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${await getToken()}`,
+        Authorization: `Bearer ${getToken()?.access}`,
       },
       body: JSON.stringify(data),
     });
@@ -188,7 +189,7 @@ export const useTripStore = defineStore("trip", () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${await getToken()}`,
+        Authorization: `Bearer ${getToken()?.access}`,
       },
       body: JSON.stringify(data),
     });
@@ -218,7 +219,7 @@ export const useTripStore = defineStore("trip", () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${await getToken()}`,
+        Authorization: `Bearer ${getToken()?.access}`,
       },
       body: JSON.stringify(data),
     });

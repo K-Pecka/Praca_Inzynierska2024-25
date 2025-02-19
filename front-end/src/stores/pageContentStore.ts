@@ -1,6 +1,17 @@
 import { defineStore } from "pinia";
-
+import { useUserStore } from "./userStore";
+import { computed, onMounted, ref } from "vue";
 export const usePageStore = defineStore("page", () => {
+  const {validToken} = useUserStore()
+  const isLogin = ref(false);
+
+  const checkLoginStatus = async () => {
+    isLogin.value = await validToken();
+  };
+
+  onMounted(async () => {
+    await checkLoginStatus();
+  });
   const baseList = [
     { label: "Oferta", href: "/", className: ["navbar__link--base"] },
     { label: "O nas", href: "/", className: ["navbar__link--base"] },
@@ -8,24 +19,21 @@ export const usePageStore = defineStore("page", () => {
   ];
 
   const SiteName = () => import.meta.env.VITE_APP_SITE_NAME || "Plannder";
-  const isLogin = () => !!localStorage.getItem("jwt") || false;
 
-  const navLinks = () => {
-    let baseList = [
-      { label: "Oferta", href: "/", className: ["navbar__link--base"] },
-      { label: "O nas", href: "/", className: ["navbar__link--base"] },
-      { label: "Kontakt", href: "/", className: ["navbar__link--base"] },
-    ];
+  const navLinks = () => computed(() => {
     return [
       ...baseList,
-      ...(isLogin()
-        ? [{ label: "wyloguj się", href: { name: 'logOut'} },{label: "Panel", href: { name: 'panel'}, active: true }]
+      ...(isLogin.value
+        ? [
+            { label: "Wyloguj się", href: { name: "logOut" } },
+            { label: "Panel", href: { name: "panel" }, active: true },
+          ]
         : [
-            { label: "Zaloguj się", href: { name: 'logIn'} },
-            { label: "Zarejestruj się", href: { name: 'register'}, active: true },
+            { label: "Zaloguj się", href: { name: "logIn" } },
+            { label: "Zarejestruj się", href: { name: "register" }, active: true },
           ]),
     ];
-  };
+  });
 
   const footerData = () => {
     return {

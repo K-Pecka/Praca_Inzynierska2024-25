@@ -7,7 +7,7 @@
       >{{ inputData.label }}</label
     >
 
-    <template v-if="inputData.type === 'data_range'">
+    <template v-if="inputData.type === 'date_range'">
       <v-date-input
         v-model="localRange"
         :label="inputData.placeholder"
