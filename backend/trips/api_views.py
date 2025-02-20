@@ -123,6 +123,7 @@ class BudgetUpdateAPIView(UpdateAPIView):
     serializer_class = BudgetSerializer
 
     def get_object(self):
+        print(self.kwargs)
         trip = Trip.objects.by_id(self.kwargs['trip_id'])
         try:
             return trip.budżet

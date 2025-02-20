@@ -60,7 +60,7 @@ class ItineraryAPITestCase(TestCase):
         view = ItineraryCreateAPIView.as_view()
         request = self.factory.post('/itineraries/', data)
         force_authenticate(request, user=self.user)
-        response = view(request)
+        response = view(request, trip_pk=self.trip.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_itinerary_retrieve(self):
