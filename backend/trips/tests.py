@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 
-from trips.api_views import BudgetCreateAPIView, BudgetUpdateAPIView, BudgetDestroyAPIView,\
+from trips.api_views import BudgetCreateAPIView, BudgetUpdateAPIView, BudgetDestroyAPIView, \
     ExpenseUpdateAPIView, ExpenseDestroyAPIView, ExpenseRetrieveAPIView, ExpenseListAPIView, ExpenseCreateAPIView
 from users.models import CustomUser, UserProfile
 from trips.models import Trip, Budget, Expense
@@ -26,7 +26,6 @@ class BudgetAPITestCase(TestCase):
 
         self.trip = Trip.objects.create(
             creator=self.user_profile,
-            budget=5000.00,
             settings={"currency": "USD"},
             start_date="2025-06-01",
             end_date="2025-06-15"
@@ -44,6 +43,8 @@ class BudgetAPITestCase(TestCase):
         """
         Test creating a budget when the request is valid.
         """
+        Budget.objects.filter(trip=self.trip).delete()
+
         data = {
             'trip': self.trip.id,
             'amount': 2000.00,
@@ -52,9 +53,9 @@ class BudgetAPITestCase(TestCase):
         view = BudgetCreateAPIView.as_view()
         request = self.factory.post(f'/trips/{self.trip.id}/budget/', data)
         force_authenticate(request, user=self.user)
-        response = view(request)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = view(request, trip_id=self.trip.id)
 
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_budget_update(self):
         """
@@ -65,9 +66,9 @@ class BudgetAPITestCase(TestCase):
             'currency': 'EUR'
         }
         view = BudgetUpdateAPIView.as_view()
-        request = self.factory.patch(f'/trips/{self.trip.id}/budget/{self.budget.id}/update/', data)
+        request = self.factory.patch(f'/trip/{self.trip.id}/budget/{self.budget.id}/update/', data)
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.budget.id)
+        response = view(request, trip_id=self.budget.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.budget.refresh_from_db()
         self.assertEqual(str(self.budget.amount), "1500.00")
@@ -79,7 +80,7 @@ class BudgetAPITestCase(TestCase):
         view = BudgetDestroyAPIView.as_view()
         request = self.factory.delete(f'/trips/{self.trip.id}/budget/{self.budget.id}/delete/')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.budget.id)
+        response = view(request, trip_id=self.trip.id, budget_id=self.budget.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Budget.objects.filter(id=self.budget.id).exists())
 
@@ -116,7 +117,6 @@ class ExpenseAPITestCase(TestCase):
 
         self.trip = Trip.objects.create(
             creator=self.user_profile,
-            budget=5000.00,
             settings={"currency": "USD"},
             start_date="2025-06-01",
             end_date="2025-06-15"
