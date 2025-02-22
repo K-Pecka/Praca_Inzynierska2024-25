@@ -11,13 +11,12 @@ import 'vue-toastification/dist/index.css';
 
 const toast = useToast();
 const messageStore = useNotificationStore();
-const configToast = toastConfig;
 
 watch(
   () => messageStore.errorCurrentMessage,
   (newMessage) => {
     if (newMessage) {
-      toast.error(newMessage, configToast);
+      toast.error(newMessage, toastConfig);
       messageStore.errorCurrentMessage = "";
     }
   }
@@ -27,7 +26,7 @@ watch(
   () => messageStore.successCurrentMessage,
   (newMessage) => {
     if (newMessage) {
-      toast.success(newMessage, configToast);
+      toast.success(newMessage, toastConfig);
       messageStore.successCurrentMessage = "";
     }
   }

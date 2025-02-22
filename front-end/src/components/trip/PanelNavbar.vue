@@ -26,7 +26,7 @@ function toggleAccountMenu() {
           alt="Ikona konta"
           class="panel-navbar__icon"
       />
-      <a href="#" class="panel-navbar__account-l">Moje Konto</a>
+      <router-link :to="{}" class="panel-navbar__account-l">Moje Konto</router-link>
 
       <div
           v-if="accountMenuOpen"
@@ -61,6 +61,7 @@ function toggleAccountMenu() {
   border-bottom: 2px solid rgb(var(--v-theme-primary));
   padding: 1rem 2rem;
   z-index: 1000;
+  height: 5rem;
 }
 
 .panel-navbar__logo {

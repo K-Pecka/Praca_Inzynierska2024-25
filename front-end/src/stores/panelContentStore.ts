@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { RoleSelection, SideNavItem } from "@/type/interface";
-
+import { image } from "@/lib";
 export const usePagePanelStore = defineStore("pagePanel", () => {
     const getRoleSelection:RoleSelection = {
         title: "Witaj w aplikacji Plannder",
@@ -9,13 +9,13 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
             {
                 title: "Turysta",
                 description: "Planowanie indywidualnych podróży dla siebie i rodziny",
-                image: "/picture/tourist.svg",
+                image: image.role.turist,
                 path:{name:"yourTrip"}
             },
             {
                 title: "Przewodnik",
                 description: "Tworzenie i zarządzanie wycieczkami dla grup turystycznych",
-                image: "/picture/guide.svg",
+                image: image.role.guide,
                 path:{name:"yourTrip"}
             },
         ],
@@ -24,15 +24,15 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         accountIcon: "/picture/myAccount.svg",
     };
 
-    const getsideNavItems = (tripId: string): SideNavItem[]=> [
+    const getSideNavItems = (tripId: string): SideNavItem[]=> [
         {
             label: "Panel",
-            icon: "/picture/sideNav/panel.svg",
+            icon: image.icon.menu.dashboard,
             route: { name: 'tripDashboard', params: { tripId:tripId }},
         },
         {
             label: "Plany",
-            icon: "/picture/sideNav/plans.svg",
+            icon: image.icon.menu.plan,
             children: [
                 { label: "Utworzone", route: { name: 'yourPlan', params: { tripId:tripId }} },
                 { label: "Dodaj", route: { name: 'PlanForm', params: { tripId:tripId }} },
@@ -40,7 +40,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         },
         {
             label: "Bilety",
-            icon: "/picture/sideNav/tickets.svg",
+            icon: image.icon.menu.ticket,
             children: [
                 { label: "Dodane", route: "/" },
                 { label: "Dodaj", route: "/" },
@@ -48,7 +48,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         },
         {
             label: "Budżet",
-            icon: "/picture/sideNav/budget.svg",
+            icon: image.icon.menu.budget,
             children: [
                 { label: "Pokaż", route: { name: 'ExpenseTracker', params: { tripId:tripId }} },
                 { label: "zmień budżet", route: { name: 'budget', params: { tripId:tripId }} },
@@ -56,7 +56,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         },
         {
             label: "Uczestnicy",
-            icon: "/picture/sideNav/participants.svg",
+            icon: image.icon.menu.participant,
             children: [
                 { label: "?", route: "/" },
                 { label: "?", route: "/" },
@@ -64,7 +64,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         },
         {
             label: "Ustawienia",
-            icon: "/picture/sideNav/settings.svg",
+            icon: image.icon.menu.setting,
             children: [
                 { label: "?", route: "/" },
                 { label: "?", route: "/" },
@@ -75,6 +75,6 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
     return {
         getRoleSelection,
         navbar,
-        getsideNavItems,
+        getSideNavItems,
     };
 });

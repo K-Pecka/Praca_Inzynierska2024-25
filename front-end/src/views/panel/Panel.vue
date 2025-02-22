@@ -11,9 +11,9 @@ const SiteName = useStore.getSiteName()
 
 const panelContentStore = usePagePanelStore();
 
-const {navbar, getsideNavItems} = panelContentStore;
+const {navbar, getSideNavItems} = panelContentStore;
 const route = useRoute();
-const sideNavItems = getsideNavItems(route.params.tripId as string);
+const sideNavItems = getSideNavItems(route.params.tripId as string);
 const form = ref({
   email: "",
   password: "",
@@ -35,7 +35,7 @@ const showNavigation = computed(() => {
         </PanelNavbar>
       </v-col>
     </v-row>
-      <v-row style="height: calc(100vh - 64px); margin: 0;">
+      <v-row style="height: calc(100vh - 5rem); margin: 0;"> <!--#TODO DO POPRAWY-->
         <v-col v-if="showNavigation" cols="12" sm="3" md="2" class="side-nav-col">
           <SideNav :items="sideNavItems" class="full-height" />
         </v-col>
@@ -64,6 +64,5 @@ const showNavigation = computed(() => {
 main{
   height: 90%;
 }
-
 
 </style>

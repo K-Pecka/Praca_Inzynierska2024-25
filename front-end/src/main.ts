@@ -18,6 +18,7 @@ const queryClient = new QueryClient({
       },
    },
 });
+
 const pinia = createPinia();
 pinia.use(piniaPersist);
 

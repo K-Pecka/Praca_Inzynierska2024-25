@@ -21,12 +21,13 @@ router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const goBack = to.matched.some((record) => record.meta.goBack);
   if (requiresAuth && !(await validToken())) {
-    setErrorCurrentMessage('Wymagana jest autoryzacja.\n Proszę się zalogować.');
-    next({ name: 'logIn' });
+    setErrorCurrentMessage(
+      "Wymagana jest autoryzacja.\n Proszę się zalogować."
+    );
+    next({ name: "logIn" });
   } else if (goBack && (await validToken())) {
-    setErrorCurrentMessage('Przed wejściem na tą stronę wyloguj się.');
+    setErrorCurrentMessage("Przed wejściem na tą stronę wyloguj się.");
     next(from.name ? { name: from.name } : { name: "landing" });
-
   } else {
     next();
   }
