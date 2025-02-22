@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/vue-query";
 import { defineStore } from "pinia";
 import { computed } from "vue";
-import { useUserStore } from "./userStore";
+import { useUserStore } from "./auth/useAuthStore";
 import router from "@/router";
-import { useMessageStore } from "./messageStore";
+import { useNotificationStore } from "./ui/useNotificationStore";
 interface Button {
   title: string;
   class: String[];
@@ -13,7 +13,7 @@ export const useTripStore = defineStore("trip", () => {
   const queryClient = useQueryClient();
 
   const { setErrorCurrentMessage, setSuccessCurrentMessage } =
-    useMessageStore();
+    useNotificationStore();
   const { getToken } = useUserStore();
 
   const fetchTrips = async () => {

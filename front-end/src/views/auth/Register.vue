@@ -20,12 +20,12 @@ import Section from "@/components/Section.vue";
 import Form from "@/components/Form.vue";
 import { usePageStore } from "@/stores/pageContentStore";
 import { Input, FormType,Register } from "@/type/interface";
-import { useFormStore } from "@/stores/formStore";
-import { useUserStore } from "@/stores/userStore";
+import { useFormStore } from "@/stores/ui/useFormStore";
+import { useUserStore } from "@/stores/auth/useAuthStore";
 
 const { getSectionTitle } = usePageStore();
 const { registerMutation } = useUserStore();
-const { getFormInputs, validateForm } = useFormStore();
+const { getFormInputs, isFormValid } = useFormStore();
 
 const sectionTitle = getSectionTitle(FormType.REGISTER);
 const inputs = ref<Input[]>(getFormInputs(FormType.REGISTER));
@@ -36,7 +36,7 @@ const formValues = ref<Record<string, string>>(
 );
 
 const handleSubmit = async (_: any, config: any) => {
-  if (config?.send && validateForm(FormType.REGISTER, formValues.value)) {
+  if (config?.send && isFormValid(FormType.REGISTER, formValues.value)) {
     const { pass_2, ...registrationData } = formValues.value;
     
     try {

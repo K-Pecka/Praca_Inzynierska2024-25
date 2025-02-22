@@ -5,12 +5,12 @@
 <script setup lang="ts">
 import { useToast } from 'vue-toastification';
 import { watch } from 'vue';
-import { useMessageStore, useUserStore } from "@/stores";
+import { useNotificationStore, useUserStore } from "@/stores";
 import { toastConfig } from '@/lib';
 import 'vue-toastification/dist/index.css';
 
 const toast = useToast();
-const messageStore = useMessageStore();
+const messageStore = useNotificationStore();
 const userStore = useUserStore();
 const configToast = toastConfig;
 

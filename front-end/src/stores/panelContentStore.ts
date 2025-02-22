@@ -27,7 +27,7 @@ export const usePanelContentStore = defineStore("panelContent", () => {
         {
             label: "Panel",
             icon: "/picture/sideNav/panel.svg",
-            route: "/panel/YourTrip",
+            route: "/panel/YourTrip/:tripId",
         },
         {
             label: "Plany",

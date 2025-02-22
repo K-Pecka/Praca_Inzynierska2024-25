@@ -2,13 +2,13 @@
 import { ref } from "vue";
 import Section from "@/components/Section.vue";
 import Form from "@/components/Form.vue";
-import { useFormStore } from "@/stores/formStore";
+import { useFormStore } from "@/stores/ui/useFormStore";
 import { FormType } from "@/type/interface";
 import { useTripStore } from "@/stores/tripStore";
 import { useRoute } from "vue-router";
 
 const { planMutationAdd } = useTripStore();
-const { getFormInputs, validateForm } = useFormStore();
+const { getFormInputs, isFormValid } = useFormStore();
 
 const inputs = ref(getFormInputs(FormType.PLAN));
 const formValues = ref<Record<string, string>>(
@@ -18,7 +18,7 @@ const formValues = ref<Record<string, string>>(
 const route = useRoute();
 const id = Number(route.params.tripId);
 const handleSubmit = (_formData: any, config: any) => {
-  if (config?.send && validateForm(FormType.PLAN, formValues.value)) {
+  if (config?.send && isFormValid(FormType.PLAN, formValues.value)) {
     const { tripName, city,tripDates } = formValues.value;
     const [start_date, end_date] = tripDates.split(' - ');
     const data = {

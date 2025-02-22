@@ -6,11 +6,10 @@ import TripCard from "@/components/TripCard.vue";
 
 const { yourPlans } = useTripStore();
 import { useRoute } from "vue-router";
-import {computed} from 'vue';
+
 const route = useRoute();
 const id = Number(route.params.tripId);
 const { data: rawPlans, isLoading, error, isSuccess } = yourPlans.plans(id);
-
 </script>
 
 <template>
@@ -21,7 +20,15 @@ const { data: rawPlans, isLoading, error, isSuccess } = yourPlans.plans(id);
           <template #content>
             <p v-if="isLoading">Ładowanie...</p>
             <p v-else-if="error">Błąd: {{ error.message }}</p>
-            <TripCard v-else :plans="rawPlans.plans ?? []" :btn="yourPlans.btn ?? []" />
+            <template v-else>
+              {{console.log(...rawPlans)}}
+
+              <h1>Twoje plany</h1>
+              <TripCard
+                :plans="[rawPlans[0]]"
+                :btn="yourPlans.btn ?? []"
+              />
+            </template>
           </template>
         </Section>
       </v-col>

@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from "vue-router";
 import homeRoutes from "./homeRoutes";
 import panelRoutes from "./panelRoutes";
 import authRoutes from "./authRoutes";
-import { useUserStore, useMessageStore } from "@/stores";
+import { useUserStore, useNotificationStore } from "@/stores";
 
 const routes: RouteRecordRaw[] = [...authRoutes, homeRoutes, panelRoutes];
 const router = createRouter({
@@ -16,7 +16,7 @@ router.beforeEach(async (to, from, next) => {
   document.title = to.meta.title ? `${siteName} - ${to.meta.title}` : siteName;
 
   const { validToken } = useUserStore();
-  const { setErrorCurrentMessage } = useMessageStore();
+  const { setErrorCurrentMessage } = useNotificationStore();
 
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const goBack = to.matched.some((record) => record.meta.goBack);

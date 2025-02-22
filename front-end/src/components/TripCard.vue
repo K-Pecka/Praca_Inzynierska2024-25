@@ -2,28 +2,28 @@
 import { defineProps } from "vue";
 
 interface Trip {
-  name: string,
-  country: string,
-  start_date: string,
-  end_date: string,
+  name: string;
+  country: string;
+  start_date: string;
+  end_date: string;
 }
-interface Btn{
+interface Btn {
   actions: {
-    title: string,
-    class: String[],
-    onclick: (id: Number) => void,
+    title: string;
+    class: String[];
+    onclick: (id: Number) => void;
   }[];
 }
 const props = defineProps<{
   plans: any;
-  btn:any;
+  btn: any;
 }>();
 console.log(props);
 </script>
 
 <template>
   <v-container fluid class="trip-container">
-    <v-row :gap="6.25" v-if="props.plans.length>0">
+    <v-row :gap="6.25" v-if="props.plans.length > 0">
       <v-col
         v-for="(trip, index) in plans"
         :key="index"
@@ -49,11 +49,12 @@ console.log(props);
             <v-btn
               v-for="(action, i) in btn"
               :key="i"
-              :class="['action-btn', action.color]"
-              class="action-btn"
-              @click="action.onClick"
+              :class="['action-btn', 'px-4']"
+              :color="action.class[0]" 
+              @click="action.onclick"
+              variant="flat"
             >
-              {{ action.label }}
+              {{ action.title }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -77,17 +78,18 @@ console.log(props);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   }
 }
-button{
-    width: 40%;
-    border-radius: 0.5rem;
+button {
+  width: 40%;
+  border-radius: 0.5rem;
 }
 .action-btn {
   margin: 4px;
 }
-.v-card-actions{
-    margin-top: 3rem;
+.v-card-actions {
+  margin-top: 3rem;
 }
-.v-card-subtitle,.v-card-text{
-    margin-top: 1.5rem;
+.v-card-subtitle,
+.v-card-text {
+  margin-top: 1.5rem;
 }
 </style>

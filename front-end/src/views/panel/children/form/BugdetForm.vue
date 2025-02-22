@@ -2,10 +2,10 @@
 import { ref } from "vue";
 import Section from "@/components/Section.vue";
 import Form from "@/components/Form.vue";
-import { useFormStore } from "@/stores/formStore";
+import { useFormStore } from "@/stores/ui/useFormStore";
 import { FormType } from "@/type/interface";
 import { useRoute } from "vue-router";
-const { getFormInputs, validateForm } = useFormStore();
+const { getFormInputs, isFormValid } = useFormStore();
 import {useTripStore} from "@/stores/tripStore"
 const {tripMutationBudget} = useTripStore();
 const inputs = ref(getFormInputs(FormType.BUDGET));
@@ -16,7 +16,7 @@ const formValues = ref<Record<string, string>>(
 const route = useRoute();
 
 const handleSubmit = (_formData: any, config: any) => {
-  if (config?.send && validateForm(FormType.BUDGET, formValues.value)) {
+  if (config?.send && isFormValid(FormType.BUDGET, formValues.value)) {
     const data = {
         amount: formValues.value?.amount,
         currency: formValues.value?.currency,

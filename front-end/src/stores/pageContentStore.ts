@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useUserStore } from "./userStore";
+import { useUserStore } from "./auth/useAuthStore";
 import { computed, onMounted, ref } from "vue";
 export const usePageStore = defineStore("page", () => {
   const {validToken} = useUserStore()

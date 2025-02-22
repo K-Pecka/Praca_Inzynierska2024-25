@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useMutation } from "@tanstack/vue-query";
-import { useMessageStore } from "./messageStore";
+import { useNotificationStore } from "../ui/useNotificationStore";
 import router from "@/router";
 import { TOKEN } from "@/type";
 import {loginFetch,registerFetch,fetchRefreshToken,fetchVerify} from "@/api/auth"
 
 export const useUserStore = defineStore("user", () => {
-  const { loginSuccess, setErrorCurrentMessage, setSuccessCurrentMessage,logOutSuccess } = useMessageStore();
+  const { loginSuccess, setErrorCurrentMessage, setSuccessCurrentMessage,logOutSuccess } = useNotificationStore();
   const token = ref<TOKEN | null>(null);
   const validToken = async (): Promise<boolean> => {
     if (token.value) {

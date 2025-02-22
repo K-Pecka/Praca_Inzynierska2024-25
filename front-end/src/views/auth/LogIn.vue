@@ -7,15 +7,15 @@ import ListLink from "@/components/ListLink.vue";
 import Section from "@/components/Section.vue";
 
 import { usePageStore } from "@/stores/pageContentStore";
-import { useUserStore } from "@/stores/userStore";
-import { useFormStore } from "@/stores/formStore";
+import { useUserStore } from "@/stores/auth/useAuthStore";
+import { useFormStore } from "@/stores/ui/useFormStore";
 import { FormType, Input } from "@/type/interface";
 
 const router = useRouter();
 
 const { getSectionTitle } = usePageStore();
 const { loginMutation } = useUserStore();
-const { getFormInputs, validateForm, getMoreOptions } = useFormStore();
+const { getFormInputs, isFormValid, getMoreOptions } = useFormStore();
 
 const sectionTitle = getSectionTitle(FormType.LOGIN);
 const inputs = ref<Input[]>(getFormInputs(FormType.LOGIN));
@@ -27,7 +27,7 @@ const formValues = ref<Record<string, string>>(
 const moreOptions = ref(getMoreOptions());
 
 const handleSubmit = async (_: any, config: any) => {
-  if (config?.send && validateForm(FormType.LOGIN, formValues.value)) {
+  if (config?.send && isFormValid(FormType.LOGIN, formValues.value)) {
     try {
       await loginMutation.mutateAsync(formValues.value);
     } catch (error) {
