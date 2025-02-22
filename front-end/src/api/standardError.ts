@@ -1,6 +1,6 @@
-import { useUserStore } from "@/stores" 
+import { useAuthStore } from "@/stores" 
 const Unauthorized = async () =>{
-    const {getToken,refreshToken} = useUserStore();
+    const {getToken,refreshToken} = useAuthStore();
     const token = getToken()?.access;
     if (token) {
         console.log("refresh token");

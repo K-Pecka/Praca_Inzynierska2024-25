@@ -1,3 +1,3 @@
-export { useUserStore } from "./auth/useAuthStore";
+export { useAuthStore } from "./auth/useAuthStore";
 export { useNotificationStore } from "./ui/useNotificationStore";
-export { usePageStore } from './pageContentStore';
+export { usePageHomeStore } from './ui/usePageHomeStore';

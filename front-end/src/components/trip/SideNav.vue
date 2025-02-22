@@ -1,14 +1,8 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+import { SideNavItem } from "@/type/interface";
 
-interface SideNavItem {
-  label: string;
-  icon?: string;
-  iconActive?: string;
-  route?: string;
-  children?: SideNavItem[];
-}
 
 const props = defineProps<{
   items: SideNavItem[];
@@ -22,11 +16,6 @@ function toggleSection(index: number) {
 
 const arrowIcon = "/picture/sideNav/arrow.svg";
 
-function getRouterPath(routePath: string): string {
-  const route = useRoute();
-  const id = route.params.tripId;
-  return routePath.replace(":tripId", id as string);
-}
 </script>
 
 <template>
@@ -53,7 +42,7 @@ function getRouterPath(routePath: string): string {
 
           <router-link
               v-if="item.route"
-              :to="getRouterPath(item.route)"
+              :to="item.route"
               class="side-nav__item-link"
           >
             {{ item.label }}
@@ -83,7 +72,7 @@ function getRouterPath(routePath: string): string {
           >
             <router-link
                 v-if="sub.route"
-                :to="getRouterPath(sub.route)"
+                :to="sub.route"
                 class="side-nav__sub-link"
             >
               {{ sub.label }}

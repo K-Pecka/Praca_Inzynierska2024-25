@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
-import { usePageStore } from "@/stores/pageContentStore";
-import { FormType, Input } from "@/type/interface";
+import { useNotificationStore } from "@/stores/ui/useNotificationStore";
+import { Input } from "@/type/interface";
+import { FormType } from "@/type/enum";
 import {
   loginInput,
   registerInput,
@@ -11,23 +12,23 @@ import {
 } from "@/dataStorage/index";
 
 export const useFormStore = defineStore("form", () => {
-  const { errorMessage } = usePageStore();
+  const { getErrorMessages } = useNotificationStore();
   const extraValidationMessages = {
     isEqual: "Hasła muszą być takie same",
     dateRange: "Data zakończenia nie może być wcześniejsza niż rozpoczęcia",
   };
-  const getLoginInputs = (): Input[] => loginInput(errorMessage());
+  const getLoginInputs = (): Input[] => loginInput(getErrorMessages());
 
   const getRegisterInputs = (): Input[] =>
-    registerInput(errorMessage({ isEqual: extraValidationMessages.isEqual }));
+    registerInput(getErrorMessages({ isEqual: extraValidationMessages.isEqual }));
 
   const getPlanInputs = (): Input[] =>
-    planInput(errorMessage({ dateRange: extraValidationMessages.dateRange }));
+    planInput(getErrorMessages({ dateRange: extraValidationMessages.dateRange }));
 
   const getTripInputs = (): Input[] =>
-    tripInput(errorMessage({ dateRange: extraValidationMessages.dateRange }));
+    tripInput(getErrorMessages({ dateRange: extraValidationMessages.dateRange }));
 
-  const getBudgetInputs = (): Input[] => budgetInput(errorMessage());
+  const getBudgetInputs = (): Input[] => budgetInput(getErrorMessages());
 
   const formInputGenerators: Record<FormType, () => Input[]> = {
     [FormType.LOGIN]: getLoginInputs,

@@ -1,10 +1,6 @@
 <script lang="ts" setup>
-interface SubSectionItem {
-  image: string;
-  alt: string;
-  caption: string;
-}
-
+import { defineProps } from "vue";
+import { SubSectionItem } from "@/type";
 defineProps({
   items: {
     type: Array as () => SubSectionItem[],

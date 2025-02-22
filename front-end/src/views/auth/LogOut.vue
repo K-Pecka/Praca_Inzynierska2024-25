@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useUserStore } from "@/stores/auth/useAuthStore";
-const { logout } = useUserStore();
+import { useAuthStore } from "@/stores/auth/useAuthStore";
+const { logout } = useAuthStore();
 logout();
 </script>
 <template></template>

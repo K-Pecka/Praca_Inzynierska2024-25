@@ -1,14 +1,7 @@
 <script lang="ts" setup>
 import SubSection from "@/components/home/section/Advantage/SubSection.vue";
+import { SubSectionData } from "@/type";
 
-interface SubSectionData {
-  title: string;
-  items: {
-    image: string;
-    alt: string;
-    caption: string;
-  }[];
-}
 
 defineProps({
   subSections: {

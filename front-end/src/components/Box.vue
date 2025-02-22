@@ -1,21 +1,9 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import { DashboardBox } from "@/type/interface";
 
-interface Box {
-  title: string;
-  content: string | string[];
-  set: {
-    size: {
-      sm?: { col: number; row: number };
-      md?: { col: number; row: number };
-      lg?: { col: number; row: number };
-      xl?: { col: number; row: number };
-    };
-    order: number;
-  };
-}
 
-const props = defineProps<Box>();
+const props = defineProps<DashboardBox>();
 
 const screenWidth = ref(window.innerWidth);
 const screenBreakpoint = ref("");

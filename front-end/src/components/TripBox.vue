@@ -1,17 +1,5 @@
 <script setup lang="ts">
-
-interface Button {
-  title: string;
-  class: String[];
-  onclick: (id: number) => void;
-}
-
-interface Trip {
-  id: number;
-  name: string;
-  start_date: string;
-  end_date: string;
-}
+import {Button, Trip} from "@/type/interface";
 
 const props = defineProps({
   btn: {

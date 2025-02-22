@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
+import { RoleSelection, SideNavItem } from "@/type/interface";
 
-export const usePanelContentStore = defineStore("panelContent", () => {
-    const roleSelection = {
+export const usePagePanelStore = defineStore("pagePanel", () => {
+    const getRoleSelection:RoleSelection = {
         title: "Witaj w aplikacji Plannder",
         subtitle: "W jakiej roli planujesz zorganizować podróż?",
         roles: [
@@ -9,13 +10,13 @@ export const usePanelContentStore = defineStore("panelContent", () => {
                 title: "Turysta",
                 description: "Planowanie indywidualnych podróży dla siebie i rodziny",
                 image: "/picture/tourist.svg",
-                path:"/panel/YourTrip"
+                path:{name:"yourTrip"}
             },
             {
                 title: "Przewodnik",
                 description: "Tworzenie i zarządzanie wycieczkami dla grup turystycznych",
                 image: "/picture/guide.svg",
-                path:"/"
+                path:{name:"yourTrip"}
             },
         ],
     };
@@ -23,18 +24,18 @@ export const usePanelContentStore = defineStore("panelContent", () => {
         accountIcon: "/picture/myAccount.svg",
     };
 
-    const sideNavItems = [
+    const getsideNavItems = (tripId: string): SideNavItem[]=> [
         {
             label: "Panel",
             icon: "/picture/sideNav/panel.svg",
-            route: "/panel/YourTrip/:tripId",
+            route: { name: 'tripDashboard', params: { tripId:tripId }},
         },
         {
             label: "Plany",
             icon: "/picture/sideNav/plans.svg",
             children: [
-                { label: "Utworzone", route: "/panel/yourTrip/:tripId/yourPlan" },
-                { label: "Dodaj", route: "/panel/:tripId/planForm" },
+                { label: "Utworzone", route: { name: 'yourPlan', params: { tripId:tripId }} },
+                { label: "Dodaj", route: { name: 'PlanForm', params: { tripId:tripId }} },
             ],
         },
         {
@@ -49,8 +50,8 @@ export const usePanelContentStore = defineStore("panelContent", () => {
             label: "Budżet",
             icon: "/picture/sideNav/budget.svg",
             children: [
-                { label: "Pokaż", route: "/panel/:tripId/expenseTracker" },
-                { label: "zmień budżet", route: "/panel/:tripId/budget" },
+                { label: "Pokaż", route: { name: 'ExpenseTracker', params: { tripId:tripId }} },
+                { label: "zmień budżet", route: { name: 'budget', params: { tripId:tripId }} },
             ],
         },
         {
@@ -72,8 +73,8 @@ export const usePanelContentStore = defineStore("panelContent", () => {
     ];
 
     return {
-        roleSelection,
+        getRoleSelection,
         navbar,
-        sideNavItems,
+        getsideNavItems,
     };
 });

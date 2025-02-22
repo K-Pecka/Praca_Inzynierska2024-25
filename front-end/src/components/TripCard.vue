@@ -1,19 +1,7 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
+import { Trip,Btn } from "@/type/interface";
 
-interface Trip {
-  name: string;
-  country: string;
-  start_date: string;
-  end_date: string;
-}
-interface Btn {
-  actions: {
-    title: string;
-    class: String[];
-    onclick: (id: Number) => void;
-  }[];
-}
 const props = defineProps<{
   plans: any;
   btn: any;

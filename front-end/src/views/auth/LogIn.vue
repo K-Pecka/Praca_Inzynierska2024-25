@@ -6,15 +6,16 @@ import Form from "@/components/Form.vue";
 import ListLink from "@/components/ListLink.vue";
 import Section from "@/components/Section.vue";
 
-import { usePageStore } from "@/stores/pageContentStore";
-import { useUserStore } from "@/stores/auth/useAuthStore";
+import { usePageHomeStore } from "@/stores/ui/usePageHomeStore";
+import { useAuthStore } from "@/stores/auth/useAuthStore";
 import { useFormStore } from "@/stores/ui/useFormStore";
-import { FormType, Input } from "@/type/interface";
+import { Input } from "@/type/interface";
+import { FormType } from "@/type/enum";
 
 const router = useRouter();
 
-const { getSectionTitle } = usePageStore();
-const { loginMutation } = useUserStore();
+const { getSectionTitle } = usePageHomeStore();
+const { loginMutation } = useAuthStore();
 const { getFormInputs, isFormValid, getMoreOptions } = useFormStore();
 
 const sectionTitle = getSectionTitle(FormType.LOGIN);

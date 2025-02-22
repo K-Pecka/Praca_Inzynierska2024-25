@@ -2,10 +2,10 @@
 import Section from "@/components/Section.vue";
 import FAQ from "@/components/home/section/FAQ/FAQ.vue";
 import Advantage from "@/components/home/section/Advantage/Advantage.vue";
-import { usePageStore } from "@/stores/pageContentStore";
-const useStore = usePageStore();
-const faqList = useStore.FQAData(10);
-const subSections = useStore.advantagesData();
+import { usePageHomeStore } from "@/stores/ui/usePageHomeStore";
+const useStore = usePageHomeStore();
+const faqList = useStore.getFAQData(10);
+const subSections = useStore.getAdvantagesData();
 </script>
 
 <template>

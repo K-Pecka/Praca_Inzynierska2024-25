@@ -6,7 +6,7 @@ import router from "@/router";
 import { TOKEN } from "@/type";
 import {loginFetch,registerFetch,fetchRefreshToken,fetchVerify} from "@/api/auth"
 
-export const useUserStore = defineStore("user", () => {
+export const useAuthStore = defineStore("auth", () => {
   const { loginSuccess, setErrorCurrentMessage, setSuccessCurrentMessage,logOutSuccess } = useNotificationStore();
   const token = ref<TOKEN | null>(null);
   const validToken = async (): Promise<boolean> => {

@@ -1,14 +1,8 @@
 <script lang="ts" setup>
 import router from "@/router";
 import { ref } from "vue";
+import { Link } from "@/type";
 
-interface Link {
-  label: string;
-  href: string | { name: string };
-  className?: string | string[];
-  style?: Record<string, string>;
-  active?: boolean;
-}
 
 defineProps<{ links: Link[] }>();
 

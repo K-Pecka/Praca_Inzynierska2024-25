@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import Navbar from "@/components/home/Navbar.vue";
 import Footer from "@/components/home/Footer.vue";
-import { usePageStore } from '@/stores/';
-const useStore = usePageStore();
+import { usePageHomeStore } from '@/stores/';
+const useStore = usePageHomeStore();
 
-const SiteName = useStore.SiteName();
-const navData = useStore.navLinks();
-const footerData = useStore.footerData();
+const SiteName = useStore.getSiteName();
+const navData = useStore.navigationLinks;
+const footerData = useStore.getFooterData();
+console.log(footerData);
 </script>
 
 <template>

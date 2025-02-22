@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-interface Link{
-    label:string,
-    href: string,
-}
+import { Link } from "@/type/interface";
 defineProps({
   links: {
     type: Array as () => Link[],
@@ -13,7 +10,7 @@ defineProps({
 <template>
     <div>
         <div v-for="link in links" :key="link.label">
-        <a :href="link.href">{{ link.label }}</a>
+        <router-link :to="link.href">{{ link.label }}</router-link>
     </div>
     </div>
     

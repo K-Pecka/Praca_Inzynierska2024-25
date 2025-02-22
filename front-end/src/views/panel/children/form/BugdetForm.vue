@@ -3,7 +3,7 @@ import { ref } from "vue";
 import Section from "@/components/Section.vue";
 import Form from "@/components/Form.vue";
 import { useFormStore } from "@/stores/ui/useFormStore";
-import { FormType } from "@/type/interface";
+import { FormType } from "@/type/enum";
 import { useRoute } from "vue-router";
 const { getFormInputs, isFormValid } = useFormStore();
 import {useTripStore} from "@/stores/tripStore"

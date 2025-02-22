@@ -1,22 +1,23 @@
 <script setup lang="ts">
-
+import {Role} from "@/type/interface";
+import { PropType } from "vue";
 
 const props = defineProps({
-  title: String,
-  description: String,
-  image: String,
-  path: {type: String,default: '/'}
+  role: {
+    type: Object as PropType<Role>,
+    required: true,
+  },
 });
 
 
 </script>
 
 <template>
-  <router-link :to="path">
+  <router-link :to="role.path">
     <button class="role-button">
-      <img :src="image" alt="" class="role-icon" />
-      <h2 class="role-title">{{ title }}</h2>
-      <p class="role-description">{{ description }}</p>
+      <img :src="role.image" alt="" class="role-icon" />
+      <h2 class="role-title">{{ role.title }}</h2>
+      <p class="role-description">{{ role.description }}</p>
     </button>
   </router-link>
   

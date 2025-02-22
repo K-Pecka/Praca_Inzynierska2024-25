@@ -2,7 +2,6 @@
 import Section from "@/components/Section.vue";
 import TripBox from "@/components/TripBox.vue";
 import { useTripStore } from "@/stores/tripStore";
-import { watchEffect } from "vue";
 
 const { yourTrips } = useTripStore();
 const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()

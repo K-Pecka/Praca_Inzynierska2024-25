@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import {Hero,Sections} from "@/components";
-import { usePageStore } from "@/stores";
+import { usePageHomeStore } from "@/stores";
 import {image} from "@/lib"
-const { heroText } = usePageStore();
+const { getHeroBannerText } = usePageHomeStore();
 </script>
 
 <template>
-  <Hero :phrases="heroText()">
+  <Hero :phrases="getHeroBannerText()">
     <template #hero>
       <img :src="image.hero.img" :alt=image.hero.alt />
     </template>

@@ -1,14 +1,6 @@
 <script lang="ts" setup>
-interface Link {
-  href: string;
-  label: string;
-}
+import {Link, FooterData} from "@/type/interface";
 
-interface FooterData {
-  links: Link[];
-  footerText?: string;
-  subSection?: string;
-}
 
 const props = defineProps({
   footerData: {
@@ -33,7 +25,7 @@ const props = defineProps({
           >
             <ul>
               <li v-for="(link, index) in footerData.links" :key="index">
-                <a :href="link.href">{{ link.label }}</a>
+                <router-link :to="link.href">{{ link.label }}</router-link>
               </li>
             </ul>
           </div>
@@ -50,7 +42,7 @@ const props = defineProps({
         >
           <hr />
           <p v-if="footerData.footerText">{{ footerData.footerText }}</p>
-          <p v-if="footerData.subSection">{{ footerData.subSection }}</p>
+          <p v-if="footerData.lastUpdated">{{ footerData.lastUpdated }}</p>
         </v-col>
       </v-row>
     </v-container>

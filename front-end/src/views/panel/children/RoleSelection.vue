@@ -1,23 +1,21 @@
 <script setup lang="ts">
-import {usePanelContentStore} from "@/stores/panelContentStore";
+import {usePagePanelStore} from "@/stores/panelContentStore";
 import RoleButton from "@/components/trip/RoleButton.vue";
 
-const { roleSelection } = usePanelContentStore();
+const pagePanelStore = usePagePanelStore();
+const getRoleSelection = pagePanelStore.getRoleSelection;
 
 </script>
 
 <template>
   <div class="role-selection">
-    <h1 class="title">{{ roleSelection.title }}</h1>
-    <p class="subtitle">{{ roleSelection.subtitle }}</p>
+    <h1 class="title">{{ getRoleSelection.title }}</h1>
+    <p class="subtitle">{{ getRoleSelection.subtitle }}</p>
     <div class="roles-container">
       <RoleButton
-          v-for="role in roleSelection.roles"
-          :key="role.title"
-          :title="role.title"
-          :description="role.description"
-          :image="role.image"
-          :path="role.path"
+          v-for="(role,index) in getRoleSelection.roles"
+          :key="index"
+          :role = "role"
       />
     </div>
   </div>

@@ -1,11 +1,6 @@
 <script lang="ts" setup>
 import TypewriterText from "@/components/TypewriterText.vue";
-
-interface Phrase {
-  word: string | string[];
-  animation?: boolean;
-  styles?: Record<string, string>;
-}
+import { Phrase } from "@/type";
 
 const props = defineProps({
   phrases: {

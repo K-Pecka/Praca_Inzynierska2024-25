@@ -17,11 +17,11 @@ const panelRoutes: RouteRecordRaw = {
     { path: "yourTrip", name: "yourTrip", component: YourTrip },
     { path: "yourTrip/:tripId", name: "tripDashboard", component: TripDashboard },
     { path: "yourTrip/:tripId/yourPlan", name: "yourPlan", component: YourPlan },
-    { path: ":tripId/expenseTracker", name: "ExpenseTracker", component: ExpenseTracker },
+    { path: "yourTrip/:tripId/expenseTracker", name: "ExpenseTracker", component: ExpenseTracker },
 
     { path: "tripForm", name: "TripForm", component: TripForm },
-    { path: ":tripId/planForm", name: "PlanForm", component: PlanForm },
-    { path: ":tripId/budget", name: "budget", component: BugdetForm },
+    { path: "yourTrip/:tripId/planForm", name: "PlanForm", component: PlanForm },
+    { path: "yourTrip/:tripId/budget", name: "budget", component: BugdetForm },
   ],
 };
 

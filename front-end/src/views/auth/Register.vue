@@ -18,13 +18,14 @@
 import { ref } from "vue";
 import Section from "@/components/Section.vue";
 import Form from "@/components/Form.vue";
-import { usePageStore } from "@/stores/pageContentStore";
-import { Input, FormType,Register } from "@/type/interface";
+import { usePageHomeStore } from "@/stores/ui/usePageHomeStore";
+import { Input,Register } from "@/type/interface";
+import { FormType } from "@/type/enum";
 import { useFormStore } from "@/stores/ui/useFormStore";
-import { useUserStore } from "@/stores/auth/useAuthStore";
+import { useAuthStore } from "@/stores/auth/useAuthStore";
 
-const { getSectionTitle } = usePageStore();
-const { registerMutation } = useUserStore();
+const { getSectionTitle } = usePageHomeStore();
+const { registerMutation } = useAuthStore();
 const { getFormInputs, isFormValid } = useFormStore();
 
 const sectionTitle = getSectionTitle(FormType.REGISTER);

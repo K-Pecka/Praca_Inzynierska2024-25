@@ -2,17 +2,18 @@
 import {ref, computed} from "vue";
 import PanelNavbar from "@/components/trip/PanelNavbar.vue";
 import SideNav from "@/components/trip/SideNav.vue";
-import {usePageStore} from "@/stores/pageContentStore";
-import {usePanelContentStore} from "@/stores/panelContentStore";
+import {usePageHomeStore} from "@/stores/ui/usePageHomeStore";
+import {usePagePanelStore} from "@/stores/panelContentStore";
 import { useRoute } from "vue-router";
 
-const useStore = usePageStore();
-const SiteName = useStore.SiteName()
+const useStore = usePageHomeStore();
+const SiteName = useStore.getSiteName()
 
-const panelContentStore = usePanelContentStore();
+const panelContentStore = usePagePanelStore();
 
-const {navbar, sideNavItems} = panelContentStore;
+const {navbar, getsideNavItems} = panelContentStore;
 const route = useRoute();
+const sideNavItems = getsideNavItems(route.params.tripId as string);
 const form = ref({
   email: "",
   password: "",
