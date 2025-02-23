@@ -51,7 +51,7 @@ class BudgetAPITestCase(TestCase):
             'currency': 'PLN'
         }
         view = BudgetCreateAPIView.as_view()
-        request = self.factory.post(f'/trips/{self.trip.id}/budget/', data)
+        request = self.factory.post(f'/trips/{self.trip.id}/budget/create/', data)
         force_authenticate(request, user=self.user)
         response = view(request, trip_id=self.trip.id)
 
