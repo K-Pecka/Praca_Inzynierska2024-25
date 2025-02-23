@@ -148,12 +148,12 @@ class Expense(BaseModel):
         verbose_name=_("Opis"),
         help_text=_("Opis wydatku (opcjonalne)")
     )
-    budget = models.ForeignKey(
-        Budget,
+    trip = models.ForeignKey(
+        Trip,
         on_delete=models.CASCADE,
         related_name="expenses",
-        verbose_name=_("budzet"),
-        help_text=_("Powiązany budzet")
+        verbose_name=_("trip"),
+        help_text=_("Powiązany trip")
     )
     user = models.ForeignKey(
         UserProfile,

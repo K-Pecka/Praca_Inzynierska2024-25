@@ -131,7 +131,7 @@ class ExpenseAPITestCase(TestCase):
         )
 
         self.expense = Expense.objects.create(
-            budget=self.budget,
+            trip=self.trip,
             user=self.user_profile,
             amount=200.00,
             date="2025-06-05",
@@ -144,7 +144,7 @@ class ExpenseAPITestCase(TestCase):
         Test creating an expense when the request is valid.
         """
         data = {
-            'budget': self.budget.id,
+            'trip': self.trip.id,
             'user': self.user_profile.id,
             'amount': 150.00,
             'date': "2025-06-06",

@@ -18,7 +18,8 @@ class BudgetSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'amount', 'currency'
         ]
-        read_only_fields = ['id',]
+        read_only_fields = ['id', ]
+
 
 class BudgetCreateSerializer(BudgetSerializer):
     def create(self, validated_data):
@@ -27,8 +28,7 @@ class BudgetCreateSerializer(BudgetSerializer):
         return super().create(validated_data)
 
     class Meta(BudgetSerializer.Meta):
-        read_only_fields = ['id',]
-
+        read_only_fields = ['id', ]
 
 
 #################################################################
@@ -109,16 +109,17 @@ class TicketSerializer(BaseTicketSerializer):
     class Meta(BaseTicketSerializer.Meta):
         read_only_fields = ['id', 'ticket', 'profile', 'trip']
 
+
 #################################################################
 # Expense
 #################################################################
 class ExpenseSerializer(serializers.ModelSerializer):
-    budget = serializers.PrimaryKeyRelatedField(required=True, queryset=Budget.objects.all())
+    trip = serializers.PrimaryKeyRelatedField(required=True, queryset=Trip.objects.all())
     user = serializers.PrimaryKeyRelatedField(required=True, queryset=UserProfile.objects.all())
 
     class Meta:
         model = Expense
         fields = [
-            'id', 'amount', 'date', 'description', 'budget', 'user', 'type'
+            'id', 'amount', 'date', 'description', 'trip', 'user', 'type'
         ]
         read_only_fields = ['id']
