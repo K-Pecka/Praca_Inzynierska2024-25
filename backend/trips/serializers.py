@@ -1,3 +1,4 @@
+from gunicorn.config import validate_statsd_address
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound
 
@@ -97,7 +98,6 @@ class TripCreateSerializer(BaseTripSerializer):
 #################################################################
 class BaseTicketSerializer(serializers.ModelSerializer):
     ticket = serializers.FileField()
-    profile = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
     trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
 
     class Meta:
@@ -108,6 +108,21 @@ class BaseTicketSerializer(serializers.ModelSerializer):
 class TicketSerializer(BaseTicketSerializer):
     class Meta(BaseTicketSerializer.Meta):
         read_only_fields = ['id', 'ticket', 'profile', 'trip']
+
+
+class TicketCreateSerializer(BaseTicketSerializer):
+    profile = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False)
+
+    def create(self, validated_data):
+        view = self.context['view']
+        trip = Trip.objects.get(pk=view.kwargs.get('trip_pk'))
+        profile = view.request.user.get_default_profile()
+        validated_data['profile'] = profile
+        validated_data['trip'] = trip
+        return Ticket.objects.create(**validated_data)
+
+    class Meta(BaseTicketSerializer.Meta):
+        fields = ['id', 'ticket', 'profile', 'trip']
 
 
 #################################################################

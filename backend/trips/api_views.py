@@ -67,7 +67,7 @@ class TripDestroyAPIView(DestroyAPIView):
 @extend_schema(tags=['Ticket'])
 class TicketCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = TicketSerializer
+    serializer_class = TripCreateSerializer
 
 
 @extend_schema(tags=['Ticket'])
