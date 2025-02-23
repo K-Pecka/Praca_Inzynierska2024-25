@@ -1,6 +1,5 @@
-from gunicorn.config import validate_statsd_address
+from drf_spectacular.utils import extend_schema, OpenApiTypes
 from rest_framework import serializers
-from rest_framework.exceptions import NotFound
 
 from .models import Trip, Ticket, Budget, Expense
 from users.models import UserProfile
@@ -115,10 +114,8 @@ class TicketCreateSerializer(BaseTicketSerializer):
 
     def create(self, validated_data):
         view = self.context['view']
-        trip = Trip.objects.get(pk=view.kwargs.get('trip_pk'))
         profile = view.request.user.get_default_profile()
         validated_data['profile'] = profile
-        validated_data['trip'] = trip
         return Ticket.objects.create(**validated_data)
 
     class Meta(BaseTicketSerializer.Meta):

@@ -1,6 +1,6 @@
-from django.db.models import Q
 from drf_spectacular.utils import extend_schema
 from rest_framework.exceptions import NotFound
+from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
 from rest_framework.generics import (
     CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView
 )
@@ -9,7 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Trip, Ticket, Budget, Expense
 from server.permissions import IsTripParticipant, IsTripCreator, IsTicketOwner
 from .serializers import (
-    TripSerializer, TicketSerializer, TripCreateSerializer, BudgetSerializer, ExpenseSerializer, BudgetCreateSerializer
+    TripSerializer, TicketSerializer, TripCreateSerializer, BudgetSerializer, ExpenseSerializer, BudgetCreateSerializer,
+    TicketCreateSerializer
 )
 
 
@@ -67,7 +68,8 @@ class TripDestroyAPIView(DestroyAPIView):
 @extend_schema(tags=['Ticket'])
 class TicketCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = TripCreateSerializer
+    serializer_class = TicketCreateSerializer
+    parser_classes = (MultiPartParser,)
 
 
 @extend_schema(tags=['Ticket'])

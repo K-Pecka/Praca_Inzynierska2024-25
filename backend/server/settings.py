@@ -151,6 +151,7 @@ SPECTACULAR_SETTINGS = {
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
     'DISABLE_DEFAULT_SCHEMA_GROUPING': True,
+    'COMPONENT_SPLIT_REQUEST': True,
     'TAGS': [
         {'name': 'Trip', 'description': 'Endpoints for managing trips.'},
         {'name': 'Ticket', 'description': 'Endpoints for managing tickets.'},

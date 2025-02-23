@@ -7,8 +7,9 @@ from rest_framework.exceptions import NotFound
 class TripManager(models.Manager):
     def by_id(self, pk):
         try:
-            return self.get_queryset().select_related('creator').prefetch_related('members').get(pk=pk)
+            return self.get_queryset().get(pk=pk)
         except self.model.DoesNotExist:
+            print(f'Trip pk {pk} not found')
             raise NotFound(detail="Nie znaleziono wycieczki o podanym ID")
 
     def by_user(self, profile):

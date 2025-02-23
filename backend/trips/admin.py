@@ -4,7 +4,7 @@ from .models import Trip, Ticket, FYQ
 @admin.register(Trip)
 class TripAdmin(admin.ModelAdmin):
     list_select_related = ('creator',)
-    list_display = ('creator', 'start_date', 'end_date')
+    list_display = ('id', 'creator', 'start_date', 'end_date')
     search_fields = ('creator__user__username',)
     list_filter = ('start_date', 'end_date')
 
