@@ -184,12 +184,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.poczta.onet.pl'
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-EMAIL_USE_TLS = False
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'plannder@op.pl' # TODO: przeniesc potem do env variables
 EMAIL_HOST_PASSWORD = 'Pjatk12121212!'
-DEFAULT_FROM_EMAIL = 'plannder@op.pl'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

@@ -4,6 +4,6 @@ from .api_views import UserCreateAPIView, UserUpdateAPIView, UserUpdatePasswordA
 
 urlpatterns = [
     path('', UserUpdateAPIView.as_view(), name='update-user'),
-    path('create/', UserCreateAPIView.as_view(), name='create-user'),
+    path('create/', UserCreateAPIView.as_view(), name='register'),
     path('password/', UserUpdatePasswordAPIView.as_view(), name='update-user-password'),
 ]
