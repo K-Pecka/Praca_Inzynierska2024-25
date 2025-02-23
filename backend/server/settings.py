@@ -147,7 +147,7 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Engineering thesis PJATK',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
+    'SWAGGER_UI_DIST': 'SIDECAR',
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
     'DISABLE_DEFAULT_SCHEMA_GROUPING': True,
@@ -183,12 +183,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Email config
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-
+EMAIL_HOST = 'smtp.poczta.onet.pl'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = 'plannder@op.pl' # TODO: przeniesc potem do env variables
+EMAIL_HOST_PASSWORD = 'Pjatk12121212!'
+DEFAULT_FROM_EMAIL = 'plannder@op.pl'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

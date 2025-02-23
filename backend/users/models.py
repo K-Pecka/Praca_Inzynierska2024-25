@@ -100,7 +100,7 @@ class UserProfile(BaseModel):
 
     user = models.ForeignKey(
         CustomUser,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="profiles",
         verbose_name=_("Użytkownik"),
         help_text=_("Użytkownik")

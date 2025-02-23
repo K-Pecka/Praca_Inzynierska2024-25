@@ -8,6 +8,7 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+from users.views import confirm_email
 
 '''
 Extending schema example
@@ -31,4 +32,5 @@ urlpatterns = [
     path('trip/<int:trip_pk>/itinerary/', include('itineraries.api_urls')),
     path('chat/', include('chats.api_urls')),
     path('trip/', include('trips.api_urls')),
+    path('', confirm_email, name='confirm_email'),
 ]

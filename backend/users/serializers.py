@@ -1,7 +1,12 @@
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
 from django.contrib.auth.password_validation import validate_password
+from django.utils.http import urlsafe_base64_encode
 
 from rest_framework import serializers
 
@@ -28,8 +33,30 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
+        validated_data['is_active'] = False
+
         validated_data['password'] = make_password(validated_data['password'])
-        return super().create(validated_data)
+
+        user = super().create(validated_data)
+
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+        confirmation_link = self.context['request'].build_absolute_uri(
+            f"/confirm-email/{uid}/{token}/"
+        )
+
+        self.send_confirmation_email(user, confirmation_link)
+
+        return user
+
+    def send_confirmation_email(self, user, confirmation_link):
+        subject = 'Confirm your email address'
+        message = render_to_string('emails/confirmation_email.html', {
+            'user': user,
+            'confirmation_link': confirmation_link,
+        })
+        send_mail(subject, message, 'plannder@op.pl', [user.email])
 
     class Meta:
         model = CustomUser
