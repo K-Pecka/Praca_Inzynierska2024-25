@@ -25,7 +25,7 @@ class ChatroomRetrieveAPIView(RetrieveAPIView):
     serializer_class = ChatroomSerializer
 
     def get_object(self):
-        return Chatroom.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
+        return Chatroom.objects.by_id(self.kwargs['pk'])
 
 class ChatroomListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
@@ -34,7 +34,7 @@ class ChatroomListAPIView(ListAPIView):
     def get_queryset(self):
         profile = self.request.user.get_default_profile()
 
-        return Chatroom.objects.for_user(profile).select_related('creator').prefetch_related('members')
+        return Chatroom.objects.by_user(profile).select_related('creator').prefetch_related('members')
 
 
 class ChatroomUpdateAPIView(UpdateAPIView):
@@ -42,7 +42,7 @@ class ChatroomUpdateAPIView(UpdateAPIView):
     serializer_class = ChatroomUpdateSerializer
 
     def get_object(self):
-        return Chatroom.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
+        return Chatroom.objects.by_id(self.kwargs['pk'])
 
 
 class ChatroomDestroyAPIView(DestroyAPIView):
@@ -50,7 +50,7 @@ class ChatroomDestroyAPIView(DestroyAPIView):
     serializer_class = ChatroomSerializer
 
     def get_object(self):
-        return Chatroom.objects.by_id(self.kwargs['pk']).select_related('creator').prefetch_related('members')
+        return Chatroom.objects.by_id(self.kwargs['pk'])
 
 
 #####################################################################
@@ -68,7 +68,7 @@ class ChatMessageRetrieveAPIView(RetrieveAPIView):
     def get_object(self):
         return ChatMessage.objects.by_room_and_id(
             self.kwargs['pk'], self.kwargs['room_pk']
-        ).select_related('profile', 'chatroom').prefetch_related('chatroom__members',)
+        )
 
 
 class ChatMessageListAPIView(ListAPIView):
@@ -76,10 +76,11 @@ class ChatMessageListAPIView(ListAPIView):
     serializer_class = ChatMessageSerializer
 
     def get_queryset(self):
-        profile = self.request.user.get_user_permissions()
+        profile = self.request.user.get_default_profile()
+        room_pk = self.kwargs['room_pk']
 
         return ChatMessage.objects.by_user_and_chatroom(
-            profile, self.kwargs['room_pk']
+            profile, room_pk
         ).select_related('profile', 'chatroom').prefetch_related('chatroom__members',)
 
 
@@ -90,7 +91,7 @@ class ChatMessageUpdateAPIView(UpdateAPIView):
     def get_object(self):
         return ChatMessage.objects.by_room_and_id(
             self.kwargs['pk'], self.kwargs['room_pk']
-        ).select_related('profile', 'chatroom').prefetch_related('chatroom__members',)
+        )
 
 
 class ChatMessageDestroyAPIView(DestroyAPIView):
@@ -100,4 +101,4 @@ class ChatMessageDestroyAPIView(DestroyAPIView):
     def get_object(self):
         return ChatMessage.objects.by_room_and_id(
             self.kwargs['pk'], self.kwargs['room_pk']
-        ).select_related('profile', 'chatroom').prefetch_related('chatroom__members',)
+        )
