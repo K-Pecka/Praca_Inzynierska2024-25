@@ -1,10 +1,18 @@
-import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/vue-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from "@tanstack/vue-query";
 import { defineStore } from "pinia";
 import { computed } from "vue";
 import { useAuthStore } from "./auth/useAuthStore";
 import router from "@/router";
 import { useNotificationStore } from "./ui/useNotificationStore";
-import { Button } from "@/type";
+import { fetchTrips, fetchTrip, deleteTrip, createTrip } from "@/api";
+import { fetchPlans, createPlan } from "@/api";
+import { saveBudget } from "@/api";
+import { Plan } from "@/type";
 
 export const useTripStore = defineStore("trip", () => {
   const queryClient = useQueryClient();
@@ -13,69 +21,6 @@ export const useTripStore = defineStore("trip", () => {
     useNotificationStore();
   const { getToken } = useAuthStore();
 
-  const fetchTrips = async () => {
-    console.log(getToken()?.access);
-    const response = await fetch("https://api.plannder.com/trip/all/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()?.access}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Błąd podczas pobierania wycieczek");
-    }
-
-    return response.json();
-  };
-  const fetchPlans = async (id:Number) => {
-    console.log(id);
-    const response = await fetch(`https://api.plannder.com/trip/${id}/itinerary/all/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()?.access}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Błąd podczas pobierania wycieczek");
-    }
-
-    return response.json();
-  };
-  const fetchTripDetails = async (id: Number) => {
-    const response = await fetch(`https://api.plannder.com/trip/${id}/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()?.access}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Błąd podczas pobierania wycieczek");
-    }
-
-    return response.json();
-  };
-  const deleteTrip = async (tripId: Number) => {
-    const response = await fetch(`https://api.plannder.com/trip/${tripId}/delete/`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()?.access}`,
-      },
-    });
-  
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.log(errorData);
-      throw new Error(errorData);
-    }
-    return response;
-  };
   const deleteTripMutation = useMutation({
     mutationFn: deleteTrip,
     onSuccess: () => {
@@ -84,26 +29,26 @@ export const useTripStore = defineStore("trip", () => {
     },
     onError: (err) => {
       setErrorCurrentMessage(err.message);
-    }    
+    },
   });
-  const handleDeleteTrip = async (id: Number) => {
+  const handleDeleteTrip = async (id: string) => {
     try {
-      await deleteTripMutation.mutateAsync(id);
+      await deleteTripMutation.mutateAsync({ tripId: id });
     } catch (err) {
       console.error("Failed to delete trip:", err);
     }
   };
-  
-  const getTripDetails = (id: number) => {
+
+  const getTripDetails = (id: string) => {
     return useQuery({
       queryKey: ["trip", id],
-      queryFn: () => fetchTripDetails(id),
+      queryFn: () => fetchTrip({ tripId: id }),
     });
   };
-  const getPlans = (id: number) => {
+  const getPlans = (id: string) => {
     return useQuery({
       queryKey: ["plans", id],
-      queryFn: () => fetchPlans(id),
+      queryFn: () => fetchPlans({ tripId: id }),
     });
   };
   const getTrips = () => {
@@ -118,12 +63,13 @@ export const useTripStore = defineStore("trip", () => {
         {
           title: "Zarządzaj wycieczką",
           class: ["primary"],
-          onclick: (id: Number) => router.push(`/panel/YourTrip/${id}`),
+          onclick: (trip: string, id: string) =>
+            router.push(`/panel/YourTrip/${trip}`),
         },
         {
           title: "usuń wycieczkę",
           class: ["accent"],
-          onclick: (id: number) => handleDeleteTrip(id),
+          onclick: (id: string) => handleDeleteTrip(id),
         },
       ],
       trips: getTrips,
@@ -135,39 +81,42 @@ export const useTripStore = defineStore("trip", () => {
         {
           title: "Zarządzaj wycieczką",
           class: ["primary"],
-          onclick: (id: Number) => router.push(`/panel/YourTrip/${id}`),
+          onclick: (id: string) => router.push(`/panel/YourTrip/${id}`),
         },
         {
           title: "usuń wycieczkę",
           class: ["accent"],
-          onclick: (id: number) => handleDeleteTrip(id),
+          onclick: (id: string) => handleDeleteTrip(id),
         },
       ],
       plans: getPlans,
     };
   });
-  const saveBudget = async (data: {
-    amount: string;
-    currency: string;
-    trip: Number;
-  }) => {
-    const response = await fetch(`https://api.plannder.com/trip/${data.trip}/budget/update/`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()?.access}`,
-      },
-      body: JSON.stringify(data),
-    });
-    console.log(data);
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.log(errorData);
-      throw new Error(errorData || "unknow");
-    }
+  // const saveBudget = async (data: {
+  //   amount: string;
+  //   currency: string;
+  //   trip: Number;
+  // }) => {
+  //   const response = await fetch(
+  //     `https://api.plannder.com/trip/${data.trip}/budget/update/`,
+  //     {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${getToken()?.access}`,
+  //       },
+  //       body: JSON.stringify(data),
+  //     }
+  //   );
+  //   console.log(data);
+  //   if (!response.ok) {
+  //     const errorData = await response.json();
+  //     console.log(errorData);
+  //     throw new Error(errorData || "unknow");
+  //   }
 
-    return response.json();
-  };
+  //   return response.json();
+  // };
   const tripMutationBudget = useMutation({
     mutationFn: saveBudget,
     onSuccess: (data) => {
@@ -177,60 +126,9 @@ export const useTripStore = defineStore("trip", () => {
       setErrorCurrentMessage("błąd");
     },
   });
-  const addTrip = async (data: {
-    name: string;
-    start_date: string;
-    end_date: string;
-  }) => {
-    const response = await fetch(`https://api.plannder.com/trip/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()?.access}`,
-      },
-      body: JSON.stringify(data),
-    });
-    console.log(data);
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.log(errorData);
-      throw new Error(errorData || "unknow");
-    }
-
-    return response.json();
-  };
-  const addPlan = async ({
-    data,
-    tripId
-  }: {
-    data: {
-      name: string;
-      start_date: string;
-      end_date: string;
-    };
-    tripId: number;
-  })  => {
-    console.log( data,
-      tripId);
-    const response = await fetch(`https://api.plannder.com/trip/${tripId}/itinerary/create/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${getToken()?.access}`,
-      },
-      body: JSON.stringify(data),
-    });
-    console.log(data);
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.log(errorData);
-      throw new Error(errorData || "unknow");
-    }
-
-    return response.json();
-  };
   const planMutationAdd = useMutation({
-    mutationFn: addPlan,
+    mutationFn: ({ data, tripId }: { data: Plan; tripId: string }) =>
+      createPlan(data, { tripId: tripId }),
     onSuccess: (data) => {
       router.back();
       setSuccessCurrentMessage("dodano planu");
@@ -240,7 +138,7 @@ export const useTripStore = defineStore("trip", () => {
     },
   });
   const tripMutationAdd = useMutation({
-    mutationFn: addTrip,
+    mutationFn: createTrip,
     onSuccess: (data) => {
       router.back();
       setSuccessCurrentMessage("dodano wycieczkę");
@@ -249,5 +147,12 @@ export const useTripStore = defineStore("trip", () => {
       setErrorCurrentMessage("błąd");
     },
   });
-  return { yourTrips,yourPlans, getTripDetails,tripMutationAdd, tripMutationBudget,planMutationAdd };
+  return {
+    yourTrips,
+    yourPlans,
+    getTripDetails,
+    tripMutationAdd,
+    tripMutationBudget,
+    planMutationAdd,
+  };
 });

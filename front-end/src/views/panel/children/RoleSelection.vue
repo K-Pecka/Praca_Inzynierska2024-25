@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {usePagePanelStore} from "@/stores/panelContentStore";
+import {usePagePanelStore} from "@/stores/ui/usePagePanelStore";
 import RoleButton from "@/components/trip/RoleButton.vue";
 
 const pagePanelStore = usePagePanelStore();

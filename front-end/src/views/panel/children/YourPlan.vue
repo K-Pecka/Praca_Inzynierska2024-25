@@ -8,7 +8,7 @@ const { yourPlans } = useTripStore();
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const id = Number(route.params.tripId);
+const id = route.params.tripId as string;
 const { data: rawPlans, isLoading, error, isSuccess } = yourPlans.plans(id);
 </script>
 
@@ -21,11 +21,10 @@ const { data: rawPlans, isLoading, error, isSuccess } = yourPlans.plans(id);
             <p v-if="isLoading">Ładowanie...</p>
             <p v-else-if="error">Błąd: {{ error.message }}</p>
             <template v-else>
-              {{console.log(...rawPlans)}}
-
+            
               <h1>Twoje plany</h1>
               <TripCard
-                :plans="[rawPlans[0]]"
+                :plans="rawPlans"
                 :btn="yourPlans.btn ?? []"
               />
             </template>

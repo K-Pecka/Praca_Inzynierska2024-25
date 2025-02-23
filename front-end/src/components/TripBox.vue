@@ -40,7 +40,7 @@ const props = defineProps({
                     :key="index"
                     :className="button.class"
                   >
-                    <v-btn @click="button.onclick(trip.id)">
+                    <v-btn @click="button.onclick(String(trip.id))">
                       {{ button.title }}
                     </v-btn>
                   </div>

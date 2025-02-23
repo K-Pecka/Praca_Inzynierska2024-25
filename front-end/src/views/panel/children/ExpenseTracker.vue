@@ -35,7 +35,7 @@ const progress = computed(() => (spent.value / budget.value) * 100);
           color="#8EFF84"
         >
           <div class="progress-text">
-            {{ spent.toFixed(2) }}/{{ Number(budget) }} PLN
+            {{ spent.toFixed(2) }}/{{ `${Number(budget.amount)} ${(budget.currency)}` }}
           </div>
         </v-progress-circular>
       </v-col>

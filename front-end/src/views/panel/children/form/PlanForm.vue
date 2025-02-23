@@ -6,6 +6,7 @@ import { useFormStore } from "@/stores/ui/useFormStore";
 import { FormType } from "@/type/enum";
 import { useTripStore } from "@/stores/tripStore";
 import { useRoute } from "vue-router";
+import { Plan } from "@/type/interface";
 
 const { planMutationAdd } = useTripStore();
 const { getFormInputs, isFormValid } = useFormStore();
@@ -16,12 +17,13 @@ const formValues = ref<Record<string, string>>(
 );
 
 const route = useRoute();
-const id = Number(route.params.tripId);
+const id = Array.isArray(route.params.tripId) ? route.params.tripId[0] : route.params.tripId;
 const handleSubmit = (_formData: any, config: any) => {
   if (config?.send && isFormValid(FormType.PLAN, formValues.value)) {
     const { tripName, city,tripDates } = formValues.value;
     const [start_date, end_date] = tripDates.split(' - ');
-    const data = {
+    const newPlan:Plan = {
+      id: id,
       name: tripName,
       country: city,
       start_date: start_date || '',
@@ -29,7 +31,7 @@ const handleSubmit = (_formData: any, config: any) => {
     };
     try {
       console.log(id);
-      planMutationAdd.mutateAsync({data:data,tripId:id});
+      planMutationAdd.mutateAsync({ data: newPlan, tripId: id });
     } catch (error) {
       console.log("ERROR");
     }

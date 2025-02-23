@@ -1,10 +1,74 @@
+import { useAuthStore } from "@/stores";
 export const hostName = "https://api.plannder.com";
 export const params = [":tripId"];
-export const apiEndpoints = {
-    auth:{
-        login: `${hostName}/user_auth/login/`,
-        register: `${hostName}/user/`,
-        refreshToken: `${hostName}/user_auth/token/refresh/`,
-        verify:`${hostName}/user_auth/token/verify/`
+export const standardHeaders = () => {
+  const { getToken } = useAuthStore();
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${getToken()?.access}`,
+  };
+};
+export const fetchData = async <T = unknown>(
+  url: string,
+  options: RequestInit = { body: undefined },
+  method: "GET" | "POST" | "DELETE" | "PATCH" = "GET"
+): Promise<{ data?: T; error?: string }> => {
+  console.log(url, options, method);
+  try {
+    console.log({
+        method: method,
+        headers: {
+          ...standardHeaders(),
+        },
+        ...options,
+        body: options.body ? options.body : undefined,
+      });
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        ...standardHeaders(),
+      },
+      ...options,
+      body: options.body ? options.body : undefined,
+    });
+
+    const result = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      throw new Error(result?.message || `Błąd HTTP: ${response.status}`);
     }
+    return { data: result };
+  } catch (error: any) {
+    return { error: error.message || "Wystąpił błąd" };
+  }
+};
+export const setParam = (url: string, params: Record<string, string>): string => {
+    return Object.keys(params).reduce(
+      (acc, key) => acc.replace(`:${key}`, encodeURIComponent(params[key])),
+      url
+    );
+  };
+  
+export const apiEndpoints = {
+  auth: {
+    login: `${hostName}/user_auth/login/`,
+    register: `${hostName}/user/`,
+    refreshToken: `${hostName}/user_auth/token/refresh/`,
+    verify: `${hostName}/user_auth/token/verify/`,
+  },
+  trip: {
+    all: `${hostName}/trip/all/`,
+    detail: `${hostName}/trip/:tripId/`,
+    delete: `${hostName}/trip/:tripId/delete/`,
+    create: `${hostName}/trip/`,
+  },
+  plan: {
+    all: `${hostName}/trip/:tripId/itinerary/all/`,
+    detail: `${hostName}/trip/:tripId/itinerary/:planId/`,
+    delete: `${hostName}/trip/:tripId/itinerary/:planId/delete/`,
+    create: `${hostName}/trip/:tripId/itinerary/create/`,
+  },
+  budget: {
+    update: `${hostName}/trip/:tripId/budget/update/`,
 }
+};

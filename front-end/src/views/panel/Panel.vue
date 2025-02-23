@@ -3,15 +3,13 @@ import {ref, computed} from "vue";
 import PanelNavbar from "@/components/trip/PanelNavbar.vue";
 import SideNav from "@/components/trip/SideNav.vue";
 import {usePageHomeStore} from "@/stores/ui/usePageHomeStore";
-import {usePagePanelStore} from "@/stores/panelContentStore";
+import {usePagePanelStore} from "@/stores/ui/usePagePanelStore";
 import { useRoute } from "vue-router";
 
 const useStore = usePageHomeStore();
 const SiteName = useStore.getSiteName()
 
-const panelContentStore = usePagePanelStore();
-
-const {navbar, getSideNavItems} = panelContentStore;
+const {navbar, getSideNavItems} = usePagePanelStore();
 const route = useRoute();
 const sideNavItems = getSideNavItems(route.params.tripId as string);
 const form = ref({

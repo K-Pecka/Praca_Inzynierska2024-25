@@ -4,18 +4,20 @@ import { useRoute } from "vue-router";
 import { useTripStore } from "@/stores/tripStore";
 import { computed } from "vue";
 import Section from "@/components/Section.vue";
+import { Trip } from "@/type";
 const { getTripDetails } = useTripStore();
 const route = useRoute();
-const id = Number(route.params.tripId);
+const id = route.params.tripId as string;
 
 const { data: trip, isLoading, error } = getTripDetails(id);
+
 console.log(trip);
 const tripTime = computed(
   () => `${trip.value?.start_date ?? "..."} - ${trip.value?.end_date ?? "..."}`
 );
 const budget = computed(() => `${trip.value?.budget?.amount ?? "..."} PLN`);
 const participantCount = computed(
-  () => `${trip.value?.members.length ?? "..."} Uczestników`
+  () => `${trip.value?.members?.length ?? "..."} Uczestników`
 );
 const activityCount = computed(() => "0 Aktywności");
 const upcomingActivities = computed(() => []);

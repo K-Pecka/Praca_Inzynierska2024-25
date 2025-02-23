@@ -1,4 +1,5 @@
 import { Validator } from "@/utils/validator/validation";
+import { NavigationFailure } from "vue-router";
 
 export interface TOKEN {
   refresh: string;
@@ -43,21 +44,29 @@ export interface DashboardBox {
 export interface Button {
   title: string;
   class: String[];
-  onclick: (id: number) => void;
+  onclick: (id: string) => Promise<void> | void;
 }
 
 export interface Trip {
-  id: number;
+  id: string;
   name: string;
   start_date: string;
   end_date: string;
+  country?: string;
+  city?: string;
+  members?:Array<string>;
+  budget?:Budget;
 }
-
+export interface Budget {
+  amount: string;
+  currency: string;
+  trip: string;
+}
 export interface Btn {
   actions: {
     title: string;
     class: String[];
-    onclick: (id: Number) => void;
+    onclick: (id: string) => Promise<void> | void;
   }[];
 }
 
@@ -116,4 +125,18 @@ export interface RoleSelection{
   title: String,
   subtitle: String,
   roles: Role[]
+}
+
+export interface NewTrip {
+  name: string;
+  start_date: string;
+  end_date: string;
+}
+export interface Plan {
+  id: string;
+  name: string;
+  country: string;
+  city?: string;
+  start_date: string;
+  end_date: string;
 }

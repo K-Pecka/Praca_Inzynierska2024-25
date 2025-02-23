@@ -39,7 +39,7 @@ console.log(props);
               :key="i"
               :class="['action-btn', 'px-4']"
               :color="action.class[0]" 
-              @click="action.onclick"
+              @click="action.onclick(String(trip.trip),String(trip.id))"
               variant="flat"
             >
               {{ action.title }}
