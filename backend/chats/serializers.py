@@ -32,6 +32,7 @@ class ChatroomCreateSerializer(BaseChatroomSerializer):
     def validate(self, data):
         request = self.context['request']
         # TODO: walidacja dla prywatnych i publicznych pokoi dla przewodników i uczestników do ustalenia
+        return data
         # if not request.user.is_guide:
         #     if Chatroom.objects.filter(creator=request.user.get_default_profile()).count() > 2:
         #         raise serializers.ValidationError("Osiągnąłeś limit wycieczek dla swojego profilu.")
@@ -76,7 +77,7 @@ class BaseChatMessageSerializer(serializers.ModelSerializer):
 class ChatMessageCreateSerializer(BaseChatMessageSerializer):
     class Meta(BaseChatMessageSerializer.Meta):
         model = ChatMessage
-        read_only_fields = ['id',]
+        read_only_fields = ['id', ]
 
 
 class ChatMessageSerializer(BaseChatMessageSerializer):

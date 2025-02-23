@@ -27,21 +27,24 @@ class IsParticipantForChatroom(BasePermission):
     """
     Custom permission to check if the user is the creator for the chatroom.
     """
-    message = "Tylko uczestnicy czatu mogą wykonać tę akcje."
+    message = "Tylko uczestnicy czatu mogą wykonać tę akcję."
 
     def has_permission(self, request, view):
         obj = None
-        if hasattr(view, 'get_object'):
+
+        if hasattr(view, 'get_object') and not isinstance(view, ListAPIView):
             try:
                 obj = view.get_object()
-            except Exception:
-                print('ex', view.get_object())
-                pass
+            except AssertionError:
+                obj = None
 
         if not obj:
-            chatroom_id = view.request.data.get('chatroom')
+            chatroom_id = request.data.get('chatroom') or view.kwargs.get('room_pk')
             if chatroom_id:
                 obj = Chatroom.objects.filter(pk=chatroom_id).first()
+
+        if not obj:
+            return False
 
         profile = request.user.get_default_profile()
 
@@ -49,6 +52,7 @@ class IsParticipantForChatroom(BasePermission):
             return obj.creator == profile or profile in obj.members.all()
         elif isinstance(obj, ChatMessage):
             return obj.chatroom.creator == profile or profile in obj.chatroom.members.all()
+
         return False
 
 

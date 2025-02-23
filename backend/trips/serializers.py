@@ -1,4 +1,4 @@
-from gunicorn.config import validate_statsd_address
+# from gunicorn.config import validate_statsd_address
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound
 
