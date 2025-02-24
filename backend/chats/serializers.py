@@ -36,7 +36,7 @@ class ChatroomCreateSerializer(BaseChatroomSerializer):
 
 
 class ChatroomRetrieveSerializer(BaseChatroomSerializer):
-    id = serializers.PrimaryKeyRelatedField(write_only=True)
+    id = serializers.IntegerField(write_only=True)
     name = serializers.CharField(read_only=True, max_length=30)
     type = serializers.CharField(read_only=True, max_length=32)
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -61,7 +61,7 @@ class ChatroomUpdateSerializer(BaseChatroomSerializer):
     type = serializers.CharField(max_length=32)
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = serializers.PrimaryKeyRelatedField()
+    members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all())
     settings = serializers.JSONField()
 
 
@@ -87,7 +87,7 @@ class BaseChatMessageSerializer(serializers.ModelSerializer):
 class ChatMessageCreateSerializer(BaseChatMessageSerializer):
     id = serializers.IntegerField(write_only=True)
     text = serializers.CharField(max_length=512)
-    profile = serializers.PrimaryKeyRelatedField(read_only=True, queryset=UserProfile.objects.all())
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
     file = serializers.FileField()
     chatroom = serializers.PrimaryKeyRelatedField(read_only=True)
 
@@ -104,25 +104,25 @@ class ChatMessageCreateSerializer(BaseChatMessageSerializer):
 class ChatMessageRetrieveSerializer(BaseChatMessageSerializer):
     id = serializers.IntegerField(read_only=True)
     text = serializers.CharField(write_only=True, max_length=512)
-    profile = serializers.PrimaryKeyRelatedField(write_only=True)
+    profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
     file = serializers.FileField(write_only=True)
-    chatroom = serializers.PrimaryKeyRelatedField(write_only=True)
+    chatroom = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Chatroom.objects.all())
 
 
 class ChatMessageListSerializer(BaseChatMessageSerializer):
     id = serializers.IntegerField(write_only=True)
     text = serializers.CharField(write_only=True, max_length=512)
-    profile = serializers.PrimaryKeyRelatedField(write_only=True)
+    profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
     file = serializers.FileField(write_only=True)
-    chatroom = serializers.PrimaryKeyRelatedField(write_only=True)
+    chatroom = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Chatroom.objects.all())
 
 
 class ChatMessageUpdateSerializer(BaseChatMessageSerializer):
     id = serializers.IntegerField(write_only=True)
     text = serializers.CharField(max_length=512)
-    profile = serializers.PrimaryKeyRelatedField(read_only=True, queryset=UserProfile.objects.all())
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
     file = serializers.FileField()
-    chatroom = serializers.PrimaryKeyRelatedField(read_only=True, queryset=Chatroom.objects.all())
+    chatroom = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
 class ChatMessageDestroySerializer(BaseChatMessageSerializer):
