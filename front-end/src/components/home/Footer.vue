@@ -1,7 +1,16 @@
 <script lang="ts" setup>
 import { FooterData} from "@/type/interface";
+import { onMounted, ref } from "vue";
 
-
+const lastModified = ref<string>(new Date().toLocaleDateString());
+onMounted(async () => {
+  try {
+    const response = await fetch('/last-modified.txt');
+    lastModified.value = await response.text();
+  } catch (error) {
+    lastModified.value = 'Brak danych';
+  }
+});
 const props = defineProps({
   footerData: {
     type: Object as () => FooterData,
@@ -42,7 +51,7 @@ const props = defineProps({
         >
           <hr />
           <p v-if="footerData.footerText">{{ footerData.footerText }}</p>
-          <p v-if="footerData.lastUpdated">{{ footerData.lastUpdated }}</p>
+          <p v-if="footerData.lastUpdated">{{ lastModified }}</p>
         </v-col>
       </v-row>
     </v-container>

@@ -19,7 +19,7 @@ export default defineConfig({
       "/api": {
         target: "https://api.plannder.com/",
         changeOrigin: true,
-        secure: false, // Wyłącz, jeśli używasz HTTPS z samopodpisanym certyfikatem
+        secure: false,
       },
     },
   },
