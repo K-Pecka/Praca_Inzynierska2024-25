@@ -5,10 +5,11 @@ from rest_framework.generics import (
 
 from .models import Chatroom, ChatMessage
 from server.permissions import IsCreatorForChatroom, IsParticipantForChatroom, IsCreatorForChatMessage, \
-    IsTripParticipant, IsTripCreator
+    IsTripParticipant
 from .serializers import (
-    ChatroomCreateSerializer, ChatroomUpdateSerializer, ChatMessageCreateSerializer, ChatroomSerializer,
-    ChatMessageSerializer, ChatMessageUpdateSerializer
+    ChatroomCreateSerializer, ChatroomUpdateSerializer, ChatMessageCreateSerializer,
+    ChatMessageUpdateSerializer, ChatroomRetrieveSerializer, ChatroomListSerializer,
+    ChatroomDestroySerializer, ChatMessageRetrieveSerializer, ChatMessageListSerializer, ChatMessageDestroySerializer
 )
 
 
@@ -22,19 +23,20 @@ class ChatroomCreateAPIView(CreateAPIView):
 
 class ChatroomRetrieveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
-    serializer_class = ChatroomSerializer
+    serializer_class = ChatroomRetrieveSerializer
 
     def get_object(self):
-        return Chatroom.objects.by_id(self.kwargs['pk'])
+        id = self.kwargs['pk']
+        return Chatroom.objects.by_id(id)
+
 
 class ChatroomListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = ChatroomSerializer
+    serializer_class = ChatroomListSerializer
 
     def get_queryset(self):
-        profile = self.request.user.get_default_profile()
-
-        return Chatroom.objects.by_user(profile).select_related('creator').prefetch_related('members')
+        user = self.request.user.get_default_profile()
+        return Chatroom.objects.by_user(user).select_related('creator').prefetch_related('members')
 
 
 class ChatroomUpdateAPIView(UpdateAPIView):
@@ -42,15 +44,17 @@ class ChatroomUpdateAPIView(UpdateAPIView):
     serializer_class = ChatroomUpdateSerializer
 
     def get_object(self):
-        return Chatroom.objects.by_id(self.kwargs['pk'])
+        id = self.kwargs['pk']
+        return Chatroom.objects.by_id(id)
 
 
 class ChatroomDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsCreatorForChatroom]
-    serializer_class = ChatroomSerializer
+    serializer_class = ChatroomDestroySerializer
 
     def get_object(self):
-        return Chatroom.objects.by_id(self.kwargs['pk'])
+        id = self.kwargs['pk']
+        return Chatroom.objects.by_id(id)
 
 
 #####################################################################
@@ -63,17 +67,17 @@ class ChatMessageCreateAPIView(CreateAPIView):
 
 class ChatMessageRetrieveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
-    serializer_class = ChatMessageSerializer
+    serializer_class = ChatMessageRetrieveSerializer
 
     def get_object(self):
-        return ChatMessage.objects.by_room_and_id(
-            self.kwargs['pk'], self.kwargs['room_pk']
-        )
+        id = self.kwargs['pk']
+        room_id = self.kwargs['room_pk']
+        return ChatMessage.objects.by_room_and_id(room_id, id)
 
 
 class ChatMessageListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
-    serializer_class = ChatMessageSerializer
+    serializer_class = ChatMessageListSerializer
 
     def get_queryset(self):
         profile = self.request.user.get_default_profile()
@@ -89,16 +93,16 @@ class ChatMessageUpdateAPIView(UpdateAPIView):
     serializer_class = ChatMessageUpdateSerializer
 
     def get_object(self):
-        return ChatMessage.objects.by_room_and_id(
-            self.kwargs['pk'], self.kwargs['room_pk']
-        )
+        id = self.kwargs['pk']
+        room_id = self.kwargs['room_pk']
+        return ChatMessage.objects.by_room_and_id(room_id, id)
 
 
 class ChatMessageDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatMessage]
-    serializer_class = ChatMessageSerializer
+    serializer_class = ChatMessageDestroySerializer
 
     def get_object(self):
-        return ChatMessage.objects.by_room_and_id(
-            self.kwargs['pk'], self.kwargs['room_pk']
-        )
+        id = self.kwargs['pk']
+        room_id = self.kwargs['room_pk']
+        return ChatMessage.objects.by_room_and_id(room_id, id)

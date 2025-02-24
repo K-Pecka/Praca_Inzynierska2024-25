@@ -11,82 +11,123 @@ from users.models import UserProfile
 # Chatroom
 #####################################################################
 class BaseChatroomSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(max_length=50)
-    type = serializers.CharField(max_length=32)
-    trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
-    creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
-    members = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=UserProfile.objects.all())
-    settings = serializers.JSONField()
+    def validate_members(self, value):
+        if len(value) != len(set(value)):
+            raise serializers.ValidationError("Nie są dozwolone zduplikowane członkostwa.")
+        return value
 
     class Meta:
         model = Chatroom
         fields = ['id', 'name', 'type', 'trip', 'creator', 'members', 'settings']
 
 
-class ChatroomSerializer(BaseChatroomSerializer):
-    class Meta(BaseChatroomSerializer.Meta):
-        read_only_fields = ['id', 'name', 'type', 'trip', 'creator', 'members', 'settings']
-
-
 class ChatroomCreateSerializer(BaseChatroomSerializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField(max_length=30)
+    type = serializers.CharField(max_length=32)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all())
+    settings = serializers.JSONField()
+
     def validate(self, data):
-        request = self.context['request']
         # TODO: walidacja dla prywatnych i publicznych pokoi dla przewodników i uczestników do ustalenia
         return data
-        # if not request.user.is_guide:
-        #     if Chatroom.objects.filter(creator=request.user.get_default_profile()).count() > 2:
-        #         raise serializers.ValidationError("Osiągnąłeś limit wycieczek dla swojego profilu.")
 
-    def validate_members(self, value):
-        if len(value) != len(set(value)):
-            # Check members duplicates
-            raise serializers.ValidationError("Nie są dozwolone zduplikowane członkostwa.")
-        return value
 
-    class Meta(BaseChatroomSerializer.Meta):
-        model = Chatroom
-        read_only_fields = ['id']
+class ChatroomRetrieveSerializer(BaseChatroomSerializer):
+    id = serializers.PrimaryKeyRelatedField(write_only=True)
+    name = serializers.CharField(read_only=True, max_length=30)
+    type = serializers.CharField(read_only=True, max_length=32)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    members = serializers.PrimaryKeyRelatedField(read_only=True)
+    settings = serializers.JSONField(read_only=True)
+
+
+class ChatroomListSerializer(BaseChatroomSerializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(read_only=True, max_length=30)
+    type = serializers.CharField(read_only=True, max_length=32)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    members = serializers.PrimaryKeyRelatedField(read_only=True)
+    settings = serializers.JSONField(read_only=True)
 
 
 class ChatroomUpdateSerializer(BaseChatroomSerializer):
-    def validate_members(self, value):
-        if len(value) != len(set(value)):
-            # Check members duplicates
-            raise serializers.ValidationError("Nie są dozwolone zduplikowane członkostwa.")
-        return value
+    id = serializers.IntegerField(write_only=True)
+    name = serializers.CharField(max_length=30)
+    type = serializers.CharField(max_length=32)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    members = serializers.PrimaryKeyRelatedField()
+    settings = serializers.JSONField()
 
-    class Meta(BaseChatroomSerializer.Meta):
-        model = Chatroom
-        read_only_fields = ['id', 'creator', 'trip']
+
+class ChatroomDestroySerializer(BaseChatroomSerializer):
+    id = serializers.IntegerField(write_only=True)
+    name = serializers.CharField(write_only=True, max_length=30)
+    type = serializers.CharField(write_only=True, max_length=32)
+    trip = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Trip.objects.all())
+    creator = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(write_only=True, many=True, queryset=UserProfile.objects.all())
+    settings = serializers.JSONField(write_only=True)
 
 
 #####################################################################
 # ChatMessage
 #####################################################################
 class BaseChatMessageSerializer(serializers.ModelSerializer):
-    text = serializers.CharField(max_length=512)
-    profile = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
-    file = serializers.FileField(required=False)
-    chatroom = serializers.PrimaryKeyRelatedField(queryset=Chatroom.objects.all())
-
     class Meta:
         model = ChatMessage
         fields = ['id', 'text', 'profile', 'file', 'chatroom']
 
 
 class ChatMessageCreateSerializer(BaseChatMessageSerializer):
-    class Meta(BaseChatMessageSerializer.Meta):
-        model = ChatMessage
-        read_only_fields = ['id', ]
+    id = serializers.IntegerField(write_only=True)
+    text = serializers.CharField(max_length=512)
+    profile = serializers.PrimaryKeyRelatedField(read_only=True, queryset=UserProfile.objects.all())
+    file = serializers.FileField()
+    chatroom = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    def create(self, validated_data):
+        view = self.context.get('view')
+        profile = view.request.user.get_default_profile()
+        validated_data['profile'] = profile
+        chatroom_id = view.kwargs.get('room_id')
+        chatroom = Chatroom.objects.get(pk=chatroom_id)
+        validated_data['chatroom'] = chatroom
+        return Chatroom.objects.create(**validated_data)
 
 
-class ChatMessageSerializer(BaseChatMessageSerializer):
-    class Meta(BaseChatMessageSerializer.Meta):
-        model = ChatMessage
-        read_only_fields = ['id', 'text', 'profile', 'file', 'chatroom']
+class ChatMessageRetrieveSerializer(BaseChatMessageSerializer):
+    id = serializers.IntegerField(read_only=True)
+    text = serializers.CharField(write_only=True, max_length=512)
+    profile = serializers.PrimaryKeyRelatedField(write_only=True)
+    file = serializers.FileField(write_only=True)
+    chatroom = serializers.PrimaryKeyRelatedField(write_only=True)
+
+
+class ChatMessageListSerializer(BaseChatMessageSerializer):
+    id = serializers.IntegerField(write_only=True)
+    text = serializers.CharField(write_only=True, max_length=512)
+    profile = serializers.PrimaryKeyRelatedField(write_only=True)
+    file = serializers.FileField(write_only=True)
+    chatroom = serializers.PrimaryKeyRelatedField(write_only=True)
 
 
 class ChatMessageUpdateSerializer(BaseChatMessageSerializer):
-    class Meta(BaseChatMessageSerializer.Meta):
-        model = ChatMessage
-        read_only_fields = ['id', 'chatroom', 'profile']
+    id = serializers.IntegerField(write_only=True)
+    text = serializers.CharField(max_length=512)
+    profile = serializers.PrimaryKeyRelatedField(read_only=True, queryset=UserProfile.objects.all())
+    file = serializers.FileField()
+    chatroom = serializers.PrimaryKeyRelatedField(read_only=True, queryset=Chatroom.objects.all())
+
+
+class ChatMessageDestroySerializer(BaseChatMessageSerializer):
+    id = serializers.IntegerField(write_only=True)
+    text = serializers.CharField(write_only=True, max_length=512)
+    profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
+    file = serializers.FileField(write_only=True)
+    chatroom = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Chatroom.objects.all())

@@ -16,9 +16,9 @@ class ChatroomManager(models.Manager):
 
 
 class ChatMessageManager(models.Manager):
-    def by_room_and_id(self, pk, room_pk):
+    def by_room_and_id(self, room_pk, id):
         try:
-            return self.get(pk=pk, chatroom=room_pk)
+            return self.get(pk=id, chatroom=room_pk)
         except self.model.DoesNotExist:
             raise NotFound(detail="Nie znaleziono wiadomości o podanym ID")
 
