@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { Trip,Btn } from "@/type/interface";
-
 const props = defineProps<{
   plans: any;
   btn: any;

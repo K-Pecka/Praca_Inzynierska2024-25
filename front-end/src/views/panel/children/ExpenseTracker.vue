@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRoute } from "vue-router";
-import { useTripStore } from "@/stores/tripStore";
+import { useTripStore } from "@/stores/useTripStore";
 
 const { getTripDetails } = useTripStore();
 const route = useRoute();

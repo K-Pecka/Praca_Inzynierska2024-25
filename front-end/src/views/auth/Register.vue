@@ -1,28 +1,9 @@
-<template>
-  <Section class="logIn">
-    <template #title>
-      <h1>{{ sectionTitle }}</h1>
-    </template>
-    <template #content>
-      <Form
-        :submitButtonLabel="sectionTitle"
-        :inputs="inputs"
-        :formValues="formValues"
-        @submitForm="handleSubmit"
-      />
-    </template>
-  </Section>
-</template>
-
 <script lang="ts" setup>
 import { ref } from "vue";
-import Section from "@/components/Section.vue";
-import Form from "@/components/common/Form.vue";
-import { usePageHomeStore } from "@/stores/ui/usePageHomeStore";
+import { Section,Form } from "@/components";
 import { Input,Register } from "@/type/interface";
 import { FormType } from "@/type/enum";
-import { useFormStore } from "@/stores/ui/useFormStore";
-import { useAuthStore } from "@/stores/auth/useAuthStore";
+import { useAuthStore,useFormStore,usePageHomeStore } from "@/stores";
 
 const { getSectionTitle } = usePageHomeStore();
 const { registerMutation } = useAuthStore();
@@ -39,7 +20,6 @@ const formValues = ref<Record<string, string>>(
 const handleSubmit = async (_: any, config: any) => {
   if (config?.send && isFormValid(FormType.REGISTER, formValues.value)) {
     const { pass_2, ...registrationData } = formValues.value;
-    
     try {
       await registerMutation.mutateAsync(registrationData as unknown as Register);
     } catch (error) {
@@ -48,6 +28,24 @@ const handleSubmit = async (_: any, config: any) => {
   }
 };
 </script>
+
+<template>
+  <Section class="logIn">
+    <template #title>
+      <h1>{{ sectionTitle }}</h1>
+    </template>
+    <template #content>
+      <Form
+        :submitButtonLabel="sectionTitle"
+        :inputs="inputs"
+        :formValues="formValues"
+        @submitForm="handleSubmit"
+      />
+    </template>
+  </Section>
+</template>
+
+
 
 <style scoped lang="scss">
 h1 {

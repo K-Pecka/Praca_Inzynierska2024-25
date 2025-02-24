@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { useNotificationStore } from "@/stores/ui/useNotificationStore";
 import { Input } from "@/type/interface";
 import { FormType } from "@/type/enum";
 import {
@@ -11,7 +10,7 @@ import {
   getMoreOptions,
 } from "@/dataStorage/index";
 import { computed, ref } from "vue";
-import { useAuthStore } from "@/stores";
+import { useAuthStore,useNotificationStore } from "@/stores";
 
 export const useFormStore = defineStore("form", () => {
   const { getErrorMessages } = useNotificationStore();

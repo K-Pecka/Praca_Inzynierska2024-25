@@ -1,10 +1,8 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import Section from "@/components/Section.vue";
-import Form from "@/components/common/Form.vue";
-import { useFormStore } from "@/stores/ui/useFormStore";
+import {Section,Form} from "@/components";
+import { useFormStore,useTripStore } from "@/stores";
 import { FormType } from "@/type/enum";
-import { useTripStore } from "@/stores/tripStore";
 
 const { tripMutationAdd } = useTripStore();
 
@@ -15,8 +13,6 @@ const inputs = ref(getFormInputs(FormType.TRIP));
 const formValues = ref<Record<string, string>>(
     Object.fromEntries(inputs.value.map(input => [input.name, ""]))
 );
-
-
 const handleSubmit = (_formData: any, config: any) => {
   if (config?.send && isFormValid(FormType.TRIP, formValues.value)) {
     const { tripName, tripDates } = formValues.value;

@@ -18,7 +18,9 @@ export const usePageHomeStore = defineStore("pagHome", () => {
   const checkUserAuthentication = async () => {
     isUserLoggedIn.value = await validToken();
   };
-
+  const setStateisLogged = (value: boolean) => {
+    isUserLoggedIn.value = value;
+  }
   onMounted(async () => {
     await checkUserAuthentication();
   });
@@ -52,6 +54,7 @@ export const usePageHomeStore = defineStore("pagHome", () => {
   };
 
   return {
+    setStateisLogged,
     getSiteName,
     navigationLinks,
     getFooterData,

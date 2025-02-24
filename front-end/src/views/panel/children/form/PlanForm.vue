@@ -1,10 +1,8 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import Section from "@/components/Section.vue";
-import Form from "@/components/common/Form.vue";
-import { useFormStore } from "@/stores/ui/useFormStore";
+import {Section,Form} from "@/components";
+import { useFormStore,useTripStore } from "@/stores";
 import { FormType } from "@/type/enum";
-import { useTripStore } from "@/stores/tripStore";
 import { useRoute } from "vue-router";
 import { Plan } from "@/type/interface";
 

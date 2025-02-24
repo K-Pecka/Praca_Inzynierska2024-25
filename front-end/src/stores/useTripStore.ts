@@ -1,14 +1,12 @@
 import {
   useMutation,
   useQuery,
-  useQueryClient,
-  UseQueryOptions,
+  useQueryClient
 } from "@tanstack/vue-query";
 import { defineStore } from "pinia";
 import { computed } from "vue";
-import { useAuthStore } from "./auth/useAuthStore";
+import { useAuthStore,useNotificationStore } from "@/stores";
 import router from "@/router";
-import { useNotificationStore } from "./ui/useNotificationStore";
 import { fetchTrips, fetchTrip, deleteTrip, createTrip } from "@/api";
 import { fetchPlans, createPlan } from "@/api";
 import { saveBudget } from "@/api";

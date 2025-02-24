@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-import Form from "@/components/common/Form.vue";
-import ListLink from "@/components/ListLink.vue";
-import Section from "@/components/Section.vue";
-
+import {Form,ListLink,Section} from "@/components/common";
 import { usePageHomeStore,useFormStore } from "@/stores/";
 import { FormType } from "@/type/enum";
 

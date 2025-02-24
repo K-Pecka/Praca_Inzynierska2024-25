@@ -57,7 +57,7 @@ export const apiEndpoints = {
     verify: `${hostName}/user_auth/token/verify/`,
   },
   trip: {
-    all: `${hostName}/trip/`,
+    all: `${hostName}/trip/all/`,
     detail: `${hostName}/trip/:tripId/`,
     delete: `${hostName}/trip/:tripId/delete/`,
     create: `${hostName}/trip/`,

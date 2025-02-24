@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import { useRoute } from "vue-router";
 import { SideNavItem } from "@/type/interface";
 
 

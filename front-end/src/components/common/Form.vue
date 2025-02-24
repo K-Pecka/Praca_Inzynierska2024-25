@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import FormInput from "@/components/FormInput.vue";
+import FormInput from "@/components/common/FormInput.vue";
 import { Input } from "@/type/interface";
 
 

@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import Box from "@/components/Box.vue";
+import {Box,Section} from "@/components";
 import { useRoute } from "vue-router";
-import { useTripStore } from "@/stores/tripStore";
-import { computed } from "vue";
-import Section from "@/components/Section.vue";
+import { useTripStore } from "@/stores/useTripStore";
 const { getDashboard } = useTripStore();
 const route = useRoute();
 const id = route.params.tripId as string;

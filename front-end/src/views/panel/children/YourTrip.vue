@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import Section from "@/components/Section.vue";
-import TripBox from "@/components/TripBox.vue";
-import { useTripStore } from "@/stores/tripStore";
+import {Section,TripBox} from "@/components";
+import { useTripStore } from "@/stores/useTripStore";
 
 const { yourTrips } = useTripStore();
 const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()

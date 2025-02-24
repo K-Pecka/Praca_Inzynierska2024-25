@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 import {ref, computed} from "vue";
-import PanelNavbar from "@/components/trip/PanelNavbar.vue";
-import SideNav from "@/components/trip/SideNav.vue";
-import {usePageHomeStore} from "@/stores/ui/usePageHomeStore";
-import {usePagePanelStore} from "@/stores/ui/usePagePanelStore";
+import { PanelNavbar,SideNav } from "@/components";
+import {usePageHomeStore,usePagePanelStore} from "@/stores";
 import { useRoute } from "vue-router";
 
 const useStore = usePageHomeStore();

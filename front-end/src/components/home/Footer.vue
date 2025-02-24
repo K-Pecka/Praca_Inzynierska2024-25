@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {Link, FooterData} from "@/type/interface";
+import { FooterData} from "@/type/interface";
 
 
 const props = defineProps({

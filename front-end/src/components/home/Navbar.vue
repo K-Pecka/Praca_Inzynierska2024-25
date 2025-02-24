@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import router from "@/router";
 import { ref } from "vue";
 import { Link } from "@/type";
 
