@@ -9,7 +9,6 @@ class TripManager(models.Manager):
         try:
             return self.get_queryset().get(pk=pk)
         except self.model.DoesNotExist:
-            print(f'Trip pk {pk} not found')
             raise NotFound(detail="Nie znaleziono wycieczki o podanym ID")
 
     def by_user(self, profile):

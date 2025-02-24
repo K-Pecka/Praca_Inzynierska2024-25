@@ -89,44 +89,29 @@ class IsTripParticipant(BasePermission):
 
         try:
             obj = view.get_object()  # Only for views that require fetching objects
-            print('obj', obj)
         except Exception:
-            print('ex', view.get_object())
             return False
 
         profile = request.user.get_default_profile()
         if not profile:
-            print('no profile')
             return False
 
         if isinstance(obj, Trip):
-            print(f'obj.creator: {obj.creator}, profile: {profile}, obj.members: {obj.members.all()}')
-            print('res', obj.creator == profile or profile in obj.members.all())
             return obj.creator == profile or profile in obj.members.all()
 
         if isinstance(obj, Chatroom):
-            print(f'obj.creator: {obj.trip.creator}, profile: {profile}, obj.members: {obj.members.all()}')
-            print('res', obj.trip.creator == profile or profile in obj.members.all())
             return obj.trip.creator == profile or profile in obj.members.all()
 
         if isinstance(obj, ChatMessage):
-            print(f'obj.creator: {obj.chatroom.trip.creator}, profile: {profile}, obj.members: {obj.chatroom.members.all()}')
-            print('res', obj.chatroom.trip.creator == profile or profile in obj.chatroom.members.all())
             return obj.chatroom.trip.creator == profile or profile in obj.chatroom.members.all()
 
         if isinstance(obj, Ticket):
-            print(f'obj.creator: {obj.trip.creator}, profile: {profile}, obj.members: {obj.trip.members.all()}')
-            print('res', obj.trip.creator == profile or profile in obj.trip.members.all())
             return obj.trip.creator == profile or profile in obj.trip.members.all()
 
         if isinstance(obj, Itinerary):
-            print(f'obj.creator: {obj.trip.creator}, profile: {profile}, obj.members: {obj.trip.members.all()}')
-            print('res', obj.trip.creator == profile or profile in obj.trip.members.all())
             return obj.trip.creator == profile or profile in obj.trip.members.all()
 
         if isinstance(obj, ItineraryActivity):
-            print(f'obj.creator: {obj.itinerary.trip.creator}, profile: {profile}, obj.members: {obj.itinerary.trip.members.all()}')
-            print('res', obj.itinerary.trip.creator == profile or profile in obj.itinerary.trip.members.all())
             return obj.itinerary.trip.creator == profile or profile in obj.itinerary.trip.members.all()
 
         return False

@@ -8,27 +8,31 @@ from users.models import UserProfile
 #################################################################
 # Budget
 #################################################################
-# TODO: rozdzielić serializery
-class BudgetSerializer(serializers.ModelSerializer):
-    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
-    currency = serializers.CharField(max_length=64)
-
+class BudgetBaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Budget
-        fields = [
-            'id', 'amount', 'currency'
-        ]
-        read_only_fields = ['id', ]
+        fields = ['id', 'amount', 'currency', 'trip']
 
 
-class BudgetCreateSerializer(BudgetSerializer):
-    def create(self, validated_data):
-        view = self.context['view']
-        validated_data['trip'] = Trip.objects.get(pk=view.kwargs['trip_id'])
-        return super().create(validated_data)
+class BudgetRetrieveSerializer(BudgetBaseSerializer):
+    id = serializers.IntegerField(read_only=True)
+    amount = serializers.DecimalField(read_only=True, max_digits=10, decimal_places=2)
+    currency = serializers.CharField(read_only=True, max_length=64)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
 
-    class Meta(BudgetSerializer.Meta):
-        read_only_fields = ['id', ]
+
+class BudgetUpdateSerializer(BudgetBaseSerializer):
+    id = serializers.IntegerField(read_only=True)
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    currency = serializers.CharField(max_length=64)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+
+
+class BudgetDestroySerializer(BudgetBaseSerializer):
+    id = serializers.IntegerField(write_only=True)
+    amount = serializers.DecimalField(write_only=True, max_digits=10, decimal_places=2)
+    currency = serializers.CharField(write_only=True, max_length=64)
+    trip = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Trip.objects.all())
 
 
 #################################################################
@@ -44,25 +48,6 @@ class BaseTripSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Trip
-        fields = [
-            'id', 'name', 'creator', 'members', 'start_date', 'end_date', 'settings'
-        ]
-
-
-class TripSerializer(BaseTripSerializer):
-    budget = BudgetSerializer()
-
-    def validate(self, data):
-        members = data.get("members", [])
-
-        if members and data.get("creator") in members:
-            raise serializers.ValidationError("Właściciel nie może być uczestnikiem wycieczki.")
-        return data
-
-    def get_budget(self, obj):
-        return obj.budget
-
-    class Meta(BaseTripSerializer.Meta):
         fields = ['id', 'name', 'creator', 'members', 'budget', 'start_date', 'end_date', 'settings']
 
 
@@ -88,29 +73,62 @@ class TripCreateSerializer(BaseTripSerializer):
         except Exception as e:
             raise e
 
-    class Meta(BaseTripSerializer.Meta):
-        read_only_fields = ['id', 'creator']
+
+class TripRetrieveSerializer(BaseTripSerializer):
+    id = serializers.IntegerField(write_only=True)
+    name = serializers.CharField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
+    start_date = serializers.DateField(read_only=True)
+    end_date = serializers.DateField(read_only=True)
+    settings = serializers.JSONField(read_only=True)
+    budget = BudgetRetrieveSerializer(read_only=True)
+
+    def get_budget(self, obj):
+        return obj.budget
+
+
+class TripListSerializer(TripRetrieveSerializer):
+    id = serializers.IntegerField(read_only=True)
+
+
+class TripUpdateSerializer(BaseTripSerializer):
+    id = serializers.IntegerField(write_only=True)
+    name = serializers.CharField()
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all())
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+    settings = serializers.JSONField()
+    budget = BudgetRetrieveSerializer()
+    # TODO: walidacja start_date end_date czy mozna zmienic
+
+
+class TripDestroySerializer(BaseTripSerializer):
+    id = serializers.IntegerField(write_only=True)
+    name = serializers.CharField(write_only=True)
+    creator = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(write_only=True, many=True, queryset=UserProfile.objects.all())
+    start_date = serializers.DateField(write_only=True)
+    end_date = serializers.DateField(write_only=True)
+    settings = serializers.JSONField(write_only=True)
+    budget = BudgetRetrieveSerializer(write_only=True)
 
 
 #################################################################
 # Ticket
 #################################################################
 class BaseTicketSerializer(serializers.ModelSerializer):
-    ticket = serializers.FileField()
-    trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
-
     class Meta:
         model = Ticket
         fields = ['id', 'ticket', 'profile', 'trip']
 
 
-class TicketSerializer(BaseTicketSerializer):
-    class Meta(BaseTicketSerializer.Meta):
-        read_only_fields = ['id', 'ticket', 'profile', 'trip']
-
-
 class TicketCreateSerializer(BaseTicketSerializer):
-    profile = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False)
+    id = serializers.IntegerField(write_only=True)
+    ticket = serializers.FileField()
+    profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
+    trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
 
     def create(self, validated_data):
         view = self.context['view']
@@ -118,8 +136,33 @@ class TicketCreateSerializer(BaseTicketSerializer):
         validated_data['profile'] = profile
         return Ticket.objects.create(**validated_data)
 
-    class Meta(BaseTicketSerializer.Meta):
-        fields = ['id', 'ticket', 'profile', 'trip']
+
+class TicketRetrieveSerializer(BaseTicketSerializer):
+    id = serializers.IntegerField(write_only=True)
+    ticket = serializers.FileField(read_only=True)
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+
+
+class TicketListSerializer(BaseTicketSerializer):
+    id = serializers.IntegerField(read_only=True)
+    ticket = serializers.FileField(read_only=True)
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+
+
+class TicketUpdateSerializer(BaseTicketSerializer):
+    id = serializers.IntegerField(write_only=True)
+    ticket = serializers.FileField()
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+
+
+class TicketDestroySerializer(BaseTicketSerializer):
+    id = serializers.IntegerField(write_only=True)
+    ticket = serializers.FileField(write_only=True)
+    profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
+    trip = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Trip.objects.all())
 
 
 #################################################################

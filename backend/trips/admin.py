@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Trip, Ticket, FYQ
+from .models import Trip, Ticket
 
 @admin.register(Trip)
 class TripAdmin(admin.ModelAdmin):
@@ -15,8 +15,3 @@ class TicketAdmin(admin.ModelAdmin):
     list_display = ('profile', 'trip', 'ticket')
     search_fields = ('profile__user__username', 'trip__creator__user__username')
     list_filter = ('trip',)
-
-
-@admin.register(FYQ)
-class FYQAdmin(admin.ModelAdmin):
-    list_display = ('id',)

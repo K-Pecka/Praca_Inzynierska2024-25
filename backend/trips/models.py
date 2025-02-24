@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from dicts.models import BaseModel
-from trips.managers import TripManager
+from trips.managers import TripManager, TicketManager
 from users.models import UserProfile
 
 
@@ -83,17 +83,12 @@ class Ticket(BaseModel):
         verbose_name=_("Wycieczka"), help_text=_("Wycieczka")
     )
 
+    objects = TicketManager()
+
     class Meta:
         db_table = "tickets"
         verbose_name = "Bilet"
         verbose_name_plural = "Bilety"
-
-
-class FYQ(BaseModel):
-    class Meta:
-        db_table = "fyq"
-        verbose_name = "FYQ"
-        verbose_name_plural = "FYQ"
 
 
 class Budget(BaseModel):

@@ -9,8 +9,10 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Trip, Ticket, Budget, Expense
 from server.permissions import IsTripParticipant, IsTripCreator, IsTicketOwner
 from .serializers import (
-    TripSerializer, TicketSerializer, TripCreateSerializer, BudgetSerializer, ExpenseSerializer, BudgetCreateSerializer,
-    TicketCreateSerializer
+    TripCreateSerializer, ExpenseSerializer,
+    TicketCreateSerializer, TicketUpdateSerializer, TicketRetrieveSerializer, TicketDestroySerializer,
+    TicketListSerializer, TripRetrieveSerializer, TripListSerializer, TripUpdateSerializer, TripDestroySerializer,
+    BudgetUpdateSerializer, BudgetDestroySerializer
 )
 
 
@@ -27,39 +29,41 @@ class TripCreateAPIView(CreateAPIView):
 @extend_schema(tags=['Trip'])
 class TripRetrieveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = TripSerializer
+    serializer_class = TripRetrieveSerializer
 
     def get_object(self):
-        return Trip.objects.by_id(self.kwargs['pk'])
+        id = self.kwargs['pk']
+        return Trip.objects.by_id(id)
 
 
 @extend_schema(tags=['Trip'])
 class TripListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = TripSerializer
+    serializer_class = TripListSerializer
 
     def get_queryset(self):
-        profile = self.request.user.get_default_profile()
-
-        return Trip.objects.by_user(profile).select_related('creator').prefetch_related('members')
+        user = self.request.user.get_default_profile()
+        return Trip.objects.by_user(user).select_related('creator').prefetch_related('members')
 
 
 @extend_schema(tags=['Trip'])
 class TripUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
-    serializer_class = TripSerializer
+    serializer_class = TripUpdateSerializer
 
     def get_object(self):
-        return Trip.objects.by_id(self.kwargs['pk'])
+        id = self.kwargs['pk']
+        return Trip.objects.by_id(id)
 
 
 @extend_schema(tags=['Trip'])
 class TripDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
-    serializer_class = TripSerializer
+    serializer_class = TripDestroySerializer
 
     def get_object(self):
-        return Trip.objects.by_id(self.kwargs['pk'])
+        id = self.kwargs['pk']
+        return Trip.objects.by_id(id)
 
 
 #############################################################################
@@ -75,54 +79,52 @@ class TicketCreateAPIView(CreateAPIView):
 @extend_schema(tags=['Ticket'])
 class TicketRetrieveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsTicketOwner]
-    serializer_class = TicketSerializer
+    serializer_class = TicketRetrieveSerializer
 
     def get_object(self):
-        return Ticket.objects.by_id(self.kwargs['pk']).select_related('profile', 'trip', 'activity')
+        id = self.kwargs['pk']
+        return Ticket.objects.by_id(id)
 
 
 @extend_schema(tags=['Ticket'])
 class TicketListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = TicketSerializer
+    serializer_class = TicketListSerializer
 
     def get_queryset(self):
-        profile = self.request.user.get_default_profile()
+        user = self.request.user.get_default_profile()
 
-        return Ticket.objects.by_user(profile).select_related('profile', 'trip', 'activity')
+        return Ticket.objects.by_user(user).select_related('profile', 'trip')
 
 
 @extend_schema(tags=['Ticket'])
 class TicketUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsTicketOwner]
-    serializer_class = TicketSerializer
+    serializer_class = TicketUpdateSerializer
+    parser_classes = (MultiPartParser,)
 
     def get_object(self):
-        return Ticket.objects.by_id(self.kwargs['pk']).select_related('profile', 'trip', 'activity')
+        id = self.kwargs['pk']
+        return Ticket.objects.by_id(id)
 
 
 @extend_schema(tags=['Ticket'])
 class TicketDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsTicketOwner]
-    serializer_class = TicketSerializer
+    serializer_class = TicketDestroySerializer
 
     def get_object(self):
-        return Ticket.objects.by_id(self.kwargs['pk']).select_related('profile', 'trip', 'activity')
+        id = self.kwargs['pk']
+        return Ticket.objects.by_id(id)
 
 
 #############################################################################
 # Budget
 #############################################################################
 @extend_schema(tags=['Budget'])
-class BudgetCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = BudgetCreateSerializer
-
-
-@extend_schema(tags=['Budget'])
 class BudgetUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = BudgetSerializer
+    serializer_class = BudgetUpdateSerializer
 
     def get_object(self):
         trip = Trip.objects.by_id(self.kwargs['trip_id'])
@@ -135,7 +137,7 @@ class BudgetUpdateAPIView(UpdateAPIView):
 @extend_schema(tags=['Budget'])
 class BudgetDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = BudgetSerializer
+    serializer_class = BudgetDestroySerializer
 
     def get_object(self):
         trip = Trip.objects.by_id(self.kwargs['trip_id'])

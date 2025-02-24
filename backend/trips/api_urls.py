@@ -6,9 +6,9 @@ from .api_views import (
 )
 urlpatterns = [
     # Trip URLs
-    path('', TripListAPIView.as_view(), name='trip-list'),
     path('create/', TripCreateAPIView.as_view(), name='trip-create'),
     path('<int:pk>/', TripRetrieveAPIView.as_view(), name='trip-retrieve'),
+    path('all/', TripListAPIView.as_view(), name='trip-list'),
     path('<int:pk>/update/', TripUpdateAPIView.as_view(), name='trip-update'),
     path('<int:pk>/delete/', TripDestroyAPIView.as_view(), name='trip-delete'),
 
@@ -24,9 +24,9 @@ urlpatterns = [
     path('<int:trip_id>/budget/delete/', BudgetDestroyAPIView.as_view(), name='budget-delete'),
 
     # Expense URLs
-    path('<int:trip_id>/expense/', ExpenseListAPIView.as_view(), name='expense-list'),
     path('<int:trip_id>/expense/create/', ExpenseCreateAPIView.as_view(), name='expense-create'),
     path('<int:trip_id>/expense/<int:pk>/', ExpenseRetrieveAPIView.as_view(), name='expense-retrieve'),
+    path('<int:trip_id>/expense/all/', ExpenseListAPIView.as_view(), name='expense-list'),
     path('<int:trip_id>/expense/<int:pk>/update/', ExpenseUpdateAPIView.as_view(), name='expense-update'),
     path('<int:trip_id>/expense/<int:pk>/delete/', ExpenseDestroyAPIView.as_view(), name='expense-delete'),
 ]
