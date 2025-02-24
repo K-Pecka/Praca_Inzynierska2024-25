@@ -10,13 +10,21 @@ import {
   budgetInput,
   getMoreOptions,
 } from "@/dataStorage/index";
+import { computed, ref } from "vue";
+import { useAuthStore } from "@/stores";
 
 export const useFormStore = defineStore("form", () => {
   const { getErrorMessages } = useNotificationStore();
+  const { loginMutation } = useAuthStore();
+  const formType = ref<FormType>(FormType.LOGIN);
   const extraValidationMessages = {
     isEqual: "Hasła muszą być takie same",
     dateRange: "Data zakończenia nie może być wcześniejsza niż rozpoczęcia",
   };
+  const formValues = computed(() => {
+    const inputs = getFormInputs(FormType.LOGIN);
+    return Object.fromEntries(inputs.map((input: { name: string }) => [input.name, ""]));
+  });
   const getLoginInputs = (): Input[] => loginInput(getErrorMessages());
 
   const getRegisterInputs = (): Input[] =>
@@ -39,7 +47,10 @@ export const useFormStore = defineStore("form", () => {
   };
   const getFormInputs = (type: FormType): Input[] =>
     formInputGenerators[type]?.() ?? [];
-
+  const initForm = (type: FormType) => {
+    formType.value = type;
+    return getFormInputs(type);
+  }
   const isFormValid  = (type: FormType, formValues: Record<string, string>) => {
     return getFormInputs(type).every((input) => {
       const value = formValues[input.name];
@@ -53,5 +64,15 @@ export const useFormStore = defineStore("form", () => {
       return errors.length === 0;
     });
   };
-  return { getFormInputs, isFormValid, getMoreOptions };
+
+  const sendForm =async (_: any, config: any)=>{
+    if (config?.send && isFormValid(FormType.LOGIN, formValues.value)) {
+      try {
+        await loginMutation.mutateAsync(formValues.value);
+      } catch (error) {
+        console.log("ERROR");
+      }
+    }
+  }
+  return { sendForm,initForm,formValues,getFormInputs, isFormValid, getMoreOptions };
 });

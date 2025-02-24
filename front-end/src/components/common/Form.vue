@@ -4,7 +4,7 @@
       <v-col cols="12" md="6" lg="8" offset-md="3" offset-lg="2">
         <form @submit.prevent="handleSubmit" class="form-container">
           <div v-for="(inputData, index) in inputs" :key="index">
-            <InputWithLabel
+            <FormInput
               :inputData="inputData"
               v-model="formValues[inputData.name]"
               @update="handleFieldUpdate"
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import InputWithLabel from "@/components/InputWithLabel.vue";
+import FormInput from "@/components/FormInput.vue";
 import { Input } from "@/type/interface";
 
 

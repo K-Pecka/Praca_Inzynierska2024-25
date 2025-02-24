@@ -29,7 +29,7 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
           <template #content>
             <p v-if="isLoading">Ładowanie...</p>
             <p v-else-if="error">Błąd: {{ error.message }}</p>
-            <TripBox v-else :btn="yourTrips.btn.map(btn => ({ ...btn, onclick: async (id: string) => { await btn.onclick('', id); } }))" image="/picture/p2.svg" />
+            <TripBox v-else :btn="yourTrips.btn.map(btn => ({ ...btn, onclick: async (id: string) => { await btn.onclick(id); return; } }))" :trip="trips" image="/picture/p1.svg" />
           </template>
         </Section>
       </v-col>
@@ -43,7 +43,7 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
           <template #content>
             <p v-if="isLoading">Ładowanie...</p>
             <p v-else-if="error">Błąd: {{ error.message }}</p>
-            <TripBox v-else :btn="yourTrips.btn.map(btn => ({ ...btn, onclick: async (id: string) => { await btn.onclick('', id); } }))" image="/picture/p2.svg" />
+            <TripBox v-else :btn="yourTrips.btn.map(btn => ({ ...btn, onclick: async (id: string) => { await btn.onclick(id); return; } }))" :trip="trips" image="/picture/p2.svg" />
           </template>
         </Section>
       </v-col>

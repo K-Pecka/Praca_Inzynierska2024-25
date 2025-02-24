@@ -22,7 +22,7 @@ router.beforeEach(async (to, from, next) => {
   const goBack = to.matched.some((record) => record.meta.goBack);
   if (requiresAuth && !(await validToken())) {
     setErrorCurrentMessage(
-      "Wymagana jest autoryzacja.\n Proszę się zalogować."
+      "Tylko zalogowani użytkownicy,\n posiadają dostępn do tej zawartości."
     );
     next({ name: "logIn" });
   } else if (goBack && (await validToken())) {

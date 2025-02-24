@@ -15,6 +15,7 @@ const props = defineProps({
     type: String,
   }
 });
+console.log(props.trip);
 </script>
 
 <template>
@@ -34,7 +35,7 @@ const props = defineProps({
                 <v-card-subtitle>
                   {{ `${trip.start_date} - ${trip.end_date}` }}
                 </v-card-subtitle>
-                <div>
+                <div class="detail">
                   <div
                     v-for="(button, index) in props.btn"
                     :key="index"
@@ -73,7 +74,10 @@ const props = defineProps({
 }
 .v-btn {
   margin-top: 0.6rem;
-  width: 100%;
+  min-width: 100%;
+}
+.detail{
+  width: 90%;
 }
 .primary button {
   background-color: rgb(var(--v-theme-primary));

@@ -1,5 +1,7 @@
 <template>
-  <router-view />
+  <v-app class="bg-app">
+    <router-view />
+  </v-app>
 </template>
 
 <script setup lang="ts">
@@ -33,3 +35,9 @@ watch(
 );
 
 </script>
+
+<style lang="scss" scoped>
+.bg-app {
+  background-color: rgba(var(--v-theme-background), 0.1);
+}
+</style>

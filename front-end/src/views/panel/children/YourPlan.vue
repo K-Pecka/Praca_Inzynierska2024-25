@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Section from "@/components/Section.vue";
-import TripBox from "@/components/TripBox.vue";
 import { useTripStore } from "@/stores/tripStore";
 import TripCard from "@/components/TripCard.vue";
 
@@ -9,7 +8,7 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 const id = route.params.tripId as string;
-const { data: rawPlans, isLoading, error, isSuccess } = yourPlans.plans(id);
+const { data: rawPlans, isLoading, error } = yourPlans.plans(id);
 </script>
 
 <template>

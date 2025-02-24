@@ -33,6 +33,7 @@ export const useTripStore = defineStore("trip", () => {
   });
   const handleDeleteTrip = async (id: string) => {
     try {
+      console.log("Deleting trip with id:", id);
       await deleteTripMutation.mutateAsync({ tripId: id });
     } catch (err) {
       console.error("Failed to delete trip:", err);
@@ -45,6 +46,93 @@ export const useTripStore = defineStore("trip", () => {
       queryFn: () => fetchTrip({ tripId: id }),
     });
   };
+const getDashboard = (id: string) => {
+  const { data: tripRaw, isLoading, error } = getTripDetails(id);
+  const tripTime = computed(
+    () => `${tripRaw.value?.start_date ?? "..."} - ${tripRaw.value?.end_date ?? "..."}`
+  );
+  const budget = computed(() => `${tripRaw.value?.budget?.amount ?? "..."} PLN`);
+  const participantCount = computed(
+    () => `${tripRaw.value?.members?.length ?? "..."} Uczestników`
+  );
+  const activityCount = computed(() => "0 Aktywności");
+  const upcomingActivities = computed(() => []);
+  const boxes = computed(() => [
+    {
+      title: "Czas trwania",
+      content: tripTime.value,
+      set: {
+        order: 1,
+        size: {
+          sm: { col: 12, row: 1 },
+          md: { col: 6, row: 1 },
+          lg: { col: 3, row: 1 },
+        },
+      },
+    },
+    {
+      title: "Budżet",
+      content: budget.value,
+      set: {
+        order: 2,
+        size: {
+          sm: { col: 12, row: 1 },
+          md: { col: 6, row: 1 },
+          lg: { col: 3, row: 1 },
+        },
+      },
+    },
+    {
+      title: "Uczestnicy",
+      content: participantCount.value,
+      set: {
+        order: 3,
+        size: {
+          sm: { col: 12, row: 1 },
+          md: { col: 6, row: 1 },
+          lg: { col: 3, row: 1 },
+        },
+      },
+    },
+    {
+      title: "Aktywności",
+      content: activityCount.value,
+      set: {
+        order: 4,
+        size: {
+          sm: { col: 12, row: 1 },
+          md: { col: 6, row: 1 },
+          lg: { col: 3, row: 1 },
+        },
+      },
+    },
+    {
+      title: "Nadchodzące aktywności",
+      content: upcomingActivities.value,
+      set: {
+        order: 5,
+        size: {
+          sm: { col: 12, row: 2 },
+          md: { col: 6, row: 2 },
+          lg: { col: 6, row: 2 },
+        },
+      },
+    },
+    {
+      title: "Ważne informacje",
+      content: upcomingActivities.value,
+      set: {
+        order: 5,
+        size: {
+          sm: { col: 12, row: 2 },
+          md: { col: 6, row: 2 },
+          lg: { col: 6, row: 2 },
+        },
+      },
+    },
+  ]);
+  return { boxes, isLoading, error };
+};
   const getPlans = (id: string) => {
     return useQuery({
       queryKey: ["plans", id],
@@ -63,8 +151,8 @@ export const useTripStore = defineStore("trip", () => {
         {
           title: "Zarządzaj wycieczką",
           class: ["primary"],
-          onclick: (trip: string, id: string) =>
-            router.push(`/panel/YourTrip/${trip}`),
+          onclick: (id: string) =>
+            router.push(`/panel/YourTrip/${id}`),
         },
         {
           title: "usuń wycieczkę",
@@ -79,12 +167,12 @@ export const useTripStore = defineStore("trip", () => {
     return {
       btn: [
         {
-          title: "Zarządzaj wycieczką",
+          title: "Zarządzaj planem",
           class: ["primary"],
-          onclick: (id: string) => router.push(`/panel/YourTrip/${id}`),
+          onclick: (trip: string, id: string) => router.push(`/panel/YourTrip/${id}`),
         },
         {
-          title: "usuń wycieczkę",
+          title: "usuń plan",
           class: ["accent"],
           onclick: (id: string) => handleDeleteTrip(id),
         },
@@ -92,31 +180,6 @@ export const useTripStore = defineStore("trip", () => {
       plans: getPlans,
     };
   });
-  // const saveBudget = async (data: {
-  //   amount: string;
-  //   currency: string;
-  //   trip: Number;
-  // }) => {
-  //   const response = await fetch(
-  //     `https://api.plannder.com/trip/${data.trip}/budget/update/`,
-  //     {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${getToken()?.access}`,
-  //       },
-  //       body: JSON.stringify(data),
-  //     }
-  //   );
-  //   console.log(data);
-  //   if (!response.ok) {
-  //     const errorData = await response.json();
-  //     console.log(errorData);
-  //     throw new Error(errorData || "unknow");
-  //   }
-
-  //   return response.json();
-  // };
   const tripMutationBudget = useMutation({
     mutationFn: saveBudget,
     onSuccess: (data) => {
@@ -148,6 +211,7 @@ export const useTripStore = defineStore("trip", () => {
     },
   });
   return {
+    getDashboard,
     yourTrips,
     yourPlans,
     getTripDetails,

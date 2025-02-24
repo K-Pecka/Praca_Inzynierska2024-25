@@ -34,9 +34,11 @@ export const deleteTrip = async (param: Record<string, string>={}) => {
     {},
     "DELETE"
   );
-  console.log(setParam(apiEndpoints.plan.delete, param));
+  console.log(setParam(apiEndpoints.trip.delete, param));
   if (error) {
     console.error("Błąd pobierania podróży:", error);
+    throw new Error(error);
+    
     return;
   }
 
