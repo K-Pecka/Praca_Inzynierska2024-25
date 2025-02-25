@@ -43,7 +43,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
             icon: image.icon.menu.ticket,
             children: [
                 { label: "Dodane", route: "/" },
-                { label: "Dodaj", route: { name: 'addTicket', params: { tripId:tripId }} },
+                { label: "Dodaj", route: { name: 'TicketsView', params: { tripId:tripId }} },
             ],
         },
         {
