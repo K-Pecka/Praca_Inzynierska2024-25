@@ -21,62 +21,123 @@ function handleAddTicket(newTicketData: {
   showForm.value = false;
 }
 </script>
+
 <template>
-  <Section>
-    <template #title>
-      <h1>{{ tripName }}</h1>
-    </template>
-
-    <template #content>
-      <div class="d-flex align-center justify-end">
-        <v-btn color="primary" @click="showForm = !showForm">
-          Dodaj Bilet
-        </v-btn>
-      </div>
-
-      <div v-if="tickets.length === 0 && !showForm" class="empty-tickets">
-        <div class="empty-state">
-          <v-icon size="48">mdi-ticket-confirmation</v-icon>
-          <p>Brak dodanych biletów</p>
-          <a @click="showForm = true">Dodaj pierwszy bilet</a>
+  <div class="page-container">
+    <Section>
+      <template #title>
+        <div class="header-wrapper">
+          <div class="title-container">
+            <h1 class="trip-title">{{ tripName }}</h1>
+            <h1 class="section-title">Bilety</h1>
+          </div>
+          <div class="button-container">
+            <v-btn
+                color="primary"
+                @click="showForm = !showForm"
+                class="add-button"
+                depressed
+            >
+              Dodaj Bilet
+            </v-btn>
+          </div>
         </div>
-      </div>
+      </template>
 
-      <TicketList v-else-if="tickets.length > 0" :tickets="tickets"/>
+      <template #content>
+        <div class="content-container">
+          <div v-if="tickets.length === 0 && !showForm" class="empty-tickets">
+            <div class="empty-state">
+              <v-icon size="48" color="grey">mdi-ticket-confirmation</v-icon>
+              <p class="empty-text">Brak dodanych biletów</p>
+              <a class="add-link" @click="showForm = true">Dodaj pierwszy bilet</a>
+            </div>
+          </div>
 
-      <TicketForm
-          v-if="showForm"
-          @submitTicket="handleAddTicket"
-          @cancelForm="showForm = false"
-      />
-    </template>
-  </Section>
+          <TicketList v-else-if="tickets.length > 0" :tickets="tickets"/>
+
+          <TicketForm
+              v-if="showForm"
+              @submitTicket="handleAddTicket"
+              @cancelForm="showForm = false"
+          />
+        </div>
+      </template>
+    </Section>
+  </div>
 </template>
 
 
 <style scoped lang="scss">
-h1 {
-  font-size: 1.5rem;
-  font-weight: bold;
+.page-container {
+  max-width: 88rem;
+  margin: 0 auto;
+  padding-top: 0;
+}
+
+.header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.trip-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.2rem 0;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 600;
   margin: 0;
+}
+
+.button-container {
+  display: flex;
+  align-self: flex-end;
+}
+
+.add-button {
+  height: 40px;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: none;
+  border-radius: 15px;
+  padding: 0 24px;
 }
 
 .empty-tickets {
   padding: 2rem;
-  background-color: rgb(var(--v-theme-secondary), 0.2);
+  background-color: rgb(var(--v-theme-secondary),0.5);
+  border-radius: 12px;
   text-align: center;
-  border-radius: 1rem;
 }
 
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
-.empty-state img {
-  width: 80px;
-  height: auto;
+.add-link {
+  color: rgb(var(--v-theme-primary));
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
 }
+
 </style>
