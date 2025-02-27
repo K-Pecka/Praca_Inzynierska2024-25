@@ -8,13 +8,27 @@ const props = defineProps({
     required: true,
   },
 });
+import { ref, onMounted, nextTick } from "vue";
+
+const heroText = ref<HTMLElement | null>(null);
+const heroImage = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+  nextTick(() => {
+    if (heroText.value && heroImage.value) {
+      console.log(heroText.value);
+      console.log(heroImage.value);
+      heroImage.value.style.height = `${heroText.value.clientHeight}px`;
+    }
+  });
+});
 </script>
 
 <template>
   <header class="hero">
     <v-container fluid class="full-width-container">
       <v-row>
-        <v-col cols="7" class="hero__text">
+        <v-col cols="7" class="hero__text" ref="heroText">
           <span v-for="(item, index) in phrases" :key="index" class="phrase">
             <TypewriterText
               v-if="item.animation"
@@ -28,7 +42,7 @@ const props = defineProps({
           </span>
         </v-col>
 
-        <v-col cols="5" class="hero__image">
+        <v-col cols="5" class="hero__image" ref="heroImage" >
           <slot name="hero"></slot>
         </v-col>
       </v-row>
@@ -37,12 +51,16 @@ const props = defineProps({
 </template>
 <style scoped lang="scss">
 @use "@/assets/style" as *;
-
+.v-container{
+  height: 85vh;
+}
 .hero {
   padding: 1rem 0;
-
+  height: 100%;
   @include font-large;
-
+  .v-row{
+    height: 100%;
+  }
   &__text {
     font-weight: 600;
     text-transform: uppercase;
@@ -72,7 +90,6 @@ const props = defineProps({
 
   &__image {
     display: flex;
-    padding-top: 3%;
     justify-content: flex-end;
   }
 }

@@ -129,6 +129,7 @@ const props = defineProps({
     flex-direction: column;
     flex-wrap: wrap;
     text-align: center;
+    border-top: 1px solid #0000001c;
     @media screen and (min-width: 768px) {
       flex-direction: column;
       &::after {
@@ -150,9 +151,4 @@ const props = defineProps({
   }
 }
 
-hr {
-  color: #0000001c;
-  width: 100%;
-  margin-bottom: 0.2rem;
-}
 </style>

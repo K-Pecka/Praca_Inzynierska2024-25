@@ -11,7 +11,8 @@ const footerData = computed(() => useStore.getFooterData());
 </script>
 
 <template>
-  <v-container fluid class="full-width-container">
+  <div class="wrapper">
+    <v-container fluid class="full-width-container">
     <v-row class="sticky-top fixed-center">
       <v-col cols="12" md="10" offset-md="1">
         <v-responsive>
@@ -42,8 +43,24 @@ const footerData = computed(() => useStore.getFooterData());
       </v-col>
     </v-row>
   </v-container>
+  </div>
+  
 </template>
 <style lang="scss" scoped>
+.wrapper {
+  position: relative;
+}
+.wrapper::after {
+  content: "";
+  width: 45vw;
+  height: 45vw;
+  border-radius: 50%;
+  background-color: rgb(var(--v-theme-secondary));
+  position: absolute;
+  top:-7vw;
+  right: -6vw;
+  z-index: -1;
+}
 .v-responsive {
   transition: all 0.3s ease;
 }
