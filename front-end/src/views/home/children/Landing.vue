@@ -9,11 +9,10 @@ const { getHeroBannerText } = usePageHomeStore();
 <template>
   <Hero :phrases="getHeroBannerText()">
     <template #hero>
-      <v-img
+      <img
         :src="image.hero.img"
         :alt="image.hero.alt"
         class="hero-image"
-        contain
         lazy-src="/images/placeholder.jpg"
         transition="scale-transition"
       />
@@ -29,15 +28,19 @@ const { getHeroBannerText } = usePageHomeStore();
   max-width: 100%;
   transition: transform 0.3s ease-in-out;
   transform-origin: top left;
-
+  position: relative;
+  top: -5%;
   @media (max-width: 600px) {
     transform: scale(0.5) translateX(100%);
+    top: -3%;
   }
   @media (min-width: 600px) and (max-width: 800px) {
     transform: scale(0.75) translateX(30%);
+    top: -1%;
   }
   @media (min-width: 800px) {
     transform: scale(1);
+    top: 0%;
   }
 }
 </style>

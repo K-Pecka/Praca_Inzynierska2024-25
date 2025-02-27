@@ -8,20 +8,6 @@ const props = defineProps({
     required: true,
   },
 });
-import { ref, onMounted, nextTick } from "vue";
-
-const heroText = ref<HTMLElement | null>(null);
-const heroImage = ref<HTMLElement | null>(null);
-
-onMounted(() => {
-  nextTick(() => {
-    if (heroText.value && heroImage.value) {
-      console.log(heroText.value);
-      console.log(heroImage.value);
-      heroImage.value.style.height = `${heroText.value.clientHeight}px`;
-    }
-  });
-});
 </script>
 
 <template>
@@ -52,11 +38,12 @@ onMounted(() => {
 <style scoped lang="scss">
 @use "@/assets/style" as *;
 .v-container{
-  height: 85vh;
+  height: 80vh;
 }
 .hero {
   padding: 1rem 0;
   height: 100%;
+  margin-bottom: 50vh;
   @include font-large;
   .v-row{
     height: 100%;
