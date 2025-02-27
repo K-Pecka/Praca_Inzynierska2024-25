@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { defineProps } from "vue";
 import TicketCard from "./TicketCard.vue";
-
+import { Ticket} from "@/type";
 
 const props = defineProps({
   tickets: {
-    type: Array,
+    type: Array as () => Ticket[],
     default: () => [],
   },
 });

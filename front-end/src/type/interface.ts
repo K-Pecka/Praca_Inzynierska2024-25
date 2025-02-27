@@ -140,3 +140,10 @@ export interface Plan {
   start_date: string;
   end_date: string;
 }
+export interface Ticket{
+  id: string;
+  name: string;
+  date: string;
+  assignedTo?: string | string[];
+  file?: File;
+}
