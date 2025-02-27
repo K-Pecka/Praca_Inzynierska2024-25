@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps } from "vue";
 const props = defineProps<{
   plans: any;
   btn: any;

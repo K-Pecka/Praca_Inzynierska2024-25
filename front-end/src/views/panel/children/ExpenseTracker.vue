@@ -1,120 +1,140 @@
-<script setup>
-import { ref, computed } from 'vue';
-import { useRoute } from "vue-router";
-import { useTripStore } from "@/stores/useTripStore";
+<script setup lang="ts">
+import AppCard from "@/components/budget/AppCard.vue";
+import AppButton from "@/components/budget/AppButton.vue";
+import AppProgress from "@/components/budget/AppProgress.vue";
+import ExpenseList from "@/components/budget/ExpenseList.vue";
 
-const { getTripDetails } = useTripStore();
-const route = useRoute();
-const id = Number(route.params.tripId);
-
-const { data: trip, isLoading, error } = getTripDetails(id);
-
-const budget = computed(() => (trip.value?.budget ?? 0));
-const expenses = ref([
-  { id: 1, category: 'Obiad w restauracji', amount: -17.97, currency: 'PLN', date: '17.02.2024' },
-  { id: 2, category: 'Obiad w restauracji', amount: -7.97, currency: 'PLN', date: '17.02.2024' },
-  { id: 3, category: 'Obiad w restauracji', amount: -222.97, currency: 'PLN', date: '17.02.2024' },
-  { id: 4, category: 'Obiad w restauracji', amount: -17.97, currency: 'PLN', date: '17.02.2024' }
-]);
-
-const spent = computed(() => Math.abs(expenses.value.reduce((acc, exp) => acc + exp.amount, 0)));
-const progress = computed(() => (spent.value / budget.value) * 100);
+const budget = 1500;
+const spent = 322;
+const remaining = budget - spent;
+const expenses = [
+  { id: 1, title: "Tytuł", category: "jedzenie", date: "26.02.2025", amount: 322, notes: "Notatki bla bla" }
+];
 </script>
 
 <template>
-  <template v-if="isLoading">
-    <p>Loadding...</p>
-  </template>
-  <v-container v-else>
-    <v-row justify="center">
-      <v-col cols="12" md="6" lg="4" class="text-center">
-        <v-progress-circular
-          :model-value="progress"
-          :size="250"
-          :width="20"
-          color="#8EFF84"
-        >
-          <div class="progress-text">
-            {{ spent.toFixed(2) }}/{{ `${Number(budget.amount)} ${(budget.currency)}` }}
-          </div>
-        </v-progress-circular>
-      </v-col>
-    </v-row>
-
-    <v-row justify="center">
-      <v-col cols="12" md="10" lg="8">
-        <h3 class="text-center mt-5">Wydatki</h3>
-
-        <v-list class="expenses-list">
-          <v-list-item v-for="expense in expenses" :key="expense.id">
-            <v-card class="expense-card d-flex align-center">
-
-              <div class="d-flex align-center flex-grow-1">
-                <v-icon class="mr-3" color="primary">mdi-food</v-icon>
-                <span class="expense-category">{{ expense.category }}</span>
-              </div>
-
-              <div class="expense-details d-flex justify-end">
-                <span class="expense-amount">{{ expense.amount }} {{ expense.currency }}</span>
-                <span class="expense-date">{{ expense.date }}</span>
-              </div>
-            </v-card>
-          </v-list-item>
-        </v-list>
-      </v-col>
-    </v-row>
-  </v-container>
+    <div class="header">
+      <h1 class="title">Budżet</h1>
+      <AppButton class="add-button">Dodaj wydatek</AppButton>
+    </div>
+    
+    <div class="summary">
+      <AppCard class="summary-card">
+        <h3>Budżet</h3>
+        <p class="amount">{{ budget }} EUR</p>
+      </AppCard>
+      <AppCard class="summary-card">
+        <h3>Wydano</h3>
+        <AppProgress :value="spent" :max="budget" />
+        <div class="d-flex justify-space-between" style="margin-top: 10%;">
+          <p class="spent">{{ spent }} EUR</p>
+          <p class="percent">{{ (spent / budget * 100).toFixed(2) }}%</p>
+        </div>
+        
+      </AppCard>
+      <AppCard class="summary-card">
+        <h3>Pozostało</h3>
+        <p class="remaining">{{ remaining }} EUR</p>
+      </AppCard>
+    </div>
+    
+    <AppCard class="expenses">
+      <h2 class="section-title">Wydatki</h2>
+      <ExpenseList :expenses="expenses" />
+    </AppCard>
+    
+    <div class="charts">
+      <AppCard class="chart-card"><h2 class="section-title">Wydatki - Kategorie</h2></AppCard>
+      <AppCard class="chart-card"><h2 class="section-title">Wydatki - Uczestnicy</h2></AppCard>
+    </div>
 </template>
 
 <style scoped>
-.v-container {
-  max-width: 1000px;
-  margin: auto;
+h3{
+  font-size: 1.5rem;
 }
-
-.progress-text {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: rgb(var(--v-theme-text));
+.amount, .remaining{
+  font-size: 2.2rem;
 }
-
-.expenses-list {
-  margin-top: 10px;
-  width: 100%;
-  background-color: transparent;
-}
-
-.expense-card {
-  padding: 1rem;
-  border-radius: 1rem;
-  width: 100%;
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #000000;
-  box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
-.expense-category {
-  font-size: 1rem;
+.title {
+  font-size: 26px;
   font-weight: bold;
+  color: #333;
 }
 
-.expense-details {
-  min-width: 200px;
+.add-button {
+  background-color: #4a90e2;
+  color: white;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.summary {
   display: flex;
+  gap: 10rem;
   justify-content: space-between;
-  gap: 15px;
+  margin-bottom: 20px;
 }
 
-.expense-amount {
+.summary-card {
+  background-color: #f3f3ff;
+  padding: 16px;
+  border-radius: 12px;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.amount {
   font-weight: bold;
-  color: #d32f2f;
-  text-align: right;
+  color: #333;
 }
 
-.expense-date {
-  color: #666;
-  text-align: right;
+.spent {
+  font-size: 18px;
+  color: #4a90e2;
+  font-weight: bold;
+}
+
+.remaining {
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.expenses {
+  background-color: #ede9fe;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.charts {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.chart-card {
+  flex: 1;
+  background-color: #f8f8ff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>

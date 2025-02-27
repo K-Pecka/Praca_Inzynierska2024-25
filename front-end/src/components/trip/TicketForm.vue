@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {ref, computed} from "vue";
-import {defineEmits} from "vue";
 import {useTicketStore} from "@/stores/useTicketStore";
 
 const emit = defineEmits(["submitTicket", "cancelForm"]);
