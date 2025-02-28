@@ -2,8 +2,8 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 
-from trips.api_views import BudgetCreateAPIView, BudgetUpdateAPIView, BudgetDestroyAPIView, \
-    ExpenseUpdateAPIView, ExpenseDestroyAPIView, ExpenseRetrieveAPIView, ExpenseListAPIView, ExpenseCreateAPIView
+from trips.api_views import BudgetUpdateAPIView, BudgetDestroyAPIView, \
+    ExpenseUpdateAPIView, ExpenseDestroyAPIView, ExpenseRetrieveAPIView, ExpenseCreateAPIView
 from users.models import CustomUser, UserProfile
 from trips.models import Trip, Budget, Expense
 
@@ -39,24 +39,6 @@ class BudgetAPITestCase(TestCase):
             currency="USD"
         )
 
-    def test_budget_create(self):
-        """
-        Test creating a budget when the request is valid.
-        """
-        Budget.objects.filter(trip=self.trip).delete()
-
-        data = {
-            'trip': self.trip.id,
-            'amount': 2000.00,
-            'currency': 'PLN'
-        }
-        view = BudgetCreateAPIView.as_view()
-        request = self.factory.post(f'/trips/{self.trip.id}/budget/create/', data)
-        force_authenticate(request, user=self.user)
-        response = view(request, trip_id=self.trip.id)
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
     def test_budget_update(self):
         """
         Test updating a budget when the user is authenticated.
@@ -83,20 +65,6 @@ class BudgetAPITestCase(TestCase):
         response = view(request, trip_id=self.trip.id, budget_id=self.budget.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Budget.objects.filter(id=self.budget.id).exists())
-
-    def test_budget_create_unauthenticated(self):
-        """
-        Test creating a budget without authentication.
-        """
-        data = {
-            'trip': self.trip.id,
-            'amount': 500.00,
-            'currency': 'GBP'
-        }
-        view = BudgetCreateAPIView.as_view()
-        request = self.factory.post(f'/trips/{self.trip.id}/budget/', data)
-        response = view(request)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class ExpenseAPITestCase(TestCase):

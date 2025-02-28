@@ -22,12 +22,12 @@ class BaseChatroomSerializer(serializers.ModelSerializer):
 
 
 class ChatroomCreateSerializer(BaseChatroomSerializer):
-    id = serializers.IntegerField()
+    id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(max_length=30)
     type = serializers.CharField(max_length=32)
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=UserProfile.objects.all())
     settings = serializers.JSONField()
 
     def validate(self, data):
@@ -85,49 +85,50 @@ class BaseChatMessageSerializer(serializers.ModelSerializer):
 
 
 class ChatMessageCreateSerializer(BaseChatMessageSerializer):
-    id = serializers.IntegerField(write_only=True)
+    id = serializers.IntegerField(read_only=True)
     text = serializers.CharField(max_length=512)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
-    file = serializers.FileField()
+    file = serializers.FileField(required=False)
     chatroom = serializers.PrimaryKeyRelatedField(read_only=True)
 
     def create(self, validated_data):
         view = self.context.get('view')
         profile = view.request.user.get_default_profile()
         validated_data['profile'] = profile
-        chatroom_id = view.kwargs.get('room_id')
+
+        chatroom_id = view.kwargs.get('room_pk')
         chatroom = Chatroom.objects.get(pk=chatroom_id)
         validated_data['chatroom'] = chatroom
-        return Chatroom.objects.create(**validated_data)
+        return ChatMessage.objects.create(**validated_data)
 
 
 class ChatMessageRetrieveSerializer(BaseChatMessageSerializer):
     id = serializers.IntegerField(read_only=True)
-    text = serializers.CharField(write_only=True, max_length=512)
-    profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
-    file = serializers.FileField(write_only=True)
-    chatroom = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Chatroom.objects.all())
+    text = serializers.CharField(read_only=True, max_length=512)
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    file = serializers.FileField(read_only=True)
+    chatroom = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
 class ChatMessageListSerializer(BaseChatMessageSerializer):
-    id = serializers.IntegerField(write_only=True)
-    text = serializers.CharField(write_only=True, max_length=512)
-    profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
-    file = serializers.FileField(write_only=True)
-    chatroom = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Chatroom.objects.all())
+    id = serializers.IntegerField(read_only=True)
+    text = serializers.CharField(read_only=True, max_length=512)
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    file = serializers.FileField(read_only=True)
+    chatroom = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
 class ChatMessageUpdateSerializer(BaseChatMessageSerializer):
-    id = serializers.IntegerField(write_only=True)
+    id = serializers.IntegerField(read_only=True)
     text = serializers.CharField(max_length=512)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
-    file = serializers.FileField()
+    file = serializers.FileField(required=False)
     chatroom = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
 class ChatMessageDestroySerializer(BaseChatMessageSerializer):
-    id = serializers.IntegerField(write_only=True)
-    text = serializers.CharField(write_only=True, max_length=512)
-    profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
-    file = serializers.FileField(write_only=True)
-    chatroom = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Chatroom.objects.all())
+    id = serializers.IntegerField(read_only=True)
+    text = serializers.CharField(read_only=True, max_length=512)
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    file = serializers.FileField(read_only=True)
+    chatroom = serializers.PrimaryKeyRelatedField(read_only=True)
