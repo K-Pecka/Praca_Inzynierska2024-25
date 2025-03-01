@@ -3,7 +3,7 @@ import AppCard from "@/components/budget/AppCard.vue";
 import AppButton from "@/components/budget/AppButton.vue";
 import AppProgress from "@/components/budget/AppProgress.vue";
 import ExpenseList from "@/components/budget/ExpenseList.vue";
-
+import Section from "@/components/common/Section.vue";
 const budget = 1500;
 const spent = 322;
 const remaining = budget - spent;
@@ -13,12 +13,17 @@ const expenses = [
 </script>
 
 <template>
-    <div class="header">
-      <h1 class="title">Budżet</h1>
+  <Section>
+    <template #title>
+      <h1>Wakacje we fancji</h1>
+      <div class="d-flex justify-space-between align-center">
+        <h1 class="title">Budżet</h1>
       <AppButton class="add-button">Dodaj wydatek</AppButton>
-    </div>
-    
-    <div class="summary">
+      </div>
+      
+    </template>
+    <template #content>
+      <div class="summary">
       <AppCard class="summary-card">
         <h3>Budżet</h3>
         <p class="amount">{{ budget }} EUR</p>
@@ -47,9 +52,15 @@ const expenses = [
       <AppCard class="chart-card"><h2 class="section-title">Wydatki - Kategorie</h2></AppCard>
       <AppCard class="chart-card"><h2 class="section-title">Wydatki - Uczestnicy</h2></AppCard>
     </div>
+    </template>
+  </Section>
 </template>
 
 <style scoped>
+h1{
+  font-size: 2rem;
+  text-align: start;
+}
 h3{
   font-size: 1.5rem;
 }
@@ -80,7 +91,7 @@ h3{
 
 .summary {
   display: flex;
-  gap: 10rem;
+  gap: 8rem;
   justify-content: space-between;
   margin-bottom: 20px;
 }

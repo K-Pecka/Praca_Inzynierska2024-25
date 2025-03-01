@@ -13,11 +13,11 @@
 @use "@/assets/style" as *;
 .section {
   @include section-width;
-  margin: 5rem 0;
+  margin: 1rem 5rem 2rem;
   &__header {
     text-align: center;
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin: 2rem 0;
     color: var(--v-theme-text, #333);
   }
 

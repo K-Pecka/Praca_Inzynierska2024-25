@@ -2,7 +2,6 @@ import {TOKEN} from "@/type/interface";
 import { apiEndpoints } from "@/api/apiEndpoints";
 import { errorStatus } from "@/api/standardError";
 export const fetchVerify = async (token:TOKEN,tryAgain:Boolean =true) =>{
-    console.log(token);
     try{
       const response = await fetch(apiEndpoints.auth.verify, {
       method: "POST",

@@ -29,6 +29,7 @@ export interface Register{
   }
 export interface DashboardBox {
   title: string;
+  icon?:string,
   content: string | string[];
   set: {
     size: {

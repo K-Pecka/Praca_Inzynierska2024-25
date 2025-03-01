@@ -9,9 +9,12 @@ export const fetchTrips = async () => {
   console.log(data);
   if (error) {
     console.error("Błąd pobierania podróży:", error);
-    return;
+    return [];
   }
-
+  if(!data){
+    console.error("Błąd pobierania podróży:", data);
+    return [];
+  }
   return data;
 };
 export const fetchTrip = async (param: Record<string, string>={}) => {

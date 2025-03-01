@@ -52,7 +52,7 @@ const { boxes, isLoading, error } = getDashboard(id);
         <template #content>
           <div class="grid-container">
             <template v-for="(box, index) in boxes" :key="index">
-            <Box :title="box.title" :content="box.content" :set="box.set" />
+            <Box :title="box.title" :content="box.content" :set="box.set" :icon="box.icon" />
           </template>
           </div>
           
@@ -72,5 +72,6 @@ const { boxes, isLoading, error } = getDashboard(id);
 }
 h1 {
   text-align: start;
+  font-size: 2rem;
 }
 </style>

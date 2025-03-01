@@ -13,6 +13,8 @@ defineProps<{
 
 <template>
   <AppCard class="expense-item">
+    <div class="d-flex align-center">
+      <v-icon size="32">mdi-food-fork-drink</v-icon>
     <div class="info">
       <h4>{{ title }}</h4>
       <p>
@@ -20,8 +22,11 @@ defineProps<{
         <span class="notes"> - {{ notes }}</span>
       </p>
     </div>
+    </div>
+    
     <div class="amount">
       <strong>{{ amount }} EUR</strong>
+      <v-icon>mdi-trash-can-outline</v-icon>
     </div>
   </AppCard>
 </template>

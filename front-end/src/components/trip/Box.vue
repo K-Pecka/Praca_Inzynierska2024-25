@@ -4,7 +4,7 @@ import { DashboardBox } from "@/type/interface";
 
 
 const props = defineProps<DashboardBox>();
-
+console.log(props);
 const screenWidth = ref(window.innerWidth);
 const screenBreakpoint = ref("");
 
@@ -69,8 +69,8 @@ const getGridRows = () => {
       order: props.set.order,
     }"
   >
-    <v-card-title class="text-h6 font-weight-medium">
-      {{ props.title }}
+    <v-card-title class="text-h6 font-weight-medium d-flex align-center">
+      <v-icon class="mr-2" color="primary">{{`${props.icon}`}}</v-icon> {{ props.title }}
     </v-card-title>
     <v-card-text>
       <template v-if="Array.isArray(props.content)">

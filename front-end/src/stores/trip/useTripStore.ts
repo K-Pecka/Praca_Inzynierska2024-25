@@ -57,6 +57,7 @@ const getDashboard = (id: string) => {
   const boxes = computed(() => [
     {
       title: "Czas trwania",
+      icon:"mdi-calendar-month-outline",
       content: tripTime.value,
       set: {
         order: 1,
@@ -69,6 +70,7 @@ const getDashboard = (id: string) => {
     },
     {
       title: "Budżet",
+      icon:"mdi-currency-usd",
       content: budget.value,
       set: {
         order: 2,
@@ -81,6 +83,7 @@ const getDashboard = (id: string) => {
     },
     {
       title: "Uczestnicy",
+      icon:"mdi-account-multiple",
       content: participantCount.value,
       set: {
         order: 3,
@@ -93,6 +96,7 @@ const getDashboard = (id: string) => {
     },
     {
       title: "Aktywności",
+      icon:"mdi-clock-outline",
       content: activityCount.value,
       set: {
         order: 4,
@@ -105,6 +109,7 @@ const getDashboard = (id: string) => {
     },
     {
       title: "Nadchodzące aktywności",
+      icon:"mdi-timer-refresh-outline",
       content: upcomingActivities.value,
       set: {
         order: 5,
@@ -117,6 +122,7 @@ const getDashboard = (id: string) => {
     },
     {
       title: "Ważne informacje",
+      icon:"mdi-information-outline",
       content: upcomingActivities.value,
       set: {
         order: 5,
