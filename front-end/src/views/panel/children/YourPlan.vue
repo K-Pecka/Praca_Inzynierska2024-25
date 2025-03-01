@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {Section,TripCard} from "@/components";
-import { useTripStore } from "@/stores/useTripStore";
+import { useTripStore } from "@/stores/trip/useTripStore";
 
 const { yourPlans } = useTripStore();
 import { useRoute } from "vue-router";

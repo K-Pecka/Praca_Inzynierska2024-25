@@ -12,7 +12,7 @@ export default createVuetify({
           secondary: '#dedcff',
           accent: '#ac6ed9',
           text: '#030309',
-          background: '#eeeeee',
+          background: '#F5F4FC',
         },
         variables: {
           borderRadius: '24px',

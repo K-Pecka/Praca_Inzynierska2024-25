@@ -38,6 +38,6 @@ watch(
 
 <style lang="scss" scoped>
 .bg-app {
-  background-color: rgba(var(--v-theme-background), 0.1);
+  background-color: rgba(var(--v-theme-background));
 }
 </style>

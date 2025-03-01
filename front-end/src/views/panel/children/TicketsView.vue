@@ -2,7 +2,7 @@
 import {ref, computed} from "vue";
 import {useRoute} from "vue-router";
 import {Section} from "@/components";
-import {useTicketStore} from "@/stores/useTicketStore";
+import {useTicketStore} from "@/stores/trip/useTicketStore";
 import TicketList from "@/components/trip/TicketList.vue";
 import TicketForm from "@/components/trip/TicketForm.vue";
 

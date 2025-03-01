@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {Section,TripBox} from "@/components";
-import { useTripStore } from "@/stores/useTripStore";
+import { useTripStore } from "@/stores/trip/useTripStore";
 
 const { yourTrips } = useTripStore();
 const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()

@@ -47,6 +47,10 @@ const footerData = computed(() => useStore.getFooterData());
   
 </template>
 <style lang="scss" scoped>
+.v-container{
+  position: relative;
+  z-index: 2;
+}
 .wrapper {
   position: relative;
 }
@@ -59,7 +63,7 @@ const footerData = computed(() => useStore.getFooterData());
   position: absolute;
   top:-7vw;
   right: -6vw;
-  z-index: -1;
+  z-index: 1;
 }
 .v-responsive {
   transition: all 0.3s ease;

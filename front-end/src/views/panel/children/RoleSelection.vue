@@ -26,7 +26,6 @@ const getRoleSelection = pagePanelStore.getRoleSelection;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 2rem auto;
   text-align: center;
 
   .title {

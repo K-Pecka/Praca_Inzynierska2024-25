@@ -17,8 +17,7 @@ export const useTripStore = defineStore("trip", () => {
 
   const { setErrorCurrentMessage, setSuccessCurrentMessage } =
     useNotificationStore();
-  const { getToken } = useAuthStore();
-
+    
   const deleteTripMutation = useMutation({
     mutationFn: deleteTrip,
     onSuccess: () => {
