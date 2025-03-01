@@ -147,3 +147,10 @@ export interface Ticket{
   assignedTo?: string | string[];
   file?: File;
 }
+
+export interface Participant {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
