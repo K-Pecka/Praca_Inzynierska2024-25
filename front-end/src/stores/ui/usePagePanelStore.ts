@@ -41,10 +41,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         {
             label: "Bilety",
             icon: image.icon.menu.ticket,
-            children: [
-                { label: "Dodane", route: "/" },
-                { label: "Dodaj", route: { name: 'TicketsView', params: { tripId:tripId }} },
-            ],
+            route: { name: 'TicketsView', params: { tripId:tripId }},
         },
         {
             label: "Budżet",
@@ -57,10 +54,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         {
             label: "Uczestnicy",
             icon: image.icon.menu.participant,
-            children: [
-                { label: "?", route: "/" },
-                { label: "?", route: "/" },
-            ],
+            route: { name: 'ParticipantsView', params: { tripId:tripId }},
         },
         {
             label: "Ustawienia",
