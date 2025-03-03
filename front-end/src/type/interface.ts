@@ -2,8 +2,8 @@ import { Validator } from "@/utils/validator/validation";
 import { NavigationFailure } from "vue-router";
 
 export interface TOKEN {
-  refresh: string;
-  access: string;
+  refresh?: string;
+  access?: string;
 }
 interface Config {
   required?: boolean;

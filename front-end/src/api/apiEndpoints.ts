@@ -1,6 +1,5 @@
 import { useAuthStore } from "@/stores";
 export const hostName = "https://api.plannder.com";
-export const params = [":tripId"];
 export const standardHeaders = () => {
   const { getToken } = useAuthStore();
   return {
@@ -13,16 +12,7 @@ export const fetchData = async <T = unknown>(
   options: RequestInit = { body: undefined },
   method: "GET" | "POST" | "DELETE" | "PATCH" = "GET"
 ): Promise<{ data?: T; error?: string }> => {
-  console.log(url, options, method);
   try {
-    console.log({
-        method: method,
-        headers: {
-          ...standardHeaders(),
-        },
-        ...options,
-        body: options.body ? options.body : undefined,
-      });
     const response = await fetch(url, {
       method: method,
       headers: {
@@ -43,11 +33,15 @@ export const fetchData = async <T = unknown>(
   }
 };
 export const setParam = (url: string, params: Record<string, string>): string => {
-    return Object.keys(params).reduce(
-      (acc, key) => acc.replace(`:${key}`, encodeURIComponent(params[key])),
-      url
-    );
-  };
+  return Object.keys(params).reduce((acc, key) => {
+    if (acc.includes(`:${key}`)) {
+      return acc.replace(`:${key}`, encodeURIComponent(params[key]));
+    } else {
+      console.warn(`Missing parameter: ${key}`);
+      return acc;
+    }
+  }, url);
+};
   
 export const apiEndpoints = {
   auth: {

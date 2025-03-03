@@ -7,14 +7,16 @@ export const fetchRefreshToken = async (token: TOKEN) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refresh: token.refresh }),
     });
+
     if (!response.ok) {
-      console.log("error");
       throw new Error("An error occurred");
     }
+
     return response.json();
-  } catch(error: unknown){
+  } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("Error refreshing token:", error.message);
+      throw error;
     }
   }
 };
