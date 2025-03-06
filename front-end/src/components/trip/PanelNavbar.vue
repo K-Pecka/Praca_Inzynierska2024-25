@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref, defineProps, defineEmits} from "vue";
 
 const props = defineProps({
   accountIcon: String,
@@ -10,6 +10,12 @@ const accountMenuOpen = ref(false);
 function toggleAccountMenu() {
   accountMenuOpen.value = !accountMenuOpen.value;
 }
+
+const emit = defineEmits(["toggleMenu"]);
+
+function onHamburgerClick() {
+  emit("toggleMenu");
+}
 </script>
 
 <template>
@@ -19,6 +25,10 @@ function toggleAccountMenu() {
         <h1>Logo</h1>
       </slot>
     </router-link>
+
+    <div class="panel-navbar__hamburger" @click="onHamburgerClick">
+      <v-icon size="46">mdi-menu</v-icon>
+    </div>
 
     <div class="panel-navbar__account" @click="toggleAccountMenu">
       <img
@@ -123,6 +133,19 @@ function toggleAccountMenu() {
   &:hover {
     background-color: rgb(var(--v-theme-primary));
     color: white;
+  }
+}
+
+.panel-navbar__hamburger {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: rgb(var(--v-theme-primary));
+}
+
+@media (max-width: 1000px) {
+  .panel-navbar__hamburger {
+    display: block;
   }
 }
 </style>
