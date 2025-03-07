@@ -155,3 +155,10 @@ export interface Participant {
   email: string;
   role: string;
 }
+
+export interface PricingCard {
+  name: string;
+  price: string;
+  features: string[];
+  buttonVariant?: "primary" | "secondary";
+}

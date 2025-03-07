@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from "vue-router";
-import { Home, Landing } from "@/views/home";
+import { Home, Landing, PricingSection } from "@/views/home";
 
 const homeRoutes: RouteRecordRaw = {
   path: "/",
@@ -11,6 +11,11 @@ const homeRoutes: RouteRecordRaw = {
       path: "",
       name: "landing",
       component: Landing,
+    },
+    {
+      path: "/pricingSection",
+      name: "pricingSection",
+      component: PricingSection,
     }
   ],
 };

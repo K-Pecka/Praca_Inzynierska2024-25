@@ -87,7 +87,7 @@ a {
   padding: 1rem;
 }
 </style>
-<style>
+<style lang="scss" scoped>
 .navbar {
   margin: 0 auto;
   position: sticky;

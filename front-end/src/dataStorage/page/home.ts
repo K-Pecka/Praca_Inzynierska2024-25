@@ -1,5 +1,5 @@
 export const defaultNavLinks = [
-    { label: "Oferta", href: "/", className: ["navbar__link--base"] },
+    { label: "Oferta", href: "pricingSection", className: ["navbar__link--base"] },
     { label: "O nas", href: "/", className: ["navbar__link--base"] },
     { label: "Kontakt", href: "/", className: ["navbar__link--base"] },
   ];
@@ -97,4 +97,24 @@ export const defaultNavLinks = [
     footerText: `© 2025 Plannder Wszystkie prawa zastrzeżone`,
     lastUpdated: `Ostatnia modyfikacja: ${new Date().toLocaleDateString()}`,
   });
-  
+
+export const pricingPlans = [
+  {
+    name: "Podstawowy",
+    price: "Darmowy",
+    features: ["Tekst", "Tekst", "Tekst"],
+    buttonVariant: "secondary" as "secondary",
+  },
+  {
+    name: "Turysta",
+    price: "15.0 zł / miesiąc",
+    features: ["Tekst", "Tekst", "Tekst"],
+    buttonVariant: "primary" as "primary",
+  },
+  {
+    name: "Podróżnik",
+    price: "40.0 zł / miesiąc",
+    features: ["Tekst", "Tekst", "Tekst"],
+    buttonVariant: "secondary" as "secondary",
+  },
+];
