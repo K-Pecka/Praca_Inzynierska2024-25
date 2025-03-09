@@ -48,7 +48,7 @@ const buttonStyle = computed(() => {
 </script>
 
 <template>
-  <v-btn :class="buttonClass" :style="buttonStyle" @click="handleClick">
+  <v-btn :class="buttonClass" :style="buttonStyle">
     <slot></slot>
   </v-btn>
 </template>
