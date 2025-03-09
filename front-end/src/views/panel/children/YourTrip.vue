@@ -19,7 +19,7 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
                  <v-btn  outlined class="text-primary p-5">
                   Dodaj wycieczkę
                 </v-btn>
-                <BaseButton variant="secondary" size="small">Dodaj wycieczkę</BaseButton>
+                <!--BaseButton variant="secondary" size="small">Dodaj wycieczkę</!--BaseButton-->
               </router-link>
              
             </div>
