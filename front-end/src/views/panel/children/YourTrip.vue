@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {Section,TripBox} from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
-
+import BaseButton from "@/components/style/button/BaseButton.vue";
 const { yourTrips } = useTripStore();
 const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
 
@@ -19,6 +19,7 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
                  <v-btn  outlined class="text-primary p-5">
                   Dodaj wycieczkę
                 </v-btn>
+                <BaseButton variant="secondary" size="small">Dodaj wycieczkę</BaseButton>
               </router-link>
              
             </div>
