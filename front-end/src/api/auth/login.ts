@@ -9,7 +9,7 @@ export const loginFetch = async (credentials: Record<string, string>) => {
   if (!response.ok) {
     let errorData = null;
     if(backendNotification){
-      let errorData = await response.json();
+      errorData = await response.json();
     }
     const {loginError} = useNotificationStore();
     throw new Error(errorData || loginError());

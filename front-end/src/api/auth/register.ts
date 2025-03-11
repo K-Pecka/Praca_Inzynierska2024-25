@@ -7,7 +7,6 @@ export const registerFetch = async (userData: Register) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
     });
-    console.log(userData);
     if (!response.ok) {
       const errorData = await response.json();
       console.log(errorData);

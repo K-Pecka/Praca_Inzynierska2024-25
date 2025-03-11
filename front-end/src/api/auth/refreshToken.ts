@@ -1,23 +1,20 @@
 import { TOKEN } from "@/type/interface";
-import { apiEndpoints } from "@/api/apiEndpoints";
+import { apiEndpoints, backendNotification } from "@/api/apiEndpoints";
+import { useNotificationStore } from "@/stores";
 export const fetchRefreshToken = async (token: TOKEN) => {
-  // try {
-    const response = await fetch(apiEndpoints.auth.refreshToken, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refresh: token.refresh }),
-    });
-    console.log("weryfikacja");
-    console.count("weryfikacja");
-    if (!response.ok) {
-      throw new Error("An error occurred");
+  const response = await fetch(apiEndpoints.auth.refreshToken, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ refresh: token.refresh }),
+  });
+  if (!response.ok) {
+    let errorData = null;
+    if (backendNotification) {
+      errorData = await response.json();
     }
+    const { tokenError } = useNotificationStore();
+    throw new Error(errorData || tokenError());
+  }
 
-    return response.json();
-  // } catch (error: unknown) {
-  //   if (error instanceof Error) {
-  //     console.error("Error refreshing token:", error.message);
-  //     throw error;
-  //   }
-  // }
+  return response.json();
 };

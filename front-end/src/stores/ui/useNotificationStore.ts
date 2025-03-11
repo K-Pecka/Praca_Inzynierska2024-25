@@ -13,6 +13,7 @@ export const useNotificationStore = defineStore("notification", () => {
     },
     error: {
       default: "Nieznany błąd",
+      token: "Wystąpił problem związany z kontem, zostałeś wylogowany",
       login: {
         response: "Błąd logowania",
         wrongLoginAndPass: "Błędny login lub hasło",
@@ -51,14 +52,16 @@ export const useNotificationStore = defineStore("notification", () => {
   const loginError = () => messages.error.login.wrongLoginAndPass || messages.error.default;
   const loginSuccess = () => messages.success.login || messages.success.default;
   const logOutSuccess = () => messages.success.logOut || messages.success.default;
-
+  const unexpectedError = () => messages.error.default;
+  const tokenError = () => messages.error.token;
   return {
     errorCurrentMessage,
     successCurrentMessage,
 
     loginSuccessMessage,
     logOutSuccessMessage,
-
+    unexpectedError,
+    tokenError,
     getErrorMessages,
     setErrorCurrentMessage,
     setSuccessCurrentMessage,

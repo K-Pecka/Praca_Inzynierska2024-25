@@ -2,7 +2,6 @@ import {TOKEN} from "@/type/interface";
 import { apiEndpoints } from "@/api/apiEndpoints";
 import { errorStatus } from "@/api/standardError";
 export const fetchVerify = async (token:TOKEN,tryAgain:Boolean =true) =>{
-    // try{
       const response = await fetch(apiEndpoints.auth.verify, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -20,8 +19,4 @@ export const fetchVerify = async (token:TOKEN,tryAgain:Boolean =true) =>{
       }
     }
     return response.json();
-    // }
-    // catch(error){
-    //   console.log("error");
-    // }
   }
