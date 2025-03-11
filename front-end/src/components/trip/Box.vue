@@ -87,7 +87,7 @@ const getGridRows = () => {
   </v-card>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .v-card {
   transition: transform 0.2s, box-shadow 0.2s;
   background-color: rgb(var(--v-theme-secondary), 50%);
