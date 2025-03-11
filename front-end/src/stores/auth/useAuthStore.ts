@@ -92,6 +92,7 @@ export const useAuthStore = defineStore("auth", () => {
     token,
     loginMutation, 
     registerMutation, 
+    saveToken,
     logout, 
     isLogin,
     validToken,
