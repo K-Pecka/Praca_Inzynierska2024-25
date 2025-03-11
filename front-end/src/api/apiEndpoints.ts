@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/stores";
 export const hostName = "https://api.plannder.com";
+export const backendNotification = false;
 export const standardHeaders = () => {
   const { getToken } = useAuthStore();
   return {

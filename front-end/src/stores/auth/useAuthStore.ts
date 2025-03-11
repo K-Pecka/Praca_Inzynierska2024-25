@@ -7,7 +7,7 @@ import { TOKEN } from "@/type";
 import {loginFetch,registerFetch,fetchRefreshToken,fetchVerify} from "@/api/auth"
 
 export const useAuthStore = defineStore("auth", () => {
-  const { loginSuccess, setErrorCurrentMessage, setSuccessCurrentMessage,logOutSuccess } = useNotificationStore();
+  const { loginSuccess, setErrorCurrentMessage, setSuccessCurrentMessage,logOutSuccess,loginError } = useNotificationStore();
   const token = ref<TOKEN | null>(null);
   const validToken = async (): Promise<boolean> => {
     if (token.value) {
@@ -73,7 +73,7 @@ export const useAuthStore = defineStore("auth", () => {
       router.push("/panel");
     },
     onError: (err) => {
-      setErrorCurrentMessage("An unexpected error occurred.");
+      setErrorCurrentMessage(err?.message || loginError());
     },
   });
 

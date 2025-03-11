@@ -1,16 +1,18 @@
-import { apiEndpoints } from "@/api/apiEndpoints";
-import { errorStatus } from "@/api/standardError";
+import { apiEndpoints,backendNotification } from "@/api/apiEndpoints";
+import { useNotificationStore } from "@/stores";
 export const loginFetch = async (credentials: Record<string, string>) => {
   const response = await fetch(apiEndpoints.auth.login, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
   });
-  errorStatus(401);
   if (!response.ok) {
-    const errorData = await response.json();
-    console.log(errorData);
-    throw new Error(errorData.message || "An error occurred");
+    let errorData = null;
+    if(backendNotification){
+      let errorData = await response.json();
+    }
+    const {loginError} = useNotificationStore();
+    throw new Error(errorData || loginError());
   }
   return response.json();
 };
