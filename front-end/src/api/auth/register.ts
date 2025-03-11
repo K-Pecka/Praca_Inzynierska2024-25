@@ -9,7 +9,6 @@ export const registerFetch = async (userData: Register) => {
     });
     if (!response.ok) {
       const errorData = await response.json();
-      console.log(errorData);
       throw new Error(errorData || "unknow");
     }
 

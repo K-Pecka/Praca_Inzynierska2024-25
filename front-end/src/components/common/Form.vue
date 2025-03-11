@@ -41,7 +41,6 @@ const handleFieldUpdate = (name: string, value: string) => {
     input.error = input.validation.validate(value);
     input.related?.forEach((el) => {
       let related = props.inputs.find((input) => input.name === el);
-      console.log(related);
       if (related) {
         related.error = related.validation
           .isEqual(value)

@@ -6,13 +6,10 @@ export const fetchTrips = async () => {
     {},
     "GET"
   );
-  console.log(data);
   if (error) {
-    console.error("Błąd pobierania podróży:", error);
     return [];
   }
   if(!data){
-    console.error("Błąd pobierania podróży:", data);
     return [];
   }
   return data;
@@ -23,9 +20,7 @@ export const fetchTrip = async (param: Record<string, string>={}) => {
       {},
       "GET"
     );
-    console.log(data);
     if (error) {
-      console.error("Błąd pobierania podróży:", error);
       return;
     }
   
@@ -37,9 +32,7 @@ export const deleteTrip = async (param: Record<string, string>={}) => {
     {},
     "DELETE"
   );
-  console.log(setParam(apiEndpoints.trip.delete, param));
   if (error) {
-    console.error("Błąd pobierania podróży:", error);
     throw new Error(error);
     
     return;
@@ -53,9 +46,7 @@ export const createTrip = async (newTrip:NewTrip,param: Record<string, string>={
       { body: JSON.stringify(newTrip) },
       "POST"
     );
-    console.log(setParam(apiEndpoints.plan.create, param));
     if (error) {
-      console.error("Błąd pobierania podróży:", error);
       return;
     }
   
@@ -76,7 +67,6 @@ export const updateTrip = async (
     );
 
     if (error) {
-        console.error("Błąd aktualizacji wycieczki:", error);
         throw new Error(error);
     }
     return data;

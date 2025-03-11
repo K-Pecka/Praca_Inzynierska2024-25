@@ -28,12 +28,10 @@ const handleSubmit = (_formData: any, config: any) => {
       end_date: end_date || ''
     };
     try {
-      console.log(id);
       planMutationAdd.mutateAsync({ data: newPlan, tripId: id });
     } catch (error) {
       console.log("ERROR");
     }
-    console.log("Plan został utworzony. Dane:", formValues.value);
   }
 };
 </script>

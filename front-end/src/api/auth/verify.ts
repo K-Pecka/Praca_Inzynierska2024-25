@@ -9,12 +9,8 @@ export const fetchVerify = async (token:TOKEN,tryAgain:Boolean =true) =>{
     });
     console.count("weryfikacja");
     if (!response.ok && tryAgain) {
-      console.log("błąd 401");
-      console.log(!errorStatus(response.status))
-      console.log(token);
       if(!errorStatus(response.status))
       {
-        console.log(token);
         fetchVerify(token,false);
       }
     }

@@ -4,7 +4,6 @@ import { DashboardBox } from "@/type/interface";
 
 
 const props = defineProps<DashboardBox>();
-console.log(props);
 const screenWidth = ref(window.innerWidth);
 const screenBreakpoint = ref("");
 

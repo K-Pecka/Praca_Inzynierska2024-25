@@ -95,7 +95,6 @@ export const useAuthStore = defineStore(
         router.push("/logIn");
       },
       onError: (err) => {
-        console.log(err);
         setErrorCurrentMessage("Error");
       },
     });

@@ -6,9 +6,7 @@ export const saveBudget = async (newBudget:Budget,param: Record<string, string>=
       { body: JSON.stringify(newBudget) },
       "PATCH"
     );
-    console.log(data);
     if (error) {
-      console.error("Błąd pobierania podróży:", error);
       return;
     }
   

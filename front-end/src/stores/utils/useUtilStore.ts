@@ -7,7 +7,6 @@ export const useUtilStore = defineStore("utils", () => {
     const getTripId = (paramName: string) => computed(() => route.params[paramName]);
     const getCurrentPath = () =>{name:route.name}
     const isCurrentRouteNotInSet = (RouteSet: string[]) => computed(() => {
-        console.log(route.name);
         return !RouteSet.includes(route.name as string)
     });
     return {getTripId,isCurrentRouteNotInSet,getCurrentPath}

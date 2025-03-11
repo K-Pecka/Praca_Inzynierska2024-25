@@ -6,9 +6,7 @@ export const fetchPlans = async (param: Record<string, string> = {}) => {
     {},
     "GET"
   );
-  console.log(data);
   if (error) {
-    console.error("Błąd pobierania podróży:", error);
     return;
   }
 
@@ -20,9 +18,7 @@ export const fetchPlan = async () => {
     {},
     "GET"
   );
-  console.log(data);
   if (error) {
-    console.error("Błąd pobierania podróży:", error);
     return;
   }
 
@@ -35,7 +31,6 @@ export const deletePlan = async (param: Record<string, string> = {}) => {
     "DELETE"
   );
   if (error) {
-    console.error("Błąd pobierania podróży:", error);
     return;
   }
 
@@ -51,7 +46,6 @@ export const createPlan = async (
     "POST"
   );
   if (error) {
-    console.error("Błąd pobierania podróży:", error);
     return;
   }
 

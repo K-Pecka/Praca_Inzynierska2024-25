@@ -30,10 +30,8 @@ export const useTripStore = defineStore("trip", () => {
   });
   const handleDeleteTrip = async (id: string) => {
     try {
-      console.log("Deleting trip with id:", id);
       await deleteTripMutation.mutateAsync({ tripId: id });
     } catch (err) {
-      console.error("Failed to delete trip:", err);
     }
   };
 
