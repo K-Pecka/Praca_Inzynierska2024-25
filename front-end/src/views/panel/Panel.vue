@@ -38,6 +38,7 @@ onUnmounted(() => {
       <v-row style="height: 5rem; margin: 0">
         <v-col>
           <PanelNavbar :account-icon="navbar.accountIcon"
+                       :show-navigation="showNavigation"
                        @toggleMenu="toggleSideNav">
             <template #logo>
               {{ SiteName }}
@@ -57,7 +58,7 @@ onUnmounted(() => {
           <SideNav :items="sideNavItems" :mobile="isMobile" @close="toggleSideNav" />
         </v-col>
         <v-col
-            :cols="showNavigation ? 9 : 12"
+            :cols="showNavigation ? (isMobile ? 12 : 9) : 12"
             :md="showNavigation ? 10 : 12"
             class="full-height"
         >

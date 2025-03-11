@@ -3,6 +3,7 @@ import {ref, defineProps, defineEmits} from "vue";
 
 const props = defineProps({
   accountIcon: String,
+  showNavigation: Boolean,
 });
 
 const accountMenuOpen = ref(false);
@@ -26,7 +27,7 @@ function onHamburgerClick() {
       </slot>
     </router-link>
 
-    <div class="panel-navbar__hamburger" @click="onHamburgerClick">
+    <div v-if="showNavigation" class="panel-navbar__hamburger" @click="onHamburgerClick">
       <v-icon size="46">mdi-menu</v-icon>
     </div>
 
