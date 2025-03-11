@@ -61,3 +61,23 @@ export const createTrip = async (newTrip:NewTrip,param: Record<string, string>={
   
     return data;
   };
+
+export const updateTrip = async (
+    param: Record<string, string>,
+    tripData: Partial<Trip>
+) => {
+    const url = setParam(apiEndpoints.trip.update, param);
+    const { data, error } = await fetchData<Trip>(
+        url,
+        {
+            body: JSON.stringify(tripData),
+        },
+        "PATCH"
+    );
+
+    if (error) {
+        console.error("Błąd aktualizacji wycieczki:", error);
+        throw new Error(error);
+    }
+    return data;
+};
