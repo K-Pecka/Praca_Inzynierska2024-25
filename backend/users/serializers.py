@@ -46,7 +46,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
             f"/confirm-email/{uid}/{token}/"
         )
 
-        self.send_confirmation_email(user, confirmation_link)
+        try:
+            self.send_confirmation_email(user, confirmation_link)
+        except Exception:
+            raise serializers.ValidationError({"error": "User could not be created."})
 
         return user
 
