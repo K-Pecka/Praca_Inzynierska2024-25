@@ -1,16 +1,6 @@
 <script lang="ts" setup>
 import { FooterData} from "@/type/interface";
-import { onMounted, ref } from "vue";
-
-const lastModified = ref<string>(new Date().toLocaleDateString());
-onMounted(async () => {
-  try {
-    const response = await fetch('/last-modified.txt');
-    lastModified.value = await response.text();
-  } catch (error) {
-    lastModified.value = 'Brak danych';
-  }
-});
+import lastModified from "@/assets/last-modified.txt?raw";
 const props = defineProps({
   footerData: {
     type: Object as () => FooterData,

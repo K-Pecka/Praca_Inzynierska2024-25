@@ -9,7 +9,7 @@
     "build": "npm run last-modified && vue-tsc -b && vite build && npm run test",
     "preview": "vite preview",
     "test": "vitest",
-    "last-modified": "git log -1 --format=%cd --date=format:%d-%m-%Y > last-modified.txt"
+    "last-modified": "git log -1 --format=%cd --date=format:%d-%m-%Y > src/assets/last-modified.txt"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
