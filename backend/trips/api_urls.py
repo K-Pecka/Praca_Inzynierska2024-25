@@ -4,7 +4,7 @@ from .api_views import (
     TicketCreateAPIView, TicketRetrieveAPIView, TicketUpdateAPIView, TicketDestroyAPIView, TicketListAPIView,
     BudgetUpdateAPIView, BudgetDestroyAPIView,
     ExpenseCreateAPIView, ExpenseRetrieveAPIView, ExpenseUpdateAPIView, ExpenseDestroyAPIView, ExpenseListAPIView,
-    TripParticipantsAPIView
+    TripParticipantsAPIView, TripParticipantsUpdateAPIView
 )
 urlpatterns = [
     # Trip URLs
@@ -16,6 +16,7 @@ urlpatterns = [
 
     # Trip participants URLs
     path('<int:pk>/participants/', TripParticipantsAPIView.as_view(), name='trip-participants'),
+    path('<int:pk>/participants/manage/<int:profile_pk>/', TripParticipantsUpdateAPIView.as_view(), name='trip-participants-manage'),
 
     # Ticket URLs
     path('ticket/', TicketListAPIView.as_view(), name='ticket-list'),

@@ -1,7 +1,7 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import get_object_or_404
 
 from rest_framework.exceptions import NotFound
 from rest_framework.parsers import MultiPartParser
@@ -10,6 +10,7 @@ from rest_framework.generics import (
 )
 from rest_framework.permissions import IsAuthenticated
 
+from users.models import UserProfile
 from .models import Trip, Ticket, Budget, Expense
 from .serializers import (
     TripCreateSerializer, ExpenseSerializer,
@@ -75,7 +76,10 @@ class TripDestroyAPIView(DestroyAPIView):
 # Participants
 #############################################################################
 @extend_schema(tags=['Trip'], parameters = [
-    OpenApiParameter(name='email', description="Search users by email", required=False, type=str)
+    OpenApiParameter(
+        name='email',
+        description="Search users by email",
+        required=False, type=str)
 ])
 class TripParticipantsAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
@@ -86,7 +90,6 @@ class TripParticipantsAPIView(RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         trip = self.get_object()
-
         search_query = self.request.query_params.get('email', None)
 
         if search_query:
@@ -94,11 +97,55 @@ class TripParticipantsAPIView(RetrieveAPIView):
         else:
             members = trip.members.all()
 
-        print('members', members)
-
         serializer = self.get_serializer(members, many=True)
 
         return Response({"members": serializer.data})
+
+
+@extend_schema(tags=['Trip'], parameters = [
+    OpenApiParameter(
+        name='action',
+        description='Action to add or remove user from the trip (add/remove)',
+        required=True,
+        type=str,
+    enum=['add', 'remove'],)
+])
+class TripParticipantsUpdateAPIView(UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsTripCreator]
+    serializer_class = TripParticipantsListSerializer
+
+    def get_object(self):
+        return get_object_or_404(Trip, id=self.kwargs['pk'])
+
+    def update(self, request, *args, **kwargs):
+        trip = self.get_object()
+        action = self.request.query_params.get('action', None)
+        profile_id = kwargs.get('profile_pk')
+        user_profile = get_object_or_404(UserProfile, id=profile_id)
+
+        if not self.validate_action(action):
+            return Response({"detail": "Invalid action. Use 'add' or 'remove'."}, status=400)
+
+        if action == 'add':
+            return self.add_member(trip, user_profile)
+
+        if action == 'remove':
+            return self.remove_member(trip, user_profile)
+
+    def validate_action(self, action):
+        return action in ['add', 'remove']
+
+    def add_member(self, trip, user_profile):
+        if trip.members.filter(id=user_profile.id).exists():
+            return Response({"detail": "User is already a member of this trip."})
+        trip.members.add(user_profile)
+        return Response({"message": "User successfully added to the trip."})
+
+    def remove_member(self, trip, user_profile):
+        if not trip.members.filter(id=user_profile.id).exists():
+            return Response({"detail": "User is not a member of this trip."}, status=400)
+        trip.members.remove(user_profile)
+        return Response({"message": "User successfully removed from the trip."})
 
 
 #############################################################################

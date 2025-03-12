@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
+from django.shortcuts import get_object_or_404
 from users.serializers import UserListSerializer
+
 from .models import Trip, Ticket, Budget, Expense
 from users.models import UserProfile
 
@@ -126,6 +128,11 @@ class TripParticipantsListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['id', 'email',]
+
+
+class TripParticipantsUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trip
 
 
 #################################################################
