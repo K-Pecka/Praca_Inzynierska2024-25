@@ -1,8 +1,10 @@
 from django.urls import path
 from .api_views import (
     TripCreateAPIView, TripRetrieveAPIView, TripUpdateAPIView, TripDestroyAPIView, TripListAPIView,
-    TicketCreateAPIView, TicketRetrieveAPIView, TicketUpdateAPIView, TicketDestroyAPIView, TicketListAPIView, BudgetUpdateAPIView, BudgetDestroyAPIView,
-    ExpenseCreateAPIView, ExpenseRetrieveAPIView, ExpenseUpdateAPIView, ExpenseDestroyAPIView, ExpenseListAPIView
+    TicketCreateAPIView, TicketRetrieveAPIView, TicketUpdateAPIView, TicketDestroyAPIView, TicketListAPIView,
+    BudgetUpdateAPIView, BudgetDestroyAPIView,
+    ExpenseCreateAPIView, ExpenseRetrieveAPIView, ExpenseUpdateAPIView, ExpenseDestroyAPIView, ExpenseListAPIView,
+    TripParticipantsAPIView
 )
 urlpatterns = [
     # Trip URLs
@@ -11,6 +13,9 @@ urlpatterns = [
     path('all/', TripListAPIView.as_view(), name='trip-list'),
     path('<int:pk>/update/', TripUpdateAPIView.as_view(), name='trip-update'),
     path('<int:pk>/delete/', TripDestroyAPIView.as_view(), name='trip-delete'),
+
+    # Trip participants URLs
+    path('<int:pk>/participants/', TripParticipantsAPIView.as_view(), name='trip-participants'),
 
     # Ticket URLs
     path('ticket/', TicketListAPIView.as_view(), name='ticket-list'),

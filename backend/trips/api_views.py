@@ -1,19 +1,24 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+
+from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework.exceptions import NotFound
-from rest_framework.parsers import MultiPartParser, FileUploadParser, FormParser
+from rest_framework.parsers import MultiPartParser
 from rest_framework.generics import (
     CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView
 )
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Trip, Ticket, Budget, Expense
-from server.permissions import IsTripParticipant, IsTripCreator, IsTicketOwner
 from .serializers import (
     TripCreateSerializer, ExpenseSerializer,
     TicketCreateSerializer, TicketUpdateSerializer, TicketRetrieveSerializer, TicketDestroySerializer,
     TicketListSerializer, TripRetrieveSerializer, TripListSerializer, TripUpdateSerializer, TripDestroySerializer,
-    BudgetUpdateSerializer, BudgetDestroySerializer
+    BudgetUpdateSerializer, BudgetDestroySerializer, TripParticipantsListSerializer
 )
+
+from server.permissions import IsTripParticipant, IsTripCreator, IsTicketOwner
 
 
 #############################################################################
@@ -64,6 +69,36 @@ class TripDestroyAPIView(DestroyAPIView):
     def get_object(self):
         id = self.kwargs['pk']
         return Trip.objects.by_id(id)
+
+
+#############################################################################
+# Participants
+#############################################################################
+@extend_schema(tags=['Trip'], parameters = [
+    OpenApiParameter(name='email', description="Search users by email", required=False, type=str)
+])
+class TripParticipantsAPIView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated, IsTripParticipant]
+    serializer_class = TripParticipantsListSerializer
+
+    def get_object(self):
+        return Trip.objects.get(id=self.kwargs["pk"])
+
+    def retrieve(self, request, *args, **kwargs):
+        trip = self.get_object()
+
+        search_query = self.request.query_params.get('email', None)
+
+        if search_query:
+            members = trip.members.filter(user__email__icontains=search_query)
+        else:
+            members = trip.members.all()
+
+        print('members', members)
+
+        serializer = self.get_serializer(members, many=True)
+
+        return Response({"members": serializer.data})
 
 
 #############################################################################

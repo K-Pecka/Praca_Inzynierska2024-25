@@ -1,6 +1,6 @@
-from drf_spectacular.utils import extend_schema, OpenApiTypes
 from rest_framework import serializers
 
+from users.serializers import UserListSerializer
 from .models import Trip, Ticket, Budget, Expense
 from users.models import UserProfile
 
@@ -78,7 +78,7 @@ class TripRetrieveSerializer(BaseTripSerializer):
     id = serializers.IntegerField(write_only=True)
     name = serializers.CharField(read_only=True)
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
+    members = UserListSerializer(read_only=True, many=True)
     start_date = serializers.DateField(read_only=True)
     end_date = serializers.DateField(read_only=True)
     settings = serializers.JSONField(read_only=True)
@@ -90,6 +90,7 @@ class TripRetrieveSerializer(BaseTripSerializer):
 
 class TripListSerializer(TripRetrieveSerializer):
     id = serializers.IntegerField(read_only=True)
+    members = UserListSerializer(read_only=True, many=True)
 
 
 class TripUpdateSerializer(BaseTripSerializer):
@@ -113,6 +114,18 @@ class TripDestroySerializer(BaseTripSerializer):
     end_date = serializers.DateField(write_only=True)
     settings = serializers.JSONField(write_only=True)
     budget = BudgetRetrieveSerializer(write_only=True)
+
+
+#################################################################
+# Participants
+#################################################################
+class TripParticipantsListSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    email = serializers.EmailField(source='user.email')
+
+    class Meta:
+        model = UserProfile
+        fields = ['id', 'email',]
 
 
 #################################################################

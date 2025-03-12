@@ -48,6 +48,7 @@ class Trip(BaseModel):
         except Budget.DoesNotExist:
             return Budget.objects.create(trip=self, currency='PLN')
 
+
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))

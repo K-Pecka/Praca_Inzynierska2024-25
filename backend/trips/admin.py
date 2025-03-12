@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Trip, Ticket
 
+
 @admin.register(Trip)
 class TripAdmin(admin.ModelAdmin):
     list_select_related = ('creator',)

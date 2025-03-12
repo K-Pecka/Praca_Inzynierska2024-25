@@ -13,6 +13,17 @@ from rest_framework import serializers
 from users.models import CustomUser
 
 
+class UserListSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(read_only=True)
+    first_name = serializers.CharField(read_only=True)
+    last_name = serializers.CharField(read_only=True)
+    date_of_birth = serializers.DateField(read_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'first_name', 'last_name', 'date_of_birth']
+
+
 class UserCreateSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
         try:
@@ -95,6 +106,3 @@ class UserUpdatePasswordSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['id', 'password']
         read_only_fields = ['id']
-
-
-
