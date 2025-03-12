@@ -81,14 +81,13 @@ class IsTripParticipant(BasePermission):
 
     def has_permission(self, request, view):
         if isinstance(view, ListAPIView):
-            return True  # No need for object checking in ListAPIView
+            return True
 
-        # Don't call get_object for CreateAPIView (which doesn't require it)
         if isinstance(view, CreateAPIView):
             return True
 
         try:
-            obj = view.get_object()  # Only for views that require fetching objects
+            obj = view.get_object()
         except Exception:
             return False
 
