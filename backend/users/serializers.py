@@ -10,7 +10,19 @@ from django.utils.http import urlsafe_base64_encode
 
 from rest_framework import serializers
 
-from users.models import CustomUser
+from users.models import CustomUser, UserProfile
+
+
+#############################################################################
+# User
+#############################################################################
+class UserProfileListSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    email = serializers.EmailField(source='user.email')
+
+    class Meta:
+        model = UserProfile
+        fields = ['id', 'email',]
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -39,7 +51,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Enter a valid email address.")
 
         if CustomUser.objects.filter(email=value).exists():
-            raise serializers.ValidationError("This email is already in use.")
+            raise serializers.ValidationError("Użytkownik o podanym adresie email już istnieje.")
 
         return value
 
@@ -60,12 +72,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
         try:
             self.send_confirmation_email(user, confirmation_link)
         except Exception:
-            raise serializers.ValidationError({"error": "User could not be created."})
+            raise serializers.ValidationError({"error": "Błąd przy tworzeniu użytkownika."})
 
         return user
 
     def send_confirmation_email(self, user, confirmation_link):
-        subject = 'Confirm your email address'
+        subject = 'Potwierdź swój adres email.'
         message = render_to_string('emails/confirmation_email.html', {
             'user': user,
             'confirmation_link': confirmation_link,

@@ -77,33 +77,6 @@ class TripDestroyAPIView(DestroyAPIView):
 #############################################################################
 @extend_schema(tags=['Trip'], parameters = [
     OpenApiParameter(
-        name='email',
-        description="Search users by email",
-        required=False, type=str)
-])
-class TripParticipantsAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = TripParticipantsListSerializer
-
-    def get_object(self):
-        return Trip.objects.get(id=self.kwargs["pk"])
-
-    def retrieve(self, request, *args, **kwargs):
-        trip = self.get_object()
-        search_query = self.request.query_params.get('email', None)
-
-        if search_query:
-            members = trip.members.filter(user__email__icontains=search_query)
-        else:
-            members = trip.members.all()
-
-        serializer = self.get_serializer(members, many=True)
-
-        return Response({"members": serializer.data})
-
-
-@extend_schema(tags=['Trip'], parameters = [
-    OpenApiParameter(
         name='action',
         description='Action to add or remove user from the trip (add/remove)',
         required=True,

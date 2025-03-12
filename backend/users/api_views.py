@@ -1,12 +1,33 @@
-from rest_framework.generics import CreateAPIView, UpdateAPIView
+from drf_spectacular.utils import OpenApiParameter, extend_schema
+from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .serializers import UserCreateSerializer, UserUpdateSerializer, UserUpdatePasswordSerializer
+from .models import CustomUser, UserProfile
+from .serializers import UserCreateSerializer, UserUpdateSerializer, UserUpdatePasswordSerializer, UserListSerializer, \
+    UserProfileListSerializer
 
 from rest_framework import status
 
 from django.db import transaction
+
+
+@extend_schema(tags=['User'], parameters = [
+    OpenApiParameter(
+        name='email',
+        description="Search users by email",
+        required=False, type=str)
+])
+class UserProfileListAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserProfileListSerializer
+
+    def get_queryset(self):
+        search_query = self.request.query_params.get('email', None)
+        if search_query:
+            return UserProfile.objects.filter(user__email__icontains=search_query, type='client')
+        else:
+            return UserProfile.objects.all()
 
 
 class UserCreateAPIView(CreateAPIView):

@@ -121,15 +121,6 @@ class TripDestroySerializer(BaseTripSerializer):
 #################################################################
 # Participants
 #################################################################
-class TripParticipantsListSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-    email = serializers.EmailField(source='user.email')
-
-    class Meta:
-        model = UserProfile
-        fields = ['id', 'email',]
-
-
 class TripParticipantsUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trip
@@ -145,9 +136,9 @@ class BaseTicketSerializer(serializers.ModelSerializer):
 
 
 class TicketCreateSerializer(BaseTicketSerializer):
-    id = serializers.IntegerField(write_only=True)
+    id = serializers.IntegerField(read_only=True)
     ticket = serializers.FileField()
-    profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
     trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
 
     def create(self, validated_data):
@@ -197,4 +188,3 @@ class ExpenseSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'amount', 'date', 'description', 'trip', 'user', 'type'
         ]
-        read_only_fields = ['id']

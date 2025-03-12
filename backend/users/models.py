@@ -164,6 +164,10 @@ class UserPermission(BaseModel):
         verbose_name=_("Uprawnienia"),
         help_text=_("Uprawnienia"))
 
+    @classmethod
+    def check_permission(cls, user_profile, permission):
+        return cls.objects.filter(profile=user_profile, permission=permission, ).exists()
+
     def __str__(self):
         return f"UserProfilePermission: {self.profile} - {self.permission}"
 
