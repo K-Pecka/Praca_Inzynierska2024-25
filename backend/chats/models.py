@@ -1,7 +1,6 @@
 from django.db import models
 
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ValidationError
 
 from chats.managers import ChatroomManager, ChatMessageManager
 from dicts.models import BaseModel

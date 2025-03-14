@@ -66,22 +66,52 @@ class Trip(BaseModel):
         verbose_name_plural = "Wycieczki"
 
 
+class TicketType(BaseModel):
+    name = models.CharField(
+        max_length=124,
+        verbose_name=_("Nazwa"), help_text=_("Nazwa")
+    )
+
+    def __str__(self):
+        return self.name
+
+
+def get_default_ticket_type():
+    return TicketType.objects.first()
+
+
 class Ticket(BaseModel):
-    ticket = models.FileField(
+    file = models.FileField(
         upload_to="tickets/",
-        verbose_name=_("Bilet"), help_text=_("Bilet")
+        verbose_name=_("Bilet"),
+        help_text=_("Bilet")
+    )
+    type = models.ForeignKey(
+        TicketType,
+        on_delete=models.CASCADE,
+        default=get_default_ticket_type,
+        verbose_name=_("Typ"),
+        help_text=_("Typ")
+    )
+    valid_from = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_("Ważny od"),
+        help_text=_("Ważny od")
     )
     profile = models.ForeignKey(
         UserProfile,
         on_delete=models.CASCADE,
         related_name="tickets",
-        verbose_name=_("Profil"), help_text=_("Profil")
+        verbose_name=_("Profil"),
+        help_text=_("Profil")
     )
     trip = models.ForeignKey(
         Trip,
         on_delete=models.CASCADE,
         related_name="tickets",
-        verbose_name=_("Wycieczka"), help_text=_("Wycieczka")
+        verbose_name=_("Wycieczka"),
+        help_text=_("Wycieczka")
     )
 
     objects = TicketManager()
@@ -119,14 +149,22 @@ class Budget(BaseModel):
         verbose_name = "Budżet"
 
 
-class Expense(BaseModel):
-    EXPENSE_CHOICES = [
-        ("food", "Jedzenie"),
-        ("transport", "Transport"),
-        ("accommodation", "Nocleg"),
-        ("other", "Inne"),
-    ]
+class ExpenseType(BaseModel):
+    name = models.CharField(
+        max_length=124,
+        verbose_name=_("Nazwa"),
+        help_text=_("Nazwa")
+    )
 
+    def __str__(self):
+        return self.name
+
+
+def get_default_expense_type():
+    return ExpenseType.objects.first()
+
+
+class Expense(BaseModel):
     amount = models.DecimalField(
         max_digits=7,
         decimal_places=2,
@@ -158,10 +196,10 @@ class Expense(BaseModel):
         verbose_name=_("Użytkownik"),
         help_text=_("Osoba, która poniosła wydatek")
     )
-    type = models.CharField(
-        max_length=50,
-        choices=EXPENSE_CHOICES,
-        default="other",
+    type = models.ForeignKey(
+        ExpenseType,
+        on_delete=models.CASCADE,
+        default=get_default_expense_type,
         verbose_name=_("Rodzaj wydatku"),
         help_text=_("Rodzaj wydatku")
     )
