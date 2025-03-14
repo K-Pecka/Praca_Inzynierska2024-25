@@ -143,6 +143,7 @@ export interface Plan {
 }
 export interface Ticket{
   id: string;
+  type: string;
   name: string;
   date: string;
   assignedTo?: string | string[];

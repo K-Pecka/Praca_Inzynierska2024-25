@@ -48,7 +48,7 @@ function handleAddTicket(newTicketData: {
         <div class="content-container">
           <div v-if="tickets.length === 0 && !showForm" class="empty-tickets">
             <div class="empty-state">
-              <v-icon size="48" color="grey">mdi-ticket-confirmation</v-icon>
+              <v-icon size="48" color="black">mdi-ticket-confirmation-outline</v-icon>
               <p class="empty-text">Brak dodanych biletów</p>
               <a class="add-link" @click="showForm = true">Dodaj pierwszy bilet</a>
             </div>

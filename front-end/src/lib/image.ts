@@ -9,12 +9,13 @@ const images = {
   },
   icon: {
     menu: {
-      dashboard: "/picture/sideNav/panel.svg",
-      plan: "/picture/sideNav/plans.svg",
-      ticket: "/picture/sideNav/tickets.svg",
-      budget: "/picture/sideNav/budget.svg",
-      participant: "/picture/sideNav/participants.svg",
-      setting: "/picture/sideNav/settings.svg",
+      dashboard: "mdi-home-outline",
+      plan: "mdi-note-text-outline",
+      ticket: "mdi-ticket-confirmation-outline",
+      budget: "mdi-currency-usd",
+      participant: "mdi-account-multiple-outline",
+      setting: "mdi-cog-outline",
+      myAccount: "mdi-account-circle-outline",
     },
   }
 };

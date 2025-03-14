@@ -37,15 +37,10 @@ const arrowIcon = "/picture/sideNav/arrow.svg";
             :class="{ open: openIndex === index }"
             @click="item.children ? toggleSection(index) : null"
         >
-          <img
-              v-if="item.icon"
-              :src="openIndex === index && item.iconActive
-                      ? item.iconActive
-                      : item.icon"
-              class="side-nav__icon"
-              alt=""
-          />
-
+          <v-icon v-if="item.icon" class="side-nav__icon">{{
+              openIndex === index && item.iconActive
+                  ? item.iconActive
+                  : item.icon}}</v-icon>
           <router-link
               v-if="item.route"
               :to="item.route"
@@ -57,13 +52,11 @@ const arrowIcon = "/picture/sideNav/arrow.svg";
 
           <span v-else>{{ item.label }}</span>
 
-          <img
+          <v-icon
               v-if="item.children"
-              :src="arrowIcon"
               class="side-nav__arrow-icon"
               :class="{ open: openIndex === index }"
-              alt="arrow"
-          />
+          >mdi-chevron-right</v-icon>
         </div>
 
 

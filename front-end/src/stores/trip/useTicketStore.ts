@@ -20,8 +20,8 @@ export const useTicketStore = defineStore("ticket", () => {
     const tickets = ref<Ticket[]>([]);
 
     const ticketTypes = ref<TicketType[]>([
-        { value: "transport", label: "Transport", icon: "mdi-bus" },
         { value: "attraction", label: "Atrakcja", icon: "mdi-star" },
+        { value: "bus", label: "Autobus", icon: "mdi-bus" },
         { value: "plane", label: "Samolot", icon: "mdi-airplane" },
         { value: "train", label: "Pociąg", icon: "mdi-train" },
     ]);

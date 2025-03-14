@@ -26,7 +26,7 @@ function submitTicket() {
   emit("submitTicket", {...form.value});
 
   form.value = {
-    type: "transport",
+    type: "train",
     name: "",
     date: "",
     assignedTo: "",

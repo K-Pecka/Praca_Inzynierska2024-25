@@ -32,11 +32,11 @@ function onHamburgerClick() {
     </div>
 
     <div class="panel-navbar__account" @click="toggleAccountMenu">
-      <img
-          :src="accountIcon"
-          alt="Ikona konta"
-          class="panel-navbar__icon"
-      />
+      <v-icon
+          class="panel__account-icon"
+          size="34"
+      >{{accountIcon}}</v-icon>
+
       <router-link :to="{}" class="panel-navbar__account-l">Moje Konto</router-link>
 
       <div
@@ -90,11 +90,6 @@ function onHamburgerClick() {
   cursor: pointer;
 }
 
-.panel-navbar__icon {
-  width: 36px;
-  height: 36px;
-}
-
 .panel-navbar__account-l {
   text-decoration: none;
   color: rgb(var(--v-theme-text));
@@ -106,6 +101,9 @@ function onHamburgerClick() {
   }
 }
 
+.panel__account-icon {
+  color: rgb(var(--v-theme-accent));
+}
 
 .panel-navbar__dropdown {
   position: absolute;

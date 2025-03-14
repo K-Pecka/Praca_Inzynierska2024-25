@@ -21,7 +21,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         ],
     };
     const navbar = {
-        accountIcon: "/picture/myAccount.svg",
+        accountIcon: image.icon.menu.myAccount,
     };
 
     const getSideNavItems = (tripId: string): SideNavItem[]=> [
