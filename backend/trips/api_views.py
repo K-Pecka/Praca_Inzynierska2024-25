@@ -16,7 +16,7 @@ from .serializers import (
     TripCreateSerializer, ExpenseSerializer,
     TicketCreateSerializer, TicketUpdateSerializer, TicketRetrieveSerializer, TicketDestroySerializer,
     TicketListSerializer, TripRetrieveSerializer, TripListSerializer, TripUpdateSerializer, TripDestroySerializer,
-    BudgetUpdateSerializer, BudgetDestroySerializer, TripParticipantsListSerializer
+    BudgetUpdateSerializer, BudgetDestroySerializer, TripParticipantsUpdateSerializer
 )
 
 from server.permissions import IsTripParticipant, IsTripCreator, IsTicketOwner
@@ -85,7 +85,7 @@ class TripDestroyAPIView(DestroyAPIView):
 ])
 class TripParticipantsUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
-    serializer_class = TripParticipantsListSerializer
+    serializer_class = TripParticipantsUpdateSerializer
 
     def get_object(self):
         return get_object_or_404(Trip, id=self.kwargs['pk'])
