@@ -165,8 +165,13 @@ class UserPermission(BaseModel):
         help_text=_("Uprawnienia"))
 
     @classmethod
-    def check_permission(cls, user_profile, permission):
-        return cls.objects.filter(profile=user_profile, permission=permission, ).exists()
+    def check_permission(cls, user_profile, perm_code, perm_action):
+        perm_to_user = cls.objects.filter(profile=user_profile, permission__code=perm_code)
+
+        if not perm_to_user.exists():
+            return False
+        else:
+            return perm_action in perm_to_user.first().permission.actions()
 
     def __str__(self):
         return f"UserProfilePermission: {self.profile} - {self.permission}"

@@ -30,7 +30,7 @@ class CustomPermission(BaseModel):
 
     active_objects = ActivePermissionsManager()
 
-    def perms_to_str(self):
+    def actions(self):
         string = ""
         if self.can_view:
             string += "R"
@@ -40,16 +40,9 @@ class CustomPermission(BaseModel):
             string += "D"
         return string
 
-    # @classmethod
-    # def check_permission(cls, permission_code, action):
-    #     return cls.active_objects.filter(code=permission_code, action=action).exists()
-
-    @classmethod
-    def get_active_item_by_name(cls, name):
-        return cls.active_objects.filter(name=name)
 
     def __str__(self):
-        return f"{self.code} / {self.perms_to_str()}"
+        return f"{self.code} / {self.actions()}"
 
     def __repr__(self):
         return f"<CustomPermission(pk={self.pk}, code={self.code})>"

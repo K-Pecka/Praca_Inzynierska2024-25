@@ -26,12 +26,12 @@ def required_permission(permission_code, action):
             permission = profile.profile_to_permission.filter(permission__code=permission_code).first()
 
             if permission is None:
-                return HttpResponseForbidden("You do not have permission to perform this action.")
+                return HttpResponseForbidden("Nie masz uprawnień do wykonania tej akcji.")
 
             has_permission = getattr(permission, f'can_{action.lower()}', None)
 
             if not has_permission:
-                return HttpResponseForbidden("You do not have permission to perform this action.")
+                return HttpResponseForbidden("Nie masz uprawnień do wykonania tej akcji.")
 
             return view_func(request, *args, **kwargs)
 
