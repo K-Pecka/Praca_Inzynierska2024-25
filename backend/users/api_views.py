@@ -12,7 +12,7 @@ from rest_framework import status
 from django.db import transaction
 
 
-@extend_schema(tags=['User'], parameters = [
+@extend_schema(tags=['user'], parameters = [
     OpenApiParameter(
         name='email',
         description="Search users by email",

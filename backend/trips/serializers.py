@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from users.serializers import UserListSerializer
 
-from .models import Trip, Ticket, Budget, Expense
+from .models import Trip, Ticket, Budget, Expense, TicketType
 from users.models import UserProfile
 
 
@@ -132,13 +132,15 @@ class TripParticipantsUpdateSerializer(serializers.ModelSerializer):
 class BaseTicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
-        fields = ['id', 'file', 'profile', 'trip']
+        fields = ['id', 'file', 'type', 'profile', 'valid_from', 'trip']
 
 
 class TicketCreateSerializer(BaseTicketSerializer):
     id = serializers.IntegerField(read_only=True)
     file = serializers.FileField()
+    type = serializers.PrimaryKeyRelatedField(queryset=TicketType.objects.all())
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    valid_from = serializers.DateTimeField()
     trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
 
     def create(self, validated_data):
@@ -149,30 +151,39 @@ class TicketCreateSerializer(BaseTicketSerializer):
 
 
 class TicketRetrieveSerializer(BaseTicketSerializer):
-    id = serializers.IntegerField(write_only=True)
+    id = serializers.IntegerField(read_only=True)
     file = serializers.FileField(read_only=True)
+    type = serializers.PrimaryKeyRelatedField(read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    valid_from = serializers.DateTimeField(read_only=True)
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
 class TicketListSerializer(BaseTicketSerializer):
     id = serializers.IntegerField(read_only=True)
     file = serializers.FileField(read_only=True)
+    type = serializers.PrimaryKeyRelatedField(read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    valid_from = serializers.DateTimeField(read_only=True)
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
 class TicketUpdateSerializer(BaseTicketSerializer):
-    id = serializers.IntegerField(write_only=True)
+    id = serializers.IntegerField(read_only=True)
     file = serializers.FileField()
+    type = serializers.PrimaryKeyRelatedField()
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    valid_from = serializers.DateTimeField()
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
+
 
 
 class TicketDestroySerializer(BaseTicketSerializer):
     id = serializers.IntegerField(write_only=True)
     file = serializers.FileField(write_only=True)
+    type = serializers.PrimaryKeyRelatedField(write_only=True)
     profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
+    valid_from = serializers.DateTimeField(write_only=True)
     trip = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Trip.objects.all())
 
 
