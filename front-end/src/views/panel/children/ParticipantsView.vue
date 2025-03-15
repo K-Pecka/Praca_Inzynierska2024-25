@@ -5,27 +5,27 @@ import {Section} from "@/components";
 import AppButton from "@/components/budget/AppButton.vue";
 import ParticipantList from "@/components/trip/ParticipantList.vue";
 import {Participant} from "@/type";
-
+import {useTripStore} from "@/stores";
 
 const participants = ref<Participant[]>([
-  {
-    id: "p1",
-    name: "Mateusz Wiśniewski",
-    email: "s24893@pjwstk.edu.pl",
-    role: "przeglądanie",
-  },
-  {
-    id: "p2",
-    name: "Mateusz Wiśniewski",
-    email: "s24893@pjwstk.edu.pl",
-    role: "przeglądanie",
-  },
-  {
-    id: "p3",
-    name: "Mateusz Wiśniewski",
-    email: "s24893@pjwstk.edu.pl",
-    role: "przeglądanie",
-  },
+  // {
+  //   id: "p1",
+  //   name: "Mateusz Wiśniewski",
+  //   email: "s24893@pjwstk.edu.pl",
+  //   role: "przeglądanie",
+  // },
+  // {
+  //   id: "p2",
+  //   name: "Mateusz Wiśniewski",
+  //   email: "s24893@pjwstk.edu.pl",
+  //   role: "przeglądanie",
+  // },
+  // {
+  //   id: "p3",
+  //   name: "Mateusz Wiśniewski",
+  //   email: "s24893@pjwstk.edu.pl",
+  //   role: "przeglądanie",
+  // },
 ]);
 
 const maxParticipants = 5;
@@ -34,7 +34,8 @@ const countLabel = computed(() => `${participants.value.length}/${maxParticipant
 const inviteEmail = ref("");
 
 function inviteParticipant() {
-
+  const {invateUserMutation} = useTripStore();
+  invateUserMutation.mutateAsync(inviteEmail.value);
 }
 
 const route = useRoute();

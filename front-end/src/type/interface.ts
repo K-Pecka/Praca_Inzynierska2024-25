@@ -163,3 +163,7 @@ export interface PricingCard {
   features: string[];
   buttonVariant?: "primary" | "secondary";
 }
+export interface InvateUser{
+  id:string,
+  email:string,
+}

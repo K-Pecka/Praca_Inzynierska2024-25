@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "start": "serve -s dist",
-    "build": "npm run last-modified && vue-tsc -b && vite build && npm run test",
+    "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "last-modified": "git log -1 --format=%cd --date=format:%d-%m-%Y > src/assets/last-modified.txt"

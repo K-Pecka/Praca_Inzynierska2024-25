@@ -9,6 +9,7 @@ import { useAuthStore,useNotificationStore } from "@/stores";
 import router from "@/router";
 import { fetchTrips, fetchTrip, deleteTrip, createTrip } from "@/api";
 import { fetchPlans, createPlan } from "@/api";
+import {invateUser} from "@/api";
 import { saveBudget } from "@/api";
 import { Plan } from "@/type";
 
@@ -211,6 +212,16 @@ const getDashboard = (id: string) => {
       setErrorCurrentMessage("błąd");
     },
   });
+  const invateUserMutation = useMutation({
+    mutationFn: invateUser,
+    onSuccess: (data) => {
+      router.back();
+      setSuccessCurrentMessage("dodano usera do wycieczki");
+    },
+    onError: (err) => {
+      setErrorCurrentMessage("błąd");
+    },
+  });
   return {
     getDashboard,
     yourTrips,
@@ -219,5 +230,6 @@ const getDashboard = (id: string) => {
     tripMutationAdd,
     tripMutationBudget,
     planMutationAdd,
+    invateUserMutation
   };
 });

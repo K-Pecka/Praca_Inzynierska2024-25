@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/stores";
+import { invateUser } from "./trip";
 export const hostName = "https://api.plannder.com";
 export const backendNotification = false;
 export const standardHeaders = () => {
@@ -63,6 +64,7 @@ export const apiEndpoints = {
     detail: `${hostName}/trip/:tripId/itinerary/:planId/`,
     delete: `${hostName}/trip/:tripId/itinerary/:planId/delete/`,
     create: `${hostName}/trip/:tripId/itinerary/create/`,
+    invateUser: `${hostName}/trip/:tripId/itinerary/{itinerary_pk}/activities/{id}/update/`
   },
   ticket:{
     create:`${hostName}/trip/ticket/create/`
