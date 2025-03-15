@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref, computed} from "vue";
 import {useTicketStore} from "@/stores/trip/useTicketStore";
+import AppButton from "@/components/budget/AppButton.vue";
 
 const emit = defineEmits(["submitTicket", "cancelForm"]);
 
@@ -8,7 +9,7 @@ const store = useTicketStore();
 
 
 const form = ref({
-  type: "transport",
+  type: "Atrakcja",
   name: "",
   date: "",
   assignedTo: "",
@@ -96,12 +97,13 @@ function submitTicket() {
 
     <v-card-actions>
       <v-spacer/>
-      <v-btn color="primary" @click="submitTicket">
-        Dodaj Bilet
-      </v-btn>
-      <v-btn color="secondary" @click="$emit('cancelForm')">
+      <AppButton variant="secondary"
+                 @click="$emit('cancelForm')">
         Anuluj
-      </v-btn>
+      </AppButton>
+      <AppButton variant="primary" @click="submitTicket">
+        Dodaj
+      </AppButton>
     </v-card-actions>
   </v-card>
 </template>

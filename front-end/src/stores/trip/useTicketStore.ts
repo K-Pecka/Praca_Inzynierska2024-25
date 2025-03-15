@@ -32,9 +32,11 @@ export const useTicketStore = defineStore("ticket", () => {
             type: ticketData.type,
             name: ticketData.name,
             date: ticketData.date,
-            assignedTo: ticketData.assignedTo,
             file: ticketData.file,
         };
+        if (ticketData.assignedTo && ticketData.assignedTo.trim() !== "") {
+            newTicket.assignedTo = ticketData.assignedTo;
+        }
         tickets.value.push(newTicket);
     };
     const createTicket = (file:File,data:Record<string, string>) =>{

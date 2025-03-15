@@ -49,6 +49,13 @@ function handleAddTicket(newTicketData: {
 
       <template #content>
         <div class="content-container">
+          <TicketForm
+              v-if="showForm"
+              @submitTicket="handleAddTicket"
+              @cancelForm="showForm = false"
+              class="form-container"
+          />
+
           <div v-if="tickets.length === 0 && !showForm" class="empty-tickets">
             <div class="empty-state">
               <v-icon size="48" color="black">mdi-ticket-confirmation-outline</v-icon>
@@ -59,11 +66,6 @@ function handleAddTicket(newTicketData: {
 
           <TicketList v-else-if="tickets.length > 0" :tickets="tickets"/>
 
-          <TicketForm
-              v-if="showForm"
-              @submitTicket="handleAddTicket"
-              @cancelForm="showForm = false"
-          />
         </div>
       </template>
     </Section>
@@ -143,4 +145,7 @@ function handleAddTicket(newTicketData: {
   }
 }
 
+.form-container {
+  margin-bottom: 1rem;
+}
 </style>

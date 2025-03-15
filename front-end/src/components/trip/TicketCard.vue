@@ -36,12 +36,14 @@ function previewTicket() {
 
     <div class="ticket-body">
       <v-select
+          clearable
+          chips
           v-model="ticket.assignedTo"
           :items="['Jan', 'Anna', 'Piotr']"
           label="Przypisz do osoby (Opcjonalnie)"
-          outlined
-          density="compact"
+          variant="outlined"
           class="assign-select"
+          multiple
       />
       <v-btn
           color="primary"
@@ -105,7 +107,7 @@ function previewTicket() {
     justify-content: space-between;
 
     .assign-select {
-      max-width: 300px;
+      max-width: 450px;
     }
 
     .ticket-preview-btn {
