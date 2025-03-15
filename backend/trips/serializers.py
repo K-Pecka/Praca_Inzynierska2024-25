@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from users.serializers import UserListSerializer
+from users.serializers import UserProfileListSerializer
 
 from .models import Trip, Ticket, Budget, Expense, TicketType
 from users.models import UserProfile
@@ -79,7 +79,7 @@ class TripRetrieveSerializer(BaseTripSerializer):
     id = serializers.IntegerField(write_only=True)
     name = serializers.CharField(read_only=True)
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = UserListSerializer(read_only=True, many=True)
+    members = UserProfileListSerializer(read_only=True, many=True)
     start_date = serializers.DateField(read_only=True)
     end_date = serializers.DateField(read_only=True)
     settings = serializers.JSONField(read_only=True)
@@ -91,7 +91,7 @@ class TripRetrieveSerializer(BaseTripSerializer):
 
 class TripListSerializer(TripRetrieveSerializer):
     id = serializers.IntegerField(read_only=True)
-    members = UserListSerializer(read_only=True, many=True)
+    members = UserProfileListSerializer(read_only=True, many=True)
 
 
 class TripUpdateSerializer(BaseTripSerializer):
@@ -124,7 +124,7 @@ class TripParticipantsUpdateSerializer(BaseTripSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = UserListSerializer(read_only=True, many=True)
+    members = UserProfileListSerializer(read_only=True, many=True)
     start_date = serializers.DateField(read_only=True)
     end_date = serializers.DateField(read_only=True)
     settings = serializers.JSONField(read_only=True)
