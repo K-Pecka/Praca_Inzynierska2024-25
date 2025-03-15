@@ -95,7 +95,7 @@ class TripListSerializer(TripRetrieveSerializer):
 
 
 class TripUpdateSerializer(BaseTripSerializer):
-    id = serializers.IntegerField(write_only=True)
+    id = serializers.IntegerField(read_only=True)
     name = serializers.CharField()
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
     members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all())
@@ -120,10 +120,18 @@ class TripDestroySerializer(BaseTripSerializer):
 #################################################################
 # Participants
 #################################################################
-class TripParticipantsUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Trip
-        fields = '__all__'
+class TripParticipantsUpdateSerializer(BaseTripSerializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    members = UserListSerializer(read_only=True, many=True)
+    start_date = serializers.DateField(read_only=True)
+    end_date = serializers.DateField(read_only=True)
+    settings = serializers.JSONField(read_only=True)
+    budget = BudgetRetrieveSerializer(read_only=True)
+
+    def get_budget(self, obj):
+        return obj.budget
 
 
 #################################################################
