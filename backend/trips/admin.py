@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Trip, Ticket, TicketType, ExpenseType, Expense
+from .models import Trip, Ticket, TicketType, ExpenseType, Expense, Currency
 
 
 @admin.register(Trip)
@@ -32,8 +32,17 @@ class ExpenseTypeAdmin(admin.ModelAdmin):
     list_filter = ('name',)
 
 
+@admin.register(Currency)
+class CurrencyAdmin(admin.ModelAdmin):
+    list_display = ('id', 'code')
+    search_fields = ('code', )
+    list_filter = ('code',)
+
+
 @admin.register(Expense)
 class ExpenseAdmin(admin.ModelAdmin):
-    list_select_related = ('trip',)
-    list_display = ('amount', 'date', 'description', 'trip', 'user', 'type')
-    list_filter = ('trip',)
+    list_select_related = ('trip', 'user', 'category', 'currency')
+    list_display = ('title', 'amount', 'currency', 'date', 'note', 'trip', 'user', 'category')
+    list_filter = ('trip', 'category', 'currency', 'date')
+    search_fields = ('title', 'note', 'user__user__first_name', 'user__user__last_name')
+    date_hierarchy = 'date'

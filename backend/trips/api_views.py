@@ -75,13 +75,13 @@ class TripDestroyAPIView(DestroyAPIView):
 #############################################################################
 # Participants
 #############################################################################
-@extend_schema(tags=['Trip'], parameters = [
+@extend_schema(tags=['Trip'], parameters=[
     OpenApiParameter(
         name='action',
         description='Action to add or remove user from the trip (add/remove)',
         required=True,
         type=str,
-    enum=['add', 'remove'],)
+        enum=['add', 'remove'], )
 ])
 class TripParticipantsUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
@@ -229,7 +229,8 @@ class ExpenseListAPIView(ListAPIView):
     serializer_class = ExpenseSerializer
 
     def get_queryset(self):
-        return Expense.objects.filter(trip=self.kwargs['trip_id']).select_related('trip', 'user')
+        return Expense.objects.filter(trip=self.kwargs['trip_id']).select_related('trip', 'user', 'category',
+                                                                                  'currency')
 
 
 @extend_schema(tags=['Expense'])

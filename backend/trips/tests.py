@@ -7,7 +7,7 @@ from trips.api_views import BudgetUpdateAPIView, BudgetDestroyAPIView, \
     ExpenseUpdateAPIView, ExpenseDestroyAPIView, ExpenseRetrieveAPIView, ExpenseCreateAPIView, TicketCreateAPIView, \
     TicketRetrieveAPIView, TicketUpdateAPIView, TicketDestroyAPIView
 from users.models import CustomUser, UserProfile
-from trips.models import Trip, Budget, Expense, Ticket, TicketType, ExpenseType
+from trips.models import Trip, Budget, Expense, Ticket, TicketType, ExpenseType, Currency
 
 
 class BudgetAPITestCase(TestCase):
@@ -99,14 +99,17 @@ class ExpenseAPITestCase(TestCase):
             amount=3000.00,
             currency="USD"
         )
-        expense_type = ExpenseType.objects.create(name='food')
+        self.currency = Currency.objects.create(code="USD")
+        self.expense_category = ExpenseType.objects.create(name='food')
         self.expense = Expense.objects.create(
             trip=self.trip,
             user=self.user_profile,
             amount=200.00,
+            title="Obiad w restauracji",
+            currency=self.currency,
             date="2025-06-05",
-            description="Lunch at a restaurant",
-            type=expense_type
+            note="Obiad w dobrej restauracji",
+            category=self.expense_category
         )
 
     def test_expense_create(self):
@@ -117,9 +120,11 @@ class ExpenseAPITestCase(TestCase):
             'trip': self.trip.id,
             'user': self.user_profile.id,
             'amount': 150.00,
+            'title': "obiad smażalnia ryb",
+            'currency': self.currency.id,
             'date': "2025-06-06",
-            'description': "Taxi fare",
-            'type': self.expense.type.id
+            'note': "obiad w smażalni w złotych tarasach",
+            'category': self.expense_category.id
         }
         view = ExpenseCreateAPIView.as_view()
         request = self.factory.post(f'/trips/{self.trip.id}/expense/', data)
@@ -137,6 +142,7 @@ class ExpenseAPITestCase(TestCase):
         response = view(request, pk=self.expense.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['amount'], "200.00")
+        self.assertEqual(response.data['title'], "Obiad w restauracji")
 
     def test_expense_update(self):
         """
@@ -144,8 +150,9 @@ class ExpenseAPITestCase(TestCase):
         """
         data = {
             'amount': 250.00,
-            'description': "Updated lunch cost",
-            'type': self.expense.type.id
+            'title': "Obiad w barze",
+            'note': "Obiad w jakimś dobrym barze",
+            'category': self.expense_category.id
         }
         view = ExpenseUpdateAPIView.as_view()
         request = self.factory.patch(f'/trips/{self.trip.id}/expense/{self.expense.id}/update/', data)
@@ -154,6 +161,7 @@ class ExpenseAPITestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.expense.refresh_from_db()
         self.assertEqual(str(self.expense.amount), "250.00")
+        self.assertEqual(self.expense.title, "Obiad w barze")
 
     def test_expense_destroy(self):
         """
@@ -171,12 +179,14 @@ class ExpenseAPITestCase(TestCase):
         Test creating an expense without authentication.
         """
         data = {
-            'budget': self.budget.id,
+            'trip': self.trip.id,
             'user': self.user_profile.id,
             'amount': 100.00,
+            'title': "Bilet do muzeum",
+            'currency': self.currency.id,
             'date': "2025-06-07",
-            'description': "Museum ticket",
-            'type': self.expense.type.id
+            'note': "Bilet do muzeum w paryżu",
+            'category': self.expense_category.id
         }
         view = ExpenseCreateAPIView.as_view()
         request = self.factory.post(f'/trips/{self.trip.id}/expense/', data)

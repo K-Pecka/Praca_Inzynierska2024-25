@@ -48,11 +48,9 @@ class Trip(BaseModel):
         except Budget.DoesNotExist:
             return Budget.objects.create(trip=self, currency='PLN')
 
-
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
-
 
     def save(self, *args, **kwargs):
         self.clean()
@@ -164,7 +162,35 @@ def get_default_expense_type():
     return ExpenseType.objects.first()
 
 
+class Currency(BaseModel):
+    code = models.CharField(
+        max_length=3,
+        verbose_name=_("Kod waluty"),
+        help_text=_("Kod waluty (np. PLN, EUR, USD)")
+    )
+
+    def __str__(self):
+        return self.code
+
+    class Meta:
+        db_table = "currencies"
+        verbose_name = "Waluta"
+        verbose_name_plural = "Waluty"
+
+
+def get_default_currency():
+    currency = Currency.objects.first()
+    if currency:
+        return currency.id
+    return None
+
+
 class Expense(BaseModel):
+    title = models.CharField(
+        max_length=255,
+        verbose_name=_("Tytuł"),
+        help_text=_("Tytuł wydatku")
+    )
     amount = models.DecimalField(
         max_digits=7,
         decimal_places=2,
@@ -173,35 +199,44 @@ class Expense(BaseModel):
         verbose_name=_("Kwota wydatku"),
         help_text=_("Kwota wydatku")
     )
+    currency = models.ForeignKey(
+        Currency,
+        on_delete=models.PROTECT,
+        default=get_default_currency,
+        verbose_name=_("Waluta"),
+        help_text=_("Waluta wydatku")
+    )
     date = models.DateField(
         verbose_name=_("Data"),
         help_text=_("Data wydatku")
     )
-    description = models.TextField(
+    note = models.TextField(
         blank=True,
-        verbose_name=_("Opis"),
-        help_text=_("Opis wydatku (opcjonalne)")
+        verbose_name=_("Notatka"),
+        help_text=_("Notatka dotycząca wydatku (opcjonalne)")
     )
     trip = models.ForeignKey(
         Trip,
         on_delete=models.CASCADE,
         related_name="expenses",
-        verbose_name=_("trip"),
-        help_text=_("Powiązany trip")
+        verbose_name=_("Podróż"),
+        help_text=_("Powiązana podróż")
     )
     user = models.ForeignKey(
         UserProfile,
         on_delete=models.CASCADE,
         related_name="expenses",
         verbose_name=_("Użytkownik"),
-        help_text=_("Osoba, która poniosła wydatek")
+        help_text=_("Osoba, która poniosła wydatek"),
+        blank=True,
+        null=True,
     )
-    type = models.ForeignKey(
+    category = models.ForeignKey(
         ExpenseType,
         on_delete=models.CASCADE,
         default=get_default_expense_type,
-        verbose_name=_("Rodzaj wydatku"),
-        help_text=_("Rodzaj wydatku")
+        verbose_name=_("Kategoria"),
+        help_text=_("Kategoria wydatku")
     )
 
     class Meta:
