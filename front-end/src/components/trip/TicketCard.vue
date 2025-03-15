@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {computed} from "vue";
-import {defineProps} from "vue";
 import {useTicketStore} from "@/stores/trip/useTicketStore";
 
 const props = defineProps({

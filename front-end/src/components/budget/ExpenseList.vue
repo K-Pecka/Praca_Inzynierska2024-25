@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ExpenseItem from "./ExpenseItem.vue";
-import { defineProps } from "vue";
 
 defineProps<{ expenses: Array<{ id: number; title: string; category: string; date: string; amount: number; notes: string }> }>();
 </script>

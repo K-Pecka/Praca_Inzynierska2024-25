@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import AppCard from "./AppCard.vue";
-import { defineProps } from "vue";
 
 defineProps<{
   title: string;

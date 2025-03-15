@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
 import { Participant} from "@/type";
 
 const props = defineProps<Participant>();

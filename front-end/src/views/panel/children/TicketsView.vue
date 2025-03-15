@@ -15,9 +15,12 @@ const tickets = computed(() => ticketStore.tickets);
 const showForm = ref(false);
 
 function handleAddTicket(newTicketData: {
-  type: string; name: string; date: string; assignedTo?: string; file?: File;
+  type: string; name: string; date: string; assignedTo?: string; file: File;
 }) {
-  ticketStore.addTicket(newTicketData);
+  const {file, ...ticketData} = newTicketData;
+  const {createTicket} = useTicketStore();
+  createTicket(file,ticketData);
+  //ticketStore.addTicket(newTicketData);
   showForm.value = false;
 }
 </script>

@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-
+import { useUtilStore } from "@/stores/utils/useUtilStore";
 interface Ticket {
     id: string;
     type: string;
     name: string;
     date: string;
     assignedTo?: string;
-    file?: File;
+    file: File;
 }
 
 interface TicketType {
@@ -37,11 +37,17 @@ export const useTicketStore = defineStore("ticket", () => {
         };
         tickets.value.push(newTicket);
     };
-
+    const createTicket = (file:File,data:Record<string, string>) =>{
+        const {getTripId} = useUtilStore();
+        console.log(file);
+        console.log(data);
+        console.log(getTripId('tripId').value);
+       }
 
     return {
         tickets,
         ticketTypes,
         addTicket,
+        createTicket
     };
 });
