@@ -60,8 +60,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
             label: "Ustawienia",
             icon: image.icon.menu.setting,
             children: [
-                { label: "?", route: "/" },
-                { label: "?", route: "/" },
+                { label: "Edycja wycieczki", route: { name: 'TripEdit', params: { tripId:tripId }}, },
             ],
         },
     ];

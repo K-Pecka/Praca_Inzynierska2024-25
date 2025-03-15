@@ -7,11 +7,12 @@ import { defineStore } from "pinia";
 import { computed } from "vue";
 import { useAuthStore,useNotificationStore } from "@/stores";
 import router from "@/router";
-import { fetchTrips, fetchTrip, deleteTrip, createTrip } from "@/api";
+import { fetchTrips, fetchTrip, deleteTrip, createTrip, updateTrip } from "@/api";
 import { fetchPlans, createPlan } from "@/api";
 import {invateUser} from "@/api";
 import { saveBudget } from "@/api";
 import { Plan } from "@/type";
+import type { Trip } from "@/type/interface";
 
 export const useTripStore = defineStore("trip", () => {
   const queryClient = useQueryClient();
@@ -222,6 +223,19 @@ const getDashboard = (id: string) => {
       setErrorCurrentMessage("błąd");
     },
   });
+
+  const tripMutationUpdate = useMutation({
+    mutationFn: ({ tripId, newData }: { tripId: string; newData: Partial<Trip> }) => {
+      return updateTrip({ tripId }, newData);
+    },
+    onSuccess: () => {
+      setSuccessCurrentMessage("Zaktualizowano wycieczkę");
+    },
+    onError: (err: any) => {
+      setErrorCurrentMessage(err?.message || "Błąd podczas aktualizacji wycieczki");
+    },
+  });
+
   return {
     getDashboard,
     yourTrips,
@@ -230,6 +244,7 @@ const getDashboard = (id: string) => {
     tripMutationAdd,
     tripMutationBudget,
     planMutationAdd,
-    invateUserMutation
+    invateUserMutation,
+    tripMutationUpdate
   };
 });
