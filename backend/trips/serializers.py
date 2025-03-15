@@ -181,7 +181,7 @@ class TicketUpdateSerializer(BaseTicketSerializer):
 class TicketDestroySerializer(BaseTicketSerializer):
     id = serializers.IntegerField(write_only=True)
     file = serializers.FileField(write_only=True)
-    type = serializers.PrimaryKeyRelatedField(write_only=True)
+    type = serializers.PrimaryKeyRelatedField(write_only=True, queryset=TicketType.objects.all())
     profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
     valid_from = serializers.DateTimeField(write_only=True)
     trip = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Trip.objects.all())
