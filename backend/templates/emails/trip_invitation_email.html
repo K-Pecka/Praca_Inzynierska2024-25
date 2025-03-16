@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zaproszenie na wycieczkę</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        h1 { color: #333; }
+        p { color: #555; }
+    </style>
 </head>
 <body>
-
+    <div class="container">
+        <h1>Zaproszenie na wycieczkę!</h1>
+        <p>Cześć, <strong>{{ name }}</strong>!</p>
+        <p>Zostałeś zaproszony do udziału w wycieczce <strong>{{ trip_name }}</strong>.</p>
+        <p>Data: <strong>{{ date }}</strong></p>
+        <p>Kliknij poniższy przycisk, aby dołączyć:</p>
+        <a href="{{ trip_link }}" style="display: inline-block; padding: 10px 20px; margin-top: 20px; text-decoration: none; background-color: #28a745; color: #fff; border-radius: 5px; font-size: 16px;">
+            Dołącz do wycieczki
+        </a>
+        <p>Do zobaczenia!</p>
+    </div>
 </body>
 </html>
