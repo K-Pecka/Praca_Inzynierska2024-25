@@ -1,43 +1,46 @@
 """
 Django settings for server project.
 """
+import environ
 import os
+
 from datetime import timedelta
 
 from pathlib import Path
 
 import psycopg2
 
+env = environ.Env()
+environ.Env.read_env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = True
 
-if DEBUG:
-    SECRET_KEY = 'LYLmGW3Eabxzn2kdQeFGumZflknV1aFQAlIamvbuAjw='
-    API_URL = 'https://127.0.0.1:8000'
-else:
+if not DEBUG:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     API_URL = 'https://api.plannder.com'
+    CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[])
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+else:
+    SECRET_KEY = 'LYLmGW3Eabxzn2kdQeFGumZflknV1aFQAlIamvbuAjw='
+    API_URL = 'https://127.0.0.1:8000'
 
-CORS_ALLOWED_ORIGINS = [
-    "https://localhost.com",
-    "http://localhost:5173",
-    "http://localhost:8080",
-    "http://127.0.0.1:9000",
-    "https://127.0.0.1:8000",
-    "https://plannder.com",
-    "https://api.plannder.com",
-]
+    CORS_ALLOWED_ORIGINS = [
+        "https://localhost.com",
+        "http://localhost:5173",
+        "http://localhost:8080",
+        "http://127.0.0.1:9000",
+        "https://127.0.0.1:8000",
+    ]
 
-ALLOWED_HOSTS = [
-    '0.0.0.0',
-    '127.0.0.1',
-    'localhost',
-    'testserver',
-    'api.plannder.com',
-    'plannder.com',
-]
+    ALLOWED_HOSTS = [
+        '0.0.0.0',
+        '127.0.0.1',
+        'localhost',
+        'testserver',
+    ]
 
 # Application definition
 
@@ -191,11 +194,19 @@ AUTH_PASSWORD_VALIDATORS = [
 # Email config
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.poczta.onet.pl'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'plannder@op.pl' # TODO: przeniesc potem do env variables
-EMAIL_HOST_PASSWORD = 'Pjatk12121212!'
+
+if not DEBUG:
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+    EMAIL_HOST = os.environ.get('EMAIL_HOST')
+else:
+    EMAIL_HOST_USER = 'plannder@op.pl'
+    EMAIL_HOST_PASSWORD = 'Pjatk12121212!'
+    EMAIL_HOST = 'smtp.poczta.onet.pl'
+
+
 
 
 # Internationalization
