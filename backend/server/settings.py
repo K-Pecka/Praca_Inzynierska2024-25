@@ -11,17 +11,21 @@ import psycopg2
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'xkudmt1*h-go&u1@&!396=@_m-bly^@446q@e2^yjeg&8e(h$7'  # TODO: Pozniej bedzie to trzeba zmienic na: os.environ["SECRET_KEY"]
+DEBUG = True
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # TODO: False, aby włączyć produkcję
+if DEBUG:
+    SECRET_KEY = 'LYLmGW3Eabxzn2kdQeFGumZflknV1aFQAlIamvbuAjw='
+    API_URL = 'https://127.0.0.1:8000'
+else:
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    API_URL = 'https://api.plannder.com'
 
 CORS_ALLOWED_ORIGINS = [
     "https://localhost.com",
     "http://localhost:5173",
     "http://localhost:8080",
     "http://127.0.0.1:9000",
+    "https://127.0.0.1:8000",
     "https://plannder.com",
     "https://api.plannder.com",
 ]
