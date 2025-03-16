@@ -237,8 +237,8 @@ STATICFILES_DIRS = [
 MEDIA_URL = '' # TODO: ustawić
 MEDIA_ROOT = '' # TODO: ustawić
 
-CSRF_COOKIE_SECURE = False # TODO: zmienić na True jak już będzie na https
-SESSION_COOKIE_SECURE = False # TODO: zmienić na True jak już będzie na https
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 # Database settings
 CONN_MAX_AGE = 0
