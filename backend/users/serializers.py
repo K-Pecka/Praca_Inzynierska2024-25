@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.contrib.auth.password_validation import validate_password
 from django.utils.http import urlsafe_base64_encode
+from django.conf import settings
 
 from rest_framework import serializers
 
@@ -82,7 +83,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             'user': user,
             'confirmation_link': confirmation_link,
         })
-        send_mail(subject, message, 'plannder@op.pl', [user.email])
+        send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
 
     class Meta:
         model = CustomUser

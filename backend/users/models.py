@@ -1,9 +1,10 @@
 from django.contrib.auth.models import AbstractBaseUser
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.db import models
+from django.db import models, IntegrityError
 from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.hashers import make_password
 
 from permissions.models import CustomPermission
 from .managers import CustomUserManager, CustomProfileManager
@@ -36,6 +37,11 @@ class CustomUser(AbstractBaseUser, BaseModel):
         blank=True, null=True,
         verbose_name=_("Data urodzenia"),
         help_text=_("Data urodzenia")
+    )
+    is_guest = models.BooleanField(
+        default=False,
+        verbose_name=_("Czy gość"),
+        help_text=_("Czy konto gościa")
     )
     is_active = models.BooleanField(
         default=False,
@@ -72,6 +78,26 @@ class CustomUser(AbstractBaseUser, BaseModel):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
+    # @classmethod
+    # def create_account(cls): # TODO: sprawdzic czy sie przyda
+
+    @classmethod
+    def create_guest_account(cls, name, email):
+        try:
+            user = cls.objects.create(
+                email=email,
+                first_name=f"{name}",
+                last_name="",
+                is_active=True,
+                is_guest=True
+            )
+            return user
+        except IntegrityError:
+            raise ValueError("Użytkownik z tym adresem email już istnieje.")
+        except ValidationError:
+            raise ValueError("Niepoprawny adres email.")
+
+
     def has_perm(self, perm, obj=None):
         """
         Returns True if the user has the specified permission.
@@ -91,12 +117,17 @@ class CustomUser(AbstractBaseUser, BaseModel):
         except UserProfile.DoesNotExist:
             return None
 
+    class Meta:
+        verbose_name = "Użytkownik"
+        verbose_name_plural = _("Użytkownicy")
+
 
 class UserProfile(BaseModel):
     class ProfileType(models.TextChoices):
         CLIENT = 'client', _("Klient")
         GUIDE = 'guide', _("Przewodnik")
         ADMIN = 'admin', _("Administrator")
+        GUEST = 'guest', _("Gość")
 
     user = models.ForeignKey(
         CustomUser,
@@ -144,8 +175,8 @@ class UserProfile(BaseModel):
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = _("Użytkownik")
-        verbose_name_plural = _("Użytkownicy")
+        verbose_name = _("Profil")
+        verbose_name_plural = _("Profile")
         db_table = "users"
 
 

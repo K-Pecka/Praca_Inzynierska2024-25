@@ -8,4 +8,8 @@ from .models import UserProfile
 @receiver(post_save, sender=get_user_model())
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance, is_default=True)
+        if not instance.is_guest:
+            UserProfile.objects.create(user=instance, is_default=True)
+        else:
+            UserProfile.objects.create(user=instance, type='guest')
+

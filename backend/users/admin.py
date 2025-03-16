@@ -9,7 +9,7 @@ from dicts.helpers import get_admin_change_link
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'email', 'get_profile_link', 'is_active', 'is_staff', 'is_superuser')
+    list_display = ('pk', 'email', 'get_profile_link', 'is_active', 'is_guest', 'is_staff', 'is_superuser')
     list_filter = ('is_active', 'is_staff', 'is_superuser')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
@@ -23,7 +23,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'is_active', 'is_staff', 'is_superuser'),
+            'fields': ('email', 'password1', 'password2', 'is_active', 'is_guest', 'is_staff', 'is_superuser'),
         }),
     )
 
