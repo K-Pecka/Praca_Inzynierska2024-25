@@ -46,6 +46,7 @@ class BaseTripSerializer(serializers.ModelSerializer):
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     settings = serializers.JSONField(required=False)
+    budget = serializers.PrimaryKeyRelatedField(queryset=Budget.objects.all(), required=False)
 
     class Meta:
         model = Trip

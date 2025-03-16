@@ -1,3 +1,8 @@
+import base64
+import secrets
+
+from rest_framework.response import Response
+
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -5,7 +10,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from dicts.models import BaseModel
-from trips.managers import TripManager, TicketManager
+from trips.managers import TripManager, TicketManager, TripAccessTokenManager
 from users.models import UserProfile
 
 
@@ -48,6 +53,24 @@ class Trip(BaseModel):
         except Budget.DoesNotExist:
             return Budget.objects.create(trip=self, currency='PLN')
 
+    @classmethod
+    def send_invitation(cls, name, date, email):
+        pass
+
+    @classmethod
+    def add_member(cls, trip, user_profile):
+        if trip.members.filter(id=user_profile.id).exists():
+            return Response({"detail": "User is already a member of this trip."})
+        trip.members.add(user_profile)
+        return Response({"message": "User successfully added to the trip."})
+
+    @classmethod
+    def remove_member(cls, trip, user_profile):
+        if not trip.members.filter(id=user_profile.id).exists():
+            return Response({"detail": "User is not a member of this trip."}, status=400)
+        trip.members.remove(user_profile)
+        return Response({"message": "User successfully removed from the trip."})
+
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
@@ -56,12 +79,41 @@ class Trip(BaseModel):
         self.clean()
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
+
     objects = TripManager()
 
     class Meta:
         db_table = "trips"
         verbose_name = "Wycieczka"
         verbose_name_plural = "Wycieczki"
+
+
+class TripAccessToken(BaseModel):
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    token = models.CharField(max_length=24, verbose_name=_("Token"), help_text=_("Token"))
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    objects = TripAccessTokenManager()
+
+    @classmethod
+    def generate_token(self):
+        random_bytes = secrets.token_bytes(32)
+        return base64.b64encode(random_bytes).decode('utf-8')
+
+    def generate_new_token(self):
+        self.token = self.generate_token()
+        self.save(update_fields=['token'])
+        return self.token
+
+    def __str__(self):
+        return f"{self.trip} - {self.token}"
+
+    class Meta:
+        verbose_name = "Token dostępu do wycieczki"
+        verbose_name_plural = "Tokeny dostępu do wycieczek"
+        unique_together = ('trip', 'user_profile')
 
 
 class TicketType(BaseModel):
@@ -72,6 +124,10 @@ class TicketType(BaseModel):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Typ biletu"
+        verbose_name_plural = _("Typy biletów")
 
 
 def get_default_ticket_type():
@@ -145,6 +201,7 @@ class Budget(BaseModel):
     class Meta:
         db_table = "budgets"
         verbose_name = "Budżet"
+        verbose_name_plural = _("Budżety")
 
 
 class ExpenseType(BaseModel):
@@ -156,6 +213,10 @@ class ExpenseType(BaseModel):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Typ wydatku"
+        verbose_name_plural = _("Typy wydatków")
 
 
 def get_default_expense_type():

@@ -100,25 +100,12 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             return Response({"detail": "Invalid action. Use 'add' or 'remove'."}, status=400)
 
         if action == 'add':
-            return self.add_member(trip, user_profile)
-
-        if action == 'remove':
-            return self.remove_member(trip, user_profile)
+            return Trip.add_member(trip, user_profile)
+        elif action == 'remove':
+            return Trip.remove_member(trip, user_profile)
 
     def validate_action(self, action):
         return action in ['add', 'remove']
-
-    def add_member(self, trip, user_profile):
-        if trip.members.filter(id=user_profile.id).exists():
-            return Response({"detail": "User is already a member of this trip."})
-        trip.members.add(user_profile)
-        return Response({"message": "User successfully added to the trip."})
-
-    def remove_member(self, trip, user_profile):
-        if not trip.members.filter(id=user_profile.id).exists():
-            return Response({"detail": "User is not a member of this trip."}, status=400)
-        trip.members.remove(user_profile)
-        return Response({"message": "User successfully removed from the trip."})
 
 
 #############################################################################

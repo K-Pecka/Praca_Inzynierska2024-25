@@ -27,3 +27,15 @@ class TicketManager(models.Manager):
 
     def by_user(self, profile):
         return self.filter(profile=profile).distinct()
+
+
+class TripAccessTokenManager(models.Manager):
+    def by_id(self, pk):
+        try:
+            return self.get(pk=pk)
+        except self.model.DoesNotExist:
+            raise NotFound(detail="Nie znaleziono czatu o podanym ID")
+
+    def by_token(self, token):
+        return self.get(token=token)
+

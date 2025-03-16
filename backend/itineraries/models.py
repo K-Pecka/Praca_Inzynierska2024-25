@@ -9,7 +9,7 @@ class Itinerary(BaseModel):
     country = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField()
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='itineraries')
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='itineraries', null=True, blank=True)
 
     objects = ItineraryManager()
 
