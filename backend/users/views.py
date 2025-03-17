@@ -37,4 +37,3 @@ def check_access(request, user_pk, perm_code, perm_action):
         return Response({"message": "Dostęp do akcji został przyznany."}, status=status.HTTP_200_OK)
     else:
         return Response({"error": "Brak odpowiednich uprawnień do wykonania akcji."}, status=status.HTTP_403_FORBIDDEN)
-

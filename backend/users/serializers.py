@@ -1,6 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
+from django.db import transaction
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
@@ -12,6 +13,7 @@ from django.conf import settings
 from rest_framework import serializers
 
 from users.models import CustomUser, UserProfile
+
 
 
 #############################################################################
@@ -60,22 +62,22 @@ class UserCreateSerializer(serializers.ModelSerializer):
         validated_data['is_active'] = False
 
         validated_data['password'] = make_password(validated_data['password'])
+        with transaction.atomic():
+            user = super().create(validated_data)
 
-        user = super().create(validated_data)
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
 
-        token = default_token_generator.make_token(user)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
+            confirmation_link = self.context['request'].build_absolute_uri(
+                f"/confirm-email/{uidb64}/{token}/"
+            )
 
-        confirmation_link = self.context['request'].build_absolute_uri(
-            f"/confirm-email/{uid}/{token}/"
-        )
+            try:
+                self.send_confirmation_email(user, confirmation_link)
+            except Exception:
+                raise serializers.ValidationError({"error": "Błąd przy tworzeniu użytkownika."})
 
-        try:
-            self.send_confirmation_email(user, confirmation_link)
-        except Exception:
-            raise serializers.ValidationError({"error": "Błąd przy tworzeniu użytkownika."})
-
-        return user
+            return user
 
     def send_confirmation_email(self, user, confirmation_link):
         subject = 'Potwierdź swój adres email.'

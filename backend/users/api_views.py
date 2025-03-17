@@ -1,15 +1,11 @@
 from drf_spectacular.utils import OpenApiParameter, extend_schema
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, ListAPIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
-from .models import CustomUser, UserProfile
+from rest_framework.generics import CreateAPIView, UpdateAPIView, ListAPIView
+from rest_framework.permissions import IsAuthenticated
+
+from .models import UserProfile
 from .serializers import UserCreateSerializer, UserUpdateSerializer, UserUpdatePasswordSerializer, UserListSerializer, \
     UserProfileListSerializer
-
-from rest_framework import status
-
-from django.db import transaction
 
 
 @extend_schema(tags=['user'], parameters = [
@@ -33,24 +29,6 @@ class UserProfileListAPIView(ListAPIView):
 class UserCreateAPIView(CreateAPIView):
     permission_classes = []
     serializer_class = UserCreateSerializer
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['request'] = self.request
-        return context
-
-    def perform_create(self, serializer):
-        with transaction.atomic():
-            user = serializer.save()
-
-            try:
-                serializer.send_confirmation_email(user, self.request.build_absolute_uri)
-            except Exception:
-                transaction.set_rollback(True)
-                return Response(
-                    {"error": "Could not send confirmation email. Please try again later."},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
 
 
 class UserUpdateAPIView(UpdateAPIView):

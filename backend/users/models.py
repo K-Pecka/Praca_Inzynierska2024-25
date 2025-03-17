@@ -4,10 +4,9 @@ from django.core.validators import validate_email
 from django.db import models, IntegrityError
 from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.hashers import make_password
 
 from permissions.models import CustomPermission
-from .managers import CustomUserManager, CustomProfileManager
+from .managers import CustomUserManager
 from dicts.models import BaseModel
 from dicts.validators import validate_only_alphabetic
 
@@ -77,9 +76,6 @@ class CustomUser(AbstractBaseUser, BaseModel):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
-
-    # @classmethod
-    # def create_account(cls): # TODO: sprawdzic czy sie przyda
 
     @classmethod
     def create_guest_account(cls, name, email):

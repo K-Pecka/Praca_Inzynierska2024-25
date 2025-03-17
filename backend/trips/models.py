@@ -91,7 +91,7 @@ class Trip(BaseModel):
 
 
 class TripAccessToken(BaseModel):
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="access_tokens")
     token = models.CharField(max_length=24, verbose_name=_("Token"), help_text=_("Token"))
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 

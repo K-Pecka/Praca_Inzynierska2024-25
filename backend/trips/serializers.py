@@ -3,7 +3,7 @@ from rest_framework import serializers
 from users.serializers import UserProfileListSerializer
 
 from .models import Trip, Ticket, Budget, Expense, TicketType, Currency
-from users.models import UserProfile
+from users.models import UserProfile, CustomUser
 
 
 #################################################################
@@ -209,3 +209,18 @@ class ExpenseSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'amount', 'currency', 'date', 'note', 'trip', 'user', 'category'
         ]
+
+
+#################################################################
+# Invitation
+#################################################################
+class InvitationSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100)
+    date = serializers.DateTimeField()
+    email = serializers.EmailField()
+    is_guest = serializers.BooleanField(default=False)
+    user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), required=False)
+
+
+class JoinTripSerializer(serializers.Serializer):
+    token = serializers.CharField(required=True)
