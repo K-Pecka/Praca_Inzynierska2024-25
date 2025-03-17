@@ -164,12 +164,12 @@ SPECTACULAR_SETTINGS = {
     'DISABLE_DEFAULT_SCHEMA_GROUPING': True,
     'COMPONENT_SPLIT_REQUEST': True,
     'TAGS': [
-        {'name': 'Trip', 'description': 'Endpoints for managing trips.'},
-        {'name': 'Ticket', 'description': 'Endpoints for managing tickets.'},
-        {'name': 'Budget', 'description': 'Endpoints for managing budgets.'},
-        {'name': 'Expense', 'description': 'Endpoints for managing expenses.'},
-        {'name': 'Itinerary', 'description': 'Endpoints for managing itineraries.'},
-        {'name': 'Itinerary Activity', 'description': 'Endpoints for managing itinerary activities.'},
+        {'name': 'trip', 'description': 'Endpoints for managing trips.'},
+        {'name': 'ticket', 'description': 'Endpoints for managing tickets.'},
+        {'name': 'budget', 'description': 'Endpoints for managing budgets.'},
+        {'name': 'expense', 'description': 'Endpoints for managing expenses.'},
+        {'name': 'itinerary', 'description': 'Endpoints for managing itineraries.'},
+        {'name': 'itinerary activity', 'description': 'Endpoints for managing itinerary activities.'},
     ],
 }
 
