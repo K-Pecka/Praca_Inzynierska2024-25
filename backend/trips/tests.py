@@ -5,7 +5,7 @@ from rest_framework import status
 
 from trips.api_views import BudgetUpdateAPIView, BudgetDestroyAPIView, \
     ExpenseUpdateAPIView, ExpenseDestroyAPIView, ExpenseRetrieveAPIView, ExpenseCreateAPIView, TicketCreateAPIView, \
-    TicketRetrieveAPIView, TicketUpdateAPIView, TicketDestroyAPIView
+    TicketRetrieveAPIView, TicketDestroyAPIView
 from users.models import CustomUser, UserProfile
 from trips.models import Trip, Budget, Expense, Ticket, TicketType, ExpenseType, Currency
 
