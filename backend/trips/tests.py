@@ -3,9 +3,10 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 
-from trips.api_views import BudgetUpdateAPIView, BudgetDestroyAPIView, \
-    ExpenseUpdateAPIView, ExpenseDestroyAPIView, ExpenseRetrieveAPIView, ExpenseCreateAPIView, TicketCreateAPIView, \
-    TicketRetrieveAPIView, TicketDestroyAPIView
+from trips.views.budget_views import BudgetUpdateAPIView, BudgetDestroyAPIView
+from trips.views.expense_views import ExpenseCreateAPIView, ExpenseRetrieveAPIView, ExpenseUpdateAPIView, \
+    ExpenseDestroyAPIView
+from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketDestroyAPIView
 from users.models import CustomUser, UserProfile
 from trips.models import Trip, Budget, Expense, Ticket, TicketType, ExpenseType, Currency
 
