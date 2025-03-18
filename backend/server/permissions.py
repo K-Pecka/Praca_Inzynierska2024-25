@@ -1,4 +1,6 @@
-from django.core.exceptions import ObjectDoesNotExist
+"""
+Permission configuration for server project.
+"""
 from rest_framework.exceptions import NotFound
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import BasePermission
