@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
-from users.serializers import UserProfileListSerializer
-
 from .models import Trip, Ticket, Budget, Expense, TicketType, Currency
+
+from users.serializers import UserProfileListSerializer
 from users.models import UserProfile, CustomUser
 
 
@@ -61,6 +61,7 @@ class TripCreateSerializer(BaseTripSerializer):
         if not request.user.is_guide:
             if Trip.objects.filter(creator=request.user.get_default_profile()).count() > 2:
                 raise serializers.ValidationError("Osiągnąłeś limit wycieczek dla swojego profilu.")
+
         if members and data.get("creator") in members:
             raise serializers.ValidationError("Właściciel nie może być uczestnikiem wycieczki.")
         return data
