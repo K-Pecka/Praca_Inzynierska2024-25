@@ -193,12 +193,19 @@ class UserPermission(BaseModel):
 
     @classmethod
     def check_permission(cls, user_profile, perm_code, perm_action):
-        perm_to_user = cls.objects.filter(profile=user_profile, permission__code=perm_code)
+        """
+        Check if the user has the given permission and action.
+        This method can return a tuple of (is_allowed, message).
+        """
+        perm_to_user = cls.objects.filter(profile=user_profile, permission__code=perm_code).first()
 
-        if not perm_to_user.exists():
-            return False
-        else:
-            return perm_action in perm_to_user.first().permission.actions()
+        if not perm_to_user:
+            return False, "Użytkownik nie posiada wymaganej zgody"
+
+        if perm_action in perm_to_user.permission.actions():
+            return True, "Dostęp do akcji został przyznany"
+
+        return False, "Użytkownik nie ma uprawnień do wykonania tej akcji"
 
     def __str__(self):
         return f"UserProfilePermission: {self.profile} - {self.permission}"

@@ -121,3 +121,14 @@ class UserUpdatePasswordSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['id', 'password']
         read_only_fields = ['id']
+
+
+class ConfirmEmailSerializer(serializers.Serializer):
+    uidb64 = serializers.CharField()
+    token = serializers.CharField()
+
+
+class CheckAccessSerializer(serializers.Serializer):
+    user_pk = serializers.IntegerField()
+    perm_code = serializers.CharField()
+    perm_action = serializers.CharField()
