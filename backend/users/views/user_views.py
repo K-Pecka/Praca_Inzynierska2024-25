@@ -1,39 +1,19 @@
-from django.shortcuts import render
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
+from django.shortcuts import render
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
-
-from rest_framework.generics import CreateAPIView, UpdateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from users.serializers.user_serializers import UserCreateSerializer, UserUpdateSerializer, UserUpdatePasswordSerializer, \
+    ConfirmEmailSerializer, CheckAccessSerializer
 
-from .models import UserProfile, CustomUser, UserPermission
-from .serializers import UserCreateSerializer, UserUpdateSerializer, UserUpdatePasswordSerializer, UserListSerializer, \
-    UserProfileListSerializer, ConfirmEmailSerializer, CheckAccessSerializer
-
-
-@extend_schema(tags=['user'], parameters = [
-    OpenApiParameter(
-        name='email',
-        description="Search users by email",
-        required=False, type=str)
-])
-class UserProfileListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = UserProfileListSerializer
-
-    def get_queryset(self):
-        search_query = self.request.query_params.get('email', None)
-        if search_query:
-            return UserProfile.objects.filter(user__email__icontains=search_query, type='client')
-        else:
-            return UserProfile.objects.all()
+from users.models import CustomUser, UserPermission
 
 
 class UserCreateAPIView(CreateAPIView):

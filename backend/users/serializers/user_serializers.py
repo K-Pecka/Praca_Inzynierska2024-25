@@ -1,31 +1,18 @@
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
-from django.db import transaction
-from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
-from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
 from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.tokens import default_token_generator
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.core.validators import validate_email
+from django.db import transaction
+from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 from django.conf import settings
 
 from rest_framework import serializers
 
-from users.models import CustomUser, UserProfile
-
-
-
-#############################################################################
-# User
-#############################################################################
-class UserProfileListSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-    email = serializers.EmailField(source='user.email')
-
-    class Meta:
-        model = UserProfile
-        fields = ['id', 'email',]
+from users.models import CustomUser
 
 
 class UserListSerializer(serializers.ModelSerializer):

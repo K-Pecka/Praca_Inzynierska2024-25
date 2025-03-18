@@ -1,9 +1,9 @@
 from django.urls import path
-from .api_views import (
-    ChatroomListAPIView, ChatroomCreateAPIView, ChatroomRetrieveAPIView, ChatroomUpdateAPIView, ChatroomDestroyAPIView,
-    ChatMessageListAPIView, ChatMessageCreateAPIView, ChatMessageRetrieveAPIView, ChatMessageUpdateAPIView,
-    ChatMessageDestroyAPIView
-)
+
+from chats.views.chat_message_views import ChatMessageCreateAPIView, ChatMessageRetrieveAPIView, ChatMessageListAPIView, \
+    ChatMessageUpdateAPIView, ChatMessageDestroyAPIView
+from chats.views.chatroom_views import ChatroomCreateAPIView, ChatroomRetrieveAPIView, ChatroomListAPIView, \
+    ChatroomUpdateAPIView, ChatroomDestroyAPIView
 
 urlpatterns = [
     # Chatroom URLs

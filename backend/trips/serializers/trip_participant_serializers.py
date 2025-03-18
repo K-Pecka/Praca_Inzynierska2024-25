@@ -5,7 +5,7 @@ from trips.serializers.trip_serializers import BaseTripSerializer
 from trips.serializers.budget_serializers import BudgetRetrieveSerializer
 
 from users.models import CustomUser
-from users.serializers import UserProfileListSerializer
+from users.serializers.user_profile_serializers import UserProfileListSerializer
 
 
 class TripParticipantsUpdateSerializer(BaseTripSerializer):

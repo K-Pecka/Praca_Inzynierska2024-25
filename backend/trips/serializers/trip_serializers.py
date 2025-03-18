@@ -3,7 +3,7 @@ from rest_framework import serializers
 from trips.models import Budget, Trip
 from trips.serializers.budget_serializers import BudgetRetrieveSerializer
 from users.models import UserProfile
-from users.serializers import UserProfileListSerializer
+from users.serializers.user_profile_serializers import UserProfileListSerializer
 
 
 class BaseTripSerializer(serializers.ModelSerializer):
