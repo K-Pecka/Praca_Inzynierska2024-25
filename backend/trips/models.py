@@ -193,7 +193,7 @@ class Budget(BaseModel):
     trip = models.OneToOneField(
         Trip,
         on_delete=models.CASCADE,
-        related_name="budżet",
+        related_name="budgets",
         verbose_name=_("Wycieczka"),
         help_text=_("Powiązana wycieczka")
     )
