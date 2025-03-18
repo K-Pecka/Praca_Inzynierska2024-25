@@ -36,7 +36,3 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-# Email config
-
-EMAIL_HOST = 'smtp.poczta.onet.pl'

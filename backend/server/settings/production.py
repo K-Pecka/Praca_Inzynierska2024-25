@@ -31,9 +31,3 @@ DATABASES = {
 }
 
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-
-# Email config
-
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
