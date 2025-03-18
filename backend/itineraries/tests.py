@@ -3,13 +3,12 @@ from rest_framework.test import APIRequestFactory
 from rest_framework import status
 from rest_framework.test import force_authenticate
 
+from itineraries.views.itinerary_activity_views import ItineraryActivityRetrieveAPIView, ItineraryActivityCreateAPIView, \
+    ItineraryActivityUpdateAPIView, ItineraryActivityDestroyAPIView, ItineraryActivityListAPIView
+from itineraries.views.itinerary_views import ItineraryCreateAPIView, ItineraryRetrieveAPIView, ItineraryUpdateAPIView, \
+    ItineraryDestroyAPIView, ItineraryListAPIView
 from users.models import CustomUser, UserProfile
 from trips.models import Trip  # Assuming the Trip model is in the 'trips' app
-from itineraries.api_views import (ItineraryCreateAPIView, ItineraryRetrieveAPIView, ItineraryUpdateAPIView,
-                                   ItineraryDestroyAPIView, ItineraryListAPIView)
-from itineraries.api_views import (ItineraryActivityCreateAPIView, ItineraryActivityRetrieveAPIView,
-                                   ItineraryActivityUpdateAPIView,
-                                   ItineraryActivityDestroyAPIView, ItineraryActivityListAPIView)
 from itineraries.models import Itinerary, ItineraryActivity
 
 

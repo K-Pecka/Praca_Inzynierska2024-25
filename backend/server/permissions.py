@@ -194,11 +194,11 @@ class IsTripCreator(BasePermission):
         trip_id = view.kwargs.get('trip_pk')
 
         if trip_id:
-            trip = self.get_trip_by_id(trip_id)
+            trip = Trip.objects.get(pk=trip_id)
         else:
             itinerary_id = view.kwargs.get('itinerary_pk')
             if itinerary_id:
-                itinerary = self.get_itinerary_by_id(itinerary_id)
+                itinerary = Itinerary.objects.get(pk=itinerary_id)
                 trip = itinerary.trip if itinerary else None
 
         if not trip:

@@ -3,13 +3,12 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 
 from chats.models import Chatroom, ChatMessage
+from chats.views.chat_message_views import ChatMessageCreateAPIView, ChatMessageUpdateAPIView, \
+    ChatMessageRetrieveAPIView, ChatMessageDestroyAPIView, ChatMessageListAPIView
+from chats.views.chatroom_views import ChatroomDestroyAPIView
 from users.models import CustomUser
 
 from trips.models import Trip
-
-from chats.api_views import ChatroomCreateAPIView, ChatroomUpdateAPIView, ChatroomDestroyAPIView, \
-    ChatroomRetrieveAPIView, ChatroomListAPIView, ChatMessageCreateAPIView, ChatMessageUpdateAPIView, \
-    ChatMessageRetrieveAPIView, ChatMessageDestroyAPIView, ChatMessageListAPIView
 
 
 class ChatAPITestCase(TestCase):
