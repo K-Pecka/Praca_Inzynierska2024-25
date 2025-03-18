@@ -2,6 +2,7 @@ from django.db import models
 
 from django.utils.translation import gettext_lazy as _
 
+from chats.choices import ChatroomType
 from chats.managers import ChatroomManager, ChatMessageManager
 from dicts.models import BaseModel
 from users.models import UserProfile
@@ -9,10 +10,6 @@ from trips.models import Trip
 
 
 class Chatroom(BaseModel):
-    class ChatroomType(models.TextChoices):
-        PRIVATE = 'private', _("Prywatny")
-        GROUP = 'group', _("Grupowy")
-
     name = models.CharField(
         max_length=50,
         verbose_name=_("Nazwa"), help_text=_("Nazwa")
@@ -51,13 +48,12 @@ class Chatroom(BaseModel):
     def clean(self):
         if not self.pk:
             self.save()
-        # if self.type == self.ChatroomType.PRIVATE and self.members.count() > 1:
-        #     raise ValidationError(_("A private chatroom can only have one tourist."))
 
     class Meta:
         db_table = "chat_rooms"
         verbose_name = "Pokój do czatowania"
         verbose_name_plural = "Pokoje do czatowania"
+        ordering = ["-created_at"]
 
 
 class ChatMessage(BaseModel):
@@ -89,3 +85,4 @@ class ChatMessage(BaseModel):
         db_table = "chat_messages"
         verbose_name = "Wiadomość czatu"
         verbose_name_plural = "Wiadomości czatu"
+        ordering = ["-created_at"]
