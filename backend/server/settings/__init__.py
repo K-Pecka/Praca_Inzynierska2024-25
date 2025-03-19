@@ -4,5 +4,5 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
 if ENVIRONMENT == "production":
     from .production import *
-elif ENVIRONMENT == "development":
+else:
     from .development import *
