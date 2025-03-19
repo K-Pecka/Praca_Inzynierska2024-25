@@ -6,6 +6,7 @@ interface Ticket {
     type: string;
     name: string;
     date: string;
+    hour: string;
     assignedTo?: string;
     file: File;
 }
@@ -32,6 +33,7 @@ export const useTicketStore = defineStore("ticket", () => {
             type: ticketData.type,
             name: ticketData.name,
             date: ticketData.date,
+            hour: ticketData.hour,
             file: ticketData.file,
         };
         if (ticketData.assignedTo && ticketData.assignedTo.trim() !== "") {

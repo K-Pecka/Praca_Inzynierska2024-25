@@ -15,7 +15,7 @@ const tickets = computed(() => ticketStore.tickets);
 const showForm = ref(false);
 
 function handleAddTicket(newTicketData: {
-  type: string; name: string; date: string; assignedTo?: string; file: File;
+  type: string; name: string; date: string; hour: string; assignedTo?: string; file: File;
 }) {
   const {file, ...ticketData} = newTicketData;
   const {createTicket} = useTicketStore();

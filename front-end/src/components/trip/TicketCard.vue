@@ -27,7 +27,7 @@ function previewTicket() {
       <div class="ticket-header-text">
         <div class="ticket-name">{{ ticket.name }}</div>
         <div class="ticket-date" v-if="ticket.date">
-          {{ ticket.date }}
+          {{ticket.hour + "  " + ticket.date }}
         </div>
       </div>
     </div>

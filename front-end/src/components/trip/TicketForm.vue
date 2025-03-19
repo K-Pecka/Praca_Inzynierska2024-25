@@ -12,6 +12,7 @@ const form = ref({
   type: "Atrakcja",
   name: "",
   date: "",
+  hour: "",
   assignedTo: "",
   file: null as File | null,
 });
@@ -30,6 +31,7 @@ function submitTicket() {
     type: "train",
     name: "",
     date: "",
+    hour: "",
     assignedTo: "",
     file: null,
   };
@@ -49,8 +51,7 @@ function submitTicket() {
               item-title="text"
               item-value="value"
               label="Typ biletu"
-              outlined
-              dense
+              variant="outlined"
           />
         </v-col>
 
@@ -58,27 +59,33 @@ function submitTicket() {
           <v-text-field
               v-model="form.name"
               label="Nazwa"
-              outlined
-              dense
+              variant="outlined"
           />
         </v-col>
 
-        <v-col cols="12" sm="6">
+        <v-col cols="12" sm="3">
           <v-text-field
               v-model="form.date"
               label="Data (dd.mm.rrrr)"
               placeholder="dd.mm.rrrr"
-              outlined
-              dense
+              variant="outlined"
+          />
+        </v-col>
+
+        <v-col cols="12" sm="3">
+          <v-text-field
+              v-model="form.hour"
+              label="Godzina (hh:mm)"
+              placeholder="hh:mm"
+              variant="outlined"
           />
         </v-col>
 
         <v-col cols="12" sm="6">
-          <v-text-field
+          <v-select
               v-model="form.assignedTo"
               label="Przypisz do osoby (Opcjonalnie)"
-              outlined
-              dense
+              variant="outlined"
           />
         </v-col>
 
@@ -88,7 +95,7 @@ function submitTicket() {
               prepend-icon="mdi-upload"
               label="Przeciągnij lub dodaj bilet"
               show-size
-              outlined
+              variant="outlined"
               dense
           />
         </v-col>
@@ -111,7 +118,7 @@ function submitTicket() {
 
 <style scoped lang="scss">
 .ticket-form {
-  background-color: rgb(var(--v-theme-secondary), 0.2);
+  background-color: rgb(var(--v-theme-secondary), 0.5);
   border-radius: 1rem;
 }
 </style>
