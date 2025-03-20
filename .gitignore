@@ -42,3 +42,5 @@ db.sqlite3
 */migrations/*
 */*/migrations/*
 !*/migrations/__init__.py
+tickets/
+
