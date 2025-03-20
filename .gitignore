@@ -44,3 +44,5 @@ db.sqlite3
 !*/migrations/__init__.py
 tickets/
 
+# db
+db_dumpdata
