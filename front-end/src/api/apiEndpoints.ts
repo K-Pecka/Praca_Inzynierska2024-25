@@ -12,7 +12,7 @@ export const standardHeaders = () => {
 export const fetchData = async <T = unknown>(
   url: string,
   options: RequestInit = { body: undefined },
-  method: "GET" | "POST" | "DELETE" | "PATCH" = "GET"
+  method: "GET" | "POST" | "DELETE" | "PATCH" | "PUT" = "GET"
 ): Promise<{ data?: T; error?: string }> => {
   try {
     const response = await fetch(url, {
@@ -51,6 +51,7 @@ export const apiEndpoints = {
     register: `${hostName}/user/`,
     refreshToken: `${hostName}/user_auth/token/refresh/`,
     verify: `${hostName}/user_auth/token/verify/`,
+    profile: `${hostName}/user/profile/`
   },
   trip: {
     all: `${hostName}/trip/all/`,
@@ -58,13 +59,13 @@ export const apiEndpoints = {
     delete: `${hostName}/trip/:tripId/delete/`,
     create: `${hostName}/trip/create/`,
     update: `${hostName}/trip/:tripId/update/`,
+    invateUser: `${hostName}/trip/:tripId/participants/manage/:userId/`
   },
   plan: {
     all: `${hostName}/trip/:tripId/itinerary/`,
     detail: `${hostName}/trip/:tripId/itinerary/:planId/`,
     delete: `${hostName}/trip/:tripId/itinerary/:planId/delete/`,
     create: `${hostName}/trip/:tripId/itinerary/create/`,
-    invateUser: `${hostName}/trip/:tripId/itinerary/{itinerary_pk}/activities/{id}/update/`
   },
   ticket:{
     create:`${hostName}/trip/ticket/create/`

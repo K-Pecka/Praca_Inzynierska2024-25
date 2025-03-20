@@ -4,10 +4,10 @@ import { Navbar, Footer } from "@/components/home";
 import { usePageHomeStore } from "@/stores";
 
 const useStore = usePageHomeStore();
-
 const SiteName = computed(() => useStore.getSiteName());
 const navData = computed(() => useStore.navigationLinks);
 const footerData = computed(() => useStore.getFooterData());
+
 </script>
 
 <template>

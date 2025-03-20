@@ -4,12 +4,20 @@ import router from "@/router";
 import { computed } from "vue";
 
 export const useUtilStore = defineStore("utils", () => {
-    const route = useRoute();
-    const useRouter = () => router
-    const getTripId = (paramName: string) => computed(() => route.params[paramName]);
-    const getCurrentPath = () =>{name:route.name}
-    const isCurrentRouteNotInSet = (RouteSet: string[]) => computed(() => {
-        return !RouteSet.includes(route.name as string)
+  const route = useRoute();
+  const useRouter = () => router;
+  const getTripId = () => {
+    return computed<string>(() => {
+      const tripId = route.params?.tripId;
+      return Array.isArray(tripId) ? tripId[0] : tripId;
     });
-    return {useRouter,getTripId,isCurrentRouteNotInSet,getCurrentPath}
-})
+  };
+  const getCurrentPath = () => {
+    name: route.name;
+  };
+  const isCurrentRouteNotInSet = (RouteSet: string[]) =>
+    computed(() => {
+      return !RouteSet.includes(route.name as string);
+    });
+  return { useRouter, getTripId, isCurrentRouteNotInSet, getCurrentPath };
+});

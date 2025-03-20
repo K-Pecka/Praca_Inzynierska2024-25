@@ -214,9 +214,8 @@ const getDashboard = (id: string) => {
     },
   });
   const invateUserMutation = useMutation({
-    mutationFn: invateUser,
+    mutationFn: ({ userEmail, param }: { userEmail: string; param: Record<string, string> }) => invateUser(userEmail, param),
     onSuccess: (data) => {
-      router.back();
       setSuccessCurrentMessage("dodano usera do wycieczki");
     },
     onError: (err) => {

@@ -5,7 +5,7 @@ import {Section} from "@/components";
 import AppButton from "@/components/budget/AppButton.vue";
 import ParticipantList from "@/components/trip/ParticipantList.vue";
 import {Participant} from "@/type";
-import {useTripStore} from "@/stores";
+import {useTripStore, useUtilStore} from "@/stores";
 
 const participants = ref<Participant[]>([
   // {
@@ -34,8 +34,8 @@ const countLabel = computed(() => `${participants.value.length}/${maxParticipant
 const inviteEmail = ref("");
 
 function inviteParticipant() {
-  const {invateUserMutation} = useTripStore();
-  invateUserMutation.mutateAsync(inviteEmail.value);
+  const {getTripId} =useUtilStore()
+  useTripStore().invateUserMutation.mutateAsync({ userEmail: inviteEmail.value, param: { tripId: getTripId().value } });
 }
 
 const route = useRoute();

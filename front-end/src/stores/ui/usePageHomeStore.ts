@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "../auth/useAuthStore";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import {
   defaultNavLinks,
   loggedInNavLinks,
@@ -12,27 +12,23 @@ import {
   sectionTitles,
 } from "@/dataStorage";
 export const usePageHomeStore = defineStore("pagHome", () => {
-  const { validToken } = useAuthStore();
-  const isUserLoggedIn = ref(false);
+  const { getToken,isLogin } = useAuthStore();
 
-  const checkUserAuthentication = async () => {
-    isUserLoggedIn.value = await validToken();
-  };
-  const setStateisLogged = (value: boolean) => {
-    isUserLoggedIn.value = value;
-  }
+  const navigationLinks = ref<Array<{ label: string; href: string | { name: string }; className?: string[]; active?: boolean }>>([]);
   onMounted(async () => {
-    await checkUserAuthentication();
-  });
+      navigationLinks.value = [
+        ...defaultNavLinks,
+        ...(await isLogin() ? loggedInNavLinks : guestNavLinks),
+      ];
+    });
+  watch(getToken, (value) => {
 
-  const getSiteName = () => import.meta.env.VITE_APP_SITE_NAME || "Plannder";
-
-  const navigationLinks = computed(() => {
-    return [
+    navigationLinks.value = [
       ...defaultNavLinks,
-      ...(isUserLoggedIn.value ? loggedInNavLinks : guestNavLinks),
+      ...(value ? loggedInNavLinks : guestNavLinks),
     ];
   });
+  const getSiteName = () => import.meta.env.VITE_APP_SITE_NAME || "Plannder";
 
   const getFooterData = () => ({
     links: navigationLinks.value,
@@ -54,7 +50,6 @@ export const usePageHomeStore = defineStore("pagHome", () => {
   };
 
   return {
-    setStateisLogged,
     getSiteName,
     navigationLinks,
     getFooterData,
