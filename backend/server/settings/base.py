@@ -172,11 +172,13 @@ SESSION_COOKIE_SECURE = True
 
 # Static files (CSS, JavaScript, Images)
 
-STATIC_URL = '/graph_models/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "graph_models"),
+    os.path.join(BASE_DIR, "static"),
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Media settings
 

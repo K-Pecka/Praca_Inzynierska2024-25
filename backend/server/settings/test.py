@@ -1,7 +1,7 @@
-import os
 import psycopg2
 import dj_database_url
 
+from .base import *
 
 DEBUG = False
 
