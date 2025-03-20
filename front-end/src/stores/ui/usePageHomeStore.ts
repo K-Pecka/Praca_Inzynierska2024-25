@@ -12,13 +12,13 @@ import {
   sectionTitles,
 } from "@/dataStorage";
 export const usePageHomeStore = defineStore("pagHome", () => {
-  const { getToken,isLogin } = useAuthStore();
+  const { getToken } = useAuthStore();
 
   const navigationLinks = ref<Array<{ label: string; href: string | { name: string }; className?: string[]; active?: boolean }>>([]);
   onMounted(async () => {
       navigationLinks.value = [
         ...defaultNavLinks,
-        ...(await isLogin() ? loggedInNavLinks : guestNavLinks),
+        ...(await getToken() ? loggedInNavLinks : guestNavLinks),
       ];
     });
   watch(getToken, (value) => {

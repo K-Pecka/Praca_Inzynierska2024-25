@@ -63,11 +63,12 @@ export const useFormStore = defineStore("form", () => {
       return errors.length === 0;
     });
   };
-
+  const isSend = ref(false)
   const sendForm =async (_: any, config: any)=>{
-    if (config?.send && isFormValid(FormType.LOGIN, formValues.value)) {
+    if (config?.send && isFormValid(FormType.LOGIN, formValues.value) && !isSend.value) {
+      isSend.value = true;
       try {
-        await loginMutation.mutateAsync(formValues.value);
+        await loginMutation.mutateAsync(formValues.value).then((response) => isSend.value = false);
       } catch (error) {
         console.log("ERROR");
       }
