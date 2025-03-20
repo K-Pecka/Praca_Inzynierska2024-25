@@ -72,7 +72,7 @@ class Trip(BaseModel):
         return Response({"message": "User successfully removed from the trip."})
 
     def clean(self):
-        if self.end_date and self.start_date and self.end_date < self.start_date:
+        if self.end_date and self.start_date and self.end_date > self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
 
     def save(self, *args, **kwargs):
