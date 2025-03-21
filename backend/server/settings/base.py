@@ -2,7 +2,11 @@
 from pathlib import Path
 import os
 
+from dotenv import load_dotenv
+
 from datetime import timedelta
+
+load_dotenv()
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -81,6 +85,9 @@ CACHES = {
 }
 
 REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',  # Tylko JSON
+    ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',

@@ -29,6 +29,7 @@ backend/.venv
 .venv
 .env.*
 .venv/bin
+backend/.env
 
 # python
 */__pycache__

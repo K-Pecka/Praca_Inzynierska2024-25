@@ -56,9 +56,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
             token = default_token_generator.make_token(user)
 
             confirmation_link = self.context['request'].build_absolute_uri(
-                f"/confirm-email/{uidb64}/{token}/"
+                f"/user/confirm-email/{uidb64}/{token}/"
             )
-
             try:
                 self.send_confirmation_email(user, confirmation_link)
             except Exception as e:
