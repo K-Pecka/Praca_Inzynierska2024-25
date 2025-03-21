@@ -54,6 +54,9 @@ const footerData = computed(() => useStore.getFooterData());
 .wrapper {
   position: relative;
 }
+main{
+  min-height: 50vh;
+}
 .wrapper::after {
   content: "";
   width: 45vw;

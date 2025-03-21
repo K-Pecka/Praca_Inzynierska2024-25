@@ -45,7 +45,7 @@ export const useTicketStore = defineStore("ticket", () => {
         const {getTripId} = useUtilStore();
         console.log(file);
         console.log(data);
-        console.log(getTripId('tripId').value);
+        console.log(getTripId().value);
        }
 
     return {

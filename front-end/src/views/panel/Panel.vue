@@ -8,7 +8,7 @@ const SiteName = useStore.getSiteName();
 
 const {navbar, getSideNavItems} = usePagePanelStore();
 const {isCurrentRouteNotInSet, getTripId} = useUtilStore();
-const sideNavItems = getSideNavItems(getTripId("tripId").value as string);
+const sideNavItems = getSideNavItems(getTripId().value as string);
 const showNavigation = isCurrentRouteNotInSet(["roleSelection", "yourTrip", "TripForm"]);
 
 const sideNavOpen = ref(false);

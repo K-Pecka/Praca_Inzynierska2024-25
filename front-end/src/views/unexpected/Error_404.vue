@@ -9,10 +9,10 @@
           ></v-img> -->
           <v-card class="error-card">
             <v-card-title class="text-h2 text--primary">
-              500
+              404
             </v-card-title>
             <v-card-subtitle class="text-h5 text--secondary">
-              Wewnętrzny błąd serwera
+              Podana strona nie istnieje
             </v-card-subtitle>
             <v-card-text>
               Coś poszło nie tak. Spróbuj ponownie później lub wróć na stronę główną.
