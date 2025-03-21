@@ -32,11 +32,9 @@ class Trip(BaseModel):
         verbose_name=_("Profil"), help_text=_("Profil")
     )
     start_date = models.DateField(
-        auto_now_add=True,  # TODO: zmienić na czas lokalny a nie serwerowy
         verbose_name=_("Data rozpoczęcia"), help_text=_("Data rozpoczęcia")
     )
     end_date = models.DateField(
-        auto_now=True,  # TODO: zmienić na czas lokalny a nie serwerowy
         verbose_name=_("Data zakończenia"), help_text=_("Data zakończenia")
     )
     settings = models.JSONField(
@@ -72,7 +70,7 @@ class Trip(BaseModel):
         return Response({"message": "User successfully removed from the trip."})
 
     def clean(self):
-        if self.end_date and self.start_date and self.end_date > self.start_date:
+        if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
 
     def save(self, *args, **kwargs):

@@ -61,8 +61,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
             try:
                 self.send_confirmation_email(user, confirmation_link)
-            except Exception:
-                raise serializers.ValidationError({"error": "Błąd przy tworzeniu użytkownika."})
+            except Exception as e:
+                raise serializers.ValidationError({"error": f"Błąd przy tworzeniu użytkownika {e}"})
 
             return user
 
