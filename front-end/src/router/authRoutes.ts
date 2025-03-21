@@ -24,7 +24,7 @@ const homeRoutes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: "/auth/logOut",
+    path: "/auth/log-out",
     name: "logOut",
     component: LogOut,
   },

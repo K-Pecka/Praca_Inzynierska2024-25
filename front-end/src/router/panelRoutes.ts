@@ -14,17 +14,17 @@ const panelRoutes: RouteRecordRaw = {
   children: [
     { path: "", name: "roleSelection", component: RoleSelection },
 
-    { path: "yourTrip", name: "yourTrip", component: YourTrip },
-    { path: "yourTrip/:tripId", name: "tripDashboard", component: TripDashboard },
-    { path: "yourTrip/:tripId/yourPlan", name: "yourPlan", component: YourPlan },
-    { path: "yourTrip/:tripId/TicketsView", name: "TicketsView", component: TicketsView },
-    { path: "yourTrip/:tripId/expenseTracker", name: "ExpenseTracker", component: ExpenseTracker },
-    { path: "yourTrip/:tripId/participantsView", name: "ParticipantsView", component: ParticipantsView },
-    { path: "yourTrip/:tripId/tripEdit", name: "TripEdit", component: TripEditForm },
+    { path: "your-trip", name: "yourTrip", component: YourTrip },
+    { path: "your-trip/:tripId", name: "tripDashboard", component: TripDashboard },
+    { path: "your-trip/:tripId/your-plan", name: "yourPlan", component: YourPlan },
+    { path: "your-trip/:tripId/tickets-view", name: "TicketsView", component: TicketsView },
+    { path: "your-trip/:tripId/expense-tracker", name: "ExpenseTracker", component: ExpenseTracker },
+    { path: "your-trip/:tripId/participants-view", name: "ParticipantsView", component: ParticipantsView },
+    { path: "your-trip/:tripId/trip-edit", name: "TripEdit", component: TripEditForm },
 
-    { path: "tripForm", name: "TripForm", component: TripForm },
-    { path: "yourTrip/:tripId/planForm", name: "PlanForm", component: PlanForm },
-    { path: "yourTrip/:tripId/budget", name: "budget", component: BugdetForm },
+    { path: "your-trip", name: "TripForm", component: TripForm },
+    { path: "your-trip/:tripId/plan-form", name: "PlanForm", component: PlanForm },
+    { path: "your-trip/:tripId/budget", name: "budget", component: BugdetForm },
   ],
 };
 

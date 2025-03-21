@@ -15,7 +15,7 @@ const homeRoutes: RouteRecordRaw[] = [
         component: Landing,
       },
       {
-        path: "/pricingSection",
+        path: "/pricing-section",
         name: "pricingSection",
         component: PricingSection,
       },
