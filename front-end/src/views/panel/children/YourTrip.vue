@@ -15,7 +15,7 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
           <template #title>
             <div class="d-flex justify-between align-center justify-space-between">
               <h1>Zarządzaj wycieczkami</h1>
-              <router-link to="/panel/tripForm">
+              <router-link :to="{name: 'TripForm'}">
                  <v-btn  outlined class="text-primary p-5">
                   Dodaj wycieczkę
                 </v-btn>

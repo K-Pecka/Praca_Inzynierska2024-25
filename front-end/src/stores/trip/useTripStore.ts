@@ -155,7 +155,7 @@ const getDashboard = (id: string) => {
           title: "Zarządzaj wycieczką",
           class: ["primary"],
           onclick: (id: string) =>
-            router.push(`/panel/YourTrip/${id}`),
+            router.push({ name: "tripDashboard", params: { tripId: id } }),
         },
         {
           title: "usuń wycieczkę",
@@ -172,7 +172,7 @@ const getDashboard = (id: string) => {
         {
           title: "Zarządzaj planem",
           class: ["primary"],
-          onclick: (trip: string, id: string) => router.push(`/panel/YourTrip/${id}`),
+          onclick: (trip: string, id: string) => router.push({ name: "yourPlan", params: { tripId: trip, planId: id } }),
         },
         {
           title: "usuń plan",

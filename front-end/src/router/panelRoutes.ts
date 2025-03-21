@@ -22,7 +22,7 @@ const panelRoutes: RouteRecordRaw = {
     { path: "your-trip/:tripId/participants-view", name: "ParticipantsView", component: ParticipantsView },
     { path: "your-trip/:tripId/trip-edit", name: "TripEdit", component: TripEditForm },
 
-    { path: "your-trip", name: "TripForm", component: TripForm },
+    { path: "your-trip/trip", name: "TripForm", component: TripForm },
     { path: "your-trip/:tripId/plan-form", name: "PlanForm", component: PlanForm },
     { path: "your-trip/:tripId/budget", name: "budget", component: BugdetForm },
   ],
