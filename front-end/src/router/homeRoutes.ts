@@ -31,6 +31,10 @@ const homeRoutes: RouteRecordRaw[] = [
     name: "error_404",
     component: Error_404,
   },
+  {
+    path: '/:pathMatch(.*)*',
+    component: Error_404,
+  }
 ];
 
 export default homeRoutes;

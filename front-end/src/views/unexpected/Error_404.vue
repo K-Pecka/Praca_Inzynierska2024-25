@@ -15,7 +15,7 @@
               Podana strona nie istnieje
             </v-card-subtitle>
             <v-card-text>
-              Coś poszło nie tak. Spróbuj ponownie później lub wróć na stronę główną.
+              Coś poszło nie tak. Podana ścieżka nie istnieje.
             </v-card-text>
             <v-btn color="primary" @click="$router.push('/')">
               Wróć na stronę główną
