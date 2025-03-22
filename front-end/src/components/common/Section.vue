@@ -14,6 +14,15 @@
 .section {
   @include section-width;
   margin: 1rem 5rem 2rem;
+  @media (max-width: 600px) {
+    margin: 1rem 0.5rem 2rem;
+  }
+  @media (min-width: 600px) and (max-width: 800px) {
+    margin: 1rem 3rem 2rem;
+  }
+  @media (min-width: 800px) and (max-width: 1200px) {
+    margin: 1rem 4rem 2rem;
+  }
   &__header {
     text-align: center;
     font-size: 1.5rem;

@@ -22,6 +22,11 @@ h1{
   font-size: 4rem;
   font-family: var(--v-fontFamily);
 }
+@media (max-width: 600px) {
+  h1{
+    font-size: 2rem;
+  }
+}
 *{
   border: none;
 }

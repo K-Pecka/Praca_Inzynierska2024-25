@@ -31,7 +31,7 @@ export const usePageHomeStore = defineStore("pagHome", () => {
   const getSiteName = () => import.meta.env.VITE_APP_SITE_NAME || "Plannder";
 
   const getFooterData = () => ({
-    links: navigationLinks.value,
+    links: defaultNavLinks,
     ...footerData(),
   });
 

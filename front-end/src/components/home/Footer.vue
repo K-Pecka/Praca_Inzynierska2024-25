@@ -19,7 +19,7 @@ const props = defineProps({
           </div>
 
           <div
-            class="footer__top__links"
+            class="footer__top__links "
             v-if="footerData.links && footerData.links.length > 0"
           >
             <ul>
@@ -64,19 +64,21 @@ const props = defineProps({
   padding: 3rem 0 1rem 0;
   background-color: rgb(var(--v-theme-secondary));
   font-family: var(--v-fontFamily);
+
   &__top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-
     &__logo {
       @include font-large;
       @include gradient-text;
       font-size: 2rem;
       display: flex;
       align-items: center;
-
+      @media (max-width: 600px) {
+        font-size: 1rem;
+      }
       img {
         width: 50px;
         height: 50px;
@@ -101,6 +103,9 @@ const props = defineProps({
       li {
         margin: 5px 0;
         @include font-regular;
+        @media (max-width: 600px) {
+        font-size: 0.75rem;
+      }
       }
 
       a {
@@ -120,6 +125,9 @@ const props = defineProps({
     flex-wrap: wrap;
     text-align: center;
     border-top: 1px solid #0000001c;
+    @media (max-width: 600px) {
+      font-size: 0.75rem;
+    }
     @media screen and (min-width: 768px) {
       flex-direction: column;
       &::after {
