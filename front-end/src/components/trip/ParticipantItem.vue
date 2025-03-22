@@ -3,23 +3,30 @@ import { Participant} from "@/type";
 
 const props = defineProps<Participant>();
 
-const emit = defineEmits(["openMenu"]);
+const emit = defineEmits(["remove"]);
 
-function handleMenuClick() {
-  emit("openMenu", props.id);
+function handleRemoveClick() {
+  emit("remove", props.id);
 }
 </script>
 
 <template>
   <div class="participant-item">
-    <div class="participant-info">
-      <strong class="participant-name">{{ props.name }}</strong>
-      <span class="participant-email">{{ props.email }}</span>
-      <span class="participant-role">{{ props.role }}</span>
+    <div class="participant-left">
+      <v-icon size="48">mdi-account-outline</v-icon>
+
+      <div class="participant-texts">
+        <strong class="participant-name">{{ props.name }}</strong>
+        <div class="email-row">
+          <v-icon size="18" color="#555">mdi-email-outline</v-icon>
+          <span class="participant-email">{{ props.email }}</span>
+        </div>
+      </div>
     </div>
-      <button class="menu-button" @click="handleMenuClick">
-        <v-icon size="32">mdi-dots-vertical</v-icon>
-      </button>
+
+    <button class="delete-button" @click="handleRemoveClick">
+      <v-icon size="24">mdi-trash-can-outline</v-icon>
+    </button>
   </div>
 </template>
 
@@ -28,28 +35,53 @@ function handleMenuClick() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: rgba(var(--v-theme-secondary), 0.8);
-  border-radius: 15px;
-  padding: 1rem 2rem;
-  width: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+
+  background-color: rgb(var(--v-theme-background));
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.participant-info {
+.participant-left {
   display: flex;
-  align-items: center;
-  gap: 15rem;
-  flex-grow: 1;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.participant-texts {
+  display: flex;
+  flex-direction: column;
 }
 
 .participant-name {
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
 }
 
-.menu-button {
+.email-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.participant-email {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.delete-button {
   background: transparent;
   border: none;
-  font-size: 1.5rem;
   cursor: pointer;
+  color: #e44a3e;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
 }
 </style>

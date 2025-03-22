@@ -6,8 +6,8 @@ const props = defineProps<{
   participants: Participant[];
 }>();
 
-function handleOpenMenu(participantId: string) {
-  console.log("openMenu w ParticipantList, userId:", participantId);
+function handleRemove(id: string) {
+  console.log("Usuwam uczestnika o id:", id);
 }
 </script>
 
@@ -16,11 +16,8 @@ function handleOpenMenu(participantId: string) {
     <ParticipantItem
         v-for="participant in participants"
         :key="participant.id"
-        :id="participant.id"
-        :name="participant.name"
-        :email="participant.email"
-        :role="participant.role"
-        @openMenu="handleOpenMenu"
+        v-bind="participant"
+        @remove="handleRemove"
     />
   </div>
 </template>

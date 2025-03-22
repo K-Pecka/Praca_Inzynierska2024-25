@@ -1,73 +1,89 @@
 <script setup lang="ts">
-import {ref, computed} from "vue";
+import {ref} from "vue";
 import {useRoute} from "vue-router";
 import {Section} from "@/components";
 import AppButton from "@/components/budget/AppButton.vue";
 import ParticipantList from "@/components/trip/ParticipantList.vue";
+import ParticipantsCounter from "@/components/trip/ParticipantsCounter.vue";
+import ParticipantAddForm from "@/components/trip/ParticipantAddForm.vue";
 import {Participant} from "@/type";
 import {useTripStore, useUtilStore} from "@/stores";
 
 const participants = ref<Participant[]>([
-  // {
-  //   id: "p1",
-  //   name: "Mateusz Wiśniewski",
-  //   email: "s24893@pjwstk.edu.pl",
-  //   role: "przeglądanie",
-  // },
-  // {
-  //   id: "p2",
-  //   name: "Mateusz Wiśniewski",
-  //   email: "s24893@pjwstk.edu.pl",
-  //   role: "przeglądanie",
-  // },
-  // {
-  //   id: "p3",
-  //   name: "Mateusz Wiśniewski",
-  //   email: "s24893@pjwstk.edu.pl",
-  //   role: "przeglądanie",
-  // },
+  {
+    id: "p1",
+    name: "Mateusz Wiśniewski",
+    email: "s24893@pjwstk.edu.pl",
+    role: "przeglądanie",
+  },
+  {
+    id: "p2",
+    name: "Andrzej Ebertowski",
+    email: "s25222@pjwstk.edu.pl",
+    role: "przeglądanie",
+  }
 ]);
 
 const maxParticipants = 5;
-const countLabel = computed(() => `${participants.value.length}/${maxParticipants}`);
 
-const inviteEmail = ref("");
+const inviteEmail = ref();
+
+const showForm = ref(false);
 
 function inviteParticipant() {
+  const {invateUserMutation} = useTripStore();
+  invateUserMutation.mutateAsync(inviteEmail.value);
   const {getTripId} =useUtilStore()
   useTripStore().invateUserMutation.mutateAsync({ userEmail: inviteEmail.value, param: { tripId: getTripId().value } });
 }
 
+function removeParticipantById(id: string) {
+  participants.value = participants.value.filter(p => p.id !== id);
+}
+const tripName = "Wakacje we Francji";
 const route = useRoute();
+
 </script>
 
 <template>
   <div class="page-container">
     <Section>
       <template #title>
-        <div class="top-bar">
-          <div class="invite-wrapper">
-            <div class="invite-container">
-              <input
-                  v-model="inviteEmail"
-                  class="invite-input"
-                  placeholder="Podaj email uczestnika"
-              />
-              <AppButton variant="primary" @click="inviteParticipant">
-                Zaproś
-              </AppButton>
-            </div>
-            <div class="count-label">
-              {{ countLabel }}
-            </div>
+        <div class="header-wrapper">
+          <div class="title-container">
+            <h1 class="trip-title">{{ tripName }}</h1>
+            <h2 class="second-title">Utwórz nowy plan</h2>
+          </div>
+          <div class="button-container">
+            <AppButton variant="primary" @click="showForm = !showForm">
+              Dodaj uczestnika
+            </AppButton>
           </div>
         </div>
       </template>
 
       <template #content>
-        <ParticipantList
-            :participants="participants"
+        <ParticipantsCounter
+            :current="participants.length"
+            :max="maxParticipants"
+            title="Uczestnicy"
         />
+
+        <ParticipantAddForm
+            v-if="showForm"
+            title="Dodaj uczestnika"
+            @cancel="showForm = false"
+            @submitForm="inviteParticipant"
+        />
+
+        <div class="participants-card">
+          <h3 class="card-title">Dodani uczestnicy</h3>
+
+          <ParticipantList
+              :participants="participants"
+              @remove="removeParticipantById"
+          />
+        </div>
       </template>
     </Section>
   </div>
@@ -77,41 +93,48 @@ const route = useRoute();
 .page-container {
   max-width: 88rem;
   margin: 0 auto;
-  padding-top: 0;
 }
 
-.top-bar {
+.header-wrapper {
   display: flex;
-  justify-content: center;
-  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.invite-wrapper {
+.title-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
 }
 
-.invite-container {
+.trip-title {
+  font-size: 2rem;
+  margin: 0;
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+.second-title {
+  font-size: 2rem;
+  margin: 0;
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+.button-container {
   display: flex;
   align-items: center;
-  width: 100%;
-  gap: 1rem;
 }
 
-.invite-input {
-  flex-grow: 1;
-  padding: 0.75rem 1rem;
-  border-radius: 20px;
-  background-color: rgb(var(--v-theme-background));
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  font-size: 1rem;
+.participants-card {
+  background-color: rgb(var(--v-theme-secondary), 0.5);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1rem;
 }
 
-.count-label {
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: left;
-  margin-top: 0.5rem;
+.card-title {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 </style>
