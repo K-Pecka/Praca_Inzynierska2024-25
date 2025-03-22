@@ -1,5 +1,5 @@
 export const defaultNavLinks = [
-    { label: "Oferta", href: "pricingSection", className: ["navbar__link--base"] },
+    { label: "Oferta", href: "pricing-section", className: ["navbar__link--base"] },
     { label: "O nas", href: "/", className: ["navbar__link--base"] },
     { label: "Kontakt", href: "/", className: ["navbar__link--base"] },
   ];

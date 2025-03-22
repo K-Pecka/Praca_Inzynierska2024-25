@@ -40,4 +40,7 @@ watch(
 .bg-app {
   background-color: rgba(var(--v-theme-background));
 }
+.v-app{
+  overflow: hidden;
+}
 </style>

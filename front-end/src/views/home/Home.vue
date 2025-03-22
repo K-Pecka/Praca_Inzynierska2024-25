@@ -53,14 +53,16 @@ const footerData = computed(() => useStore.getFooterData());
 }
 .wrapper {
   position: relative;
+  overflow-x: hidden;
 }
 main{
   min-height: 50vh;
 }
 .wrapper::after {
   content: "";
-  width: 45vw;
-  height: 45vw;
+  display: none;
+  width: 50%;
+  height: 50%;
   border-radius: 50%;
   background-color: rgb(var(--v-theme-secondary));
   position: absolute;

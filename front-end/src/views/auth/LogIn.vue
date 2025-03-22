@@ -9,9 +9,8 @@ const { getMoreOptions,initForm,sendForm, formValues } = useFormStore();
 const sectionTitle = getSectionTitle(FormType.LOGIN);
 const inputs = initForm(FormType.LOGIN);
 const moreOptions = getMoreOptions();
-
-const handleSubmit = async (_: any, config: any) => {
-  sendForm(_, config);
+const handleSubmit = async (formValue: any, config: any) => {
+  sendForm(formValue, config);
 };
 </script>
 

@@ -33,10 +33,12 @@ const { getHeroBannerText } = usePageHomeStore();
   @media (max-width: 600px) {
     transform: scale(0.5) translateX(100%);
     top: -3%;
+    display:none;
   }
   @media (min-width: 600px) and (max-width: 800px) {
     transform: scale(0.75) translateX(30%);
     top: -1%;
+    display:none;
   }
   @media (min-width: 800px) {
     transform: scale(1);

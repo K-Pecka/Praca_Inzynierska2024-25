@@ -63,12 +63,13 @@ export const useFormStore = defineStore("form", () => {
       return errors.length === 0;
     });
   };
-  const isSend = ref(false)
-  const sendForm =async (_: any, config: any)=>{
-    if (config?.send && isFormValid(FormType.LOGIN, formValues.value) && !isSend.value) {
+  const isSend = ref(false);
+  const sendForm =async (formValue: any, config: any)=>{
+    console.log(formValue);
+    if (config?.send && isFormValid(FormType.LOGIN, formValue) && !isSend.value) {
       isSend.value = true;
       try {
-        await loginMutation.mutateAsync(formValues.value).then((response) => isSend.value = false);
+        await loginMutation.mutateAsync(formValue).then(() => isSend.value = false);
       } catch (error) {
         console.log("ERROR");
       }

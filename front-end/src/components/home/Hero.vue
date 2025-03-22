@@ -14,7 +14,7 @@ const props = defineProps({
   <header class="hero">
     <v-container fluid class="full-width-container">
       <v-row>
-        <v-col cols="7" class="hero__text" ref="heroText">
+        <v-col cols="7" sm="12" class="hero__text" ref="heroText">
           <span v-for="(item, index) in phrases" :key="index" class="phrase">
             <TypewriterText
               v-if="item.animation"
@@ -28,7 +28,7 @@ const props = defineProps({
           </span>
         </v-col>
 
-        <v-col cols="5" class="hero__image" ref="heroImage" >
+        <v-col cols="5" class="hero__image d-sm-none" ref="heroImage" >
           <slot name="hero"></slot>
         </v-col>
       </v-row>

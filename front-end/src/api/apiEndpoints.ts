@@ -48,7 +48,7 @@ export const setParam = (url: string, params: Record<string, string>): string =>
 export const apiEndpoints = {
   auth: {
     login: `${hostName}/user_auth/login/`,
-    register: `${hostName}/user/`,
+    register: `${hostName}/user/create/`,
     refreshToken: `${hostName}/user_auth/token/refresh/`,
     verify: `${hostName}/user_auth/token/verify/`,
     profile: `${hostName}/user/profile/`
