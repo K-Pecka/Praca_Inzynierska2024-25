@@ -33,10 +33,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <v-app>
+  <div class="wrapper">
     <v-container fluid class="full-width-container">
-      <v-row style="height: 5rem; margin: 0">
-        <v-col>
+      <v-row>
+        <v-col cols="12">
           <PanelNavbar :account-icon="navbar.accountIcon"
                        :show-navigation="showNavigation"
                        @toggleMenu="toggleSideNav">
@@ -46,7 +46,7 @@ onUnmounted(() => {
           </PanelNavbar>
         </v-col>
       </v-row>
-      <v-row style="height: calc(100vh - 5rem); margin: 0; position: relative;">
+      <v-row style="min-height: calc(100vh - 5rem); margin: 0;">
         <v-col
             v-if="showNavigation && (!isMobile || sideNavOpen)"
             cols="12"
@@ -60,7 +60,6 @@ onUnmounted(() => {
         <v-col
             :cols="showNavigation ? (isMobile ? 12 : 9) : 12"
             :md="showNavigation ? 10 : 12"
-            class="full-height"
         >
           <main>
             <router-view/>
@@ -73,26 +72,25 @@ onUnmounted(() => {
         />
       </v-row>
     </v-container>
-  </v-app>
+  </div>
 </template>
 
 <style lang="scss" scoped>
+.wrapper {
+  position: relative;
+  overflow-x: hidden;
+}
 * {
   transition: all 0.3s ease;
 }
-
+@media (max-width: 600px) {
+  h1{
+    font-size: 2rem;
+  }
+}
 .side-nav-col {
   padding: 0;
 
-}
-
-.full-height {
-  height: 100%;
-  overflow: auto;
-}
-
-main {
-  height: 100%;
 }
 
 .mobile-overlay {

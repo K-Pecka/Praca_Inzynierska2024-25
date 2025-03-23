@@ -4,47 +4,54 @@
 :root{
   font-size: 16px;
 }
+
 * {
   box-sizing: border-box;
   padding: 0;
+  border: none;
 }
+
 h2{
   font-weight: 700;
   font-size: 4rem;
   font-family: var(--v-fontFamily);
 }
+
 h3{
   font-weight: 700;
   font-size: 3rem;
   font-family: var(--v-fontFamily);
 }
+
 h1{
   font-size: 4rem;
   font-family: var(--v-fontFamily);
 }
+
 @media (max-width: 600px) {
   h1{
     font-size: 2rem;
   }
 }
-*{
-  border: none;
-}
+
 @mixin font-large {
   font-size: 4rem;
   font-weight: bold;
   font-family: var(--v-fontFamily);
   color: rgb(var(--v-theme-text));
 }
+
 @mixin font-regular {
   font-size: 1rem;
   font-weight: bold;
   font-family: var(--v-fontFamily);
   color: rgb(var(--v-theme-text));
 }
+
 @mixin section-width {
   margin: auto;
 }
+
 @mixin gradient-text {
   background-image: var(--v-gradientText);
   color: transparent;
@@ -55,37 +62,47 @@ h1{
 .gradient-text{
   @include gradient-text;
 }
+
 .col{
   padding: 0;
 }
+
 @mixin navbar-col($nr) {
   width: calc(100vw / 12 * #{$nr});
 }
+
 @for $nr from 1 through 12 {
   .navbar-col-#{$nr} {
     @include navbar-col($nr);
   }
 }
+
 .v-container {
   width: 100%;
   padding: 0;
 }
+
 .v-row{
   margin: 0;
 }
+
 .sticky-top {
   position: sticky;
   z-index: 10;
 }
+
 .fixed-center {
   top: 0;
 }
+
 .v-col{
   padding: 0;
 }
+
 input{
   background-color: rgb(var(--v-theme-background));
 }
+
 a{
   text-decoration: none;
 }

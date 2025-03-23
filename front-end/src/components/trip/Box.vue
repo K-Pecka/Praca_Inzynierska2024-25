@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import { DashboardBox } from "@/type/interface";
+import { BudgetData, DashboardBox } from "@/type/interface";
 
 
 const props = defineProps<DashboardBox>();
@@ -79,6 +79,26 @@ const getGridRows = () => {
           </v-list-item>
         </v-list>
       </template>
+
+      <template v-if="typeof props.content === 'object' && props.content !== null">
+        <div class="amount my-2">
+          <span class="text-h5 font-weight-bold">{{ (props.content as BudgetData).amount }} {{ (props.content as BudgetData).currency }}</span>
+        </div>
+
+        <v-progress-linear
+          :model-value="(props.content as BudgetData).expenses / (props.content as BudgetData).convertedAmount * 100"
+          height="6"
+          rounded
+          color="green"
+          background-color="grey-lighten-3"
+        ></v-progress-linear>
+
+        <v-row justify="space-between" class="mt-1">
+          <span class="text-green font-weight-medium">{{ (props.content as BudgetData).convertedAmount }} {{ (props.content as BudgetData).convertedCurrency }}</span>
+          <span class="text-grey-darken-1">{{ ((props.content as BudgetData).expenses / (props.content as BudgetData).convertedAmount * 100).toFixed(2) }}%</span>
+        </v-row>
+      </template>
+
       <template v-else>
         {{ props.content }}
       </template>
@@ -87,6 +107,14 @@ const getGridRows = () => {
 </template>
 
 <style scoped lang="scss">
+.budget-card {
+  background-color: #f5f4ff;
+  border-radius: 12px;
+}
+.text-green {
+  color: #4caf50;
+}
+
 .v-card {
   transition: transform 0.2s, box-shadow 0.2s;
   background-color: rgb(var(--v-theme-secondary), 50%);

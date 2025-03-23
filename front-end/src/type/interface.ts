@@ -30,7 +30,7 @@ export interface Register{
 export interface DashboardBox {
   title: string;
   icon?:string,
-  content: string | string[];
+  content: string | string[] | BudgetData;
   set: {
     size: {
       sm?: { col: number; row: number };
@@ -166,4 +166,21 @@ export interface PricingCard {
 export interface InvateUser{
   id:string,
   email:string,
+}
+
+export interface Expense {
+  title: string;
+  date: string;
+  type: string;
+  note: string;
+  amount: number;
+  currency: string;
+}
+
+export interface BudgetData {
+  amount: number;
+  currency: string;
+  convertedAmount: number;
+  convertedCurrency: string;
+  expenses: number;
 }

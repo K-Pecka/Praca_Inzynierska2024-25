@@ -71,9 +71,19 @@ const props = defineProps({
   justify-content: space-around;
   align-items: center;
 }
+@media (min-width: 600px) {
+  .v-btn {
+  font-size: 0.55rem;
+  }
+  .v-card-subtitle {
+    font-size: 0.75rem;
+  }
+}
 .v-btn {
+  margin:auto;
   margin-top: 0.6rem;
   min-width: 100%;
+  
 }
 .detail{
   width: 90%;

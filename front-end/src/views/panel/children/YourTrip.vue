@@ -14,10 +14,10 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
         <Section>
           <template #title>
             <div class="d-flex justify-between align-center justify-space-between">
-              <h1>Zarządzaj wycieczkami</h1>
+              <h1 class="mr-1">Zarządzaj wycieczkami</h1>
               <router-link :to="{name: 'TripForm'}">
                  <v-btn  outlined class="text-primary p-5">
-                  Dodaj wycieczkę
+                  Dodaj
                 </v-btn>
                 <!--BaseButton variant="secondary" size="small">Dodaj wycieczkę</!--BaseButton-->
               </router-link>
@@ -55,6 +55,9 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
 h1 {
   font-size: 2.25rem;
   text-align: left;
+  @media (max-width: 600px) {
+        font-size: 1.5rem;
+      }
 }
 .v-btn{
   font-weight: bold;

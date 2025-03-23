@@ -22,6 +22,7 @@ const getRoleSelection = pagePanelStore.getRoleSelection;
 </template>
 
 <style scoped lang="scss">
+
 .role-selection {
   display: flex;
   flex-direction: column;
@@ -48,6 +49,7 @@ const getRoleSelection = pagePanelStore.getRoleSelection;
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 7rem;
+    margin-bottom: 2rem;
   }
 
   @media (max-width: 800px) {

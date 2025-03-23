@@ -48,7 +48,7 @@ const getDashboard = (id: string) => {
   const tripTime = computed(
     () => `${tripRaw.value?.start_date ?? "..."} - ${tripRaw.value?.end_date ?? "..."}`
   );
-  const budget = computed(() => `${tripRaw.value?.budget?.amount ?? "..."} PLN`);
+  const budget = computed(() => `${tripRaw.value?.budget?.amount ?? "..."}`);
   const participantCount = computed(
     () => `${tripRaw.value?.members?.length ?? "..."} Uczestników`
   );
@@ -71,13 +71,19 @@ const getDashboard = (id: string) => {
     {
       title: "Budżet",
       icon:"mdi-currency-usd",
-      content: budget.value,
+      content: {
+        expenses:200,
+        amount: Number(budget.value),
+        currency: "PLN",
+        convertedAmount: Number(budget.value) * 0.24,
+        convertedCurrency: "EUR",
+      },
       set: {
         order: 2,
         size: {
           sm: { col: 12, row: 1 },
           md: { col: 6, row: 1 },
-          lg: { col: 3, row: 1 },
+          lg: { col: 4, row: 1 },
         },
       },
     },
@@ -90,7 +96,7 @@ const getDashboard = (id: string) => {
         size: {
           sm: { col: 12, row: 1 },
           md: { col: 6, row: 1 },
-          lg: { col: 3, row: 1 },
+          lg: { col: 2, row: 1 },
         },
       },
     },
@@ -106,33 +112,7 @@ const getDashboard = (id: string) => {
           lg: { col: 3, row: 1 },
         },
       },
-    },
-    {
-      title: "Nadchodzące aktywności",
-      icon:"mdi-timer-refresh-outline",
-      content: upcomingActivities.value,
-      set: {
-        order: 5,
-        size: {
-          sm: { col: 12, row: 2 },
-          md: { col: 6, row: 2 },
-          lg: { col: 6, row: 2 },
-        },
-      },
-    },
-    {
-      title: "Ważne informacje",
-      icon:"mdi-information-outline",
-      content: upcomingActivities.value,
-      set: {
-        order: 5,
-        size: {
-          sm: { col: 12, row: 2 },
-          md: { col: 6, row: 2 },
-          lg: { col: 6, row: 2 },
-        },
-      },
-    },
+    }
   ]);
   return { boxes, isLoading, error };
 };
