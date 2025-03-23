@@ -58,6 +58,7 @@ const props = defineProps({
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: center;
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
     transition: transform 0.3s ease;
     padding: 2rem 0;
