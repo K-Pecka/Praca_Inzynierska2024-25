@@ -67,6 +67,7 @@ const expenseItem: Expense[] = [
     <Section>
       <template #title>
         <h1>Wakacje we Francji</h1>
+        
       </template>
 
       <template #content>

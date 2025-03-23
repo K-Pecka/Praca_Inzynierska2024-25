@@ -76,4 +76,21 @@ button {
 .v-card-text {
   margin-top: 1.5rem;
 }
+@media (max-width: 600px) {
+.v-card-actions {
+  flex-direction: column;
+}
+.v-btn {
+  width: 100%;
+}
+}
+@media (min-width: 600px) {
+  .v-card-actions {
+  flex-direction: row;
+}
+  .v-btn {
+  font-size: 0.5rem;
+  width: 50%;
+}
+}
 </style>

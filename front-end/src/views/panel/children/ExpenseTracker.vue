@@ -111,7 +111,9 @@ h3 {
   justify-content: space-between;
   margin-bottom: 20px;
 }
-
+.expense-list {
+  margin-top: 2rem;
+}
 .summary-card {
   background-color: #f3f3ff;
   padding: 16px;
@@ -125,7 +127,7 @@ h3 {
   color: #333;
 }
 .spent {
-  font-size: 18px;
+  font-size: 1.125rem;
   color: #4a90e2;
   font-weight: bold;
 }
@@ -137,6 +139,7 @@ h3 {
 .expenses {
   background-color: #ede9fe;
   padding: 20px;
+  margin-top: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -173,5 +176,22 @@ h3 {
 }
 .filter-item :deep(.v-input__control){
   border-radius: 0.5rem;
+}
+@media (min-width: 600px) {
+  .summary {
+    gap: 1rem;
+  }
+  h3{
+    font-size: 1.2rem;
+  }
+  .spent{
+    font-size: 1rem;
+  }
+  .amount,.remaining{
+    font-size: 1.7rem;
+  }
+  .v-field__input,input{
+    font-size: 1rem;
+  }
 }
 </style>

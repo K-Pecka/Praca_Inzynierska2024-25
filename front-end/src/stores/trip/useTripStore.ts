@@ -41,6 +41,7 @@ export const useTripStore = defineStore("trip", () => {
     return useQuery({
       queryKey: ["trip", id],
       queryFn: () => fetchTrip({ tripId: id }),
+      //keepPreviousData: true,
     });
   };
 const getDashboard = (id: string) => {
