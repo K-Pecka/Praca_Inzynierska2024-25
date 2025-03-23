@@ -40,17 +40,13 @@ const props = defineProps({
 </template>
 <style scoped lang="scss">
 @use "@/assets/style" as *;
-.v-container{
-  height: 80vh;
-}
 .hero {
   padding: 1rem 0;
-  height: 100%;
-  margin-bottom: 50vh;
-  @include font-large;
-  .v-row{
-    height: 100%;
+  margin-bottom: 10rem;
+  @media (max-width: 600px) {
+    margin-bottom: 5rem;
   }
+  @include font-large;
   &__text {
     font-weight: 600;
     text-transform: uppercase;
