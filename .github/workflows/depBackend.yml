@@ -27,7 +27,5 @@ jobs:
         env:
           HEROKU_API_KEY: HRKU-30b9dda9-e3de-445f-bbe5-09b15f48ca24
         run: |
-          python manage.py makemigrations
-          python manage.py migrate
           heroku run python manage.py makemigrations --app backend-plannder
           heroku run python manage.py migrate --app backend-plannder
