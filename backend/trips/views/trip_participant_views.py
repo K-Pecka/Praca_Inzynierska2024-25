@@ -98,23 +98,26 @@ class InviteUserAPIView(APIView):
         token = TripAccessToken.generate_token()
         try:
             user_profile = user.get_default_profile()
+
+            token_instance, created = TripAccessToken.objects.get_or_create(
+                trip=trip,
+                user_profile=user_profile,
+                defaults={'token': token}
+            )
+
+            query_params = urlencode({'token': token})
+            invitation_link = f"{settings.API_URL}{reverse('trip_join')}?{query_params}"
+
+            if not created:
+                token_instance.token = token
+                token_instance.save()
+
+            return invitation_link
+
         except UserProfile.DoesNotExist:
             raise Exception('Nie znaleziono profilu użytkownika')
-
-        token_instance, created = TripAccessToken.objects.get_or_create(
-            trip=trip,
-            user_profile=user_profile,
-            defaults={'token': token}
-        )
-
-        query_params = urlencode({'token': token})
-        invitation_link = f"{settings.API_URL}{reverse('trip_join')}?{query_params}"
-
-        if not created:
-            token_instance.token = token
-            token_instance.save()
-
-        return invitation_link
+        except Exception as e:
+            raise ValueError(f"Błąd generowania linku: {str(e)}")
 
     def send_trip_invitation_email(self, data, invitation_link, trip):
         subject = 'Zaproszenie do wycieczki Plannder'
