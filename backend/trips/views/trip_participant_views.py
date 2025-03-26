@@ -64,8 +64,6 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
     }
 )
 class InviteUserAPIView(APIView):
-    permission_classes = [AllowAny]
-
     def post(self, request, trip_id):
         serializer = InvitationSerializer(data=request.data)
 
