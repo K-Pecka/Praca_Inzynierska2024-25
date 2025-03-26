@@ -71,32 +71,45 @@ class InviteUserAPIView(APIView):
             return Response({"error": "Niepoprawne dane zaproszenia."}, status=status.HTTP_400_BAD_REQUEST)
 
         data = serializer.validated_data
-        user = data.get('user')
-        is_guest = data.get('is_guest')
-
-        if is_guest:
-            user = CustomUser.create_guest_account(data['name'], data['email'])
-
         try:
+            if data.get('is_guest'):
+                try:
+                    user = CustomUser.create_guest_account(data['name'], data['email'])
+                except ValueError as e:
+                    # Handle case where email already exists
+                    return Response(
+                        {"error": str(e)},  # This will show "Użytkownik z tym adresem email już istnieje."
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            else:
+                user = data.get('user')
+                if not user:
+                    return Response(
+                        {"error": "User is required when not a guest"},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
             trip = Trip.objects.get(id=trip_id)
-        except Trip.DoesNotExist:
-            return Response({"error": "Wycieczka nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
-
-        try:
             invitation_link = self.create_invitation_link(request, trip, user)
-        except Exception as e:
-            return Response({"error": f"Error generating invitation link: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        try:
             self.send_trip_invitation_email(data, invitation_link, trip)
-        except Exception as e:
-            return Response({"error": f"Error sending email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response({"message": "Zaproszenie wysłane!"}, status=status.HTTP_200_OK)
+            return Response(
+                {"message": "Zaproszenie wysłane!", "invitation_link": invitation_link},
+                status=status.HTTP_200_OK
+            )
 
+        except Trip.DoesNotExist:
+            return Response(
+                {"error": "Wycieczka nie istnieje."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception:
+            return Response(
+                {"error": "Wystąpił błąd podczas przetwarzania zaproszenia"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
-
-    def create_invitation_link(self, request, trip, user):
+    def create_invitation_link(self, trip, user):
         token = TripAccessToken.generate_token()
         try:
             user_profile = user.get_default_profile()
