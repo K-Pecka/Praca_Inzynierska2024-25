@@ -11,7 +11,7 @@ from trips.views.trip_views import TripCreateAPIView, TripRetrieveAPIView, TripL
 
 urlpatterns = [
     # Trip URLs
-    path('create/', TripCreateAPIView.as_view(), name='trip-create'),
+    # path('create/', TripCreateAPIView.as_view(), name='trip-create'),
     path('<int:pk>/', TripRetrieveAPIView.as_view(), name='trip-retrieve'),
     path('all/', TripListAPIView.as_view(), name='trip-list'),
     path('<int:pk>/update/', TripUpdateAPIView.as_view(), name='trip-update'),
