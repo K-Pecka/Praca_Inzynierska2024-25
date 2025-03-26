@@ -76,9 +76,8 @@ class InviteUserAPIView(APIView):
                 try:
                     user = CustomUser.create_guest_account(data['name'], data['email'])
                 except ValueError as e:
-                    # Handle case where email already exists
                     return Response(
-                        {"error": str(e)},  # This will show "Użytkownik z tym adresem email już istnieje."
+                        {"error": str(e)},
                         status=status.HTTP_400_BAD_REQUEST
                     )
             else:
@@ -90,7 +89,7 @@ class InviteUserAPIView(APIView):
                     )
 
             trip = Trip.objects.get(id=trip_id)
-            invitation_link = self.create_invitation_link(request, trip, user)
+            invitation_link = self.create_invitation_link(trip, user)
             self.send_trip_invitation_email(data, invitation_link, trip)
 
             return Response(
