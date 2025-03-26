@@ -11,15 +11,22 @@ API_URL = 'https://api.plannder.com'
 
 # API access settings
 
-CORS_ALLOWED_ORIGINS = [
-    'https://plannder.com',
-    'https://api.plannder.com',
-]
-
 ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
     'plannder.com',
     'api.plannder.com',
     'www.plannder.com',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://localhost.com",
+    "http://localhost:5173",
+    "http://localhost:8080",
+    "http://127.0.0.1:9000",
+    "https://127.0.0.1:8000",
+    'https://plannder.com',
+    'https://api.plannder.com',
 ]
 
 # Database config
