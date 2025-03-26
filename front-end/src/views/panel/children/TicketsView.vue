@@ -20,7 +20,7 @@ function handleAddTicket(newTicketData: {
   const {file, ...ticketData} = newTicketData;
   const {createTicket} = useTicketStore();
   createTicket(file,ticketData);
-  //ticketStore.addTicket(newTicketData);
+  ticketStore.addTicket(newTicketData);
   showForm.value = false;
 }
 </script>

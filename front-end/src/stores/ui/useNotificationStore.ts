@@ -4,7 +4,7 @@ import { ref, computed } from "vue";
 export const useNotificationStore = defineStore("notification", () => {
   const errorCurrentMessage = ref("");
   const successCurrentMessage = ref("");
-
+  let messageTimeout: ReturnType<typeof setTimeout> | null = null;
   const messages = {
     success: {
       login: "Zalogowano pomyślnie",
@@ -25,11 +25,21 @@ export const useNotificationStore = defineStore("notification", () => {
   const logOutSuccessMessage = computed(() => messages.success.logOut);
 
   const setErrorCurrentMessage = (error: string) => {
+    if (messageTimeout) return;
     errorCurrentMessage.value = error;
+    messageTimeout = setTimeout(() => {
+      errorCurrentMessage.value = "";
+      messageTimeout = null;
+    }, 500);
   };
 
   const setSuccessCurrentMessage = (success: string) => {
+    if (messageTimeout) return;
     successCurrentMessage.value = success;
+    messageTimeout = setTimeout(() => {
+      successCurrentMessage.value = "";
+      messageTimeout = null;
+    }, 500);
   };
   const getErrorMessages = (customErrors: Record<string, string> = {}) => ({
     unknown: "Nieznany błąd",

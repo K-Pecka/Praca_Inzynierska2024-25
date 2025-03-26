@@ -9,11 +9,17 @@ export const standardHeaders = () => {
     Authorization: `Bearer ${getToken()?.access}`,
   };
 };
+let notificationTimeout: ReturnType<typeof setTimeout> | null = null;
 export const fetchData = async <T = unknown>(
   url: string,
   options: RequestInit = { body: undefined },
   method: "GET" | "POST" | "DELETE" | "PATCH" | "PUT" = "GET"
 ): Promise<{ data?: T; error?: string }> => {
+  if(notificationTimeout) 
+    return {error:"Jestem w trakcie wykonania\n poprzedniego zapytania..."};
+  notificationTimeout = setTimeout(() => {
+    notificationTimeout = null;
+  }, 3000);
   try {
     const response = await fetch(url, {
       method: method,
@@ -51,7 +57,8 @@ export const apiEndpoints = {
     register: `${hostName}/user/create/`,
     refreshToken: `${hostName}/user_auth/token/refresh/`,
     verify: `${hostName}/user_auth/token/verify/`,
-    profile: `${hostName}/user/profile/`
+    profile: `${hostName}/user/profile/`,
+    logout: `${hostName}/user_auth/logout/`,
   },
   trip: {
     all: `${hostName}/trip/all/`,

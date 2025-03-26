@@ -9,6 +9,7 @@ import {
   registerFetch,
   fetchRefreshToken,
   fetchVerify,
+  fetchLogOut,
 } from "@/api/auth";
 
 export const useAuthStore = defineStore(
@@ -21,7 +22,7 @@ export const useAuthStore = defineStore(
       logOutSuccess,
       unexpectedError,
     } = useNotificationStore();
-    
+
     const token = ref<TOKEN | null>(null);
     const validToken = async (): Promise<boolean> => {
       if (token.value) {
@@ -66,9 +67,7 @@ export const useAuthStore = defineStore(
       return token.value;
     };
     const logout = () => {
-      token.value = null;
-      setSuccessCurrentMessage(logOutSuccess());
-      router.push({ name: "landing" });
+      logOutMutation.mutateAsync();
     };
     const isLogin = async () => {
       if (!!token) {
@@ -76,6 +75,17 @@ export const useAuthStore = defineStore(
       }
       return false;
     };
+    const logOutMutation = useMutation({
+      mutationFn: fetchLogOut,
+      onSuccess: () => {
+        setSuccessCurrentMessage(logOutSuccess());
+        token.value = null;
+        router.push({ name: "landing" });
+      },
+      onError: (err) => {
+        setErrorCurrentMessage(err.message);
+      },
+    });
     const loginMutation = useMutation({
       mutationFn: loginFetch,
       onSuccess: (data: TOKEN) => {
