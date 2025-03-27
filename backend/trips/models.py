@@ -96,9 +96,8 @@ class TripAccessToken(BaseModel):
     objects = TripAccessTokenManager()
 
     @classmethod
-    def generate_token(self):
-        random_bytes = secrets.token_bytes(32)
-        return base64.b64encode(random_bytes).decode('utf-8')
+    def generate_token(cls):
+        return secrets.token_urlsafe(18)[:24]
 
     def generate_new_token(self):
         self.token = self.generate_token()

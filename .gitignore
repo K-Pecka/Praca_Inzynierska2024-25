@@ -29,6 +29,7 @@ backend/.venv
 .venv
 .env.*
 .venv/bin
+backend/.env
 
 # python
 */__pycache__
@@ -40,9 +41,6 @@ backend/.venv
 */*/*/*/__pycache__
 */*/*/*/__pycache__/*
 db.sqlite3
-*/migrations/*
-*/*/migrations/*
-!*/migrations/__init__.py
 tickets/
 
 # db

@@ -10,7 +10,7 @@ from django.conf import settings
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from rest_framework import status
-from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -37,18 +37,25 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         return get_object_or_404(Trip, id=self.kwargs['pk'])
 
     def update(self, request, *args, **kwargs):
-        trip = self.get_object()
-        action = self.request.query_params.get('action', None)
-        profile_id = kwargs.get('profile_pk')
-        user_profile = get_object_or_404(UserProfile, id=profile_id)
+        try:
+            trip = self.get_object()
+            action = self.request.query_params.get('action', None)
+            profile_id = kwargs.get('profile_pk')
+            user_profile = get_object_or_404(UserProfile, id=profile_id)
 
-        if not self.validate_action(action):
-            return Response({"detail": "Niepoprawna akcja, dostępne opcje to 'add' lub 'remove'."}, status=400)
+            if not self.validate_action(action):
+                return Response({"detail": "Niepoprawna akcja, dostępne opcje to 'add' lub 'remove'."}, status=400)
 
-        if action == 'add':
-            return Trip.add_member(trip, user_profile)
-        elif action == 'remove':
-            return Trip.remove_member(trip, user_profile)
+            if action == 'add':
+                return Trip.add_member(trip, user_profile)
+            elif action == 'remove':
+                return Trip.remove_member(trip, user_profile)
+        except Trip.DoesNotExist:
+            return Response({"error": "Wycieczka nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
+        except UserProfile.DoesNotExist:
+            return Response({"error": "Profil użytkownika nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": f"Wystąpił błąd: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def validate_action(self, action):
         return action in ['add', 'remove']
@@ -63,60 +70,81 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         500: OpenApiResponse(description="Server error while sending invitation email.")
     }
 )
-class InviteUserAPIView(APIView):
-    permission_classes = [AllowAny]
+class InviteUserAPIView(CreateAPIView):
+    serializer_class = InvitationSerializer
 
-    def post(self, request, trip_id):
-        serializer = InvitationSerializer(data=request.data)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({"error": "Niepoprawne dane zaproszenia."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if serializer.is_valid():
-            data = serializer.validated_data
-            user = data.get('user')
-            is_guest = data.get('is_guest')
+        data = serializer.validated_data
+        try:
+            if data.get('is_guest'):
+                try:
+                    user = CustomUser.create_guest_account(data['name'], data['email'])
+                except ValueError as e:
+                    return Response(
+                        {"error": str(e)},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            else:
+                user = data.get('user')
+                if not user:
+                    return Response(
+                        {"error": "User is required when not a guest"},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
 
-            if is_guest:
-                user = CustomUser.create_guest_account(data['name'], data['email'])
+            trip = Trip.objects.get(id=kwargs['trip_id'])
+            invitation_link = self.create_invitation_link(trip, user)
+            self.send_trip_invitation_email(data, invitation_link, trip)
 
-            try:
-                trip = Trip.objects.get(id=trip_id)
-            except Trip.DoesNotExist:
-                return Response({"error": "Wycieczka nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"message": "Zaproszenie wysłane!", "invitation_link": invitation_link},
+                status=status.HTTP_200_OK
+            )
 
-            try:
-                invitation_link = self.create_invitation_link(request, trip, user)
-            except Exception as e:
-                return Response({"error": f"Error generating invitation link: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Trip.DoesNotExist:
+            return Response(
+                {"error": "Wycieczka nie istnieje."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except CustomUser.DoesNotExist:
+            return Response(
+                {"error": "Użytkownik nie istnieje."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Wystąpił błąd podczas przetwarzania zaproszenia: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
-            try:
-                self.send_trip_invitation_email(data, invitation_link, trip)
-            except Exception as e:
-                return Response({"error": f"Error sending email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-            return Response({"message": "Zaproszenie wysłane!"}, status=status.HTTP_200_OK)
-
-        return Response({"error": "Niepoprawne dane zaproszenia."}, status=status.HTTP_400_BAD_REQUEST)
-
-    def create_invitation_link(self, request, trip, user):
+    def create_invitation_link(self, trip, user):
         token = TripAccessToken.generate_token()
         try:
             user_profile = user.get_default_profile()
+
+            token_instance, created = TripAccessToken.objects.get_or_create(
+                trip=trip,
+                user_profile=user_profile,
+                defaults={'token': token}
+            )
+
+            query_params = urlencode({'token': token})
+            invitation_link = f"{settings.API_URL}{reverse('trip_join')}?{query_params}"
+
+            if not created:
+                token_instance.token = token
+                token_instance.save()
+
+            return invitation_link
+
         except UserProfile.DoesNotExist:
             raise Exception('Nie znaleziono profilu użytkownika')
-
-        token_instance, created = TripAccessToken.objects.get_or_create(
-            trip=trip,
-            user_profile=user_profile,
-            defaults={'token': token}
-        )
-
-        query_params = urlencode({'token': token})
-        invitation_link = f"{settings.API_URL}{reverse('trip_join')}?{query_params}"
-
-        if not created:
-            token_instance.token = token
-            token_instance.save()
-
-        return invitation_link
+        except Exception as e:
+            raise ValueError(f"Błąd generowania linku: {str(e)}")
 
     def send_trip_invitation_email(self, data, invitation_link, trip):
         subject = 'Zaproszenie do wycieczki Plannder'
@@ -137,7 +165,7 @@ class InviteUserAPIView(APIView):
                 html_message=html_message,
             )
         except Exception as e:
-            raise Exception(f"Failed to send email: {str(e)}")
+            raise Exception(f"Nie udało się wysłać e-maila: {str(e)}")
 
 
 
@@ -152,10 +180,10 @@ class InviteUserAPIView(APIView):
         500: OpenApiResponse(description="Nie udało się zalogować.")
     }
 )
-class JoinTripAPIView(APIView):
+class JoinTripAPIView(RetrieveAPIView):
     permission_classes = [AllowAny]
 
-    def get(self, request):
+    def retrieve(self, request, *args, **kwargs):
         token = request.GET.get('token')
 
         if not token:

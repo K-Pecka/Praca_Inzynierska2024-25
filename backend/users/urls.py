@@ -12,6 +12,6 @@ urlpatterns = [
 
     # User registration process
     path('create/', UserCreateAPIView.as_view(), name='user-register'),
-    path('confirm-email/<uidb64>/<token>/', ConfirmEmailView.as_view(), name='confirm_email'),
-    path('check/<user_pk>/permission/<perm_code>/action/<perm_action>/', CheckAccessView.as_view(), name='check-permission'),
+    path('confirm-email/<str:uidb64>/<str:token>/', ConfirmEmailView.as_view(), name='confirm_email'),
+    path('check/<int:user_pk>/permission/<str:perm_code>/action/<str:perm_action>/', CheckAccessView.as_view(), name='check-permission'),
 ]

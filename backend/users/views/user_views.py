@@ -5,8 +5,9 @@ from django.shortcuts import render
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import CreateAPIView, UpdateAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -17,7 +18,7 @@ from users.models import CustomUser, UserPermission
 
 
 class UserCreateAPIView(CreateAPIView):
-    permission_classes = []
+    permission_classes = [AllowAny]
     serializer_class = UserCreateSerializer
 
 
@@ -49,6 +50,8 @@ class ConfirmEmailView(APIView):
     """
     View to confirm the user's email address via the provided uidb64 and token.
     """
+    permission_classes = [AllowAny,]
+
     def get(self, request, uidb64, token):
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
@@ -59,9 +62,9 @@ class ConfirmEmailView(APIView):
         if user and default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
-            return render(request, 'registration/confirmation_success.html')
+            return Response({"message": "Email confirmed successfully!"}, status=200)
         else:
-            return render(request, 'registration/confirmation_failed.html')
+            return Response({"message": "Email confirmation failed!"}, status=400)
 
 
 @extend_schema(

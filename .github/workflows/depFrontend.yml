@@ -1,0 +1,22 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'front-end/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Deploy to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          git remote add heroku "https://heroku:${HEROKU_API_KEY}@git.heroku.com/frontend-plannder.git"
+          git push heroku `git subtree split --prefix front-end main`:main --force
