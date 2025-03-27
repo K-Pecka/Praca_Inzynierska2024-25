@@ -10,7 +10,7 @@ from django.conf import settings
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from rest_framework import status
-from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -37,18 +37,25 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         return get_object_or_404(Trip, id=self.kwargs['pk'])
 
     def update(self, request, *args, **kwargs):
-        trip = self.get_object()
-        action = self.request.query_params.get('action', None)
-        profile_id = kwargs.get('profile_pk')
-        user_profile = get_object_or_404(UserProfile, id=profile_id)
+        try:
+            trip = self.get_object()
+            action = self.request.query_params.get('action', None)
+            profile_id = kwargs.get('profile_pk')
+            user_profile = get_object_or_404(UserProfile, id=profile_id)
 
-        if not self.validate_action(action):
-            return Response({"detail": "Niepoprawna akcja, dostępne opcje to 'add' lub 'remove'."}, status=400)
+            if not self.validate_action(action):
+                return Response({"detail": "Niepoprawna akcja, dostępne opcje to 'add' lub 'remove'."}, status=400)
 
-        if action == 'add':
-            return Trip.add_member(trip, user_profile)
-        elif action == 'remove':
-            return Trip.remove_member(trip, user_profile)
+            if action == 'add':
+                return Trip.add_member(trip, user_profile)
+            elif action == 'remove':
+                return Trip.remove_member(trip, user_profile)
+        except Trip.DoesNotExist:
+            return Response({"error": "Wycieczka nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
+        except UserProfile.DoesNotExist:
+            return Response({"error": "Profil użytkownika nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": f"Wystąpił błąd: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def validate_action(self, action):
         return action in ['add', 'remove']
@@ -63,10 +70,11 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         500: OpenApiResponse(description="Server error while sending invitation email.")
     }
 )
-class InviteUserAPIView(APIView):
-    def post(self, request, trip_id):
-        serializer = InvitationSerializer(data=request.data)
+class InviteUserAPIView(CreateAPIView):
+    serializer_class = InvitationSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response({"error": "Niepoprawne dane zaproszenia."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -88,7 +96,7 @@ class InviteUserAPIView(APIView):
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
-            trip = Trip.objects.get(id=trip_id)
+            trip = Trip.objects.get(id=kwargs['trip_id'])
             invitation_link = self.create_invitation_link(trip, user)
             self.send_trip_invitation_email(data, invitation_link, trip)
 
@@ -102,9 +110,14 @@ class InviteUserAPIView(APIView):
                 {"error": "Wycieczka nie istnieje."},
                 status=status.HTTP_404_NOT_FOUND
             )
-        except Exception:
+        except CustomUser.DoesNotExist:
             return Response(
-                {"error": "Wystąpił błąd podczas przetwarzania zaproszenia"},
+                {"error": "Użytkownik nie istnieje."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Wystąpił błąd podczas przetwarzania zaproszenia: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -152,7 +165,7 @@ class InviteUserAPIView(APIView):
                 html_message=html_message,
             )
         except Exception as e:
-            raise Exception(f"Failed to send email: {str(e)}")
+            raise Exception(f"Nie udało się wysłać e-maila: {str(e)}")
 
 
 
@@ -167,10 +180,10 @@ class InviteUserAPIView(APIView):
         500: OpenApiResponse(description="Nie udało się zalogować.")
     }
 )
-class JoinTripAPIView(APIView):
+class JoinTripAPIView(RetrieveAPIView):
     permission_classes = [AllowAny]
 
-    def get(self, request):
+    def retrieve(self, request, *args, **kwargs):
         token = request.GET.get('token')
 
         if not token:
