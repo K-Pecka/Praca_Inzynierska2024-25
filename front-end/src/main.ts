@@ -10,7 +10,6 @@ import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 import "@mdi/font/css/materialdesignicons.css";
 import piniaPersist from "pinia-plugin-persistedstate";
 const app = createApp(App);
-
 const queryClient = new QueryClient({});
 
 const pinia = createPinia();

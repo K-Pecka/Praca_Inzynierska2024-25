@@ -1,6 +1,12 @@
 import { apiEndpoints,backendNotification } from "@/api/apiEndpoints";
 import { useNotificationStore } from "@/stores";
+import { useMockupStore } from "@/mockup/useMockupStore";
+import { APP_MODE_DEV } from "@/config/envParams";
 export const loginFetch = async (credentials: Record<string, string>) => {
+  if (APP_MODE_DEV) {
+    const { login } = useMockupStore();
+    return login(credentials.email, credentials.password);
+  }
   const response = await fetch(apiEndpoints.auth.login, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

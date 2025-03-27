@@ -18,7 +18,7 @@ const handleSubmit = (_formData: any, config: any) => {
     const data = {
         amount: formValues.value?.amount,
         currency: formValues.value?.currency,
-        trip: route?.params?.tripId as string
+        trip: Number(route?.params?.tripId)
       }
       try {
         tripMutationBudget.mutateAsync(data);

@@ -174,8 +174,8 @@ const getDashboard = (id: string) => {
     },
   });
   const planMutationAdd = useMutation({
-    mutationFn: ({ data, tripId }: { data: Plan; tripId: string }) =>
-      createPlan(data, { tripId: tripId }),
+    mutationFn: ({ data, tripId }: { data: Plan; tripId: number }) =>
+      createPlan(data, { tripId: String(tripId) }),
     onSuccess: (data) => {
       router.back();
       setSuccessCurrentMessage("dodano planu");

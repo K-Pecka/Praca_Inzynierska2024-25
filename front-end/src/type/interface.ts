@@ -49,7 +49,7 @@ export interface Button {
 }
 
 export interface Trip {
-  id: string;
+  id: number;
   name: string;
   start_date: string;
   end_date: string;
@@ -61,7 +61,7 @@ export interface Trip {
 export interface Budget {
   amount: string;
   currency: string;
-  trip: string;
+  trip: number;
 }
 export interface Btn {
   actions: {
@@ -134,7 +134,7 @@ export interface NewTrip {
   end_date: string;
 }
 export interface Plan {
-  id: string;
+  id: number;
   name: string;
   country: string;
   city?: string;

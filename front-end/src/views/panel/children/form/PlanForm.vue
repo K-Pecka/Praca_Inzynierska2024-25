@@ -15,7 +15,7 @@ const formValues = ref<Record<string, string>>(
 );
 
 const route = useRoute();
-const id = Array.isArray(route.params.tripId) ? route.params.tripId[0] : route.params.tripId;
+const id = Number(Array.isArray(route.params.tripId) ? route.params.tripId[0] : route.params.tripId);
 const handleSubmit = (_formData: any, config: any) => {
   if (config?.send && isFormValid(FormType.PLAN, formValues.value)) {
     const { tripName, city,tripDates } = formValues.value;

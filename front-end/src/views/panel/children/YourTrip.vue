@@ -4,7 +4,6 @@ import { useTripStore } from "@/stores/trip/useTripStore";
 import BaseButton from "@/components/style/button/BaseButton.vue";
 const { yourTrips } = useTripStore();
 const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
-
 </script>
 
 <template>
@@ -29,21 +28,7 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
           <template #content>
             <p v-if="isLoading">Ładowanie...</p>
             <p v-else-if="error">Błąd: {{ error.message }}</p>
-            <TripBox v-else :btn="yourTrips.btn.map(btn => ({ ...btn, onclick: async (id: string) => { await btn.onclick(id); return; } }))" :trip="trips" image="/picture/p1.svg" />
-          </template>
-        </Section>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12" md="10" offset-md="1">
-        <Section>
-          <template #title>
-            <h1>Archiwum</h1>
-          </template>
-          <template #content>
-            <p v-if="isLoading">Ładowanie...</p>
-            <p v-else-if="error">Błąd: {{ error.message }}</p>
-            <TripBox v-else :btn="yourTrips.btn.map(btn => ({ ...btn, onclick: async (id: string) => { await btn.onclick(id); return; } }))" :trip="trips" image="/picture/p2.svg" />
+            <TripBox v-else-if="trips && trips.length > 0" :btn="yourTrips.btn.map(btn => ({ ...btn, onclick: async (id: string) => { await btn.onclick(id); return; } }))" :trip="trips" image="/picture/p1.svg" />
           </template>
         </Section>
       </v-col>

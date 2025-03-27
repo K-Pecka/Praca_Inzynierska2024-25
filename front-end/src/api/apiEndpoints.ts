@@ -15,23 +15,28 @@ export const fetchData = async <T = unknown>(
   options: RequestInit = { body: undefined },
   method: "GET" | "POST" | "DELETE" | "PATCH" | "PUT" = "GET"
 ): Promise<{ data?: T; error?: string }> => {
-  if(notificationTimeout) 
-    return {error:"Jestem w trakcie wykonania\n poprzedniego zapytania..."};
-  notificationTimeout = setTimeout(() => {
-    notificationTimeout = null;
-  }, 3000);
+  if (notificationTimeout)
+    return { error: "Jestem w trakcie wykonania\n poprzedniego zapytania..." };
+  
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
   try {
     const response = await fetch(url, {
       method: method,
       headers: {
         ...standardHeaders(),
       },
+      signal: controller.signal,
       ...options,
       body: options.body ? options.body : undefined,
     });
-
+    clearTimeout(timeoutId);
     const result = await response.json().catch(() => null);
 
+    notificationTimeout = setTimeout(() => {
+      notificationTimeout = null;
+    }, 3000);
     if (!response.ok) {
       throw new Error(result?.message || `Błąd HTTP: ${response.status}`);
     }
@@ -40,7 +45,10 @@ export const fetchData = async <T = unknown>(
     return { error: error.message || "Wystąpił błąd" };
   }
 };
-export const setParam = (url: string, params: Record<string, string>): string => {
+export const setParam = (
+  url: string,
+  params: Record<string, string>
+): string => {
   return Object.keys(params).reduce((acc, key) => {
     if (acc.includes(`:${key}`)) {
       return acc.replace(`:${key}`, encodeURIComponent(params[key]));
@@ -50,7 +58,7 @@ export const setParam = (url: string, params: Record<string, string>): string =>
     }
   }, url);
 };
-  
+
 export const apiEndpoints = {
   auth: {
     login: `${hostName}/user_auth/login/`,
@@ -66,7 +74,7 @@ export const apiEndpoints = {
     delete: `${hostName}/trip/:tripId/delete/`,
     create: `${hostName}/trip/create/`,
     update: `${hostName}/trip/:tripId/update/`,
-    invateUser: `${hostName}/trip/:tripId/participants/manage/:userId/`
+    invateUser: `${hostName}/trip/:tripId/participants/manage/:userId/`,
   },
   plan: {
     all: `${hostName}/trip/:tripId/itinerary/`,
@@ -74,10 +82,10 @@ export const apiEndpoints = {
     delete: `${hostName}/trip/:tripId/itinerary/:planId/delete/`,
     create: `${hostName}/trip/:tripId/itinerary/create/`,
   },
-  ticket:{
-    create:`${hostName}/trip/ticket/create/`
+  ticket: {
+    create: `${hostName}/trip/ticket/create/`,
   },
   budget: {
     update: `${hostName}/trip/:tripId/budget/update/`,
-}
+  },
 };
