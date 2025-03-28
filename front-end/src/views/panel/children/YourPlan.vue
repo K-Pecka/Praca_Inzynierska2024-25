@@ -16,11 +16,10 @@ const { data: rawPlans, isLoading, error } = yourPlans.plans(id);
       <v-col cols="12" md="10" offset-md="1">
         <Section>
           <template #content>
+            <h1>Twoje plany</h1>
             <p v-if="isLoading">Ładowanie...</p>
             <p v-else-if="error">Błąd: {{ error.message }}</p>
-            <template v-else>
-            
-              <h1>Twoje plany</h1>
+            <template v-else> 
               <TripCard
                 :plans="rawPlans"
                 :btn="yourPlans.btn ?? []"

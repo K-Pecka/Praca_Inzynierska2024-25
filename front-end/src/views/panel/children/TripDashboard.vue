@@ -8,7 +8,7 @@ const { getDashboard } = useTripStore();
 const route = useRoute();
 const id = route.params.tripId as string;
 
-const { boxes, isLoading, error } = getDashboard(id);
+const { boxes, isLoading, error, tripName } = getDashboard(id);
 
 const expenseItem: Expense[] = [
   {
@@ -66,7 +66,7 @@ const expenseItem: Expense[] = [
   <template v-else>
     <Section>
       <template #title>
-        <h1>Wakacje we Francji</h1>
+        <h1>{{tripName != undefined? tripName : ""}}</h1>
         
       </template>
 
@@ -82,7 +82,7 @@ const expenseItem: Expense[] = [
           </template>
           
         </div>
-        <v-card class="participants-card">
+        <v-card class="dashboard-card">
           <v-card-title class="text-h6 font-weight-medium d-flex align-center">
             Ostatnie wydatki
           </v-card-title>
@@ -104,11 +104,15 @@ h1 {
   text-align: start;
   font-size: 2rem;
 }
-.participants-card {
+.dashboard-card {
   transition: transform 0.2s, box-shadow 0.2s;
   background-color: rgb(var(--v-theme-secondary), 50%);
   border-radius: 12px;
   padding: 1.5rem;
   margin-top: 2rem;
+}
+.v-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 </style>

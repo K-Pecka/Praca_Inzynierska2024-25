@@ -7,7 +7,6 @@ export const fetchTrips = async () => {
   if (APP_MODE_DEV) {
     const { getTrips } = useMockupStore();
     const trips = getTrips();
-    console.log("trips");
     if(trips == null){
       throw new Error("Brak wycieczek");
     }
@@ -30,7 +29,7 @@ export const fetchTrip = async (param: Record<string, string>={}) => {
   if (APP_MODE_DEV) {
     const { getTrip } = useMockupStore();
     const trip = getTrip(Number(param.tripId));
-    console.log(`trip/${param.tripId}`);
+    console.log(trip);
     if(trip == null){
       throw new Error("Podana wycieczka nie istnieje");
     }

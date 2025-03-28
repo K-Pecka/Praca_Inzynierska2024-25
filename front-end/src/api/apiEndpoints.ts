@@ -1,6 +1,8 @@
 import { useAuthStore } from "@/stores";
 import { invateUser } from "./trip";
-export const hostName = "https://api.plannder.com";
+import { APP_MODE_DEV } from "@/config/envParams";
+import router from "@/router";
+export const hostName =  APP_MODE_DEV ?? "https://api.plannder.com";
 export const backendNotification = false;
 export const standardHeaders = () => {
   const { getToken } = useAuthStore();
@@ -37,9 +39,16 @@ export const fetchData = async <T = unknown>(
     notificationTimeout = setTimeout(() => {
       notificationTimeout = null;
     }, 3000);
+    if (response.status == 401) {
+      router.push({name: "login", query: { redirect: router.currentRoute.value.fullPath } });
+    }
+    if (response.status == 404) {
+      router.push({ name: "error_404", query: { message: "Podane żądanie nie istnieje.", code: "Błąd w żądaniu" } });
+    }
     if (!response.ok) {
       throw new Error(result?.message || `Błąd HTTP: ${response.status}`);
     }
+    
     return { data: result };
   } catch (error: any) {
     return { error: error.message || "Wystąpił błąd" };

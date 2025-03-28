@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import { useRoute } from "vue-router";
+const route = useRoute();
+import { computed } from "vue";
+const message = computed(() => route.query.message || "Podana ścieżka nie istnieje");
+const code = computed(() => route.query.code || "Podana strona nie istnieje");
+</script>
 <template>
     <v-container class="error-container">
       <v-row justify="center" align="center" class="fill-height">
@@ -12,10 +19,10 @@
               404
             </v-card-title>
             <v-card-subtitle class="text-h5 text--secondary">
-              Podana strona nie istnieje
+              {{code}}
             </v-card-subtitle>
             <v-card-text>
-              Coś poszło nie tak. Podana ścieżka nie istnieje.
+              Coś poszło nie tak. {{message}}
             </v-card-text>
             <v-btn color="primary" @click="$router.push('/')">
               Wróć na stronę główną

@@ -56,6 +56,12 @@ const getGridRows = () => {
 
   return size[breakpoint]?.row || size.lg?.row || 1;
 };
+const safeDivision = (numerator: number, denominator: number, percent: boolean) => {
+  if (denominator === 0) {
+    return percent ? 100 : 0;
+  }
+  return (numerator / denominator).toFixed(2);
+};
 </script>
 
 <template>
@@ -86,7 +92,7 @@ const getGridRows = () => {
         </div>
 
         <v-progress-linear
-          :model-value="(props.content as BudgetData).expenses / (props.content as BudgetData).convertedAmount * 100"
+          :model-value="safeDivision((props.content as BudgetData).expenses , (props.content as BudgetData).convertedAmount,true)"
           height="6"
           rounded
           color="green"
@@ -95,7 +101,7 @@ const getGridRows = () => {
 
         <v-row justify="space-between" class="mt-1">
           <span class="text-green font-weight-medium">{{ (props.content as BudgetData).convertedAmount }} {{ (props.content as BudgetData).convertedCurrency }}</span>
-          <span class="text-grey-darken-1">{{ ((props.content as BudgetData).expenses / (props.content as BudgetData).convertedAmount * 100).toFixed(2) }}%</span>
+          <span class="text-grey-darken-1">{{safeDivision((props.content as BudgetData).expenses,(props.content as BudgetData).convertedAmount,false) }}%</span>
         </v-row>
       </template>
 
@@ -107,10 +113,6 @@ const getGridRows = () => {
 </template>
 
 <style scoped lang="scss">
-.budget-card {
-  background-color: #f5f4ff;
-  border-radius: 12px;
-}
 .text-green {
   color: #4caf50;
 }

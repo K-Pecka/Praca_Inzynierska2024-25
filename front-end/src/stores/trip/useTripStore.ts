@@ -8,7 +8,7 @@ import { computed } from "vue";
 import { useAuthStore,useNotificationStore } from "@/stores";
 import router from "@/router";
 import { fetchTrips, fetchTrip, deleteTrip, createTrip, updateTrip } from "@/api";
-import { fetchPlans, createPlan } from "@/api";
+import { fetchPlans, createPlan,deleteItinerary } from "@/api";
 import {invateUser} from "@/api";
 import { saveBudget } from "@/api";
 import { Plan } from "@/type";
@@ -30,6 +30,26 @@ export const useTripStore = defineStore("trip", () => {
       setErrorCurrentMessage(err.message);
     },
   });
+  const deleteItineraryMutation = useMutation({
+    mutationFn:
+    ({ tripId, itineraryId }: { tripId: string; itineraryId: string }) =>
+      deleteItinerary({tripId, itineraryId}),
+    onSuccess: (data) => {
+      setSuccessCurrentMessage(`Pomyślnie usunięto wycieczkę`);
+      console.log("deleteItineraryMutation ->",data);
+      queryClient.invalidateQueries({ queryKey: ["plans",data?.tripId] });
+    },
+    onError: (err) => {
+      setErrorCurrentMessage(err.message);
+    },
+  });
+  const handleDeleteItinerary = async (Tripid: string,itineraryId: string) => {
+    console.log("handleDeleteItinerary", Tripid,itineraryId);
+    try {
+      await deleteItineraryMutation.mutateAsync({ tripId: Tripid, itineraryId:itineraryId });
+    } catch (err) {
+    }
+  };
   const handleDeleteTrip = async (id: string) => {
     try {
       await deleteTripMutation.mutateAsync({ tripId: id });
@@ -55,6 +75,7 @@ const getDashboard = (id: string) => {
   );
   const activityCount = computed(() => "0 Aktywności");
   const upcomingActivities = computed(() => []);
+  const tripName = computed(() => tripRaw.value?.name ?? "...");
   const boxes = computed(() => [
     {
       title: "Czas trwania",
@@ -115,7 +136,7 @@ const getDashboard = (id: string) => {
       },
     }
   ]);
-  return { boxes, isLoading, error };
+  return { boxes, isLoading, error,tripName };
 };
   const getPlans = (id: string) => {
     return useQuery({
@@ -158,7 +179,7 @@ const getDashboard = (id: string) => {
         {
           title: "usuń plan",
           class: ["accent"],
-          onclick: (id: string) => handleDeleteTrip(id),
+          onclick: (tripId: string,itineraryId:string) => handleDeleteItinerary(tripId,itineraryId),
         },
       ],
       plans: getPlans,
@@ -166,11 +187,12 @@ const getDashboard = (id: string) => {
   });
   const tripMutationBudget = useMutation({
     mutationFn: saveBudget,
-    onSuccess: (data) => {
+    onSuccess: () => {
       setSuccessCurrentMessage("zapisano");
+      router.push({ name: "tripDashboard" });
     },
     onError: (err) => {
-      setErrorCurrentMessage("błąd");
+      setErrorCurrentMessage(err.message ||"błąd");
     },
   });
   const planMutationAdd = useMutation({
