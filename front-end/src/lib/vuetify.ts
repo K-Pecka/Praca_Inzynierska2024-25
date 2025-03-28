@@ -1,5 +1,6 @@
 import { createVuetify } from 'vuetify';
 import 'vuetify/styles';
+import { pl } from 'vuetify/locale'
 
 export default createVuetify({
   theme: {
@@ -37,4 +38,8 @@ export default createVuetify({
       },
     },
   },
+  locale: {
+    locale: 'pl',
+    messages: { pl },
+  }
 });

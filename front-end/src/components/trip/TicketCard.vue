@@ -17,6 +17,11 @@ const icon = computed(() => {
 
 function previewTicket() {
   alert(`Podgląd biletu: ${props.ticket.name}`);
+  console.log("props.ticket.name", props.ticket);
+}
+
+function formatDate(dateString: string): string {
+  return new Intl.DateTimeFormat('pl-PL').format(new Date(dateString));
 }
 </script>
 
@@ -27,7 +32,7 @@ function previewTicket() {
       <div class="ticket-header-text">
         <div class="ticket-name">{{ ticket.name }}</div>
         <div class="ticket-date" v-if="ticket.date">
-          {{ticket.hour + "  " + ticket.date }}
+          {{ticket.time + "  " + formatDate(ticket.date) }}
         </div>
       </div>
     </div>
@@ -44,6 +49,7 @@ function previewTicket() {
           variant="outlined"
           class="assign-select"
           multiple
+          bg-color="background"
       />
       <v-btn
           color="primary"
@@ -59,10 +65,10 @@ function previewTicket() {
 
 <style scoped lang="scss">
 .ticket-card {
-  background-color: rgb(var(--v-theme-secondary), 0.8);
+  background-color: rgb(var(--v-theme-secondary), 0.5);
   border-radius: 1rem;
   padding: 1rem 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 
   display: flex;
   flex-direction: column;

@@ -3,11 +3,16 @@ import {ref, computed} from "vue";
 import {useRoute} from "vue-router";
 import {Section} from "@/components";
 import {useTicketStore} from "@/stores/trip/useTicketStore";
+import { useTripStore } from "@/stores/trip/useTripStore";
 import TicketList from "@/components/trip/TicketList.vue";
 import TicketForm from "@/components/trip/TicketForm.vue";
 
 const route = useRoute();
 const tripName = "Wakacje we Francji";
+const tripId = route.params.tripId as string;
+
+const { getTripDetails } = useTripStore();
+const { data: tripData, isLoading, error } = getTripDetails(tripId);
 
 const ticketStore = useTicketStore();
 const tickets = computed(() => ticketStore.tickets);
@@ -15,7 +20,7 @@ const tickets = computed(() => ticketStore.tickets);
 const showForm = ref(false);
 
 function handleAddTicket(newTicketData: {
-  type: string; name: string; date: string; hour: string; assignedTo?: string; file: File;
+  type: string; name: string; date: string; time: string; assignedTo?: string; file: File;
 }) {
   const {file, ...ticketData} = newTicketData;
   const {createTicket} = useTicketStore();
@@ -31,7 +36,8 @@ function handleAddTicket(newTicketData: {
       <template #title>
         <div class="header-wrapper">
           <div class="title-container">
-            <h1 class="trip-title">{{ tripName }}</h1>
+            <h1 class="trip-title" v-if="!isLoading && !error">{{tripData?.name }}</h1>
+            <h1 class="trip-title" v-else>Ładowanie nazwy wycieczki...</h1>
             <h1 class="section-title">Bilety</h1>
           </div>
           <div class="button-container">
@@ -125,6 +131,7 @@ function handleAddTicket(newTicketData: {
   background-color: rgb(var(--v-theme-secondary),0.5);
   border-radius: 12px;
   text-align: center;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .empty-state {
