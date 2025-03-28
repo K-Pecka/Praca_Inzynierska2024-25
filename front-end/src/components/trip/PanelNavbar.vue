@@ -68,7 +68,7 @@ function onHamburgerClick() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(#F5F4FC, 0.75);
+  background-color: rgba(var(--v-theme-secondary), 0.75);
   border-bottom: 2px solid rgb(var(--v-theme-primary));
   padding: 1rem 2rem;
   z-index: 1000;

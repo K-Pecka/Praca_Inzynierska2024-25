@@ -19,5 +19,13 @@ export const useUtilStore = defineStore("utils", () => {
     computed(() => {
       return !RouteSet.includes(route.name as string);
     });
-  return { useRouter, getTripId, isCurrentRouteNotInSet, getCurrentPath };
+  const formatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    };
+    return new Intl.DateTimeFormat("pl-PL", options).format(date);
+  };
+  return { useRouter, getTripId, isCurrentRouteNotInSet, getCurrentPath,formatDate };
 });

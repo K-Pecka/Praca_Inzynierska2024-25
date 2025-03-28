@@ -49,18 +49,13 @@ export const defaultNavLinks = [
         {
           image: "picture/p2.svg",
           alt: "picture",
-          caption: "Elastyczny planer podróży",
+          caption: "Precyzyjna kontrola wydatków",
         },
         {
           image: "picture/p3.svg",
           alt: "picture",
-          caption: "Elastyczny planer podróży",
-        },
-        {
-          image: "picture/p4.svg",
-          alt: "picture",
-          caption: "Elastyczny planer podróży",
-        },
+          caption: "Wygodny schowek na bilety",
+        }
       ],
     },
     {
@@ -69,23 +64,18 @@ export const defaultNavLinks = [
         {
           image: "picture/p1.svg",
           alt: "picture",
-          caption: "Elastyczny planer podróży",
-        },
-        {
-          image: "picture/p2.svg",
-          alt: "picture",
-          caption: "Elastyczny planer podróży",
-        },
-        {
-          image: "picture/p3.svg",
-          alt: "picture",
-          caption: "Elastyczny planer podróży",
+          caption: "Proste planowanie i udostępnianie",
         },
         {
           image: "picture/p4.svg",
           alt: "picture",
-          caption: "Elastyczny planer podróży",
+          caption: "Skuteczna forma komunikacji",
         },
+        {
+          image: "picture/p5.svg",
+          alt: "picture",
+          caption: "Praktyczny kanał ogłoszeniowy",
+        }
       ],
     },
   ];
@@ -95,7 +85,7 @@ export const defaultNavLinks = [
   };
   export const footerData = () => ({
     footerText: `© 2025 Plannder Wszystkie prawa zastrzeżone`,
-    lastUpdated: `Ostatnia modyfikacja: ${new Date().toLocaleDateString()}`,
+    lastUpdated: `Ostatnia modyfikacja:`,
   });
 
 export const pricingPlans = [

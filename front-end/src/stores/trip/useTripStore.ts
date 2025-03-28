@@ -84,6 +84,7 @@ const getDashboard = (id: string) => {
       set: {
         order: 1,
         size: {
+          xs: { col: 12, row: 1 },
           sm: { col: 12, row: 1 },
           md: { col: 6, row: 1 },
           lg: { col: 3, row: 1 },
@@ -103,6 +104,7 @@ const getDashboard = (id: string) => {
       set: {
         order: 2,
         size: {
+          xs: { col: 12, row: 1 },
           sm: { col: 12, row: 1 },
           md: { col: 6, row: 1 },
           lg: { col: 4, row: 1 },
@@ -116,6 +118,7 @@ const getDashboard = (id: string) => {
       set: {
         order: 3,
         size: {
+          xs: { col: 12, row: 1 },
           sm: { col: 12, row: 1 },
           md: { col: 6, row: 1 },
           lg: { col: 2, row: 1 },
@@ -129,6 +132,7 @@ const getDashboard = (id: string) => {
       set: {
         order: 4,
         size: {
+          xs: { col: 12, row: 1 },
           sm: { col: 12, row: 1 },
           md: { col: 6, row: 1 },
           lg: { col: 3, row: 1 },

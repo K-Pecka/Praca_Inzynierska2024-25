@@ -40,6 +40,9 @@ const props = defineProps({
 </template>
 <style scoped lang="scss">
 @use "@/assets/style" as *;
+.hero__image{
+  fill: rgb(var(--v-theme-hero-bg));
+}
 .hero {
   padding: 1rem 0;
   margin-bottom: 10rem;

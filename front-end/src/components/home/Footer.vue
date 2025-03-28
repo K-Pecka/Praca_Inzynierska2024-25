@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import { FooterData} from "@/type/interface";
 import lastModified from "@/assets/last-modified.txt?raw";
-const props = defineProps({
+import { useUtilStore } from "@/stores";
+ defineProps({
   footerData: {
     type: Object as () => FooterData,
     required: true,
   },
 });
+const {formatDate} = useUtilStore();
+const lastModifiedDate = formatDate(new Date(lastModified));
 </script>
 
 <template>
@@ -41,7 +44,7 @@ const props = defineProps({
         >
           <hr />
           <p v-if="footerData.footerText">{{ footerData.footerText }}</p>
-          <p v-if="footerData.lastUpdated">{{ lastModified }}</p>
+          <p v-if="lastModifiedDate">{{ `${footerData.lastUpdated} ${lastModifiedDate}` }}</p>
         </v-col>
       </v-row>
     </v-container>

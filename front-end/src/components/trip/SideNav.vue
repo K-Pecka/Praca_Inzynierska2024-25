@@ -15,14 +15,22 @@ const openIndex = ref<number | null>(null);
 function toggleSection(index: number) {
   openIndex.value = openIndex.value === index ? null : index;
 }
-
-const arrowIcon = "/picture/sideNav/arrow.svg";
-
 </script>
 
 <template>
+  
   <nav class="side-nav" :class="{ mobile }">
-    <button v-if="mobile" class="close-btn" @click="emit('close')">
+    <router-link
+      class="side-nav__logo mb-4"
+      :to="{ name: 'yourTrip' }"
+      @click.native="mobile ? emit('close') : null"
+  >
+    <v-btn class="mb-4">
+      <v-icon size="42">mdi-arrow-left</v-icon>
+      <span class="side-nav__logo-text">Powrót</span>
+    </v-btn>
+  </router-link>
+    <button v-if="mobile" class="close-btn" @click.native="emit('close')">
       <v-icon size="42">mdi-close</v-icon>
     </button>
 
@@ -86,10 +94,13 @@ const arrowIcon = "/picture/sideNav/arrow.svg";
 </template>
 
 <style lang="scss" scoped>
+*{
+  overflow: hidden;
+}
 .side-nav {
   height: 100%;
   left: 0;
-  background: rgba(#F5F4FC,0.75);
+  background-color: rgba(var(--v-theme-secondary), 0.75);
   border-right: 2px solid rgb(var(--v-theme-primary));
   padding: 1rem;
   overflow-y: auto;
@@ -160,9 +171,8 @@ const arrowIcon = "/picture/sideNav/arrow.svg";
     background: rgba(0, 0, 0, 0.9);
     z-index: 2000;
     padding-top: 0;
-    overflow-y: auto;
     display: flex;
-
+    flex-direction: column;
     align-items: center;
     justify-content: center;
   }

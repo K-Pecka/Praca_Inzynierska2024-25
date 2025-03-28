@@ -14,6 +14,7 @@ export default createVuetify({
           accent: '#ac6ed9',
           text: '#030309',
           background: '#F5F4FC',
+          heroBg:'#ac6ed9'
         },
         variables: {
           borderRadius: '24px',
@@ -24,11 +25,12 @@ export default createVuetify({
       dark: {
         dark: true,
         colors: {
-          primary: '#BB86FC',
-          secondary: '#03DAC6',
-          accent: '#FF4081',
-          background: '#121212',
-          text: '#FFFFFF',
+          primary: '#8C7AE6',
+          secondary: '#5A4E8C',
+          accent: '#C778DD',
+          text: '#E0E0E0',
+          background: '#1E1E2E',
+          heroBg:'#ac6ed9'
         },
         variables: {
           borderRadius: '24px',
