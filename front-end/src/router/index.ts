@@ -12,15 +12,26 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  const currentPath = typeof to.name === "string" ? to.name : "landing";
+
   const siteName = import.meta.env.VITE_APP_SITE_TITLE;
   document.title = to.meta.title ? `${siteName} - ${to.meta.title}` : siteName;
 
-  const { validToken } = useAuthStore();
+  const { validToken,checkPermission } = useAuthStore();
   const { setErrorCurrentMessage } = useNotificationStore();
-
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const goBack = to.matched.some((record) => record.meta.goBack);
-  if (requiresAuth && !(await validToken())) {
+  const routerName = typeof to.name === "string" ? to.name : undefined;
+  console.log(checkPermission(routerName,"path"));
+  if (!checkPermission(routerName,"path"))
+  {
+    setErrorCurrentMessage("Brak dostępu do tej zawartości");
+    const lastVisitedRoute = localStorage.getItem("routerPath");
+    console.log(lastVisitedRoute);
+    next(lastVisitedRoute ? { name: lastVisitedRoute } : { name: "landing" });
+    localStorage.setItem('routerPath', currentPath);
+    return;
+  } else if (requiresAuth && !(await validToken())) {
     setErrorCurrentMessage(
       "Tylko zalogowani użytkownicy,\n posiadają dostępn do tej zawartości."
     );
@@ -29,6 +40,7 @@ router.beforeEach(async (to, from, next) => {
     setErrorCurrentMessage("Przed wejściem na tą stronę wyloguj się.");
     next(from.name ? { name: from.name } : { name: "landing" });
   } else {
+    localStorage.setItem('routerPath', currentPath);
     next();
   }
 });

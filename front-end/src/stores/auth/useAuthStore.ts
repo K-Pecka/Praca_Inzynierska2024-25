@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/vue-query";
 import { useNotificationStore } from "../ui/useNotificationStore";
 import router from "@/router";
 import { TOKEN } from "@/type";
+import {usePermissionStore} from "@/stores"
 import {
   loginFetch,
   registerFetch,
@@ -22,8 +23,12 @@ export const useAuthStore = defineStore(
       logOutSuccess,
       unexpectedError,
     } = useNotificationStore();
-
+    const {hasPermission} =usePermissionStore()
     const token = ref<TOKEN | null>(null);
+    const getPermission = () => [1]
+    const checkPermission = (name: string | undefined, type: "nav" | "path" = "nav") =>{
+      return hasPermission(getPermission(),name,type);
+    }
     const validToken = async (): Promise<boolean> => {
       if (token.value) {
         try {
@@ -118,6 +123,7 @@ export const useAuthStore = defineStore(
       validToken,
       getToken,
       refreshToken,
+      checkPermission
     };
   },
   {

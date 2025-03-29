@@ -17,8 +17,8 @@ pinia.use(piniaPersist);
 
 app
    .use(Toast)
-   .use(router)
-   .use(vuetify)
    .use(pinia)
+   .use(vuetify)
+   .use(router)
    .use(VueQueryPlugin, { queryClient })
    .mount("#app");

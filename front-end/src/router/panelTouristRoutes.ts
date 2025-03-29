@@ -6,6 +6,7 @@ import {
 
 import { PlanForm, TripForm, BugdetForm } from "@/views/panel/children/form";
 
+
 const panelRoutes: RouteRecordRaw = {
   path: "/panel",
   name: "panel",
@@ -27,5 +28,6 @@ const panelRoutes: RouteRecordRaw = {
     { path: "your-trip/:tripId/budget", name: "budget", component: BugdetForm },
   ],
 };
+
 
 export default panelRoutes;

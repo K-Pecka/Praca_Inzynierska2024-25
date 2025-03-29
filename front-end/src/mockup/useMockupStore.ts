@@ -27,7 +27,7 @@ export const useMockupStore = defineStore(
       last_name: "Kowalski",
       date_of_birth: "2001-01-01",
       password: "123",
-      profile: [1, 2],
+      profile: [1],
     };
     const currentUser = ref<number>(tourist.id);
     const trip = {
