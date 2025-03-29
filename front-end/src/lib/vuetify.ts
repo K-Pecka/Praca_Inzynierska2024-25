@@ -1,10 +1,10 @@
 import { createVuetify } from 'vuetify';
+import { APP_DARK_MODE,APP_MODE_DEV } from '@/config/envParams';
 import 'vuetify/styles';
 import { pl } from 'vuetify/locale'
-
 export default createVuetify({
   theme: {
-    defaultTheme: 'light',
+    defaultTheme: APP_DARK_MODE ? 'dark' : 'light',
     themes: {
       light: {
         dark: false,

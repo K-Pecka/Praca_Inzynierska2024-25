@@ -109,6 +109,8 @@ export interface SideNavItem {
   iconActive?: string;
   route?: string | {name:string,params?:Record<string,string>};
   children?: SideNavItem[];
+  permission?: number[];
+  name?:string;
 }
 
 export interface FAQItem {

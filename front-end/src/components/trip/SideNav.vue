@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { ref, defineProps } from "vue";
 import { SideNavItem } from "@/type/interface";
-
-
+import { usePermissionStore } from "@/stores";
+import {useMockupStore} from "@/mockup/useMockupStore";
+const {getUserProfile} = useMockupStore();
+const{hasPermission,goTo} = usePermissionStore();
 const props = defineProps<{
   items: SideNavItem[];
   mobile?: boolean;
@@ -15,6 +17,7 @@ const openIndex = ref<number | null>(null);
 function toggleSection(index: number) {
   openIndex.value = openIndex.value === index ? null : index;
 }
+const getPermission = () =>getUserProfile()
 </script>
 
 <template>
@@ -51,14 +54,15 @@ function toggleSection(index: number) {
                   : item.icon}}</v-icon>
           <router-link
               v-if="item.route"
-              :to="item.route"
+              :to="hasPermission(getPermission(), item.name) ? item.route : goTo()"
               class="side-nav__item-link"
               @click="mobile ? emit('close') : null"
+              :class="{ 'no-permission': !hasPermission(getPermission(), item.name) }"
           >
             {{ item.label }}
           </router-link>
 
-          <span v-else>{{ item.label }}</span>
+          <span v-else >{{ item.label }}</span>
 
           <v-icon
               v-if="item.children"
@@ -80,8 +84,9 @@ function toggleSection(index: number) {
           >
             <router-link
                 v-if="sub.route"
-                :to="sub.route"
+                :to="hasPermission(getPermission(), sub.name) ? sub.route : goTo()"
                 class="side-nav__sub-link"
+                :class="{ 'no-permission': !hasPermission(getPermission(), sub.name) }"
                 @click="mobile ? emit('close') : null"
             >
               {{ sub.label }}
@@ -96,6 +101,9 @@ function toggleSection(index: number) {
 <style lang="scss" scoped>
 *{
   overflow: hidden;
+}
+.no-permission::after{
+  content:"⭐"
 }
 .side-nav {
   height: 100%;

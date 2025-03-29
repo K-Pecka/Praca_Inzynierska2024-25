@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import homeRoutes from "./homeRoutes";
-import panelRoutes from "./panelRoutes";
+import panelRoutes from "./panelTouristRoutes";
 import authRoutes from "./authRoutes";
 import { useAuthStore, useNotificationStore } from "@/stores";
 

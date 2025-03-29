@@ -5,16 +5,31 @@ import { NewTrip } from "@/type";
 export const useMockupStore = defineStore(
   "mockup",
   () => {
-    const user = {
+    const profile = {
+      admin: 0,
+      tourist: 1,
+      touristPremium: 2,
+      guide: 3,
+    }
+    const guide = {
       id: 1,
       email: "qwerty@wp.pl",
-      first_name: "Jan",
+      first_name: "guide",
       last_name: "Kowalski",
       date_of_birth: "2001-01-01",
       password: "123",
       profile: [1, 2],
     };
-    const currentUser = ref<number>(user.id);
+    const tourist = {
+      id: 1,
+      email: "123@wp.pl",
+      first_name: "Tourist",
+      last_name: "Kowalski",
+      date_of_birth: "2001-01-01",
+      password: "123",
+      profile: [1, 2],
+    };
+    const currentUser = ref<number>(tourist.id);
     const trip = {
       id: 2,
       name: "Test 1",
@@ -53,7 +68,7 @@ export const useMockupStore = defineStore(
       trip: 2
     }
     const data = ref({
-      user: [user],
+      user: [tourist, guide],
       trip: [trip, trip2],
       plan: [plan,{...plan, id: 2}],
       ticket: [],
@@ -158,7 +173,17 @@ export const useMockupStore = defineStore(
       console.log(data.value.plan);
       return newData;
     };
-    return { login, logOut, getTrips,getTrip, deleteTrip, addTrip,setBudget,getPlans, deletePlanMockUp,createPlanMockUp };
+    const getUserProfile = () =>{
+      const auth = localStorage.getItem("auth");
+      if (auth) {
+        currentUser.value = JSON.parse(auth).token.access;
+      } else {
+        currentUser.value = data.value.user[0].id;
+      }
+      const profile = data.value.user.find((t) => t.id == currentUser.value)?.profile
+      return profile? profile: [];
+    }
+    return {getUserProfile, login, logOut, getTrips,getTrip, deleteTrip, addTrip,setBudget,getPlans, deletePlanMockUp,createPlanMockUp };
   },
   {
     persist: {
