@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from "vue-router";
 
 import { 
-  Panel, RoleSelection, TripDashboard, YourTrip, YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm
+  Panel, RoleSelection, TripDashboard, YourTrip, YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm, ActivityView
 } from "@/views/panel";
 
 import { PlanForm, TripForm, BugdetForm } from "@/views/panel/children/form";
@@ -22,6 +22,7 @@ const panelRoutes: RouteRecordRaw = {
     { path: "your-trip/:tripId/expense-tracker", name: "ExpenseTracker", component: ExpenseTracker },
     { path: "your-trip/:tripId/participants-view", name: "ParticipantsView", component: ParticipantsView },
     { path: "your-trip/:tripId/trip-edit", name: "TripEdit", component: TripEditForm },
+    { path: "your-trip/:tripId/your-plan/:planId/activity", name: "ActivityView", component: ActivityView },
 
     { path: "your-trip/trip", name: "TripForm", component: TripForm },
     { path: "your-trip/:tripId/plan-form", name: "PlanForm", component: PlanForm },
