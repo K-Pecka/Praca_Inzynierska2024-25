@@ -3,16 +3,16 @@ import {ref, computed} from "vue";
 import {useRoute} from "vue-router";
 import {Section} from "@/components";
 import {useTicketStore} from "@/stores/trip/useTicketStore";
-import { useTripStore } from "@/stores/trip/useTripStore";
+import {useTripStore} from "@/stores/trip/useTripStore";
 import TicketList from "@/components/trip/TicketList.vue";
 import TicketForm from "@/components/trip/TicketForm.vue";
+import AppButton from "@/components/budget/AppButton.vue";
 
 const route = useRoute();
-const tripName = "Wakacje we Francji";
 const tripId = route.params.tripId as string;
 
-const { getTripDetails } = useTripStore();
-const { data: tripData, isLoading, error } = getTripDetails(tripId);
+const {getTripDetails} = useTripStore();
+const {data: tripData, isLoading, error} = getTripDetails(tripId);
 
 const ticketStore = useTicketStore();
 const tickets = computed(() => ticketStore.tickets);
@@ -20,11 +20,11 @@ const tickets = computed(() => ticketStore.tickets);
 const showForm = ref(false);
 
 function handleAddTicket(newTicketData: {
-  type: string; name: string; date: string; time: string; assignedTo?: string; file: File;
+  type: string; name: string; date: string; time: string; assignedTo?: string[]; file: File;
 }) {
   const {file, ...ticketData} = newTicketData;
-  const {createTicket} = useTicketStore();
-  createTicket(file,ticketData);
+  //const {createTicket} = useTicketStore();
+  //createTicket(file,ticketData);
   ticketStore.addTicket(newTicketData);
   showForm.value = false;
 }
@@ -36,19 +36,19 @@ function handleAddTicket(newTicketData: {
       <template #title>
         <div class="header-wrapper">
           <div class="title-container">
-            <h1 class="trip-title" v-if="!isLoading && !error">{{tripData?.name }}</h1>
+            <h1 class="trip-title" v-if="!isLoading && !error">{{ tripData?.name }}</h1>
             <h1 class="trip-title" v-else>Ładowanie nazwy wycieczki...</h1>
             <h1 class="section-title">Bilety</h1>
           </div>
           <div class="button-container">
-            <v-btn
-                color="primary"
-                @click="showForm = !showForm"
+            <AppButton
+                variant="primary"
+                size="md"
                 class="add-button"
-                depressed
+                @click="showForm = !showForm"
             >
               Dodaj Bilet
-            </v-btn>
+            </AppButton>
           </div>
         </div>
       </template>
@@ -117,18 +117,9 @@ function handleAddTicket(newTicketData: {
   align-self: flex-end;
 }
 
-.add-button {
-  height: 40px;
-  font-size: 16px;
-  font-weight: 500;
-  text-transform: none;
-  border-radius: 15px;
-  padding: 0 24px;
-}
-
 .empty-tickets {
   padding: 2rem;
-  background-color: rgb(var(--v-theme-secondary),0.5);
+  background-color: rgb(var(--v-theme-secondary), 0.5);
   border-radius: 12px;
   text-align: center;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);

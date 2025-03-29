@@ -13,7 +13,7 @@ const props = defineProps({
 <template>
   <div class="ticket-list">
     <TicketCard
-        v-for="ticket in tickets"
+        v-for="ticket in [...tickets].reverse()"
         :key="ticket.id"
         :ticket="ticket"
     />

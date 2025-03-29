@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
-defineProps<{ variant?: "primary" | "secondary" }>();
+defineProps<{ variant?: "primary" | "secondary", size?: "sm" | "md" | "lg" }>();
 </script>
 
 <template>
-  <button class="app-button" :class="variant">
-    <slot />
+  <button class="app-button" :class="variant, size">
+    <slot/>
   </button>
 </template>
 
@@ -16,6 +16,25 @@ defineProps<{ variant?: "primary" | "secondary" }>();
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sm {
+  padding: 6px 20px;
+  font-size: 0.8rem;
+}
+
+.md {
+  padding: 8px 32px;
+  font-size: 1rem;
+}
+
+.lg {
+  padding: 12px 48px;
+  font-size: 1.2rem;
 }
 
 .primary {

@@ -9,6 +9,13 @@ import ParticipantAddForm from "@/components/trip/ParticipantAddForm.vue";
 import {Participant} from "@/type";
 import {useTripStore, useUtilStore} from "@/stores";
 
+
+const route = useRoute();
+const tripId = route.params.tripId as string;
+
+const {getTripDetails} = useTripStore();
+const {data: tripData, isLoading, error} = getTripDetails(tripId);
+
 const participants = ref<Participant[]>([
   {
     id: "p1",
@@ -33,15 +40,14 @@ const showForm = ref(false);
 function inviteParticipant() {
   const {invateUserMutation} = useTripStore();
   invateUserMutation.mutateAsync(inviteEmail.value);
-  const {getTripId} =useUtilStore()
-  useTripStore().invateUserMutation.mutateAsync({ userEmail: inviteEmail.value, param: { tripId: getTripId().value } });
+  const {getTripId} = useUtilStore()
+  useTripStore().invateUserMutation.mutateAsync({userEmail: inviteEmail.value, param: {tripId: getTripId().value}});
 }
 
 function removeParticipantById(id: string) {
   participants.value = participants.value.filter(p => p.id !== id);
 }
-const tripName = "Wakacje we Francji";
-const route = useRoute();
+
 
 </script>
 
@@ -51,11 +57,16 @@ const route = useRoute();
       <template #title>
         <div class="header-wrapper">
           <div class="title-container">
-            <h1 class="trip-title">{{ tripName }}</h1>
+            <h1 class="trip-title" v-if="!isLoading && !error">{{ tripData?.name }}</h1>
+            <h1 class="trip-title" v-else>Ładowanie nazwy wycieczki...</h1>
             <h2 class="second-title">Utwórz nowy plan</h2>
           </div>
           <div class="button-container">
-            <AppButton variant="primary" @click="showForm = !showForm">
+            <AppButton
+                variant="primary"
+                size="md"
+                @click="showForm = !showForm"
+            >
               Dodaj uczestnika
             </AppButton>
           </div>
@@ -93,36 +104,38 @@ const route = useRoute();
 .page-container {
   max-width: 88rem;
   margin: 0 auto;
+  padding-top: 0;
 }
 
 .header-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 0;
 }
 
 .title-container {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .trip-title {
-  font-size: 2rem;
-  margin: 0;
-  font-weight: 600;
-  align-self: flex-start;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.2rem 0;
 }
 
 .second-title {
-  font-size: 2rem;
-  margin: 0;
+  font-size: 2.5rem;
   font-weight: 600;
-  align-self: flex-start;
+  margin: 0;
 }
 
 .button-container {
   display: flex;
-  align-items: center;
+  align-self: flex-end;
 }
 
 .participants-card {
