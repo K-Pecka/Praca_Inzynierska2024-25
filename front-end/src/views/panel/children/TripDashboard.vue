@@ -31,6 +31,7 @@ const expenseItem: Expense[] = [
 </script>
 
 <template>
+  
   <template v-if="isLoading">
     <div class="grid-container">
       <Box
@@ -82,7 +83,7 @@ const expenseItem: Expense[] = [
           </template>
           
         </div>
-        <v-card class="dashboard-card">
+        <v-card class="dashboard-card" elevation="3">
           <v-card-title class="text-h6 font-weight-medium d-flex align-center">
             Ostatnie wydatki
           </v-card-title>

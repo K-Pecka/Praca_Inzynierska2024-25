@@ -1,19 +1,34 @@
 <script setup lang="ts">
-
+defineProps({
+  className: {
+    type: String,
+    default: "",
+  },
+  style: {
+    type: Object,
+    default: () => ({}),
+  },
+  elevation: {
+    type: Number,
+    default: () => ({}),
+  },
+});
 </script>
 
 <template>
-  <v-card class="app-card">
+  <v-card class="pa-4 rounded-lg" :style="style" :class="className" :elevation="elevation">
     <slot />
   </v-card>
 </template>
 
 <style scoped>
-.app-card {
-  padding: 16px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.v-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  background-color: rgb(var(--v-theme-secondary), 50%);
+  height: 100%;
+  border-radius: 1.5rem;
 }
-
+ /*.v-card:hover {
+ transform: translateY(-3px);
+}*/
 </style>

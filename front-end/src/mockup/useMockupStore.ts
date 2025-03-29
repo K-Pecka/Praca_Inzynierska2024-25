@@ -21,7 +21,7 @@ export const useMockupStore = defineStore(
       profile: [1, 2],
     };
     const tourist = {
-      id: 1,
+      id: 2,
       email: "123@wp.pl",
       first_name: "Tourist",
       last_name: "Kowalski",
@@ -69,7 +69,7 @@ export const useMockupStore = defineStore(
     }
     const data = ref({
       user: [tourist, guide],
-      trip: [trip, trip2],
+      trip: [trip, trip2,{...trip2,id:3,creator: 2}],
       plan: [plan,{...plan, id: 2}],
       ticket: [],
       budget: [],
@@ -79,7 +79,6 @@ export const useMockupStore = defineStore(
       const foundUser = data.value.user.find(
         (u) => u.email === email && u.password === password
       );
-      console.log(foundUser);
       if (foundUser) {
         currentUser.value = foundUser.id;
         return { access: foundUser.id, refresh: "refresh" };
@@ -112,7 +111,7 @@ export const useMockupStore = defineStore(
     };
     const addTrip = (newTrip: NewTrip) => {
       const auth = localStorage.getItem("auth");
-      if (auth) {
+      if (auth != null) {
         currentUser.value = JSON.parse(auth).token.access;
       } else {
         currentUser.value = data.value.user[0].id;
@@ -175,10 +174,11 @@ export const useMockupStore = defineStore(
     };
     const getUserProfile = () =>{
       const auth = localStorage.getItem("auth");
-      if (auth) {
+      console.log(auth == null);
+      if (auth != null && auth != "") {
         currentUser.value = JSON.parse(auth).token.access;
       } else {
-        currentUser.value = data.value.user[0].id;
+        currentUser.value = 0;
       }
       const profile = data.value.user.find((t) => t.id == currentUser.value)?.profile
       return profile? profile: [];

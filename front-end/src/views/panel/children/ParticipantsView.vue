@@ -3,9 +3,9 @@ import {ref} from "vue";
 import {useRoute} from "vue-router";
 import {Section} from "@/components";
 import AppButton from "@/components/budget/AppButton.vue";
-import ParticipantList from "@/components/trip/ParticipantList.vue";
-import ParticipantsCounter from "@/components/trip/ParticipantsCounter.vue";
-import ParticipantAddForm from "@/components/trip/ParticipantAddForm.vue";
+import ParticipantList from "@/components/trip/modul/participan/ParticipantList.vue";
+import ParticipantsCounter from "@/components/trip/modul/participan/ParticipantsCounter.vue";
+import ParticipantAddForm from "@/components/trip/modul/participan/ParticipantAddForm.vue";
 import {Participant} from "@/type";
 import {useTripStore, useUtilStore} from "@/stores";
 

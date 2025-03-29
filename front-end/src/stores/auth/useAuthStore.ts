@@ -11,6 +11,7 @@ import {
   fetchRefreshToken,
   fetchVerify,
   fetchLogOut,
+  fetchPermission
 } from "@/api/auth";
 
 export const useAuthStore = defineStore(
@@ -25,9 +26,13 @@ export const useAuthStore = defineStore(
     } = useNotificationStore();
     const {hasPermission} =usePermissionStore()
     const token = ref<TOKEN | null>(null);
-    const getPermission = () => [1]
-    const checkPermission = (name: string | undefined, type: "nav" | "path" = "nav") =>{
-      return hasPermission(getPermission(),name,type);
+    const getPermission = useMutation({
+      mutationFn: fetchPermission,
+    });
+      
+    const checkPermission =async (name: string | undefined, type: "nav" | "path" = "nav") =>{
+      const userPermission = await getPermission.mutateAsync() || [];
+      return hasPermission(userPermission,name,type);
     }
     const validToken = async (): Promise<boolean> => {
       if (token.value) {
