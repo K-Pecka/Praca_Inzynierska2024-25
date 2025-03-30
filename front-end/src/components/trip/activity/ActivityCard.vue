@@ -42,7 +42,7 @@ const getTypeLabel = (type: string) => {
   background-color: rgb(var(--v-theme-background));
   border-radius: 1rem;
   padding: 1rem 1.25rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
 
   .activity-header {
     display: flex;

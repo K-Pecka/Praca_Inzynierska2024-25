@@ -76,6 +76,9 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
+main{
+  background-color: #F8F9Fa;
+}
 .wrapper {
   position: relative;
   overflow-x: hidden;
