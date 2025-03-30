@@ -1,7 +1,6 @@
 import { useAuthStore } from "@/stores";
-import { APP_MODE_DEV } from "@/config/envParams";
 import router from "@/router";
-export const hostName =  APP_MODE_DEV ?? "https://api.plannder.com";
+export const hostName = "https://api.plannder.com";
 export const backendNotification = false;
 export const standardHeaders = () => {
   const { getToken } = useAuthStore();
