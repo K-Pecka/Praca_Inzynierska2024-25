@@ -141,6 +141,6 @@ function submitActivity() {
 .activity-form {
   background-color: rgb(var(--v-theme-background));
   border-radius: 1rem;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
 }
 </style>

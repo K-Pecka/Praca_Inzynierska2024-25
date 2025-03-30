@@ -19,7 +19,7 @@ export default createVuetify({
         variables: {
           borderRadius: '24px',
           gradientText: 'linear-gradient(to right, #2f27ce, #ac6ed9)',
-          fontFamily: '"Roboto", serif',
+          fontFamily: '"Quicksand", serif',
         },
       },
       dark: {
