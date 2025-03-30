@@ -3,6 +3,7 @@ import { APP_MODE_DEV } from "@/config/envParams";
 export const fetchPermission = async () => {
   if (APP_MODE_DEV) {
     const { getUserProfile } = useMockupStore();
-    return getUserProfile();
+    const permission = getUserProfile();
+    return permission.length==0?[1,2,3]: permission ;
   }
 };

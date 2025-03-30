@@ -32,6 +32,8 @@ export const useAuthStore = defineStore(
       
     const checkPermission =async (name: string | undefined, type: "nav" | "path" = "nav") =>{
       const userPermission = await getPermission.mutateAsync() || [];
+      console.log("userPermission",userPermission);
+      console.log("has",hasPermission(userPermission,name,type))
       return hasPermission(userPermission,name,type);
     }
     const validToken = async (): Promise<boolean> => {
