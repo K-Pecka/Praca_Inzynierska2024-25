@@ -25,8 +25,10 @@ const checkAccess = async () => {
     )
   );
 
-  accessMap.value = Object.fromEntries(permissions.map((p) => [p.name, p.hasAccess]));
-  console.log(accessMap.value)
+  accessMap.value = {
+  '': true,
+  ...Object.fromEntries(permissions.map((p) => [p.name, p.hasAccess])),
+};
 };
 
 const linkTo = (item: SideNavItem) =>
@@ -92,7 +94,7 @@ function toggleSection(index: number) {
 .side-nav {
   height: 100%;
   left: 0;
-  background-color: rgba(var(--v-theme-secondary), 0.75);
+  background-color: rgba(var(--v-theme-background),);
   border-right: 2px solid rgb(var(--v-theme-primary));
   padding: 1rem;
   overflow-y: auto;

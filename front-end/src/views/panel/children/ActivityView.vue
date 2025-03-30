@@ -7,7 +7,7 @@ import AppButton from "@/components/budget/AppButton.vue";
 import {Section} from "@/components";
 
 const startDate = new Date("2025-04-15");
-const endDate = new Date("2025-04-17");
+const endDate = new Date("2025-04-24");
 
 function getDaysArray(start: Date, end: Date) {
   const arr = [];
@@ -97,13 +97,13 @@ function addActivity(day: string, activityData: any) {
 
 .trip-title {
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 0.2rem;
 }
 
 .section-title {
   font-size: 2.5rem;
-  font-weight: 600;
+  font-weight: 500;
   margin: 0;
 }
 
