@@ -3,7 +3,6 @@ import { RoleSelection, SideNavItem } from "@/type/interface";
 import { image } from "@/lib";
 import { usePermissionStore } from "@/stores";
 export const usePagePanelStore = defineStore("pagePanel", () => {
-    const {touristPanelNavAccess} = usePermissionStore();
     const getRoleSelection:RoleSelection = {
         title: "Witaj w aplikacji Plannder",
         subtitle: "W jakiej roli planujesz zorganizować podróż?",

@@ -232,7 +232,9 @@ export const useMockupStore = defineStore(
       
       if (trip) {
         trip.members = trip.members.filter((member) => member.id !== idParticipant);
+        return;
       }
+      return {error:true,message:"Podana wycieczka nie działa"}
     };
     return {removeParticipant,addParticipant,getUserProfile, login, logOut, getTrips,getTrip, deleteTrip, addTrip,setBudget,getPlans, deletePlanMockUp,createPlanMockUp };
   },

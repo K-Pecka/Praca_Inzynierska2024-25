@@ -1,5 +1,4 @@
 import { useAuthStore } from "@/stores";
-import { invateUser } from "./trip";
 import { APP_MODE_DEV } from "@/config/envParams";
 import router from "@/router";
 export const hostName =  APP_MODE_DEV ?? "https://api.plannder.com";
