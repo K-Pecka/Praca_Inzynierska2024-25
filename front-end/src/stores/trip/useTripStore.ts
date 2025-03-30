@@ -9,7 +9,7 @@ import { useAuthStore,useNotificationStore } from "@/stores";
 import router from "@/router";
 import { fetchTrips, fetchTrip, deleteTrip, createTrip, updateTrip } from "@/api";
 import { fetchPlans, createPlan,deleteItinerary } from "@/api";
-import {invateUser} from "@/api";
+import {fetchAddParticipant,fetchRemoveParticipant} from "@/api";
 import { saveBudget } from "@/api";
 import { Plan } from "@/type";
 import type { Trip } from "@/type/interface";
@@ -64,84 +64,107 @@ export const useTripStore = defineStore("trip", () => {
       //keepPreviousData: true,
     });
   };
-const getDashboard = (id: string) => {
-  const { data: tripRaw, isLoading, error } = getTripDetails(id);
-  const tripTime = computed(
-    () => `${tripRaw.value?.start_date ?? "..."} - ${tripRaw.value?.end_date ?? "..."}`
-  );
-  const budget = computed(() => `${tripRaw.value?.budget?.amount ?? "..."}`);
-  const participantCount = computed(
-    () => `${tripRaw.value?.members?.length ?? "..."} Uczestników`
-  );
-  const activityCount = computed(() => "0 Aktywności");
-  const upcomingActivities = computed(() => []);
-  const tripName = computed(() => tripRaw.value?.name ?? "...");
-  const boxes = computed(() => [
-    {
-      title: "Czas trwania",
-      icon:"mdi-calendar-month-outline",
-      content: tripTime.value,
-      set: {
-        order: 1,
-        size: {
-          xs: { col: 12, row: 1 },
-          sm: { col: 12, row: 1 },
-          md: { col: 6, row: 1 },
-          lg: { col: 3, row: 1 },
+  const getDashboard = (id: string) => {
+    const { data: tripRaw, isLoading, error } = getTripDetails(id);
+  
+    const tripTime = computed(() => {
+      if (tripRaw.value) {
+        return `${tripRaw.value.start_date ?? "..."} - ${tripRaw.value.end_date ?? "..."}`;
+      }
+      return "...";
+    });
+  
+    const budget = computed(() => {
+      return `${tripRaw.value?.budget?.amount ?? "..."}`;
+    });
+  
+    const participantCount = computed(() => {
+      return `${tripRaw.value?.members?.length ?? 0} Uczestników`;
+    });
+  
+    const activityCount = computed(() => "0 Aktywności");
+  
+    const upcomingActivities = computed(() => []);
+  
+    const tripName = computed(() => {
+      return tripRaw.value?.name ?? "...";
+    });
+  
+    const members = computed(() => {
+      return tripRaw.value?.members ?? [];
+    });
+  
+    const boxes = computed(() => [
+      {
+        title: "Czas trwania",
+        icon: "mdi-calendar-month-outline",
+        content: tripTime.value,
+        set: {
+          order: 1,
+          size: {
+            xs: { col: 12, row: 1 },
+            sm: { col: 12, row: 1 },
+            md: { col: 6, row: 1 },
+            lg: { col: 3, row: 1 },
+          },
         },
       },
-    },
-    {
-      title: "Budżet",
-      icon:"mdi-currency-usd",
-      content: {
-        expenses:200,
-        amount: Number(budget.value),
-        currency: "PLN",
-        convertedAmount: Number(budget.value) * 0.24,
-        convertedCurrency: "EUR",
-      },
-      set: {
-        order: 2,
-        size: {
-          xs: { col: 12, row: 1 },
-          sm: { col: 12, row: 1 },
-          md: { col: 6, row: 1 },
-          lg: { col: 4, row: 1 },
+      {
+        title: "Budżet",
+        icon: "mdi-currency-usd",
+        content: {
+          expenses: 200,
+          amount: Number(budget.value),
+          currency: "PLN",
+          convertedAmount: Number(budget.value) * 0.24,
+          convertedCurrency: "EUR",
+        },
+        set: {
+          order: 2,
+          size: {
+            xs: { col: 12, row: 1 },
+            sm: { col: 12, row: 1 },
+            md: { col: 6, row: 1 },
+            lg: { col: 4, row: 1 },
+          },
         },
       },
-    },
-    {
-      title: "Uczestnicy",
-      icon:"mdi-account-multiple",
-      content: participantCount.value,
-      set: {
-        order: 3,
-        size: {
-          xs: { col: 12, row: 1 },
-          sm: { col: 12, row: 1 },
-          md: { col: 6, row: 1 },
-          lg: { col: 2, row: 1 },
+      {
+        title: "Uczestnicy",
+        icon: "mdi-account-multiple",
+        content: participantCount.value,
+        set: {
+          order: 3,
+          size: {
+            xs: { col: 12, row: 1 },
+            sm: { col: 12, row: 1 },
+            md: { col: 6, row: 1 },
+            lg: { col: 2, row: 1 },
+          },
         },
       },
-    },
-    {
-      title: "Aktywności",
-      icon:"mdi-clock-outline",
-      content: activityCount.value,
-      set: {
-        order: 4,
-        size: {
-          xs: { col: 12, row: 1 },
-          sm: { col: 12, row: 1 },
-          md: { col: 6, row: 1 },
-          lg: { col: 3, row: 1 },
+      {
+        title: "Aktywności",
+        icon: "mdi-clock-outline",
+        content: activityCount.value,
+        set: {
+          order: 4,
+          size: {
+            xs: { col: 12, row: 1 },
+            sm: { col: 12, row: 1 },
+            md: { col: 6, row: 1 },
+            lg: { col: 3, row: 1 },
+          },
         },
-      },
-    }
-  ]);
-  return { boxes, isLoading, error,tripName };
-};
+      }
+    ]);
+  
+    return { boxes, isLoading, error, tripName, members };
+  };
+  const removeParticipant = (idTrip: number, idParticipant: number) => 
+    removeParticipantMutation.mutateAsync({ idTrip, idParticipant });
+  const addParticipant = (idTrip: number,participant:{name:string, email:string}) =>
+    addParticipantMutation.mutateAsync({ idTrip, participant });
   const getPlans = (id: string) => {
     return useQuery({
       queryKey: ["plans", id],
@@ -200,6 +223,24 @@ const getDashboard = (id: string) => {
       setErrorCurrentMessage(err.message ||"błąd");
     },
   });
+  const removeParticipantMutation = useMutation({
+    mutationFn: ({ idTrip, idParticipant }: { idTrip: number, idParticipant: number }) => fetchRemoveParticipant( idTrip, idParticipant ),
+    onSuccess: () => {
+      setSuccessCurrentMessage("zapisano");
+    },
+    onError: (err) => {
+      setErrorCurrentMessage(err.message ||"błąd");
+    },
+  });
+  const addParticipantMutation = useMutation({
+    mutationFn: ({ idTrip, participant }: { idTrip: number, participant: {name:string, email:string} }) => fetchAddParticipant( idTrip, participant ),
+    onSuccess: () => {
+      setSuccessCurrentMessage("zapisano");
+    },
+    onError: (err) => {
+      setErrorCurrentMessage(err.message ||"błąd");
+    },
+  });
   const planMutationAdd = useMutation({
     mutationFn: ({ data, tripId }: { data: Plan; tripId: number }) =>
       createPlan(data, { tripId: String(tripId) }),
@@ -216,15 +257,6 @@ const getDashboard = (id: string) => {
     onSuccess: (data) => {
       router.back();
       setSuccessCurrentMessage("dodano wycieczkę");
-    },
-    onError: (err) => {
-      setErrorCurrentMessage("błąd");
-    },
-  });
-  const invateUserMutation = useMutation({
-    mutationFn: ({ userEmail, param }: { userEmail: string; param: Record<string, string> }) => invateUser(userEmail, param),
-    onSuccess: (data) => {
-      setSuccessCurrentMessage("dodano usera do wycieczki");
     },
     onError: (err) => {
       setErrorCurrentMessage("błąd");
@@ -251,7 +283,8 @@ const getDashboard = (id: string) => {
     tripMutationAdd,
     tripMutationBudget,
     planMutationAdd,
-    invateUserMutation,
-    tripMutationUpdate
+    tripMutationUpdate,
+    removeParticipant,
+    addParticipant
   };
 });

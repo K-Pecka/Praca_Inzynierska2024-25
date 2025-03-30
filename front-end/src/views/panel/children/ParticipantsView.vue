@@ -1,54 +1,35 @@
 <script setup lang="ts">
-import {ref} from "vue";
-import {useRoute} from "vue-router";
-import {Section} from "@/components";
+import { computed, ref } from "vue";
+import { useRoute } from "vue-router";
+import { Section } from "@/components";
 import AppButton from "@/components/budget/AppButton.vue";
 import ParticipantList from "@/components/trip/modul/participan/ParticipantList.vue";
 import ParticipantsCounter from "@/components/trip/modul/participan/ParticipantsCounter.vue";
 import ParticipantAddForm from "@/components/trip/modul/participan/ParticipantAddForm.vue";
-import {Participant} from "@/type";
-import {useTripStore, useUtilStore} from "@/stores";
-
-
+import { Participant } from "@/type";
+import { useTripStore, useUtilStore, useNotificationStore } from "@/stores";
+const { setErrorCurrentMessage } = useNotificationStore();
 const route = useRoute();
 const tripId = route.params.tripId as string;
 
-const {getTripDetails} = useTripStore();
-const {data: tripData, isLoading, error} = getTripDetails(tripId);
-
-const participants = ref<Participant[]>([
-  {
-    id: "p1",
-    name: "Mateusz Wiśniewski",
-    email: "s24893@pjwstk.edu.pl",
-    role: "przeglądanie",
-  },
-  {
-    id: "p2",
-    name: "Andrzej Ebertowski",
-    email: "s25222@pjwstk.edu.pl",
-    role: "przeglądanie",
-  }
-]);
+const { getTripDetails, removeParticipant, addParticipant } = useTripStore();
+const { data: tripData, isLoading, error } = getTripDetails(tripId);
+const participants = computed(() => tripData.value?.members ?? []);
 
 const maxParticipants = 5;
 
-const inviteEmail = ref();
-
 const showForm = ref(false);
 
-function inviteParticipant() {
-  const {invateUserMutation} = useTripStore();
-  invateUserMutation.mutateAsync(inviteEmail.value);
-  const {getTripId} = useUtilStore()
-  useTripStore().invateUserMutation.mutateAsync({userEmail: inviteEmail.value, param: {tripId: getTripId().value}});
+function inviteParticipant(participant: { name: string; email: string }) {
+  if (participants.value.length == maxParticipants) {
+    setErrorCurrentMessage("Osiągnięto limit");
+    return;
+  }
+  addParticipant(Number(tripId), participant);
 }
-
-function removeParticipantById(id: string) {
-  participants.value = participants.value.filter(p => p.id !== id);
+function removeParticipantById(id: number) {
+  removeParticipant(Number(tripId), id);
 }
-
-
 </script>
 
 <template>
@@ -57,44 +38,64 @@ function removeParticipantById(id: string) {
       <template #title>
         <div class="header-wrapper">
           <div class="title-container">
-            <h1 class="trip-title" v-if="!isLoading && !error">{{ tripData?.name }}</h1>
-            <h1 class="trip-title" v-else>Ładowanie nazwy wycieczki...</h1>
-            <h2 class="second-title">Utwórz nowy plan</h2>
+            <h1 class="trip-title" v-if="!isLoading && !error">
+              {{ tripData?.name }}
+            </h1>
+            <h1 class="trip-title" v-else>Ładowanie uczestników...</h1>
+            
           </div>
-          <div class="button-container">
-            <AppButton
-                variant="primary"
-                size="md"
-                @click="showForm = !showForm"
-            >
-              Dodaj uczestnika
-            </AppButton>
-          </div>
+          
         </div>
       </template>
 
       <template #content>
-        <ParticipantsCounter
-            :current="participants.length"
-            :max="maxParticipants"
-            title="Uczestnicy"
-        />
-
-        <ParticipantAddForm
-            v-if="showForm"
-            title="Dodaj uczestnika"
-            @cancel="showForm = false"
-            @submitForm="inviteParticipant"
-        />
-
-        <div class="participants-card">
-          <h3 class="card-title">Dodani uczestnicy</h3>
-
-          <ParticipantList
-              :participants="participants"
-              @remove="removeParticipantById"
-          />
+        <div class="title-container pb-4">
+          <h2 class="second-title">Zarządzaj uczestnikami</h2>
+          <div class="button-container ">
+            <AppButton
+              variant="primary"
+              size="md"
+              @click="showForm = !showForm"
+            >
+              <v-icon v-if="$vuetify.display.smAndDown">mdi-plus</v-icon>
+              <span v-else>Dodaj</span>
+            </AppButton>
+          </div>
         </div>
+        
+        <v-container class="page-container" fluid>
+          <v-row>
+            <v-col>
+              <ParticipantsCounter
+                :current="participants.length"
+                :max="maxParticipants"
+                title="Uczestnicy"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <ParticipantAddForm
+                v-if="showForm"
+                title="Dodaj uczestnika"
+                @cancel="showForm = false"
+                @submitForm="inviteParticipant"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <div class="participants-card">
+                <h3 class="card-title">Dodani uczestnicy</h3>
+
+                <ParticipantList
+                  :participants="participants"
+                  @remove="removeParticipantById"
+                />
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
       </template>
     </Section>
   </div>
@@ -102,8 +103,6 @@ function removeParticipantById(id: string) {
 
 <style scoped lang="scss">
 .page-container {
-  max-width: 88rem;
-  margin: 0 auto;
   padding-top: 0;
 }
 
@@ -112,13 +111,12 @@ function removeParticipantById(id: string) {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  margin-top: 0;
 }
 
 .title-container {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .trip-title {
@@ -135,7 +133,7 @@ function removeParticipantById(id: string) {
 
 .button-container {
   display: flex;
-  align-self: flex-end;
+  justify-content: flex-end;
 }
 
 .participants-card {
@@ -149,5 +147,41 @@ function removeParticipantById(id: string) {
   margin: 0 0 1rem;
   font-size: 1.25rem;
   font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .trip-title {
+    font-size: 2rem;
+  }
+
+  .second-title {
+    font-size: 1.8rem;
+  }
+
+  .button-container {
+    justify-content: flex-start;
+  }
+
+  .participants-card {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .trip-title {
+    font-size: 1.6rem;
+  }
+
+  .second-title {
+    font-size: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .participants-card {
+    padding: 0.75rem;
+  }
 }
 </style>

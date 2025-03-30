@@ -10,7 +10,7 @@ const nameInput = ref("");
 const emailInput = ref("");
 
 function handleSubmit() {
-  emit("submitForm", nameInput.value, emailInput.value);
+  emit("submitForm", {name:nameInput.value, email:emailInput.value});
 }
 
 function handleCancel() {
@@ -33,7 +33,7 @@ function handleCancel() {
       </div>
     </div>
 
-    <div class="form-buttons">
+    <div class="form-buttons pt-3">
       <AppButton variant="secondary" @click="handleCancel">Anuluj</AppButton>
       <AppButton variant="primary" @click="handleSubmit">Dodaj</AppButton>
     </div>
@@ -82,5 +82,18 @@ input {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
+}
+@media (max-width: 600px) {
+  .form-fields{
+    flex-direction: column;
+  }
+  .form-buttons {
+    justify-content:center;
+    align-items: stretch;
+  }
+  
+  .field {
+    flex: 1;
+  }
 }
 </style>

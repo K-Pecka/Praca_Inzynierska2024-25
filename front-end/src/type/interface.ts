@@ -55,7 +55,7 @@ export interface Trip {
   end_date: string;
   country?: string;
   city?: string;
-  members?:Array<string>;
+  members?: { id: number, name: string, email: string }[];
   budget?:Budget;
 }
 export interface Budget {
@@ -153,10 +153,9 @@ export interface Ticket{
 }
 
 export interface Participant {
-  id: string;
+  id: number;
   name: string;
   email: string;
-  role: string;
 }
 
 export interface PricingCard {

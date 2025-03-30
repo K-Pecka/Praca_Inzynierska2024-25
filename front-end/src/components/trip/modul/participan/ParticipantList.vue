@@ -6,8 +6,13 @@ const props = defineProps<{
   participants: Participant[];
 }>();
 
-function handleRemove(id: string) {
+const emit = defineEmits<{
+  (e: "remove", id: number): void;
+}>();
+
+function handleRemove(id: number) {
   console.log("Usuwam uczestnika o id:", id);
+  emit("remove", id); 
 }
 </script>
 

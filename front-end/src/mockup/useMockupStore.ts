@@ -2,6 +2,31 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useNotificationStore } from "@/stores";
 import { NewTrip } from "@/type";
+interface Participant {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface Budget {
+  id:number,
+  amount: string;
+  currency: string;
+  trip: number;
+}
+
+interface Trip {
+  id: number;
+  name: string;
+  creator: number;
+  country?: string;
+  city?: string;
+  members: Participant[];
+  budget: Budget;
+  start_date: string;
+  end_date: string;
+}
+
 export const useMockupStore = defineStore(
   "mockup",
   () => {
@@ -30,13 +55,19 @@ export const useMockupStore = defineStore(
       profile: [1],
     };
     const currentUser = ref<number>(tourist.id);
-    const trip = {
+    const trip:Trip = {
       id: 2,
       name: "Test 1",
       creator: 1,
       country: "Polska",
       city: "Warszawa",
-      members: [],
+      members: [{
+        id:1,name: "string 1", email: "string"
+      },{
+        id:2,name: "string 2", email: "string"
+      },{
+        id:3,name: "string 3", email: "string"
+      },],
       budget: {
         id: 2,
         amount: "0.00",
@@ -46,12 +77,13 @@ export const useMockupStore = defineStore(
       start_date: "2025-04-16",
       end_date: "2025-04-26",
     };
-    const trip2 = {
+    const trip2:Trip = {
       id: 3,
       name: "Test 2",
       creator: 1,
       members: [],
       budget: {
+        id:3,
         amount: "0.00",
         currency: "PLN",
         trip: 2,
@@ -117,12 +149,13 @@ export const useMockupStore = defineStore(
         currentUser.value = data.value.user[0].id;
       }
       let idTrip = data.value.trip[data.value.trip.length - 1].id;
-      let newData = {
+      let newData:Trip = {
         id: idTrip + 1,
         name: newTrip.name,
         creator: currentUser.value,
         members: [],
         budget: {
+          id:new Date().getMilliseconds(),
           amount: "0.00",
           currency: "PLN",
           trip: idTrip + 1,
@@ -174,8 +207,7 @@ export const useMockupStore = defineStore(
     };
     const getUserProfile = () =>{
       const auth = localStorage.getItem("auth");
-      console.log(auth == null);
-      if (auth != null && auth != "") {
+      if (auth != null && JSON.parse(auth)?.token) {
         currentUser.value = JSON.parse(auth).token.access;
       } else {
         currentUser.value = 0;
@@ -183,7 +215,26 @@ export const useMockupStore = defineStore(
       const profile = data.value.user.find((t) => t.id == currentUser.value)?.profile
       return profile? profile: [];
     }
-    return {getUserProfile, login, logOut, getTrips,getTrip, deleteTrip, addTrip,setBudget,getPlans, deletePlanMockUp,createPlanMockUp };
+    const addParticipant = (idTrip: number, participant: { name: string; email: string }) => {
+      const trip = data.value.trip.find((t) => t.id === idTrip);
+      if (!trip) return {error:true,message:"Podana wycieczka nie istnieje"};
+    
+      const isAlreadyMember = trip.members.some((m: { email: string }) => m.email === participant.email);
+      if (isAlreadyMember) return {error:true,message:"Dodano już takiego użytkownika"};
+    
+      const newId = trip.members.length > 0 ? Math.max(...trip.members.map((m: { id: number }) => m.id)) + 1 : 1;
+      const newParticipant = { id: newId, ...participant };
+    
+      trip.members.push(newParticipant);
+    };
+    const removeParticipant = (idTrip: number, idParticipant: number) => {
+      const trip = data.value.trip.find((t) => t.id === idTrip);
+      
+      if (trip) {
+        trip.members = trip.members.filter((member) => member.id !== idParticipant);
+      }
+    };
+    return {removeParticipant,addParticipant,getUserProfile, login, logOut, getTrips,getTrip, deleteTrip, addTrip,setBudget,getPlans, deletePlanMockUp,createPlanMockUp };
   },
   {
     persist: {
