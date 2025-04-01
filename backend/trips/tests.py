@@ -223,7 +223,7 @@ class TicketAPITestCase(TestCase):
         self.ticket_type = TicketType.objects.create(name="Standard")
 
         self.ticket = Ticket.objects.create(
-            file="tickets/sample.pdf",
+            file="media/tickets/sample.pdf",
             type=self.ticket_type,
             valid_from="2025-06-05T12:00:00Z",
             profile=self.user_profile,
