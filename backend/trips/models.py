@@ -1,5 +1,5 @@
-import base64
 import secrets
+import pycountry
 
 from rest_framework.response import Response
 
@@ -13,6 +13,15 @@ from dicts.models import BaseModel
 from trips.managers import TripManager, TicketManager, TripAccessTokenManager
 from users.models import UserProfile
 
+
+def validate_iso_currency(value):
+    """Walidacja kodu waluty zgodnego z ISO 4217"""
+    if not pycountry.currencies.get(alpha_3=value):
+        available = [c.alpha_3 for c in pycountry.currencies]
+        raise ValidationError(
+            f"'{value}' nie jest prawidłowym kodem waluty ISO 4217. "
+            f"Dostępne kody: {', '.join(available)}"
+        )
 
 class Trip(BaseModel):
     name = models.CharField(
@@ -183,9 +192,10 @@ class Budget(BaseModel):
         help_text=_("Kwota budżetu")
     )
     currency = models.CharField(
-        max_length=10,
+        max_length=3,
         verbose_name=_("Waluta"),
-        help_text=_("Waluta (np. USD, PLN)")
+        validators=[validate_iso_currency],
+        help_text =_( "Kod waluty zgodny z ISO 4217 (np. PLN, EUR, USD)")
     )
     trip = models.OneToOneField(
         Trip,
@@ -194,6 +204,16 @@ class Budget(BaseModel):
         verbose_name=_("Wycieczka"),
         help_text=_("Powiązana wycieczka")
     )
+
+    @classmethod
+    def get_currency_choices(cls):
+        """Generuje listę wyboru walut dla formularzy"""
+        currencies = sorted(
+            [(c.alpha_3, f"{c.alpha_3} - {c.name}")
+             for c in pycountry.currencies],
+            key=lambda x: x[0]
+        )
+        return currencies
 
     class Meta:
         db_table = "budgets"
