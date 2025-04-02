@@ -111,59 +111,57 @@ class IsCreatorForChatMessage(BasePermission):
 ##################################################################################3
 class IsTripParticipant(BasePermission):
     """
-    Custom permission to check if the user is a participant of the trip.
+    Custom permission that:
+    - Allows all actions for list/create views
+    - Returns 404 when object doesn't exist
+    - Returns 403 only when object exists but user has no permissions
     """
     message = "Tylko uczestnicy wycieczki mogą wykonać tę akcję."
 
     def has_permission(self, request, view):
-        if isinstance(view, ListAPIView) or isinstance(view, CreateAPIView):
+        if isinstance(view, (ListAPIView, CreateAPIView)):
             return True
 
         try:
             obj = view.get_object()
-        except Exception:
-            return False
+        except NotFound:
+            raise
+        except Exception as e:
+            raise NotFound("Nie znaleziono obiektu")
 
         profile = request.user.get_default_profile()
         if not profile:
-            return False
+            raise PermissionDenied("Nie znaleziono profilu użytkownika")
 
-        trip_related_objects = (
-            Trip,
-            Chatroom,
-            ChatMessage,
-            Ticket,
-            Itinerary,
-            ItineraryActivity,
-        )
+        if not self.is_trip_participant(obj, profile):
+            raise PermissionDenied(self.message)
 
-        for obj_type in trip_related_objects:
-            if isinstance(obj, obj_type):
-                return self.is_trip_participant(obj, profile)
-
-        return False
+        return True
 
     def is_trip_participant(self, obj, profile):
+        """Check if profile is a participant of related trip"""
+        trip = self.get_related_trip(obj)
+        if not trip:
+            return False
+        return trip.creator == profile or profile in trip.members.all()
+
+    def get_related_trip(self, obj):
+        """
+        Get the related trip based on object type
+        """
         if isinstance(obj, Trip):
-            return obj.creator == profile or profile in obj.members.all()
-
-        if isinstance(obj, Chatroom):
-            return obj.trip.creator == profile or profile in obj.members.all()
-
-        if isinstance(obj, ChatMessage):
-            return obj.chatroom.trip.creator == profile or profile in obj.chatroom.members.all()
-
-        if isinstance(obj, Ticket):
-            return obj.trip.creator == profile or profile in obj.trip.members.all()
-
-        if isinstance(obj, Itinerary):
-            return obj.trip.creator == profile or profile in obj.trip.members.all()
-
-        if isinstance(obj, ItineraryActivity):
-            return obj.itinerary.trip.creator == profile or profile in obj.itinerary.trip.members.all()
-
-        return False
-
+            return obj
+        elif isinstance(obj, Chatroom):
+            return obj.trip
+        elif isinstance(obj, ChatMessage):
+            return obj.chatroom.trip
+        elif isinstance(obj, Ticket):
+            return obj.trip
+        elif isinstance(obj, Itinerary):
+            return obj.trip
+        elif isinstance(obj, ItineraryActivity):
+            return obj.itinerary.trip
+        return None
 
 class IsTripCreator(BasePermission):
     """

@@ -1,14 +1,12 @@
 from rest_framework import serializers
 
-from trips.serializers.trip_serializers import BaseTripSerializer
-
-from trips.serializers.budget_serializers import BudgetRetrieveSerializer
+from trips.models import Trip
 
 from users.models import CustomUser
 from users.serializers.user_profile_serializers import UserProfileListSerializer
 
 
-class TripParticipantsUpdateSerializer(BaseTripSerializer):
+class TripParticipantsUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -19,6 +17,9 @@ class TripParticipantsUpdateSerializer(BaseTripSerializer):
     def get_budget(self, obj):
         return obj.budget
 
+    class Meta:
+        model = Trip
+        fields = ['id', 'name', 'creator', 'members', 'start_date', 'end_date', 'budget']
 
 class InvitationSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=100)
