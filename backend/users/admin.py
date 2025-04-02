@@ -62,3 +62,4 @@ class UserPermissionAdmin(admin.ModelAdmin):
         return get_admin_change_link(obj.permission)
 
     get_permission_link.short_description = 'Permission'
+    #a

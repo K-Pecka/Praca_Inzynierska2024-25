@@ -18,5 +18,8 @@ DATABASES = {
     }
 }
 
+<<<<<<< HEAD
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+=======
+>>>>>>> afc59b9 (Delete useless templates, update settings, add .enc and profile, fix tests)
