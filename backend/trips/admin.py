@@ -60,4 +60,4 @@ class TripAccessTokenAdmin(admin.ModelAdmin):
     list_select_related = ('trip', 'user_profile')
     list_display = ('trip', 'token', 'user_profile')
     list_filter = ('trip',)
-    #x
+
