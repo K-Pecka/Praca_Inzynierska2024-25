@@ -15,8 +15,6 @@ class TripParticipantsUpdateSerializer(BaseTripSerializer):
     members = UserProfileListSerializer(read_only=True, many=True)
     start_date = serializers.DateField(read_only=True)
     end_date = serializers.DateField(read_only=True)
-    settings = serializers.JSONField(read_only=True)
-    budget = BudgetRetrieveSerializer(read_only=True)
 
     def get_budget(self, obj):
         return obj.budget

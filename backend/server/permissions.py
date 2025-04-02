@@ -1,7 +1,7 @@
 """
 Permission configuration for server project.
 """
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import BasePermission
 from chats.models import Chatroom, ChatMessage
@@ -176,15 +176,16 @@ class IsTripCreator(BasePermission):
         if not profile:
             return False
 
-        if request.method == 'POST':
+        if request.method == 'POST' or request.method == 'DELETE':
             return self.is_creator_for_post_request(view, profile)
 
         try:
             obj = view.get_object()
+            return self.is_trip_creator(obj, profile)
+        except NotFound:
+            raise
         except Exception:
             return False
-
-        return self.is_trip_creator(obj, profile)
 
     def is_creator_for_post_request(self, view, profile):
         """
@@ -200,11 +201,13 @@ class IsTripCreator(BasePermission):
             if itinerary_id:
                 itinerary = Itinerary.objects.get(pk=itinerary_id)
                 trip = itinerary.trip if itinerary else None
+        if trip is None:
+            raise NotFound(detail="Nie znaleziono wycieczki.")
 
-        if not trip:
-            return False
+        if trip.creator != profile:
+            raise PermissionDenied(self.message)
 
-        return trip.creator == profile
+        return True
 
     def is_trip_creator(self, obj, profile):
         if isinstance(obj, Trip):
