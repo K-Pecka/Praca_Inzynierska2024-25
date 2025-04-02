@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from chats.models import Chatroom
+from trips.models import Trip
 from users.models import UserProfile
 
 
@@ -28,6 +29,22 @@ class ChatroomCreateSerializer(BaseChatroomSerializer):
     def validate(self, data):
         # TODO: walidacja dla prywatnych i publicznych pokoi dla przewodników i uczestników do ustalenia
         return data
+
+    def create(self, validated_data):
+        try:
+            request = self.context['request']
+            kwargs = self.context['view'].kwargs
+            trip_id = kwargs.pop('trip_pk', None)
+            trip = Trip.objects.get(id=trip_id)
+            if not trip:
+                raise serializers.ValidationError("Nie znaleziono wycieczki.")
+
+            validated_data['creator'] = request.user.get_default_profile()
+            validated_data['trip'] = trip
+            chatroom = super().create(validated_data)
+            return chatroom
+        except Exception as e:
+            raise e
 
 
 class ChatroomRetrieveSerializer(BaseChatroomSerializer):

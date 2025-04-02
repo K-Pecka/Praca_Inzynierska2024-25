@@ -7,7 +7,7 @@ from chats.views.chatroom_views import ChatroomCreateAPIView, ChatroomRetrieveAP
 
 urlpatterns = [
     # Chatroom URLs
-    # path('create/', ChatroomCreateAPIView.as_view(), name='chatroom-create'),
+    path('trip/<int:pk>/create/', ChatroomCreateAPIView.as_view(), name='chatroom-create'),
     path('<int:pk>/', ChatroomRetrieveAPIView.as_view(), name='chatroom-retrieve'),
     path('all/', ChatroomListAPIView.as_view(), name='chatroom-list'),
     path('<int:pk>/update/', ChatroomUpdateAPIView.as_view(), name='chatroom-update'),

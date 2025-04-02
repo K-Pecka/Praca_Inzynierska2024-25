@@ -252,8 +252,7 @@ class TicketAPITestCase(TestCase):
         """
         Test retrieving a ticket.
         """
-        expected_url = f'http://testserver/{self.ticket.file.name}'
-
+        expected_url = f'http://testserver/media/{self.ticket.file.name}'
         view = TicketRetrieveAPIView.as_view()
         request = self.factory.get(f'/trips/{self.trip.id}/tickets/{self.ticket.id}/')
         force_authenticate(request, user=self.user)

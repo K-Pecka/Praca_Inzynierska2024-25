@@ -16,9 +16,8 @@ class ChatMessageCreateAPIView(CreateAPIView):
 class ChatMessageRetrieveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
     serializer_class = ChatMessageRetrieveSerializer
-    lookup_field = 'room_pk'
 
-    def get_queryset(self):
+    def get_object(self):
         return ChatMessage.objects.by_chatroom_pk(self.kwargs['room_pk'])
 
 
@@ -37,16 +36,14 @@ class ChatMessageListAPIView(ListAPIView):
 class ChatMessageUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatMessage]
     serializer_class = ChatMessageUpdateSerializer
-    lookup_field = 'room_pk'
 
-    def get_queryset(self):
+    def get_object(self):
         return ChatMessage.objects.by_chatroom_pk(self.kwargs['room_pk'])
 
 
 class ChatMessageDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatMessage]
-    lookup_field = 'room_pk'
 
-    def get_queryset(self):
+    def get_object(self):
         return ChatMessage.objects.by_chatroom_pk(self.kwargs['room_pk'])
 
