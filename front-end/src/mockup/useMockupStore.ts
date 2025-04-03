@@ -236,7 +236,18 @@ export const useMockupStore = defineStore(
       }
       return {error:true,message:"Podana wycieczka nie działa"}
     };
-    return {removeParticipant,addParticipant,getUserProfile, login, logOut, getTrips,getTrip, deleteTrip, addTrip,setBudget,getPlans, deletePlanMockUp,createPlanMockUp };
+
+    const getCurrentUser = () => {
+      return data.value.user.find((u) => u.id === currentUser.value);
+    };
+
+    const getUserInitials = () => {
+      const user = getCurrentUser();
+      if (!user) return "";
+      const initials = `${user.first_name[0] ?? ""}${user.last_name[0] ?? ""}`;
+      return initials.toUpperCase();
+    };
+    return {removeParticipant,addParticipant,getUserProfile, login, logOut, getTrips,getTrip, deleteTrip, addTrip,setBudget,getPlans, deletePlanMockUp,createPlanMockUp, getUserInitials };
   },
   {
     persist: {

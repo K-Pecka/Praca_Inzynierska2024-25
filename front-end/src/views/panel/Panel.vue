@@ -2,6 +2,7 @@
 import {ref, onMounted, onUnmounted} from "vue";
 import {PanelNavbar, SideNav} from "@/components";
 import {usePageHomeStore, usePagePanelStore, useUtilStore} from "@/stores";
+import { useMockupStore} from "@/mockup/useMockupStore";
 
 const useStore = usePageHomeStore();
 const SiteName = useStore.getSiteName();
@@ -12,6 +13,9 @@ const sideNavItems = getSideNavItems(getTripId().value as string);
 const showNavigation = isCurrentRouteNotInSet(["roleSelection", "yourTrip", "TripForm"]);
 
 const sideNavOpen = ref(false);
+
+const { getUserInitials } = useMockupStore();
+const userInitials = getUserInitials();
 
 function toggleSideNav() {
   sideNavOpen.value = !sideNavOpen.value;
@@ -37,7 +41,7 @@ onUnmounted(() => {
     <v-container fluid class="full-width-container">
       <v-row>
         <v-col cols="12">
-          <PanelNavbar :account-icon="navbar.accountIcon"
+          <PanelNavbar :account-icon="userInitials"
                        :show-navigation="showNavigation"
                        @toggleMenu="toggleSideNav">
             <template #logo>

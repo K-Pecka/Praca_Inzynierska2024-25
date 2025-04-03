@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useActivityStore } from "@/stores/trip/useActivityStore";
-import ActivityList from "@/components/trip/activity/ActivityList.vue";
-import ActivityForm from "@/components/trip/activity/ActivityForm.vue";
+import ActivityList from "@/components/trip/modul/activity/ActivityList.vue";
+import ActivityForm from "@/components/trip/modul/activity/ActivityForm.vue";
 import AppButton from "@/components/budget/AppButton.vue";
 import {Section} from "@/components";
 
