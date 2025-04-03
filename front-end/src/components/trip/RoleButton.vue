@@ -35,9 +35,17 @@ const props = defineProps({
   cursor: pointer;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-width: 15rem;
+  min-width: 18rem;
   max-width: 25rem;
   flex: 1 1 auto;
+  width: 100%;
+
+  @media (max-width: 480px) {
+    width: 20rem;
+  }
+  @media (max-width: 360px) {
+    width: 18rem;
+  }
 
   &:hover {
     transform: scale(1.03);
@@ -49,12 +57,21 @@ const props = defineProps({
     height: 153px;
     margin-bottom: 1rem;
     object-fit: contain;
+
+    @media (max-width: 480px) {
+      width: 90px;
+      height: 90px;
+    }
   }
 
   .role-title {
     font-size: 1.9rem;
     color: rgb(var(--v-theme-text));
     margin-bottom: 0.5rem;
+
+    @media (max-width: 480px) {
+      font-size: 1.4rem;
+    }
   }
 
   .role-description {
