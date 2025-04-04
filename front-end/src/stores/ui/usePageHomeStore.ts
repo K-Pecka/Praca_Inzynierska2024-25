@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "../auth/useAuthStore";
-import { computed, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import {
   defaultNavLinks,
   loggedInNavLinks,
@@ -13,7 +13,6 @@ import {
 } from "@/dataStorage";
 export const usePageHomeStore = defineStore("pagHome", () => {
   const { getToken } = useAuthStore();
-
   const navigationLinks = ref<Array<{ label: string; href: string | { name: string }; className?: string[]; active?: boolean }>>([]);
   onMounted(async () => {
       navigationLinks.value = [
@@ -48,7 +47,6 @@ export const usePageHomeStore = defineStore("pagHome", () => {
   const getSectionTitle = (pageType: string): string | undefined => {
     return sectionTitles[pageType] || "";
   };
-
   return {
     getSiteName,
     navigationLinks,

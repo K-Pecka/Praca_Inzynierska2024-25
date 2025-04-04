@@ -81,7 +81,7 @@ export const apiEndpoints = {
     delete: `${hostName}/trip/:tripId/delete/`,
     create: `${hostName}/trip/create/`,
     update: `${hostName}/trip/:tripId/update/`,
-    invateUser: `${hostName}/trip/:tripId/participants/manage/:userId/`,
+    invateUser: `${hostName}/trip/:tripId/invite/`,
   },
   plan: {
     all: `${hostName}/trip/:tripId/itinerary/`,

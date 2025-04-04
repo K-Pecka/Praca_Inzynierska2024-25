@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import {Section,TripBox} from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
-import BaseButton from "@/components/style/button/BaseButton.vue";
+import { useRoute } from "vue-router";
+useTripStore().initialize(useRoute().name as string);
 const { yourTrips } = useTripStore();
 const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
 </script>

@@ -1,16 +1,14 @@
 <script lang="ts" setup>
 import {ref, onMounted, onUnmounted} from "vue";
 import {PanelNavbar, SideNav} from "@/components";
-import {usePageHomeStore, usePagePanelStore, useUtilStore} from "@/stores";
+import {usePageHomeStore, useUtilStore} from "@/stores";
 import { useMockupStore} from "@/mockup/useMockupStore";
 
 const useStore = usePageHomeStore();
 const SiteName = useStore.getSiteName();
 
-const {navbar, getSideNavItems} = usePagePanelStore();
-const {isCurrentRouteNotInSet, getTripId} = useUtilStore();
-const sideNavItems = getSideNavItems(getTripId().value as string);
-const showNavigation = isCurrentRouteNotInSet(["roleSelection", "yourTrip", "TripForm"]);
+const {isCurrentRouteNotInSet} = useUtilStore();
+const showNavigation = isCurrentRouteNotInSet(["roleSelection", "yourTrip", "TripForm","yourTripGuide"]);
 
 const sideNavOpen = ref(false);
 
@@ -59,7 +57,7 @@ onUnmounted(() => {
             class="side-nav-col"
             :class="{ 'mobile-overlay': isMobile, 'open': sideNavOpen }"
         >
-          <SideNav :items="sideNavItems" :mobile="isMobile" @close="toggleSideNav" />
+          <SideNav :mobile="isMobile" @close="toggleSideNav" />
         </v-col>
         <v-col
             :cols="showNavigation ? (isMobile ? 12 : 9) : 12"
@@ -81,14 +79,11 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 main{
-  background-color: #F8F9Fa;
+  background-color: rgb(var(--v-theme-background),#F8F9Fa);
 }
 .wrapper {
   position: relative;
   overflow-x: hidden;
-}
-* {
-  transition: all 0.3s ease;
 }
 @media (max-width: 600px) {
   h1{
