@@ -20,7 +20,7 @@ export const usePermissionStore = defineStore("permission", () => {
         ExpenseTracker:[0,2,3],
         ParticipantsView:[0,2,3]
     }
-    const access:Record<string,Record<string,number[]>>={
+    const access:Record<string,Record<string,number[]>> = {
         nav:touristPanelNavAccess,
         path:pathAccess
     }

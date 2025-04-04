@@ -24,6 +24,11 @@ import PricingCard from "@/components/home/PricingCard.vue";
   justify-content: center;
   gap: 1.5rem;
   flex-wrap: wrap;
-  padding: 1rem;
+  padding: 8rem 1rem;
+  align-items: flex-start;
+
+  min-width: 60vh;
+  margin: 0 auto;
 }
+
 </style>
