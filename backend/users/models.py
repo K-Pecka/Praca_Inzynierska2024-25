@@ -111,7 +111,7 @@ class CustomUser(AbstractBaseUser, BaseModel):
         try:
             return UserProfile.objects.get(user=self, is_default=True)
         except UserProfile.DoesNotExist:
-            return None
+            raise ValueError("Nie znaleziono domyślnego profilu użytkownika.")
 
     class Meta:
         verbose_name = "Użytkownik"

@@ -13,3 +13,9 @@ export enum FormType {
   TRIP = "trip",
   BUDGET = "budget",
 }
+export enum Role {
+  UNKNOWN = "unknown",
+  TURIST = "turist",
+  GUIDE = "guide",
+  ADMIN = "admin",
+}

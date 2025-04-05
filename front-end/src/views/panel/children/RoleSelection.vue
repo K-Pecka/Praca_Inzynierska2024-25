@@ -41,6 +41,10 @@ const getRoleSelection = pagePanelStore.getRoleSelection;
     font-weight: 600;
     margin-bottom: 3.5rem;
     color: rgb(var(--v-theme-text));
+
+    @media (max-width: 480px) {
+      margin-bottom: 2rem;
+    }
   }
 
   .roles-container {
@@ -49,16 +53,44 @@ const getRoleSelection = pagePanelStore.getRoleSelection;
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 7rem;
-    margin-bottom: 2rem;
   }
 
-  @media (max-width: 800px) {
-    .roles-container {
-      gap: 2rem;
+}
+
+.role-selection .roles-container {
+  @media (max-width: 1024px) {
+    gap: 5rem;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 2.7rem;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+}
+
+.role-selection {
+  .title, .subtitle {
+    font-size: 2.5rem;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
     }
-    .title, .subtitle {
-      font-size: 1.8rem;
+
+    @media (max-width: 480px) {
+      font-size: 1.5rem;
     }
   }
+
 }
+
+
+
 </style>

@@ -2,7 +2,10 @@ import { defineStore } from "pinia";
 import { RoleSelection, SideNavItem } from "@/type/interface";
 import { image } from "@/lib";
 import { usePermissionStore } from "@/stores";
+import { useRoleStore } from "../auth/useRoleStore";
+import { Role } from "@/type/enum";
 export const usePagePanelStore = defineStore("pagePanel", () => {
+    const { getRole } = useRoleStore();
     const getRoleSelection:RoleSelection = {
         title: "Witaj w aplikacji Plannder",
         subtitle: "W jakiej roli planujesz zorganizować podróż?",
@@ -17,15 +20,19 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
                 title: "Przewodnik",
                 description: "Tworzenie i zarządzanie wycieczkami dla grup turystycznych",
                 image: image.role.guide,
-                path:{name:"yourTrip"}
+                path:{name:"yourTripGuide"}
             },
         ],
     };
-    const navbar = {
-        accountIcon: image.icon.menu.myAccount,
-    };
 
-    const getSideNavItems = (tripId: string): SideNavItem[]=> [
+    const getSideNavItems = (tripId: string): SideNavItem[]=> {
+        return getRole() == Role.GUIDE?[]:[
+        {
+            label: "Powrót",
+            icon: image.icon.menu.back,
+            name:"powrót",
+            route: { name: 'yourTrip'},
+        },
         {
             label: "Panel",
             icon: image.icon.menu.dashboard,
@@ -70,11 +77,10 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
                 { label: "Edycja wycieczki",name:"settingEdit", route: { name: 'TripEdit', params: { tripId:tripId }} },
             ],
         },
-    ];
+    ]};
 
     return {
         getRoleSelection,
-        navbar,
         getSideNavItems,
     };
 });

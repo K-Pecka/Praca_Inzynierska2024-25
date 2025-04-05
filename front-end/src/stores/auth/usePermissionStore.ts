@@ -20,7 +20,7 @@ export const usePermissionStore = defineStore("permission", () => {
         ExpenseTracker:[0,2,3],
         ParticipantsView:[0,2,3]
     }
-    const access:Record<string,Record<string,number[]>>={
+    const access:Record<string,Record<string,number[]>> = {
         nav:touristPanelNavAccess,
         path:pathAccess
     }
@@ -28,7 +28,7 @@ export const usePermissionStore = defineStore("permission", () => {
     const hasPermission = (profile: number[], name: string | undefined, type: "nav" | "path" = "nav"): boolean => {
         const allowedProfiles = access[type]?.[name || ''];
         if (!allowedProfiles) return true;
-        return profile.some((p) => allowedProfiles.includes(p));
+        return true//profile.some((p) => allowedProfiles.includes(p));
       };
     return {hasPermission,goTo}
 });

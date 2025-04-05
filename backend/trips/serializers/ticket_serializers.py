@@ -4,18 +4,22 @@ from trips.models import Ticket, TicketType, Trip
 from users.models import UserProfile
 
 
-class BaseTicketSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ticket
-        fields = ['id', 'file', 'type', 'profile', 'valid_from', 'trip']
-
-
-class TicketCreateSerializer(BaseTicketSerializer):
+class TicketCreateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     file = serializers.FileField()
     type = serializers.PrimaryKeyRelatedField(queryset=TicketType.objects.all())
+    type_display = serializers.CharField(source='type.name', read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
-    valid_from = serializers.DateTimeField()
+    valid_from = serializers.DateTimeField(
+        format="%d.%m.%Y %H:%M",
+        input_formats=["%d.%m.%Y %H:%M", "iso-8601"],
+        help_text="Data w formacie DD.MM.RRRR GG:MM (np. 20.07.2023 14:30)",
+        error_messages = {
+            'invalid': 'Nieprawidłowy format daty. Wprowadź datę w formacie DD.MM.RRRR GG:MM',
+            'blank': 'Data nie może być pusta',
+            'null': 'Data nie może być pusta'
+        }
+    )
     trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
 
     def create(self, validated_data):
@@ -24,39 +28,51 @@ class TicketCreateSerializer(BaseTicketSerializer):
         validated_data['profile'] = profile
         return Ticket.objects.create(**validated_data)
 
+    class Meta:
+        model = Ticket
+        fields = ['id', 'file', 'type', 'type_display', 'profile', 'valid_from', 'trip']
 
-class TicketRetrieveSerializer(BaseTicketSerializer):
+
+class TicketRetrieveSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(read_only=True)
+    type = serializers.PrimaryKeyRelatedField(read_only=True)
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    valid_from = serializers.DateTimeField(
+        read_only=True,
+        format="%d.%m.%Y %H:%M",
+    )
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Ticket
+        fields = ['file', 'type', 'profile', 'valid_from', 'trip']
+
+class TicketListSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     file = serializers.FileField(read_only=True)
     type = serializers.PrimaryKeyRelatedField(read_only=True)
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
-    valid_from = serializers.DateTimeField(read_only=True)
+    valid_from = serializers.DateTimeField(
+        format="%d.%m.%Y %H:%M",
+    )
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Ticket
+        fields = ['id', 'file', 'type', 'profile', 'valid_from', 'trip']
 
-
-class TicketListSerializer(BaseTicketSerializer):
-    id = serializers.IntegerField(read_only=True)
-    file = serializers.FileField(read_only=True)
-    type = serializers.PrimaryKeyRelatedField(read_only=True)
-    profile = serializers.PrimaryKeyRelatedField(read_only=True)
-    valid_from = serializers.DateTimeField(read_only=True)
-    trip = serializers.PrimaryKeyRelatedField(read_only=True)
-
-
-class TicketUpdateSerializer(BaseTicketSerializer):
+class TicketUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     file = serializers.FileField()
     type = serializers.PrimaryKeyRelatedField(queryset=TicketType.objects.all())
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
-    valid_from = serializers.DateTimeField()
+    valid_from = serializers.DateTimeField(
+        format="%d.%m.%Y %H:%M",
+        input_formats=["%d.%m.%Y %H:%M", "iso-8601"],
+    )
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Ticket
+        fields = ['id', 'file', 'type', 'profile', 'valid_from', 'trip']
 
-
-
-class TicketDestroySerializer(BaseTicketSerializer):
-    id = serializers.IntegerField(write_only=True)
-    file = serializers.FileField(write_only=True)
-    type = serializers.PrimaryKeyRelatedField(write_only=True, queryset=TicketType.objects.all())
-    profile = serializers.PrimaryKeyRelatedField(write_only=True, queryset=UserProfile.objects.all())
-    valid_from = serializers.DateTimeField(write_only=True)
-    trip = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Trip.objects.all())
+class TicketDestroySerializer(serializers.ModelSerializer):
+    class Meta:
+        read_only_fields = ['id']

@@ -1,5 +1,5 @@
-import base64
 import secrets
+import pycountry
 
 from rest_framework.response import Response
 
@@ -13,6 +13,15 @@ from dicts.models import BaseModel
 from trips.managers import TripManager, TicketManager, TripAccessTokenManager
 from users.models import UserProfile
 
+
+def validate_iso_currency(value):
+    """Walidacja kodu waluty zgodnego z ISO 4217"""
+    if not pycountry.currencies.get(alpha_3=value):
+        available = [c.alpha_3 for c in pycountry.currencies]
+        raise ValidationError(
+            f"'{value}' nie jest prawidłowym kodem waluty ISO 4217. "
+            f"Dostępne kody: {', '.join(available)}"
+        )
 
 class Trip(BaseModel):
     name = models.CharField(
@@ -52,10 +61,6 @@ class Trip(BaseModel):
             return Budget.objects.create(trip=self, currency='PLN')
 
     @classmethod
-    def send_invitation(cls, name, date, email):
-        pass
-
-    @classmethod
     def add_member(cls, trip, user_profile):
         if trip.members.filter(id=user_profile.id).exists():
             return Response({"detail": "User is already a member of this trip."})
@@ -92,6 +97,7 @@ class TripAccessToken(BaseModel):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="access_tokens")
     token = models.CharField(max_length=24, verbose_name=_("Token"), help_text=_("Token"))
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    is_pending = models.BooleanField(default=True, verbose_name=_("Czy oczekujący"), help_text=_("Czy oczekujący"))
 
     objects = TripAccessTokenManager()
 
@@ -103,6 +109,11 @@ class TripAccessToken(BaseModel):
         self.token = self.generate_token()
         self.save(update_fields=['token'])
         return self.token
+
+    def change_status(self):
+        self.is_pending = not self.is_pending
+        self.save(update_fields=['is_pending'])
+        return self.is_pending
 
     def __str__(self):
         return f"{self.trip} - {self.token}"
@@ -183,9 +194,10 @@ class Budget(BaseModel):
         help_text=_("Kwota budżetu")
     )
     currency = models.CharField(
-        max_length=10,
+        max_length=3,
         verbose_name=_("Waluta"),
-        help_text=_("Waluta (np. USD, PLN)")
+        validators=[validate_iso_currency],
+        help_text =_( "Kod waluty zgodny z ISO 4217 (np. PLN, EUR, USD)")
     )
     trip = models.OneToOneField(
         Trip,
@@ -194,6 +206,16 @@ class Budget(BaseModel):
         verbose_name=_("Wycieczka"),
         help_text=_("Powiązana wycieczka")
     )
+
+    @classmethod
+    def get_currency_choices(cls):
+        """Generuje listę wyboru walut dla formularzy"""
+        currencies = sorted(
+            [(c.alpha_3, f"{c.alpha_3} - {c.name}")
+             for c in pycountry.currencies],
+            key=lambda x: x[0]
+        )
+        return currencies
 
     class Meta:
         db_table = "budgets"

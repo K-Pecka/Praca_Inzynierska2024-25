@@ -5,7 +5,7 @@ import {
 } from "@tanstack/vue-query";
 import { defineStore } from "pinia";
 import { computed } from "vue";
-import { useAuthStore,useNotificationStore } from "@/stores";
+import { useNotificationStore } from "@/stores";
 import router from "@/router";
 import { fetchTrips, fetchTrip, deleteTrip, createTrip, updateTrip } from "@/api";
 import { fetchPlans, createPlan,deleteItinerary } from "@/api";
@@ -13,10 +13,12 @@ import {fetchAddParticipant,fetchRemoveParticipant} from "@/api";
 import { saveBudget } from "@/api";
 import { Plan } from "@/type";
 import type { Trip } from "@/type/interface";
+import { useRoleStore } from "../auth/useRoleStore";
+import { Role } from "@/type/enum";
 
 export const useTripStore = defineStore("trip", () => {
   const queryClient = useQueryClient();
-
+  const {getRole} = useRoleStore();
   const { setErrorCurrentMessage, setSuccessCurrentMessage } =
     useNotificationStore();
     
@@ -178,13 +180,15 @@ export const useTripStore = defineStore("trip", () => {
     });
   };
   const yourTrips = computed(() => {
+    const btnPath = getRole() == Role.TURIST ? "tripDashboard" : "tripDashboardGuide";
+    console.log("yourTrips",getRole(),btnPath);
     return {
       btn: [
         {
           title: "Zarządzaj wycieczką",
           class: ["primary"],
           onclick: (id: string) =>
-            router.push({ name: "tripDashboard", params: { tripId: id } }),
+            router.push({ name: btnPath, params: { tripId: id } }),
         },
         {
           title: "usuń wycieczkę",

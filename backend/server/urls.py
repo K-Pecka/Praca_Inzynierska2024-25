@@ -29,4 +29,5 @@ urlpatterns = [
     path('trip/<int:trip_pk>/itinerary/', include('itineraries.urls')),
     path('chat/', include('chats.urls')),
     path('trip/', include('trips.urls')),
+    path('apis/', include('apis.urls')),
 ]

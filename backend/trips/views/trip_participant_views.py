@@ -1,172 +1,137 @@
-from urllib.parse import urlencode
-
 from django.contrib.auth import login
+from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
-from django.urls import reverse
-from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from rest_framework import status
-from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from server.permissions import IsTripCreator
 from trips.models import Trip, TripAccessToken
-from trips.serializers.trip_participant_serializers import TripParticipantsUpdateSerializer, InvitationSerializer
-from users.models import UserProfile, CustomUser
+from trips.serializers.trip_participant_serializers import TripParticipantsUpdateSerializer
+from users.models import CustomUser
 
-
-@extend_schema(tags=['trip'], parameters=[
-    OpenApiParameter(
-        name='action',
-        description='Action to add or remove user from the trip (add/remove)',
-        required=True,
-        type=str,
-        enum=['add', 'remove'], )
-])
-class TripParticipantsUpdateAPIView(UpdateAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator]
-    serializer_class = TripParticipantsUpdateSerializer
-
-    def get_object(self):
-        return get_object_or_404(Trip, id=self.kwargs['pk'])
-
-    def update(self, request, *args, **kwargs):
-        try:
-            trip = self.get_object()
-            action = self.request.query_params.get('action', None)
-            profile_id = kwargs.get('profile_pk')
-            user_profile = get_object_or_404(UserProfile, id=profile_id)
-
-            if not self.validate_action(action):
-                return Response({"detail": "Niepoprawna akcja, dostępne opcje to 'add' lub 'remove'."}, status=400)
-
-            if action == 'add':
-                return Trip.add_member(trip, user_profile)
-            elif action == 'remove':
-                return Trip.remove_member(trip, user_profile)
-        except Trip.DoesNotExist:
-            return Response({"error": "Wycieczka nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
-        except UserProfile.DoesNotExist:
-            return Response({"error": "Profil użytkownika nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({"error": f"Wystąpił błąd: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def validate_action(self, action):
-        return action in ['add', 'remove']
 
 @extend_schema(
     tags=['trip invitation'],
-    request=InvitationSerializer,
+    parameters=[
+        OpenApiParameter(
+            name='action',
+            description='Action to perform (invite/remove)',
+            required=True,
+            type=str,
+            enum=['invite', 'remove'],
+            location=OpenApiParameter.QUERY
+        )
+    ],
     responses={
-        200: OpenApiResponse(description="Zaproszenie wysłane!"),
-        400: OpenApiResponse(description="Niepoprawne dane zaproszenia."),
-        404: OpenApiResponse(description="Trip not found."),
-        500: OpenApiResponse(description="Server error while sending invitation email.")
+        200: {"description": "Operacja wykonana pomyślnie"},
+        400: {"description": "Niepoprawne dane wejściowe"},
+        403: {"description": "Brak uprawnień"},
+        404: {"description": "Nie znaleziono wycieczki lub użytkownika"},
+        500: {"description": "Błąd serwera"}
     }
 )
-class InviteUserAPIView(CreateAPIView):
-    serializer_class = InvitationSerializer
+class TripParticipantsUpdateAPIView(UpdateAPIView):
+    serializer_class = TripParticipantsUpdateSerializer
+    permission_classes = [IsAuthenticated, IsTripCreator]
 
-    def create(self, request, *args, **kwargs):
+    def get_object(self):
+        return get_object_or_404(Trip, pk=self.kwargs['trip_id'])
+
+    def update(self, request, *args, **kwargs):
+        trip = self.get_object()
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response({"error": "Niepoprawne dane zaproszenia."}, status=status.HTTP_400_BAD_REQUEST)
-
+        serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
+        action = self.request.query_params.get('action', None)
+
         try:
-            if data.get('is_guest'):
-                try:
-                    user = CustomUser.create_guest_account(data['name'], data['email'])
-                except ValueError as e:
-                    return Response(
-                        {"error": str(e)},
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
-            else:
-                user = data.get('user')
-                if not user:
-                    return Response(
-                        {"error": "User is required when not a guest"},
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
-
-            trip = Trip.objects.get(id=kwargs['trip_id'])
-            invitation_link = self.create_invitation_link(trip, user)
-            self.send_trip_invitation_email(data, invitation_link, trip)
-
-            return Response(
-                {"message": "Zaproszenie wysłane!", "invitation_link": invitation_link},
-                status=status.HTTP_200_OK
-            )
-
-        except Trip.DoesNotExist:
-            return Response(
-                {"error": "Wycieczka nie istnieje."},
-                status=status.HTTP_404_NOT_FOUND
-            )
-        except CustomUser.DoesNotExist:
-            return Response(
-                {"error": "Użytkownik nie istnieje."},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            if action == 'invite':
+                return self.handle_invite(trip, data)
+            elif action== 'remove':
+                return self.handle_remove(trip, data)
         except Exception as e:
             return Response(
-                {"error": f"Wystąpił błąd podczas przetwarzania zaproszenia: {str(e)}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
             )
+
+    def handle_invite(self, trip, data):
+        if 'profile' not in data:
+            user = CustomUser.create_guest_account(
+                data['name'],
+                data['email']
+            )
+            profile = user.get_default_profile()
+        else:
+            profile = data['profile']
+
+        if trip.members.filter(id=profile.id).exists():
+            raise ValidationError("Użytkownik już jest uczestnikiem wycieczki")
+
+        invitation_link = self.create_invitation_link(trip, profile.user)
+
+        self.send_invitation_email(
+            name=data.get('name', profile.user.full_name),
+            email=data.get('email', profile.user.email),
+            trip=trip,
+            invitation_link=invitation_link
+        )
+
+        return Response({
+            "message": "Zaproszenie wysłane",
+            "invitation_link": invitation_link,
+            "is_guest": 'profile' not in data
+        })
+
+    def handle_remove(self, trip, data):
+        if 'profile' not in data:
+            raise ValidationError("profile_id jest wymagane do usunięcia")
+
+        profile = data['profile']
+        if not trip.members.filter(id=profile.id).exists():
+            raise ValidationError("Użytkownik nie jest uczestnikiem tej wycieczki")
+
+        trip.members.remove(profile)
+        return Response({
+            "message": "Użytkownik został usunięty z wycieczki",
+            "removed_profile_id": profile.id
+        })
 
     def create_invitation_link(self, trip, user):
         token = TripAccessToken.generate_token()
-        try:
-            user_profile = user.get_default_profile()
+        token_instance, _ = TripAccessToken.objects.update_or_create(
+            trip=trip,
+            user_profile=user.get_default_profile(),
+            defaults={'token': token}
+        )
+        endpoint_path = reverse('trip_join')
+        return f"{self.request.build_absolute_uri(endpoint_path)}?token={token}"
 
-            token_instance, created = TripAccessToken.objects.get_or_create(
-                trip=trip,
-                user_profile=user_profile,
-                defaults={'token': token}
-            )
-
-            query_params = urlencode({'token': token})
-            invitation_link = f"{settings.API_URL}{reverse('trip_join')}?{query_params}"
-
-            if not created:
-                token_instance.token = token
-                token_instance.save()
-
-            return invitation_link
-
-        except UserProfile.DoesNotExist:
-            raise Exception('Nie znaleziono profilu użytkownika')
-        except Exception as e:
-            raise ValueError(f"Błąd generowania linku: {str(e)}")
-
-    def send_trip_invitation_email(self, data, invitation_link, trip):
-        subject = 'Zaproszenie do wycieczki Plannder'
+    def send_invitation_email(self, name, email, trip, invitation_link):
+        subject = f"Zaproszenie do wycieczki {trip.name}"
         html_message = render_to_string('emails/trip_invitation_email.html', {
-            'name': data['name'],
+            'name': name,
             'trip_name': trip.name,
-            'date': data['date'],
+            'start_date': trip.start_date,
+            'end_date': trip.end_date,
             'trip_link': invitation_link
         })
-        plain_message = strip_tags(html_message)
-
-        try:
-            send_mail(
-                subject=subject,
-                message=plain_message,
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[data['email']],
-                html_message=html_message,
-            )
-        except Exception as e:
-            raise Exception(f"Nie udało się wysłać e-maila: {str(e)}")
-
+        send_mail(
+            subject=subject,
+            message=strip_tags(html_message),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            html_message=html_message
+        )
 
 
 @extend_schema(
@@ -198,9 +163,9 @@ class JoinTripAPIView(RetrieveAPIView):
 
         if not user.is_active:
             return Response({'error': 'Konto użytkownika jest nieaktywne.'}, status=status.HTTP_403_FORBIDDEN)
-
         try:
             Trip.add_member(trip_access_token.trip, user_profile)
+            trip_access_token.change_status()
         except Exception as e:
             return Response({'error': f'Nie udało się dodać użytkownika do wycieczki: {str(e)}'},
                             status=status.HTTP_400_BAD_REQUEST)

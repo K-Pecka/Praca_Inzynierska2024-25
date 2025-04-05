@@ -24,9 +24,9 @@ function handleRemoveClick() {
       </div>
     </div>
 
-    <button class="delete-button" @click="handleRemoveClick">
+    <v-btn class="delete-button" @click="handleRemoveClick">
       <v-icon size="24">mdi-trash-can-outline</v-icon>
-    </button>
+    </v-btn>
   </div>
 </template>
 

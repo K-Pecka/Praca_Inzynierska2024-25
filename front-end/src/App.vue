@@ -38,7 +38,7 @@ watch(
 
 <style lang="scss" scoped>
 .bg-app {
-  background-color: rgba(var(--v-theme-background));
+  background-color: rgb(var(--v-theme-background),#F8F9Fa);
 }
 .v-app{
   overflow: hidden;

@@ -13,7 +13,7 @@ export default createVuetify({
           secondary: '#dedcff',
           accent: '#ac6ed9',
           text: '#030309',
-          background: '#F5F4FC',
+          background: '#F8F9Fa',
           heroBg:'#ac6ed9'
         },
         variables: {

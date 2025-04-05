@@ -6,12 +6,13 @@ import {
 
 import { PlanForm, TripForm, BugdetForm } from "@/views/panel/children/form";
 
+import { Role } from "@/type/enum";
 
 const panelRoutes: RouteRecordRaw = {
   path: "/panel",
   name: "panel",
   component: Panel,
-  meta: { title: "Panel", requiresAuth: true },
+  meta: { title: "Panel", requiresAuth: true, role: Role.TURIST },
   children: [
     { path: "", name: "roleSelection", component: RoleSelection },
 

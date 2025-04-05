@@ -12,9 +12,13 @@
         v-model="localRange"
         :label="inputData.placeholder"
         :multiple="inputData.config?.multiple ? 'range' : false"
+        :placeholder= "inputData.placeholder"
         max-width="auto"
         variant="outlined"
         class="date-range-field"
+        prepend-icon=""
+        prepend-inner-icon="mdi-calendar"
+        bg-color="background"
         @update:modelValue="onRangeChange"
       />
     </template>

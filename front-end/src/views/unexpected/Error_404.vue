@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 const route = useRoute();
-import { computed } from "vue";
-const message = computed(() => route.query.message || "Podana ścieżka nie istnieje");
-const code = computed(() => route.query.code || "Podana strona nie istnieje");
+import { computed,inject } from "vue";
+const messages = inject('messages') as any;
+const message =  route.query.message || messages.errorPage.error404.defaultMessage;
+const code = route.query.code || messages.errorPage.error404.subtitle;
 </script>
 <template>
     <v-container class="error-container">
@@ -16,16 +17,16 @@ const code = computed(() => route.query.code || "Podana strona nie istnieje");
           ></v-img> -->
           <v-card class="error-card">
             <v-card-title class="text-h2 text--primary">
-              404
+              {{ messages.errorPage.error404.title }}
             </v-card-title>
             <v-card-subtitle class="text-h5 text--secondary">
-              {{code}}
+              {{ code }}
             </v-card-subtitle>
             <v-card-text>
-              Coś poszło nie tak. {{message}}
+              {{ messages.errorPage.error404.discription }} {{ message }}
             </v-card-text>
             <v-btn color="primary" @click="$router.push('/')">
-              Wróć na stronę główną
+              {{ messages.errorPage.error404.button }}
             </v-btn>
           </v-card>
         </v-col>

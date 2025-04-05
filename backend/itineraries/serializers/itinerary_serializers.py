@@ -19,7 +19,7 @@ class BaseItinerarySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'country', 'start_date', 'end_date', 'trip']
 
 
-class ItinerarySerializer(BaseItinerarySerializer):
+class ItineraryRetrieveSerializer(BaseItinerarySerializer):
 
     def validate(self, data):
         if data['end_date'] < data['start_date']:

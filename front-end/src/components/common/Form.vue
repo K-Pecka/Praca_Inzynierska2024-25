@@ -11,7 +11,7 @@
             />
           </div>
 
-          <button type="submit">{{ submitButtonLabel }}</button>
+          <v-btn type="submit">{{ submitButtonLabel }}</v-btn>
           <div class="moreOption">
             <slot name="moreOption"></slot>
           </div>
