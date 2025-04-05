@@ -43,5 +43,7 @@ backend/.env
 db.sqlite3
 tickets/
 
+*/.env
+
 # db
 db_dumpdata
