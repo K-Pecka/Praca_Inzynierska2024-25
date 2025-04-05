@@ -207,20 +207,6 @@ class IsTripCreator(BasePermission):
             itinerary_id = obj.pk
 
         if trip_id:
-<<<<<<< HEAD
-            trip = Trip.objects.get(pk=trip_id)
-        else:
-            itinerary_id = view.kwargs.get('itinerary_pk')
-            if itinerary_id:
-                itinerary = Itinerary.objects.get(pk=itinerary_id)
-                trip = itinerary.trip if itinerary else None
-        if trip is None:
-            raise NotFound(detail="Nie znaleziono wycieczki.")
-
-        if trip.creator != profile:
-            raise PermissionDenied(self.message)
-
-=======
             trip = Trip.objects.filter(pk=trip_id).first()
         elif itinerary_id:
             itinerary = Itinerary.objects.filter(pk=itinerary_id).first()
@@ -233,7 +219,6 @@ class IsTripCreator(BasePermission):
         if trip.creator != profile:
             raise PermissionDenied(self.message)
 
->>>>>>> 8f4151a (Update version 0.1)
         return True
 
     def is_trip_creator(self, obj, profile):
