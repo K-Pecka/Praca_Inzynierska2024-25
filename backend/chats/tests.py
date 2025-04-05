@@ -35,6 +35,7 @@ class ChatAPITestCase(TestCase):
         self.user_profile = self.user.get_default_profile()
         self.user_profile2 = self.user2.get_default_profile()
         self.trip = Trip.objects.create(
+            name="test_trip",
             creator=self.user_profile,
             settings={"currency": "USD", "guide_price": 1000.00},
             start_date="2025-06-01",
@@ -42,6 +43,7 @@ class ChatAPITestCase(TestCase):
         )
         self.trip.members.add(self.user_profile)
         self.trip2 = Trip.objects.create(
+            name="test_trip2",
             creator=self.user_profile2,
             settings={"currency": "USD", "guide_price": 1000.00},
             start_date="2025-06-01",
@@ -82,14 +84,13 @@ class ChatAPITestCase(TestCase):
         data = {
             'name': 'test_chatroom',
             'type': 'Prywatny',
-            'trip': self.trip.id,
+            'members': [self.user_profile.id],
             'settings': {'currency': 'USD'}
         }
-
         view = ChatroomCreateAPIView.as_view()
         request = self.factory.post(f'trip/{self.trip.id}/chat/', data, format='json')
         force_authenticate(request, user=self.user)
-        response = view(request, trip_pk=self.trip.id)
+        response = view(request, trip_pk=1, itinerary_pk=1)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_chatroom_create_unauthenticated(self):

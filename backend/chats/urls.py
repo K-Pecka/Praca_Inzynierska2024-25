@@ -7,11 +7,11 @@ from chats.views.chatroom_views import ChatroomCreateAPIView, ChatroomRetrieveAP
 
 urlpatterns = [
     # Chatroom URLs
-    path('trip/<int:pk>/create/', ChatroomCreateAPIView.as_view(), name='chatroom-create'),
+    path('create/', ChatroomCreateAPIView.as_view(), name='chatroom-create'),
     path('<int:pk>/', ChatroomRetrieveAPIView.as_view(), name='chatroom-retrieve'),
     path('all/', ChatroomListAPIView.as_view(), name='chatroom-list'),
-    path('<int:pk>/update/', ChatroomUpdateAPIView.as_view(), name='chatroom-update'),
-    path('<int:pk>/delete/', ChatroomDestroyAPIView.as_view(), name='chatroom-delete'),
+    path('update/', ChatroomUpdateAPIView.as_view(), name='chatroom-update'),
+    path('delete/', ChatroomDestroyAPIView.as_view(), name='chatroom-delete'),
 
     # ChatMessage URLs
     path('<int:room_pk>/chat-message/create/', ChatMessageCreateAPIView.as_view(), name='chat-message-create'),
