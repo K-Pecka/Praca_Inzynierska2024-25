@@ -163,9 +163,9 @@ class JoinTripAPIView(RetrieveAPIView):
 
         if not user.is_active:
             return Response({'error': 'Konto użytkownika jest nieaktywne.'}, status=status.HTTP_403_FORBIDDEN)
-
         try:
             Trip.add_member(trip_access_token.trip, user_profile)
+            trip_access_token.change_status()
         except Exception as e:
             return Response({'error': f'Nie udało się dodać użytkownika do wycieczki: {str(e)}'},
                             status=status.HTTP_400_BAD_REQUEST)
