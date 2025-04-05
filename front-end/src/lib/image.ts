@@ -16,6 +16,7 @@ const images = {
       participant: "mdi-account-multiple-outline",
       setting: "mdi-cog-outline",
       myAccount: "mdi-account-circle-outline",
+      back: "mdi-arrow-left"
     },
   }
 };

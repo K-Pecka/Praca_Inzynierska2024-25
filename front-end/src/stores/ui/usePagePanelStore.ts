@@ -28,6 +28,12 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
     const getSideNavItems = (tripId: string): SideNavItem[]=> {
         return getRole() == Role.GUIDE?[]:[
         {
+            label: "Powrót",
+            icon: image.icon.menu.back,
+            name:"powrót",
+            route: { name: 'yourTrip'},
+        },
+        {
             label: "Panel",
             icon: image.icon.menu.dashboard,
             name:"panel",
