@@ -37,6 +37,7 @@ const checkAccess = async () => {
     "": true,
     ...Object.fromEntries(permissions.map((p) => [p.name, p.hasAccess])),
   };
+  
 };
 
 const linkTo = (item: SideNavItem) =>
