@@ -99,7 +99,7 @@ class ItineraryAPITestCase(TestCase):
         view = ItineraryDestroyAPIView.as_view()
         request = self.factory.delete(f'/itineraries/{self.itinerary.id}/')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.itinerary.id)
+        response = view(request, pk=self.itinerary.id, trip_pk=self.trip.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Itinerary.objects.filter(id=self.itinerary.id).exists())
 
@@ -265,7 +265,7 @@ class ItineraryActivityAPITestCase(TestCase):
         view = ItineraryActivityDestroyAPIView.as_view()
         request = self.factory.delete(f'/activities/{self.activity.id}/')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.activity.id)
+        response = view(request, pk=self.activity.id, itinerary_pk=self.itinerary.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(ItineraryActivity.objects.filter(id=self.activity.id).exists())
 
