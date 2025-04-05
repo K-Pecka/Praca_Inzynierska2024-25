@@ -34,21 +34,21 @@ export const useTripStore = defineStore("trip", () => {
   });
   const deleteItineraryMutation = useMutation({
     mutationFn:
-    ({ tripId, itineraryId }: { tripId: string; itineraryId: string }) =>
-      deleteItinerary({tripId, itineraryId}),
+    ({ tripId, planId }: { tripId: string; planId: string }) =>
+      deleteItinerary({tripId, planId}),
     onSuccess: (data) => {
-      setSuccessCurrentMessage(`Pomyślnie usunięto wycieczkę`);
-      console.log("deleteItineraryMutation ->",data);
+      setSuccessCurrentMessage(`Pomyślnie usunięto plan`);
+      
       queryClient.invalidateQueries({ queryKey: ["plans",data?.tripId] });
     },
     onError: (err) => {
       setErrorCurrentMessage(err.message);
     },
   });
-  const handleDeleteItinerary = async (Tripid: string,itineraryId: string) => {
-    console.log("handleDeleteItinerary", Tripid,itineraryId);
+  const handleDeleteItinerary = async (Tripid: string,planId: string) => {
+    
     try {
-      await deleteItineraryMutation.mutateAsync({ tripId: Tripid, itineraryId:itineraryId });
+      await deleteItineraryMutation.mutateAsync({ tripId: Tripid, planId:planId });
     } catch (err) {
     }
   };
@@ -60,7 +60,7 @@ export const useTripStore = defineStore("trip", () => {
   };
 
   const getTripDetails = (id: string) => {
-    return useQuery({
+    return useQuery<Trip>({
       queryKey: ["trip", id],
       queryFn: () => fetchTrip({ tripId: id }),
       //keepPreviousData: true,
@@ -167,6 +167,7 @@ export const useTripStore = defineStore("trip", () => {
     removeParticipantMutation.mutateAsync({ idTrip, idParticipant });
   const addParticipant = (idTrip: number,participant:{name:string, email:string}) =>
     addParticipantMutation.mutateAsync({ idTrip, participant });
+
   const getPlans = (id: string) => {
     return useQuery({
       queryKey: ["plans", id],
@@ -181,7 +182,7 @@ export const useTripStore = defineStore("trip", () => {
   };
   const yourTrips = computed(() => {
     const btnPath = getRole() == Role.TURIST ? "tripDashboard" : "tripDashboardGuide";
-    console.log("yourTrips",getRole(),btnPath);
+    
     return {
       btn: [
         {
@@ -229,8 +230,9 @@ export const useTripStore = defineStore("trip", () => {
   });
   const removeParticipantMutation = useMutation({
     mutationFn: ({ idTrip, idParticipant }: { idTrip: number, idParticipant: number }) => fetchRemoveParticipant( idTrip, idParticipant ),
-    onSuccess: () => {
-      setSuccessCurrentMessage("zapisano");
+    onSuccess: (idTrip) => {
+      setSuccessCurrentMessage("Poprawnie usunięto uczestnika");
+      queryClient.invalidateQueries({ queryKey: ["trip", String(idTrip)] });
     },
     onError: (err) => {
       setErrorCurrentMessage(err.message ||"błąd");
@@ -238,8 +240,10 @@ export const useTripStore = defineStore("trip", () => {
   });
   const addParticipantMutation = useMutation({
     mutationFn: ({ idTrip, participant }: { idTrip: number, participant: {name:string, email:string} }) => fetchAddParticipant( idTrip, participant ),
-    onSuccess: () => {
-      setSuccessCurrentMessage("zapisano");
+    onSuccess: (idTrip) => {
+      setSuccessCurrentMessage("poprawnie dodano uczestnika");
+      console.log("idTrip", idTrip);
+      queryClient.invalidateQueries({ queryKey: ["trip", String(idTrip)] });
     },
     onError: (err) => {
       setErrorCurrentMessage(err.message ||"błąd");
@@ -280,6 +284,7 @@ export const useTripStore = defineStore("trip", () => {
   });
 
   return {
+    getPlans,
     getDashboard,
     yourTrips,
     yourPlans,

@@ -17,7 +17,6 @@ const icon = computed(() => {
 
 function previewTicket() {
   alert(`Podgląd biletu: ${props.ticket.name}`);
-  console.log("props.ticket.name", props.ticket);
 }
 
 function formatDate(dateString: string): string {

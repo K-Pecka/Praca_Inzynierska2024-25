@@ -30,7 +30,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         {
             label: "Powrót",
             icon: image.icon.menu.back,
-            name:"powrót",
+            name:"goBack",
             route: { name: 'yourTrip'},
         },
         {
@@ -44,8 +44,8 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
             name:"plan",
             icon: image.icon.menu.plan,
             children: [
-                { label: "Utworzone", route: { name: 'yourPlan', params: { tripId:tripId }} },
-                { label: "Dodaj", route: { name: 'PlanForm', params: { tripId:tripId }} },
+                { label: "Utworzone",name:"yourPlan", route: { name: 'yourPlan', params: { tripId:tripId }} },
+                { label: "Dodaj",name:"PlanForm", route: { name: 'PlanForm', params: { tripId:tripId }} },
             ],
         },
         {

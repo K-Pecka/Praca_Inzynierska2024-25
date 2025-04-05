@@ -6,15 +6,23 @@ import AppButton from "@/components/budget/AppButton.vue";
 import ParticipantList from "@/components/trip/modul/participan/ParticipantList.vue";
 import ParticipantsCounter from "@/components/trip/modul/participan/ParticipantsCounter.vue";
 import ParticipantAddForm from "@/components/trip/modul/participan/ParticipantAddForm.vue";
-import { Participant } from "@/type";
+import { Participant, Trip } from "@/type";
 import { useTripStore, useUtilStore, useNotificationStore } from "@/stores";
+import HeaderSection from "@/components/common/HeaderSection.vue";
 const { setErrorCurrentMessage } = useNotificationStore();
 const route = useRoute();
 const tripId = route.params.tripId as string;
 
 const { getTripDetails, removeParticipant, addParticipant } = useTripStore();
 const { data: tripData, isLoading, error } = getTripDetails(tripId);
-const participants = computed(() => tripData.value?.members ?? []);
+const participants = computed<Participant[]>(() => {
+  if (!tripData.value) return [];  
+
+  return [
+    ...tripData.value?.members ?? [],   
+    ...tripData.value?.pending_members ?? [] 
+  ];
+});
 
 const maxParticipants = 5;
 
@@ -36,33 +44,25 @@ function removeParticipantById(id: number) {
   <div class="page-container">
     <Section>
       <template #title>
-        <div class="header-wrapper">
-          <div class="title-container">
-            <h1 class="trip-title" v-if="!isLoading && !error">
-              {{ tripData?.name }}
-            </h1>
-            <h1 class="trip-title" v-else>Ładowanie uczestników...</h1>
-            
-          </div>
-          
-        </div>
+            <HeaderSection>
+              <template #subtitle>
+                  <div class="title-container pb-4">
+                    <h2 class="section-title">Zarządzaj uczestnikami</h2>
+                 <AppButton
+                    variant="primary"
+                    size="md"
+                    @click="showForm = !showForm"
+                  >
+                    <v-icon v-if="$vuetify.display.smAndDown">mdi-plus</v-icon>
+                    <span v-else>Dodaj</span>
+                  </AppButton>
+                  </div>
+                 
+              </template>
+              </HeaderSection>
       </template>
 
       <template #content>
-        <div class="title-container pb-4">
-          <h2 class="second-title">Zarządzaj uczestnikami</h2>
-          <div class="button-container ">
-            <AppButton
-              variant="primary"
-              size="md"
-              @click="showForm = !showForm"
-            >
-              <v-icon v-if="$vuetify.display.smAndDown">mdi-plus</v-icon>
-              <span v-else>Dodaj</span>
-            </AppButton>
-          </div>
-        </div>
-        
         <v-container class="page-container" fluid>
           <v-row>
             <v-col>

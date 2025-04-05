@@ -89,9 +89,6 @@ import BudgetContent from "@/components/style/BudgetContent.vue"
 </template>
 
 <style scoped lang="scss">
-.text-green {
-  color: #4caf50;
-}
 
 .v-card {
   transition: transform 0.2s, box-shadow 0.2s;

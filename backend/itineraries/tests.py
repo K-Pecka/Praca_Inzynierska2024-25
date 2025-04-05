@@ -265,16 +265,12 @@ class ItineraryActivityAPITestCase(TestCase):
         view = ItineraryActivityDestroyAPIView.as_view()
         request = self.factory.delete(f'/activities/{self.activity.id}/')
         force_authenticate(request, user=self.user)
-<<<<<<< HEAD
-        response = view(request, pk=self.activity.id, itinerary_pk=self.itinerary.id)
-=======
         response = view(
             request,
             trip_pk=self.activity.itinerary.trip.pk,
             itinerary_pk=self.activity.itinerary.pk,
             pk=self.activity.id
         )
->>>>>>> 8f4151a (Update version 0.1)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(ItineraryActivity.objects.filter(id=self.activity.id).exists())
 

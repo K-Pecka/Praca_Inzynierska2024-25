@@ -15,7 +15,6 @@ const props = defineProps({
     type: String,
   }
 });
-console.log(props.trip);
 </script>
 
 <template>

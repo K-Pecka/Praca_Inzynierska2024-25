@@ -11,6 +11,9 @@ const emailInput = ref("");
 
 function handleSubmit() {
   emit("submitForm", {name:nameInput.value, email:emailInput.value});
+  nameInput.value = "";
+  emailInput.value = "";
+  emit("cancel");
 }
 
 function handleCancel() {

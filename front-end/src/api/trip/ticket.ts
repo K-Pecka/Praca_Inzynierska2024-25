@@ -12,7 +12,7 @@ export const createPlan = async (
     "POST"
   );
   if (error) {
-    return;
+    throw new Error(error);
   }
 
   return data;

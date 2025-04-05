@@ -43,9 +43,6 @@ export const useTicketStore = defineStore("ticket", () => {
     };
     const createTicket = (file:File,data:Record<string, string>) =>{
         const {getTripId} = useUtilStore();
-        console.log(file);
-        console.log(data);
-        console.log(getTripId().value);
        }
 
     return {

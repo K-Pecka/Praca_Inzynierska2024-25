@@ -28,7 +28,7 @@ const checkAccess = async () => {
       items.flatMap((item) =>
           [item, ...(item.children ?? [])].map(async (subItem) => ({
             name: subItem.name,
-            hasAccess: await checkPermission(subItem.name, "nav"),
+            hasAccess: true//await checkPermission(subItem.name, "nav"),
           }))
       )
   );
@@ -37,11 +37,12 @@ const checkAccess = async () => {
     "": true,
     ...Object.fromEntries(permissions.map((p) => [p.name, p.hasAccess])),
   };
-  
 };
 
-const linkTo = (item: SideNavItem) =>
-    item.name && item.route && accessMap.value[item.name] ? item.route : goTo();
+const linkTo = (item: SideNavItem) =>{
+  return item.name && item.route && accessMap.value[item.name] ? item.route : goTo();
+}
+    
 
 onMounted(checkAccess);
 
@@ -203,7 +204,7 @@ function toggleSection(index: number) {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.9); /* ! */
     z-index: 2000;
     display: flex;
     flex-direction: column;
@@ -270,7 +271,7 @@ function toggleSection(index: number) {
     right: 1rem;
     background: none;
     border: none;
-    color: #ffffff;
+    color: #ffffff; /* ! */
     font-size: 2rem;
     cursor: pointer;
     z-index: 2001;

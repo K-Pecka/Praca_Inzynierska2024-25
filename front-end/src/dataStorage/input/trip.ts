@@ -21,7 +21,7 @@ export const tripInput = (errorMessage: Record<string, string>) => [
         type: InputType.DATE_RANGE,
         placeholder: "dd.mm.rrrr - dd.mm.rrrr",
         validation: getValidator(errorMessage),
-        config: { required: true, multiple: true },
+        config: { required: true, multiple: true,min: new Date(new Date().setDate(new Date().getDate() - 1)) },
         error: [],
       },
     ];

@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import { useTripStore } from "@/stores/trip/useTripStore";
 import { Expense } from "@/type";
 import ExpenseList from "@/components/expenseItem/ExpenseList.vue";
+import HeaderSection from "@/components/common/HeaderSection.vue";
 const { getDashboard } = useTripStore();
 const route = useRoute();
 const id = route.params.tripId as string;
@@ -67,8 +68,11 @@ const expenseItem: Expense[] = [
   <template v-else>
     <Section>
       <template #title>
-        <h1>{{tripName != undefined? tripName : ""}}</h1>
-        
+        <HeaderSection>
+              <template #subtitle>
+                 <h2 class="trip-title">Panel</h2>
+              </template>
+              </HeaderSection>
       </template>
 
       <template #content>

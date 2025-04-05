@@ -31,6 +31,7 @@ export const fetchData = async <T = unknown>(
       ...options,
       body: options.body ? options.body : undefined,
     });
+    console.log(url, method, options.body, response.status);
     clearTimeout(timeoutId);
     const result = await response.json().catch(() => null);
 
@@ -84,7 +85,7 @@ export const apiEndpoints = {
     invateUser: `${hostName}/trip/:tripId/invite/`,
   },
   plan: {
-    all: `${hostName}/trip/:tripId/itinerary/`,
+    all: `${hostName}/trip/:tripId/itinerary/all/`,
     detail: `${hostName}/trip/:tripId/itinerary/:planId/`,
     delete: `${hostName}/trip/:tripId/itinerary/:planId/delete/`,
     create: `${hostName}/trip/:tripId/itinerary/create/`,

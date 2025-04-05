@@ -14,7 +14,6 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const currentPath = typeof to.name === "string" ? to.name : "landing";
-  console.log({ ...from.params, ...to.params });
   const siteName = import.meta.env.VITE_APP_SITE_TITLE;
   document.title = to.meta.title ? `${siteName} - ${to.meta.title}` : siteName;
 
@@ -23,7 +22,6 @@ router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const goBack = to.matched.some((record) => record.meta.goBack);
   const routerName = typeof to.name === "string" ? to.name : undefined;
-  console.log(await checkPermission(routerName, "path"));
   if (requiresAuth && !(await validToken())) {
     setErrorCurrentMessage(
       "Tylko zalogowani użytkownicy,\n posiadają dostępn do tej zawartości."
@@ -35,7 +33,6 @@ router.beforeEach(async (to, from, next) => {
   } else if (!(await checkPermission(routerName, "path"))) {
     setErrorCurrentMessage("Brak dostępu do tej zawartości");
     const lastVisitedRoute = localStorage.getItem("routerPath");
-    console.log({ name: lastVisitedRoute, ...to.params });
     if (Object.keys(to.params).length > 0) {
       next(
         lastVisitedRoute

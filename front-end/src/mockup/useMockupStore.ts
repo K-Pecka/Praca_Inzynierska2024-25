@@ -125,7 +125,6 @@ export const useMockupStore = defineStore(
 
     const getTrips = () => {
       const auth = localStorage.getItem("auth");
-      console.log(auth);
       if (auth) {
         currentUser.value = JSON.parse(auth).token.access;
       } else {
@@ -166,25 +165,20 @@ export const useMockupStore = defineStore(
       data.value.trip.push(newData);
     };
     const getTrip = (id: number) => {
-      console.log(id);
       return data.value.trip.find((t) => t.id == id);
     }
     const setBudget = (newBudget: any, id: number) => {
       const trip = data.value.trip.find((t) => t.id == id);
-      console.log(trip);
       if (trip == undefined) {return null}
       trip.budget = newBudget;
       return {};
     }
     const getPlans = (id: number) => {
       const plans = data.value.plan.filter((p) => p.trip == id);
-      console.log(plans);
       return plans == undefined || plans.length==0 ? null : plans;
     }
     const deletePlanMockUp = (id: number) => {
-      console.log(id);
       data.value.plan = data.value.plan.filter((p) => p.id !== id);
-      console.log(data.value.plan);
       return {};
     };
     const createPlanMockUp = (newPlan: any, param: Record<string, string> = {}) => {
@@ -202,7 +196,6 @@ export const useMockupStore = defineStore(
         trip: Number(param.tripId),
       };
       data.value.plan.push(newData);
-      console.log(data.value.plan);
       return newData;
     };
     const getUserProfile = () =>{
