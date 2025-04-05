@@ -1,33 +1,20 @@
 from rest_framework import serializers
 
-from trips.serializers.trip_serializers import BaseTripSerializer
-
-from trips.serializers.budget_serializers import BudgetRetrieveSerializer
-
-from users.models import CustomUser
-from users.serializers.user_profile_serializers import UserProfileListSerializer
+from users.models import UserProfile
 
 
-class TripParticipantsUpdateSerializer(BaseTripSerializer):
-    id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(read_only=True)
-    creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = UserProfileListSerializer(read_only=True, many=True)
-    start_date = serializers.DateField(read_only=True)
-    end_date = serializers.DateField(read_only=True)
-    settings = serializers.JSONField(read_only=True)
-    budget = BudgetRetrieveSerializer(read_only=True)
+class TripParticipantsUpdateSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100, required=False)
+    email = serializers.EmailField(required=False)
+    profile_id = serializers.PrimaryKeyRelatedField(
+        queryset=UserProfile.objects.all(),
+        required=False,
+        source='profile',
+        help_text="Wymagane tylko dla istniejących użytkowników. Jeśli brak, traktowane jako zaproszenie gościa."
+    )
 
-    def get_budget(self, obj):
-        return obj.budget
-
-
-class InvitationSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=100)
-    date = serializers.DateTimeField()
-    email = serializers.EmailField()
-    is_guest = serializers.BooleanField(default=False)
-    user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), required=False)
+    class Meta:
+        fields = ['name', 'email', 'profile_id']
 
 
 class JoinTripSerializer(serializers.Serializer):

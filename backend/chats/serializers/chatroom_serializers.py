@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from chats.choices import ChatroomType
 from chats.models import Chatroom
 from trips.models import Trip
 from users.models import UserProfile
@@ -53,7 +54,7 @@ class ChatroomRetrieveSerializer(BaseChatroomSerializer):
     type = serializers.CharField(read_only=True, max_length=32)
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = serializers.PrimaryKeyRelatedField(read_only=True)
+    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     settings = serializers.JSONField(read_only=True)
 
 
@@ -63,7 +64,7 @@ class ChatroomListSerializer(BaseChatroomSerializer):
     type = serializers.CharField(read_only=True, max_length=32)
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = serializers.PrimaryKeyRelatedField(read_only=True)
+    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     settings = serializers.JSONField(read_only=True)
 
 

@@ -1,3 +1,5 @@
+from drf_spectacular.utils import extend_schema
+
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
@@ -8,11 +10,13 @@ from chats.models import ChatMessage
 from server.permissions import IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatMessage
 
 
+@extend_schema(tags=['chat_message'])
 class ChatMessageCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
     serializer_class = ChatMessageCreateSerializer
 
 
+@extend_schema(tags=['chat_message'])
 class ChatMessageRetrieveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
     serializer_class = ChatMessageRetrieveSerializer
@@ -21,6 +25,7 @@ class ChatMessageRetrieveAPIView(RetrieveAPIView):
         return ChatMessage.objects.by_chatroom_pk(self.kwargs['room_pk'])
 
 
+@extend_schema(tags=['chat_message'])
 class ChatMessageListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
     serializer_class = ChatMessageListSerializer
@@ -33,6 +38,7 @@ class ChatMessageListAPIView(ListAPIView):
         )
 
 
+@extend_schema(tags=['chat_message'])
 class ChatMessageUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatMessage]
     serializer_class = ChatMessageUpdateSerializer
@@ -41,6 +47,7 @@ class ChatMessageUpdateAPIView(UpdateAPIView):
         return ChatMessage.objects.by_chatroom_pk(self.kwargs['room_pk'])
 
 
+@extend_schema(tags=['chat_message'])
 class ChatMessageDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatMessage]
 

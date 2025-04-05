@@ -5,9 +5,10 @@ from trips.views.expense_views import ExpenseCreateAPIView, ExpenseRetrieveAPIVi
     ExpenseUpdateAPIView, ExpenseDestroyAPIView
 from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketListAPIView, TicketUpdateAPIView, \
     TicketDestroyAPIView
-from trips.views.trip_participant_views import TripParticipantsUpdateAPIView, InviteUserAPIView, JoinTripAPIView
+from trips.views.trip_participant_views import JoinTripAPIView, TripParticipantsUpdateAPIView
 from trips.views.trip_views import TripCreateAPIView, TripRetrieveAPIView, TripListAPIView, TripUpdateAPIView, \
     TripDestroyAPIView
+
 
 urlpatterns = [
     # Trip URLs
@@ -18,8 +19,8 @@ urlpatterns = [
     path('<int:pk>/delete/', TripDestroyAPIView.as_view(), name='trip-delete'),
 
     # Trip participants URLs
-    path('<int:pk>/participants/manage/<int:profile_pk>/', TripParticipantsUpdateAPIView.as_view(), name='trip-participants-manage'),
-    path('<int:trip_id>/invite/', InviteUserAPIView.as_view(), name='invite_user'),
+    path('<int:trip_pk>/participants/manage/', TripParticipantsUpdateAPIView.as_view(), name='trip-participants-manage-no-account'),
+    path('<int:trip_id>/invite/', TripParticipantsUpdateAPIView.as_view(), name='invite_user'),
     path('join/', JoinTripAPIView.as_view(), name='trip_join'),
 
     # Ticket URLs

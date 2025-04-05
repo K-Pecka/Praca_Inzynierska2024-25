@@ -2,7 +2,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from itineraries.serializers.itinerary_serializers import ItineraryCreateSerializer, ItinerarySerializer, \
+from itineraries.serializers.itinerary_serializers import ItineraryCreateSerializer, ItineraryRetrieveSerializer, \
     ItineraryUpdateSerializer, ItineraryDeleteSerializer
 
 from itineraries.models import Itinerary
@@ -19,14 +19,14 @@ class ItineraryCreateAPIView(CreateAPIView):
 class ItineraryRetrieveAPIView(RetrieveAPIView):
     queryset = Itinerary.objects.all()
     permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = ItinerarySerializer
+    serializer_class = ItineraryRetrieveSerializer
 
 
 @extend_schema(tags=['itinerary'])
 class ItineraryListAPIView(ListAPIView):
     queryset = Itinerary.objects.all()
     permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = ItinerarySerializer
+    serializer_class = ItineraryRetrieveSerializer
 
 
 @extend_schema(tags=['itinerary'])

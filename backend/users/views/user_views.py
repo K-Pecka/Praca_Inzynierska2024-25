@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
-from django.shortcuts import render
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
@@ -98,3 +97,23 @@ class CheckAccessView(APIView):
             return Response({"message": f"{message}"}, status=status.HTTP_200_OK)
         else:
             return Response({"error": f"{message}"}, status=status.HTTP_403_FORBIDDEN)
+
+
+@extend_schema(
+    tags=['user'],
+)
+class CheckAccountTypeAPIView(APIView):
+    """
+    View to check the account type of the user.
+    """
+    def get(self, request):
+        user = request.user
+        if not user:
+            raise ValueError("Nie znaleziono użytkownika.")
+
+        profile = user.get_default_profile()
+        profile_type = profile.type
+        if not profile_type:
+            raise ValueError("Profil użytkownika nie ma przypisanego typu.")
+
+        return Response({"profile_type": profile_type}, status=status.HTTP_200_OK)
