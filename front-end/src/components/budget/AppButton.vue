@@ -4,9 +4,9 @@ defineProps<{ variant?: "primary" | "secondary", size?: "sm" | "md" | "lg" }>();
 </script>
 
 <template>
-  <button class="app-button" :class="variant, size">
+  <v-btn clbuttonass="app-button" :class="variant, size">
     <slot/>
-  </button>
+  </v-btn>
 </template>
 
 <style scoped lang="scss">

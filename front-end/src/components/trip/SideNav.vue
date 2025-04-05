@@ -53,9 +53,9 @@ function toggleSection(index: number) {
 <template>
   <nav class="side-nav" :class="{ mobile }">
 
-    <button v-if="mobile" class="close-btn" @click="emit('close')">
+    <v-btn v-if="mobile" class="close-btn" @click="emit('close')">
       <v-icon size="42">mdi-close</v-icon>
-    </button>
+    </v-btn>
 
     <ul class="side-nav__list">
       <li
