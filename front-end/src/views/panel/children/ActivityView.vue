@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useActivityStore } from "@/stores/trip/useActivityStore";
 import ActivityList from "@/components/trip/modul/activity/ActivityList.vue";
 import ActivityForm from "@/components/trip/modul/activity/ActivityForm.vue";
 import AppButton from "@/components/budget/AppButton.vue";
 import {Section} from "@/components";
-
+import  {useTripStore} from "@/stores/trip/useTripStore";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const id = route.params.tripId as string;
+const planId = route.params.planId as string;
 const startDate = new Date("2025-04-15");
 const endDate = new Date("2025-04-24");
-
+const { getPlans } = useTripStore();
+const { data: plansData, isLoading, error } = getPlans(id);
 function getDaysArray(start: Date, end: Date) {
   const arr = [];
   const dt = new Date(start);
@@ -19,8 +24,17 @@ function getDaysArray(start: Date, end: Date) {
   }
   return arr;
 }
-
-const days = ref(getDaysArray(startDate, endDate));
+const days = computed(() => {
+  if (plansData.value) {
+    const plan = plansData.value.find((plan) => plan.id == Number(planId));
+    if (plan) {
+      return plan.start_date && plan.end_date
+        ? getDaysArray(new Date(plan.start_date), new Date(plan.end_date))
+        : null;
+    }
+  }
+  return null;
+});
 
 const activityStore = useActivityStore();
 
@@ -35,18 +49,18 @@ function addActivity(day: string, activityData: any) {
   });
   showFormForDay.value = null;
 }
+import HeaderSection from "@/components/common/HeaderSection.vue";
 </script>
 
 <template>
   <div class="page-container">
     <Section>
       <template #title>
-        <div class="header-wrapper">
-          <div class="title-container">
-            <h1 class="trip-title">Wakacje we Francji</h1>
-            <h1 class="section-title">Zaplanuj aktywności</h1>
-          </div>
-        </div>
+        <HeaderSection>
+              <template #subtitle>
+                 <h2 class="trip-title">Zarządzaj aktywnościami</h2>
+              </template>
+              </HeaderSection>
       </template>
 
       <template #content>
