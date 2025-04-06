@@ -20,15 +20,23 @@ const expenses = [
 ];
 const categories = ref(["Jedzenie", "Transport", "Nocleg", "Rozrywka"]);
 const participants = ref(["Jan", "Kasia", "Tomek"]);
+import HeaderSection from "@/components/common/HeaderSection.vue";
 </script>
 
 <template>
   <Section>
     <template #title>
-      <div class="d-flex justify-space-between align-center">
-        <h1 class="title">Wydatki</h1>
-        <AppButton class="add-button">Dodaj wydatek</AppButton>
+      <div class="title-container">
+        <HeaderSection>
+        <template #subtitle>
+          <div class="title-container pb-4">
+            <h2 class="trip-title">Wydatki</h2>
+            <AppButton class="add-button">Dodaj wydatek</AppButton>
+          </div>
+        </template>
+      </HeaderSection>
       </div>
+      
     </template>
     <template #content>
       <v-container>
@@ -65,28 +73,28 @@ const participants = ref(["Jan", "Kasia", "Tomek"]);
                 <h3 class="mb-2">Wydatki</h3>
                 <div class="filters">
                   <v-select
-                  bg-color="background"
+                    bg-color="background"
                     label="Kategoria"
                     :items="categories"
                     variant="outlined"
                     class="filter-item"
                   ></v-select>
                   <v-select
-                  bg-color="background"
+                    bg-color="background"
                     label="Uczestnicy"
                     :items="participants"
                     variant="outlined"
                     class="filter-item"
                   ></v-select>
                   <v-text-field
-                  bg-color="background"
+                    bg-color="background"
                     label="Data od"
                     type="date"
                     variant="outlined"
                     class="filter-item"
                   ></v-text-field>
                   <v-text-field
-                  bg-color="background"
+                    bg-color="background"
                     label="Data do"
                     type="date"
                     variant="outlined"
@@ -171,13 +179,11 @@ h3 {
   justify-content: flex-end;
 }
 
-
 .section-title {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
 }
-
 
 .filter-item :deep(.v-input__control) {
   border-radius: 0.5rem;

@@ -284,6 +284,7 @@ export const useTripStore = defineStore("trip", () => {
   });
 
   return {
+    getPlans,
     getDashboard,
     yourTrips,
     yourPlans,

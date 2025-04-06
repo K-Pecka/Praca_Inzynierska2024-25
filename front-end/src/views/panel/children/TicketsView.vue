@@ -11,9 +11,6 @@ import AppButton from "@/components/budget/AppButton.vue";
 const route = useRoute();
 const tripId = route.params.tripId as string;
 
-const {getTripDetails} = useTripStore();
-const {data: tripData, isLoading, error} = getTripDetails(tripId);
-
 const ticketStore = useTicketStore();
 const tickets = computed(() => ticketStore.tickets);
 
@@ -28,20 +25,19 @@ function handleAddTicket(newTicketData: {
   ticketStore.addTicket(newTicketData);
   showForm.value = false;
 }
+import HeaderSection from "@/components/common/HeaderSection.vue";
 </script>
 
 <template>
   <div class="page-container">
     <Section>
       <template #title>
-        <div class="header-wrapper">
           <div class="title-container">
-            <h1 class="trip-title" v-if="!isLoading && !error">{{ tripData?.name }}</h1>
-            <h1 class="trip-title" v-else>Ładowanie nazwy wycieczki...</h1>
-            <h1 class="section-title">Bilety</h1>
-          </div>
-          <div class="button-container">
-            <AppButton
+            <HeaderSection>
+              <template #subtitle>
+                <div class="title-container pb-4">
+                  <h2 class="section-title">Bilety</h2>
+                 <AppButton
                 variant="primary"
                 size="md"
                 class="add-button"
@@ -49,8 +45,11 @@ function handleAddTicket(newTicketData: {
             >
               Dodaj Bilet
             </AppButton>
+                </div>
+                 
+              </template>
+              </HeaderSection>
           </div>
-        </div>
       </template>
 
       <template #content>
@@ -96,12 +95,12 @@ function handleAddTicket(newTicketData: {
 
 .title-container {
   display: flex;
-  flex-direction: column;
   align-items: flex-start;
+  justify-content: space-between;
 }
 
 .trip-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   margin: 0 0 0.2rem 0;
 }
