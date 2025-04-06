@@ -99,7 +99,7 @@ class ItineraryAPITestCase(TestCase):
         view = ItineraryDestroyAPIView.as_view()
         request = self.factory.delete(f'/itineraries/{self.itinerary.id}/')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.itinerary.id, trip_pk=self.trip.id)
+        response = view(request, pk=self.itinerary.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Itinerary.objects.filter(id=self.itinerary.id).exists())
 

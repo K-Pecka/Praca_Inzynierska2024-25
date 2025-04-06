@@ -88,7 +88,7 @@ class ChatAPITestCase(TestCase):
             'settings': {'currency': 'USD'}
         }
         view = ChatroomCreateAPIView.as_view()
-        request = self.factory.post(f'trip/{self.trip.id}/chat/', data, format='json')
+        request = self.factory.post(f'trip/1/chat/', data, format='json')
         force_authenticate(request, user=self.user)
         response = view(request, trip_pk=1, itinerary_pk=1)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
