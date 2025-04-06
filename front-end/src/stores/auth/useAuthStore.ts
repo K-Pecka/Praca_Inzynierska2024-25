@@ -26,14 +26,13 @@ export const useAuthStore = defineStore(
     } = useNotificationStore();
     const {hasPermission} =usePermissionStore()
     const token = ref<TOKEN | null>(null);
+    const user = ref<{first_name:string,last_name:string} | null>(null);
     const getPermission = useMutation({
       mutationFn: fetchPermission,
     });
       
     const checkPermission =async (name: string | undefined, type: "nav" | "path" = "nav") =>{
       const userPermission = await getPermission.mutateAsync() || [];
-      console.log("userPermission",userPermission);
-      console.log("has",hasPermission(userPermission,name,type))
       return hasPermission(userPermission,name,type);
     }
     const validToken = async (): Promise<boolean> => {
@@ -67,6 +66,7 @@ export const useAuthStore = defineStore(
         }
       } catch (error: any) {
         setErrorCurrentMessage(error.message);
+        token.value = null;
         return false;
       }
       return false;
@@ -75,6 +75,10 @@ export const useAuthStore = defineStore(
     const saveToken = (data: TOKEN) => {
       token.value = data;
     };
+    const saveUser = (data: {first_name:string,last_name:string}) => {
+      user.value = data;
+    }
+
     const getToken = () => {
       return token.value;
     };
@@ -82,10 +86,13 @@ export const useAuthStore = defineStore(
       logOutMutation.mutateAsync();
     };
     const isLogin = async () => {
-      if (!!token) {
-        return true;
+      try{
+        if(!!await validToken()){
+          return true;
+        }
+      }catch(error){
+        return false;
       }
-      return false;
     };
     const logOutMutation = useMutation({
       mutationFn: fetchLogOut,
@@ -100,9 +107,11 @@ export const useAuthStore = defineStore(
     });
     const loginMutation = useMutation({
       mutationFn: loginFetch,
-      onSuccess: (data: TOKEN) => {
+      onSuccess: (data) => {
+        const { access, refresh, last_name,first_name } = data;
         setSuccessCurrentMessage(loginSuccess());
-        saveToken(data);
+        saveToken({access, refresh});
+        saveUser({last_name,first_name});
         router.push({ name: "landing" });
       },
       onError: (err) => {
@@ -113,8 +122,8 @@ export const useAuthStore = defineStore(
     const registerMutation = useMutation({
       mutationFn: registerFetch,
       onSuccess: (data) => {
-        setSuccessCurrentMessage("Success");
-        router.push("/logIn");
+        setSuccessCurrentMessage("Rejestracja zakończona sukcesem");
+        router.push({name: "login"});
       },
       onError: (err) => {
         setErrorCurrentMessage("Error");
@@ -136,7 +145,7 @@ export const useAuthStore = defineStore(
   {
     persist: {
       storage: localStorage,
-      pick: ["token"],
+      pick: ["token","user"],
     },
   }
 );

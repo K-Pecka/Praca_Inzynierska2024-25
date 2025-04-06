@@ -3,7 +3,6 @@ import { Trip,NewTrip } from "@/type/interface";
 import { APP_MODE_DEV } from "@/config/envParams";
 import { useMockupStore } from "@/mockup/useMockupStore";
 export const fetchTrips = async () => {
-  console.log("fetchTrips");
   if (APP_MODE_DEV) {
     const { getTrips } = useMockupStore();
     const trips = getTrips();
@@ -29,7 +28,6 @@ export const fetchTrip = async (param: Record<string, string>={}) => {
   if (APP_MODE_DEV) {
     const { getTrip } = useMockupStore();
     const trip = getTrip(Number(param.tripId));
-    console.log(trip);
     if(trip == null){
       throw new Error("Podana wycieczka nie istnieje");
     }
@@ -41,7 +39,7 @@ export const fetchTrip = async (param: Record<string, string>={}) => {
       "GET"
     );
     if (error) {
-      return;
+      throw new Error(error);
     }
   
     return data;
@@ -58,8 +56,6 @@ export const deleteTrip = async (param: Record<string, string>={}) => {
   );
   if (error) {
     throw new Error(error);
-    
-    return;
   }
 
   return data;
@@ -75,7 +71,7 @@ export const createTrip = async (newTrip:NewTrip,param: Record<string, string>={
       "POST"
     );
     if (error) {
-      return;
+      throw new Error(error);
     }
   
     return data;
@@ -95,7 +91,7 @@ export const updateTrip = async (
     );
 
     if (error) {
-        throw new Error(error);
+      throw new Error(error);
     }
     return data;
 };

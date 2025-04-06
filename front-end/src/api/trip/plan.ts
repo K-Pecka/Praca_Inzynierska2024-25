@@ -36,7 +36,6 @@ export const fetchPlan = async () => {
 };
 export const deleteItinerary = async (param: Record<string, string> = {}) => {
   if (APP_MODE_DEV) {
-    console.log("deletePlan");
     const { deletePlanMockUp } = useMockupStore();
     const plan = deletePlanMockUp(Number(param.itineraryId));
     if(plan == null){
@@ -60,7 +59,6 @@ export const createPlan = async (
   param: Record<string, string> = {}
 ) => {
   if (APP_MODE_DEV) {
-    console.log("addPlan");
     const { createPlanMockUp } = useMockupStore();
     const plan = createPlanMockUp(newTrip,param);
     if(plan == null){
@@ -74,7 +72,7 @@ export const createPlan = async (
     "POST"
   );
   if (error) {
-    return;
+    throw new Error(error);
   }
 
   return data;

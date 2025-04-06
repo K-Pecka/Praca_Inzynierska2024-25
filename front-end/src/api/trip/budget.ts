@@ -8,7 +8,6 @@ export const saveBudget = async (newBudget:Budget,param: Record<string, string>=
    if (APP_MODE_DEV) {
        const { setBudget } = useMockupStore();
        const setting = setBudget(newBudget, newBudget.trip);
-       console.log(setting);
        if(setting == null){
          throw new Error("Wystąpił błąd związany z aktualizacją budżetu");
        }
@@ -19,7 +18,7 @@ export const saveBudget = async (newBudget:Budget,param: Record<string, string>=
       "PATCH"
     );
     if (error) {
-      return;
+      throw new Error(error);
     }
   
     return data;

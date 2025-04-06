@@ -4,6 +4,7 @@ import { errorStatus } from "@/api/standardError";
 import { APP_MODE_DEV } from "@/config/envParams";
 export const fetchVerify = async (token:TOKEN,tryAgain:Boolean =true) =>{
   if (APP_MODE_DEV) {
+    
     return {};
   }  
   const response = await fetch(apiEndpoints.auth.verify, {
@@ -11,7 +12,7 @@ export const fetchVerify = async (token:TOKEN,tryAgain:Boolean =true) =>{
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({token:token.access}),
     });
-    console.count("weryfikacja");
+
     if (!response.ok && tryAgain) {
       if(!errorStatus(response.status))
       {

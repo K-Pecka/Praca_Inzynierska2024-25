@@ -38,7 +38,7 @@ const props = defineProps<{
               @click="action.onclick(String(trip.trip),String(trip.id))"
               variant="flat"
             >
-              {{ action.title }}{{console.log(String(trip.trip),String(trip.id))}}
+              {{ action.title }}
             </v-btn>
           </v-card-actions>
         </v-card>

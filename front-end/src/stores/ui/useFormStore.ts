@@ -21,7 +21,7 @@ export const useFormStore = defineStore("form", () => {
     dateRange: "Data zakończenia nie może być wcześniejsza niż rozpoczęcia",
   };
   const formValues = computed(() => {
-    const inputs = getFormInputs(FormType.LOGIN);
+    const inputs = getFormInputs(formType.value);
     return Object.fromEntries(inputs.map((input: { name: string }) => [input.name, ""]));
   });
   const getLoginInputs = (): Input[] => loginInput(getErrorMessages());
@@ -65,13 +65,13 @@ export const useFormStore = defineStore("form", () => {
   };
   const isSend = ref(false);
   const sendForm =async (formValue: any, config: any)=>{
-    console.log(formValue);
     if (config?.send && isFormValid(FormType.LOGIN, formValue) && !isSend.value) {
       isSend.value = true;
       try {
         await loginMutation.mutateAsync(formValue).then(() => isSend.value = false);
+        formType.value = FormType.REGISTER;
       } catch (error) {
-        console.log("ERROR");
+       
       }
     }
   }

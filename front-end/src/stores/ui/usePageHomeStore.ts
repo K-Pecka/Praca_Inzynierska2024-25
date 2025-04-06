@@ -12,19 +12,19 @@ import {
   sectionTitles,
 } from "@/dataStorage";
 export const usePageHomeStore = defineStore("pagHome", () => {
-  const { getToken } = useAuthStore();
+  const { validToken } = useAuthStore();
   const navigationLinks = ref<Array<{ label: string; href: string | { name: string }; className?: string[]; active?: boolean }>>([]);
   onMounted(async () => {
       navigationLinks.value = [
         ...defaultNavLinks,
-        ...(await getToken() ? loggedInNavLinks : guestNavLinks),
+        ...(await validToken() ? loggedInNavLinks : guestNavLinks),
       ];
     });
-  watch(getToken, (value) => {
+  watch(validToken,async (value) => {
 
     navigationLinks.value = [
       ...defaultNavLinks,
-      ...(value ? loggedInNavLinks : guestNavLinks),
+      ...(await value ? loggedInNavLinks : guestNavLinks),
     ];
   });
   const getSiteName = () => import.meta.env.VITE_APP_SITE_NAME || "Plannder";

@@ -30,7 +30,7 @@ const handleSubmit = (_formData: any, config: any) => {
     try {
       planMutationAdd.mutateAsync({ data: newPlan, tripId: id });
     } catch (error) {
-      console.log("ERROR");
+      
     }
   }
 };

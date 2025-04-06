@@ -34,12 +34,6 @@ function handleSubmit(_formData: any, config: any) {
     const { tripName, tripDates } = formValues.value;
     const [start_date, end_date] = tripDates.split(' - ');
 
-    console.log("Data do API => ", {
-      name: tripName,
-      start_date,
-      end_date,
-    });
-
     const newData = {
       name: tripName,
       start_date: start_date || '',

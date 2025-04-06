@@ -38,7 +38,7 @@ export const useTripStore = defineStore("trip", () => {
       deleteItinerary({tripId, itineraryId}),
     onSuccess: (data) => {
       setSuccessCurrentMessage(`Pomyślnie usunięto wycieczkę`);
-      console.log("deleteItineraryMutation ->",data);
+      
       queryClient.invalidateQueries({ queryKey: ["plans",data?.tripId] });
     },
     onError: (err) => {
@@ -46,7 +46,7 @@ export const useTripStore = defineStore("trip", () => {
     },
   });
   const handleDeleteItinerary = async (Tripid: string,itineraryId: string) => {
-    console.log("handleDeleteItinerary", Tripid,itineraryId);
+    
     try {
       await deleteItineraryMutation.mutateAsync({ tripId: Tripid, itineraryId:itineraryId });
     } catch (err) {
@@ -181,7 +181,7 @@ export const useTripStore = defineStore("trip", () => {
   };
   const yourTrips = computed(() => {
     const btnPath = getRole() == Role.TURIST ? "tripDashboard" : "tripDashboardGuide";
-    console.log("yourTrips",getRole(),btnPath);
+    
     return {
       btn: [
         {
