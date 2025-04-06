@@ -4,8 +4,6 @@ export const fetchPermission = async () => {
   if (APP_MODE_DEV) {
     const { getUserProfile } = useMockupStore();
     const permission = getUserProfile();
-    console.log(permission.length==0?[1,2,3]: permission);
     return permission.length==0?[1,2,3]: permission ;
   }
-  return [1,2,3];
 };

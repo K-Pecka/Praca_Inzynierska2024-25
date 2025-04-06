@@ -98,7 +98,7 @@ const expenseItem: Expense[] = [
   </template>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .grid-container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
