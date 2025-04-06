@@ -1,3 +1,5 @@
+from drf_spectacular.utils import extend_schema
+
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
@@ -8,17 +10,20 @@ from chats.models import Chatroom
 from server.permissions import IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatroom
 
 
+@extend_schema(tags=['chat_room'])
 class ChatroomCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = ChatroomCreateSerializer
 
 
+@extend_schema(tags=['chat_room'])
 class ChatroomRetrieveAPIView(RetrieveAPIView):
     queryset = Chatroom.objects.all()
     permission_classes = [IsAuthenticated, IsTripParticipant, IsParticipantForChatroom]
     serializer_class = ChatroomRetrieveSerializer
 
 
+@extend_schema(tags=['chat_room'])
 class ChatroomListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = ChatroomListSerializer
@@ -32,12 +37,14 @@ class ChatroomListAPIView(ListAPIView):
         )
 
 
+@extend_schema(tags=['chat_room'])
 class ChatroomUpdateAPIView(UpdateAPIView):
     queryset = Chatroom.objects.all()
     permission_classes = [IsAuthenticated, IsTripParticipant, IsCreatorForChatroom]
     serializer_class = ChatroomUpdateSerializer
 
 
+@extend_schema(tags=['chat_room'])
 class ChatroomDestroyAPIView(DestroyAPIView):
     queryset = Chatroom.objects.all()
     permission_classes = [IsAuthenticated, IsTripParticipant, IsCreatorForChatroom]

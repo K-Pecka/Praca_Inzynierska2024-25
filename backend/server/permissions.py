@@ -191,15 +191,29 @@ class IsTripCreator(BasePermission):
         """
         trip = None
         trip_id = view.kwargs.get('trip_pk')
+        itinerary_id = view.kwargs.get('itinerary_pk')
+
+        obj = None
+        if not trip_id and not itinerary_id and hasattr(view, 'get_object'):
+            try:
+                obj = view.get_object()
+            except Exception:
+                pass
+
+        if not trip_id and isinstance(obj, Trip):
+            trip_id = obj.pk
+
+        if not itinerary_id and isinstance(obj, Itinerary):
+            itinerary_id = obj.pk
 
         if trip_id:
-            trip = Trip.objects.get(pk=trip_id)
-        else:
-            itinerary_id = view.kwargs.get('itinerary_pk')
-            if itinerary_id:
-                itinerary = Itinerary.objects.get(pk=itinerary_id)
-                trip = itinerary.trip if itinerary else None
-        if trip is None:
+            trip = Trip.objects.filter(pk=trip_id).first()
+        elif itinerary_id:
+            itinerary = Itinerary.objects.filter(pk=itinerary_id).first()
+            if itinerary:
+                trip = itinerary.trip
+
+        if not trip:
             raise NotFound(detail="Nie znaleziono wycieczki.")
 
         if trip.creator != profile:
