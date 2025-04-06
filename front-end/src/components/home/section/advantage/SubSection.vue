@@ -70,7 +70,7 @@ img {
     &-colorBox {
       width: 100%;
       min-height: 12rem;
-      background-color: rgba(47, 39, 206, 0.3);
+      background-color: rgba(var(--v-theme-secendar,47, 39, 206, 0.3));
       border-radius: 15px;
     }
   }

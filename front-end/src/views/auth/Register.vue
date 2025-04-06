@@ -23,8 +23,9 @@ const handleSubmit = async (_: any, config: any) => {
     try {
       await registerMutation.mutateAsync(registrationData as unknown as Register);
     } catch (error) {
-      console.error("Error: ", error);
+      
     }
+    formValues.value={};
   }
 };
 </script>

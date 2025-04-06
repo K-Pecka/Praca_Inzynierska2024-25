@@ -6,7 +6,7 @@ import AppButton from "@/components/budget/AppButton.vue";
 import ParticipantList from "@/components/trip/modul/participan/ParticipantList.vue";
 import ParticipantsCounter from "@/components/trip/modul/participan/ParticipantsCounter.vue";
 import ParticipantAddForm from "@/components/trip/modul/participan/ParticipantAddForm.vue";
-import { Participant } from "@/type";
+import { Participant, Trip } from "@/type";
 import { useTripStore, useUtilStore, useNotificationStore } from "@/stores";
 const { setErrorCurrentMessage } = useNotificationStore();
 const route = useRoute();
@@ -14,7 +14,14 @@ const tripId = route.params.tripId as string;
 
 const { getTripDetails, removeParticipant, addParticipant } = useTripStore();
 const { data: tripData, isLoading, error } = getTripDetails(tripId);
-const participants = computed(() => tripData.value?.members ?? []);
+const participants = computed<Participant[]>(() => {
+  if (!tripData.value) return [];  
+
+  return [
+    ...tripData.value?.members ?? [],   
+    ...tripData.value?.pending_members ?? [] 
+  ];
+});
 
 const maxParticipants = 5;
 
@@ -38,7 +45,7 @@ function removeParticipantById(id: number) {
       <template #title>
         <div class="header-wrapper">
           <div class="title-container">
-            <h1 class="trip-title" v-if="!isLoading && !error">
+            <h1 class="trip-title" v-if="!isLoading ">
               {{ tripData?.name }}
             </h1>
             <h1 class="trip-title" v-else>Ładowanie uczestników...</h1>

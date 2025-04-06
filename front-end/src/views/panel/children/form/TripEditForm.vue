@@ -21,9 +21,23 @@ const { data: tripData, isLoading, error } = getTripDetails(id);
 watch(
     () => tripData.value,
     (trip) => {
-      if (trip) {
-        formValues.value.tripName = trip.name;
-        formValues.value.tripDates = `${trip.start_date} - ${trip.end_date}`;
+      const tripDatesInput = inputs.value.find(
+          (input) => input.name === "tripDates"
+      );
+      if (tripDatesInput) {
+        formValues.value.tripName = trip?.name ?? '';
+        formValues.value.start_date = trip?.start_date ?? '';
+        formValues.value.end_date = trip?.end_date ?? '';
+        if (tripDatesInput) {
+
+          tripDatesInput.config = {
+            ...tripDatesInput.config,
+            edit: true,
+            min: trip?.start_date ?? '',
+            max: trip?.end_date ?? '',
+          };
+          console.log(tripDatesInput.config.min, tripDatesInput.config.max);
+        }
       }
     },
     { immediate: true }
@@ -33,12 +47,6 @@ function handleSubmit(_formData: any, config: any) {
   if (config?.send && isFormValid(FormType.TRIP, formValues.value)) {
     const { tripName, tripDates } = formValues.value;
     const [start_date, end_date] = tripDates.split(' - ');
-
-    console.log("Data do API => ", {
-      name: tripName,
-      start_date,
-      end_date,
-    });
 
     const newData = {
       name: tripName,

@@ -9,8 +9,10 @@
 
     <template v-if="inputData.type === 'date_range'">
       <v-date-input
+        :min="inputData.config?.min"
+        :max="inputData.config?.edit ?? inputData.config?.max"
         v-model="localRange"
-        :label="inputData.placeholder"
+        :label="inputData.config?.edit ? `${inputData.config?.min} - ${inputData.config?.max}` : inputData.placeholder"
         :multiple="inputData.config?.multiple ? 'range' : false"
         :placeholder= "inputData.placeholder"
         max-width="auto"
@@ -46,7 +48,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+
+import { computed, ref, watch } from "vue";
 import { VDateInput } from "vuetify/labs/components";
 import { Input } from "@/type/interface";
 
@@ -65,7 +68,12 @@ const emit = defineEmits(["update"]);
 const localRange = ref<string[]>(
   Array.isArray(props.modelValue) ? props.modelValue : []
 );
-
+const minDate = computed(() => {
+  return props.inputData.config?.min;
+});
+const maxDate = computed(() => {
+  return props.inputData.config?.max;
+});
 watch(
   () => props.modelValue,
   (newVal) => {
@@ -92,7 +100,7 @@ function onRangeChange(value: string[] | string) {
   }
 }
 
-
+console.log(props.inputData.config?.edit?`${props.inputData.config?.min} - ${props.inputData.config?.max}` : props.inputData.placeholder);
 const handleInput = (event: Event) => {
   const name = (event.target as HTMLInputElement).name;
   const value = (event.target as HTMLInputElement).value;

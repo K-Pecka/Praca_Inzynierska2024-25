@@ -11,7 +11,6 @@ const emit = defineEmits<{
 }>();
 
 function handleRemove(id: number) {
-  console.log("Usuwam uczestnika o id:", id);
   emit("remove", id); 
 }
 </script>

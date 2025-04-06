@@ -26,7 +26,7 @@ const handleSubmit = (_formData: any, config: any) => {
     try {
       tripMutationAdd.mutateAsync(data);
     } catch (error) {
-      console.log("ERROR");
+      
     }
   }
 };

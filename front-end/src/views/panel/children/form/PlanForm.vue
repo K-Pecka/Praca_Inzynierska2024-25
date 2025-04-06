@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import {Section,Form} from "@/components";
 import { useFormStore,useTripStore } from "@/stores";
 import { FormType } from "@/type/enum";
@@ -8,14 +8,29 @@ import { Plan } from "@/type/interface";
 
 const { planMutationAdd } = useTripStore();
 const { getFormInputs, isFormValid } = useFormStore();
-
+const route = useRoute();
+const id = Number(Array.isArray(route.params.tripId) ? route.params.tripId[0] : route.params.tripId);
+const { data:trip } = useTripStore().getTripDetails(String(id));
 const inputs = ref(getFormInputs(FormType.PLAN));
 const formValues = ref<Record<string, string>>(
     Object.fromEntries(inputs.value.map(input => [input.name, ""]))
 );
+watch(trip,() => {
+  if(trip){
+    const tripDatesInput = inputs.value.find(input => input.name === 'tripDates');
 
-const route = useRoute();
-const id = Number(Array.isArray(route.params.tripId) ? route.params.tripId[0] : route.params.tripId);
+    if (tripDatesInput && tripDatesInput.config) {
+      tripDatesInput.config = {
+        ...tripDatesInput.config,
+        min: trip.value?.start_date,
+        max: trip.value?.end_date
+      };
+    }
+    console.log(tripDatesInput)
+  }
+});
+
+
 const handleSubmit = (_formData: any, config: any) => {
   if (config?.send && isFormValid(FormType.PLAN, formValues.value)) {
     const { tripName, city,tripDates } = formValues.value;
@@ -30,7 +45,7 @@ const handleSubmit = (_formData: any, config: any) => {
     try {
       planMutationAdd.mutateAsync({ data: newPlan, tripId: id });
     } catch (error) {
-      console.log("ERROR");
+      
     }
   }
 };

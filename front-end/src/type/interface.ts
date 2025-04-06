@@ -8,6 +8,9 @@ export interface TOKEN {
 interface Config {
   required?: boolean;
   multiple?:boolean;
+  min?:Date | string;
+  max?:Date | string;
+  edit?:boolean;
 }
 
 export interface Input {
@@ -55,8 +58,9 @@ export interface Trip {
   end_date: string;
   country?: string;
   city?: string;
-  members?: { id: number, name: string, email: string }[];
+  members?: Participant[];
   budget?:Budget;
+  pending_members?: Participant[];
 }
 export interface Budget {
   amount: string;
@@ -154,8 +158,9 @@ export interface Ticket{
 
 export interface Participant {
   id: number;
-  name: string;
+  name?: string;
   email: string;
+  is_guest?: boolean;
 }
 
 export interface PricingCard {

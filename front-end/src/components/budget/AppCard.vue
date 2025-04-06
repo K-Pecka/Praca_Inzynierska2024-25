@@ -10,7 +10,7 @@ defineProps({
   },
   elevation: {
     type: Number,
-    default: () => ({}),
+    default: 1,
   },
 });
 </script>

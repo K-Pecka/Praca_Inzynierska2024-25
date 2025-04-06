@@ -38,3 +38,6 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
     </v-row>
   </div>
 </template>
+<style scoped lang="scss">
+/* ! */
+</style>
