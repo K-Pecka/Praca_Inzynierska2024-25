@@ -16,6 +16,13 @@ import type { Trip } from "@/type/interface";
 import { useRoleStore } from "../auth/useRoleStore";
 import { Role } from "@/type/enum";
 
+function formatPL(dateString: string) {
+  const dateObj = new Date(dateString);
+  if (isNaN(dateObj.getTime())) return dateString;
+
+  return new Intl.DateTimeFormat('pl-PL').format(dateObj);
+}
+
 export const useTripStore = defineStore("trip", () => {
   const queryClient = useQueryClient();
   const {getRole} = useRoleStore();
@@ -68,13 +75,17 @@ export const useTripStore = defineStore("trip", () => {
   };
   const getDashboard = (id: string) => {
     const { data: tripRaw, isLoading, error } = getTripDetails(id);
-  
+
     const tripTime = computed(() => {
-      if (tripRaw.value) {
-        return `${tripRaw.value.start_date ?? "..."} - ${tripRaw.value.end_date ?? "..."}`;
+      if (!tripRaw.value) {
+        return "...";
       }
-      return "...";
+      const start = formatPL(tripRaw.value.start_date);
+      const end   = formatPL(tripRaw.value.end_date);
+
+      return `${start} - ${end}`;
     });
+
   
     const budget = computed(() => {
       return `${tripRaw.value?.budget?.amount ?? "..."}`;

@@ -1,4 +1,11 @@
 <script setup lang="ts">
+
+function formatPL(dateString: string): string {
+  const dateObj = new Date(dateString);
+  if (isNaN(dateObj.getTime())) return dateString;
+  return new Intl.DateTimeFormat('pl-PL').format(dateObj);
+}
+
 const props = defineProps<{
   plans: any;
   btn: any;
@@ -26,7 +33,7 @@ const props = defineProps<{
           </v-card-subtitle>
 
           <v-card-text class="text-center">
-            {{ `${trip.start_date} - ${trip.end_date}` }}
+            {{ formatPL(trip.start_date) }} - {{ formatPL(trip.end_date) }}
           </v-card-text>
 
           <v-card-actions class="justify-center">

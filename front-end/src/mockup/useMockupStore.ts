@@ -206,7 +206,6 @@ export const useMockupStore = defineStore(
         currentUser.value = 0;
       }
       const profile = data.value.user.find((t) => t.id == currentUser.value)?.profile
-      console.log("profile",profile);
       return profile? profile: [];
     }
     const addParticipant = (idTrip: number, participant: { name: string; email: string }) => {
