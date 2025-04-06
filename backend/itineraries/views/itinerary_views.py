@@ -24,9 +24,11 @@ class ItineraryRetrieveAPIView(RetrieveAPIView):
 
 @extend_schema(tags=['itinerary'])
 class ItineraryListAPIView(ListAPIView):
-    queryset = Itinerary.objects.all()
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = ItineraryRetrieveSerializer
+
+    def get_queryset(self):
+        return Itinerary.objects.filter(trip=self.kwargs['trip_pk'])
 
 
 @extend_schema(tags=['itinerary'])
