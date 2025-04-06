@@ -2,7 +2,7 @@ import {TOKEN} from "@/type/interface";
 import { apiEndpoints } from "@/api/apiEndpoints";
 import { errorStatus } from "@/api/standardError";
 import { APP_MODE_DEV } from "@/config/envParams";
-export const fetchVerify = async (token:TOKEN,tryAgain:Boolean =true) =>{
+export const fetchVerify = async (token:TOKEN) =>{
   if (APP_MODE_DEV) {
     
     return {};
@@ -12,12 +12,8 @@ export const fetchVerify = async (token:TOKEN,tryAgain:Boolean =true) =>{
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({token:token.access}),
     });
-
-    if (!response.ok && tryAgain) {
-      if(!errorStatus(response.status))
-      {
-        fetchVerify(token,false);
-      }
+    if (!response.ok) {
+      throw new Error(errorStatus(response.status) || "Wystąpił błąd");
     }
     return response.json();
   }

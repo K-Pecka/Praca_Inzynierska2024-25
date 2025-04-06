@@ -17,7 +17,7 @@ export const fetchPlans = async (param: Record<string, string> = {}) => {
     "GET"
   );
   if (error) {
-    return;
+    throw new Error(error);
   }
 
   return data;
@@ -29,7 +29,7 @@ export const fetchPlan = async () => {
     "GET"
   );
   if (error) {
-    return;
+    throw new Error(error);
   }
 
   return data;
@@ -49,7 +49,7 @@ export const deleteItinerary = async (param: Record<string, string> = {}) => {
     "DELETE"
   );
   if (error) {
-    return;
+    throw new Error(error);
   }
 
   return param;

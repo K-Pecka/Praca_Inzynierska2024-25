@@ -63,9 +63,9 @@ const handleSubmit = () => {
   border-radius: 0.5rem;
 }
 
-button {
+.v-btn {
   background-color: rgb(var(--v-theme-primary));
-  color: rgb(var(--v-theme-secondary));
+  color: rgb(var(--v-theme-text));
   width: calc(100% - 3rem);
   padding: 0.75rem;
   margin: 1.5rem;
@@ -74,7 +74,7 @@ button {
   cursor: pointer;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 }
-button{
+.v-btn{
   margin-top: 0;
 }
 .moreOption {

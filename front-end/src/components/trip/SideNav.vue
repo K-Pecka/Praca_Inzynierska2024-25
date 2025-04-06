@@ -28,7 +28,7 @@ const checkAccess = async () => {
       items.flatMap((item) =>
           [item, ...(item.children ?? [])].map(async (subItem) => ({
             name: subItem.name,
-            hasAccess: await checkPermission(subItem.name, "nav"),
+            hasAccess: true//await checkPermission(subItem.name, "nav"),
           }))
       )
   );
@@ -37,11 +37,12 @@ const checkAccess = async () => {
     "": true,
     ...Object.fromEntries(permissions.map((p) => [p.name, p.hasAccess])),
   };
-  
 };
 
-const linkTo = (item: SideNavItem) =>
-    item.name && item.route && accessMap.value[item.name] ? item.route : goTo();
+const linkTo = (item: SideNavItem) =>{
+  return item.name && item.route && accessMap.value[item.name] ? item.route : goTo();
+}
+    
 
 onMounted(checkAccess);
 

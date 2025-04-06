@@ -11,7 +11,7 @@ function handleRemoveClick() {
 </script>
 
 <template>
-  <div class="participant-item">
+  <div class="participant-item" :class="{ 'participant-item--noactive': props.is_guest }">
     <div class="participant-left">
       <v-icon size="48">mdi-account-outline</v-icon>
 
@@ -31,6 +31,10 @@ function handleRemoveClick() {
 </template>
 
 <style scoped lang="scss">
+.participant-item--noactive{
+  background-color: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
 .participant-item {
   display: flex;
   justify-content: space-between;

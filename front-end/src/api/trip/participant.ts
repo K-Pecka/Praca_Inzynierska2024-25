@@ -13,15 +13,15 @@ export const fetchAddParticipant = async (
     }
   }
   const { data, error } = await fetchData(
-    setParam(apiEndpoints.trip.invateUser, { tripId: String(idTrip) }),
-    {},
-    "POST"
+    setParam(`${apiEndpoints.trip.invateUser}?action=invite`, { tripId: String(idTrip) }),
+    {body: JSON.stringify(participant)},
+    "PUT"
   );
   if (error) {
     throw new Error(error);
   }
 
-  return data;
+  return idTrip;
 };
 export const fetchRemoveParticipant = async (
   idTrip: number,
@@ -34,4 +34,14 @@ export const fetchRemoveParticipant = async (
       throw new Error(participant.message);
     }
   }
+  const { data, error } = await fetchData(
+    setParam(`${apiEndpoints.trip.invateUser}?action=remove`, { tripId: String(idTrip) }),
+    {body: JSON.stringify({ 'profile_id': idParticipant })},
+    "PUT"
+  );
+  if (error) {
+    throw new Error(error);
+  }
+
+  return idTrip;
 };

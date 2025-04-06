@@ -38,7 +38,7 @@ export const fetchTrip = async (param: Record<string, string>={}) => {
       {},
       "GET"
     );
-    if (error) {
+    if (error || !data) {
       throw new Error(error);
     }
   
@@ -67,7 +67,7 @@ export const createTrip = async (newTrip:NewTrip,param: Record<string, string>={
   }
     const { data, error } = await fetchData<NewTrip>(
       setParam(apiEndpoints.trip.create, param),
-      { body: JSON.stringify(newTrip) },
+      { body: JSON.stringify({...newTrip,budget_amount:0}) },
       "POST"
     );
     if (error) {
