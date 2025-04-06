@@ -75,7 +75,7 @@ function handleRemoveClick() {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: #e44a3e;
+  color: #e44a3e; /* ! */;
   display: flex;
   align-items: center;
   transition: opacity 0.2s ease;

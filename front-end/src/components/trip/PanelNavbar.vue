@@ -114,7 +114,7 @@ function onHamburgerClick() {
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: white;
+  background-color: white;/* ! */;	
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   padding: 0.5rem;

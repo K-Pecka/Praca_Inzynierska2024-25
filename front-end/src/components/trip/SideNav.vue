@@ -203,7 +203,7 @@ function toggleSection(index: number) {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.9); /* ! */
     z-index: 2000;
     display: flex;
     flex-direction: column;
@@ -270,7 +270,7 @@ function toggleSection(index: number) {
     right: 1rem;
     background: none;
     border: none;
-    color: #ffffff;
+    color: #ffffff; /* ! */
     font-size: 2rem;
     cursor: pointer;
     z-index: 2001;

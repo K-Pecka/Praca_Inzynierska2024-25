@@ -14,11 +14,11 @@ const props = defineProps({
 
 <template>
   <router-link :to="role.path">
-    <v-btn class="role-button">
+    <button class="role-button">
       <img :src="role.image" alt="" class="role-icon" />
       <h2 class="role-title">{{ role.title }}</h2>
       <p class="role-description">{{ role.description }}</p>
-    </v-btn>
+    </button>
   </router-link>
   
 </template>

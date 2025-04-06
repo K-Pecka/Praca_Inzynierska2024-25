@@ -79,7 +79,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 main{
-  background-color: rgb(var(--v-theme-background),#F8F9Fa);
+  background-color: rgb(var(--v-theme-background,#F8F9Fa));
 }
 .wrapper {
   position: relative;

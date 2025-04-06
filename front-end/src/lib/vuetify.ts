@@ -14,7 +14,9 @@ export default createVuetify({
           accent: '#ac6ed9',
           text: '#030309',
           background: '#F8F9Fa',
-          heroBg:'#ac6ed9'
+          heroBg:'#ac6ed9',
+          progressBarProgress:'#4caf50',
+          progressBar:'#e0e0e0',
         },
         variables: {
           borderRadius: '24px',
