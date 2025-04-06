@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import {Button, Trip} from "@/type/interface";
 
+function formatPL(dateString: string): string {
+  const dateObj = new Date(dateString);
+  if (isNaN(dateObj.getTime())) return dateString;
+  return new Intl.DateTimeFormat('pl-PL').format(dateObj);
+}
+
 const props = defineProps({
   btn: {
     type: Array as () => Button[],
@@ -32,7 +38,7 @@ const props = defineProps({
                   {{ trip.name }}
                 </v-card-title>
                 <v-card-subtitle>
-                  {{ `${trip.start_date} - ${trip.end_date}` }}
+                  {{ formatPL(trip.start_date) }} - {{ formatPL(trip.end_date) }}
                 </v-card-subtitle>
                 <div class="detail">
                   <div
