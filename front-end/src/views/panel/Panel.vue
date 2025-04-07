@@ -2,17 +2,17 @@
 import {ref, onMounted, onUnmounted} from "vue";
 import {PanelNavbar, SideNav} from "@/components";
 import {usePageHomeStore, useUtilStore} from "@/stores";
-import { useMockupStore} from "@/mockup/useMockupStore";
+import {useMockupStore} from "@/mockup/useMockupStore";
 
 const useStore = usePageHomeStore();
 const SiteName = useStore.getSiteName();
 
 const {isCurrentRouteNotInSet} = useUtilStore();
-const showNavigation = isCurrentRouteNotInSet(["roleSelection", "yourTrip", "TripForm","yourTripGuide"]);
+const showNavigation = isCurrentRouteNotInSet(["roleSelection", "yourTrip", "TripForm", "yourTripGuide"]);
 
 const sideNavOpen = ref(false);
 
-const { getUserInitials } = useMockupStore();
+const {getUserInitials} = useMockupStore();
 const userInitials = getUserInitials();
 
 function toggleSideNav() {
@@ -57,7 +57,7 @@ onUnmounted(() => {
             class="side-nav-col"
             :class="{ 'mobile-overlay': isMobile, 'open': sideNavOpen }"
         >
-          <SideNav :mobile="isMobile" @close="toggleSideNav" />
+          <SideNav :mobile="isMobile" @close="toggleSideNav"/>
         </v-col>
         <v-col
             :cols="showNavigation ? (isMobile ? 12 : 9) : 12"
@@ -78,18 +78,21 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
-main{
-  background-color: rgb(var(--v-theme-background,#F8F9Fa));
+main {
+  background-color: rgb(var(--v-theme-background, #F8F9Fa));
 }
+
 .wrapper {
   position: relative;
   overflow-x: hidden;
 }
+
 @media (max-width: 600px) {
-  h1{
+  h1 {
     font-size: 2rem;
   }
 }
+
 .side-nav-col {
   padding: 0;
 
@@ -97,14 +100,15 @@ main{
 
 .mobile-overlay {
   position: fixed;
-  top: 5rem;
+  top: 0;
   left: 0;
-  height: calc(100vh - 5rem);
-  width: 70%;
-  max-width: 280px;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
+  height: 100vh;
+  width: 100vw;
+  background: white;
   z-index: 1500;
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.2);
 
   &.open {
     transform: translateX(0);
@@ -115,9 +119,9 @@ main{
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.3);
   z-index: 1400;
 }
 </style>

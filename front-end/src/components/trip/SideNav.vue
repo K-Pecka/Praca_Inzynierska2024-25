@@ -39,10 +39,10 @@ const checkAccess = async () => {
   };
 };
 
-const linkTo = (item: SideNavItem) =>{
+const linkTo = (item: SideNavItem) => {
   return item.name && item.route && accessMap.value[item.name] ? item.route : goTo();
 }
-    
+
 
 onMounted(checkAccess);
 
@@ -54,8 +54,8 @@ function toggleSection(index: number) {
 <template>
   <nav class="side-nav" :class="{ mobile }">
 
-    <v-btn v-if="mobile" class="close-btn" @click="emit('close')">
-      <v-icon size="42">mdi-close</v-icon>
+    <v-btn v-if="mobile" class="close-btn" @click="emit('close')" size="small" icon="" variant="plain">
+      <v-icon size="32">mdi-close</v-icon>
     </v-btn>
 
     <ul class="side-nav__list">
@@ -199,70 +199,13 @@ function toggleSection(index: number) {
 
 @media (max-width: 1000px) {
   .side-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.9); /* ! */
-    z-index: 2000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .side-nav__list {
-    max-width: 450px;
-    text-align: left;
-  }
-
-  .side-nav__item {
     width: 100%;
-    margin-bottom: 1.5rem;
-  }
-
-  .side-nav__item-header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    font-weight: 600;
-    color: #ffffff;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .side-nav__icon {
-    filter: brightness(0) invert(1);
-  }
-
-  .side-nav__arrow-icon {
-    filter: brightness(0) invert(1);
-    transition: transform 0.3s ease;
-
-    &.open {
-      transform: rotate(90deg);
-    }
-  }
-
-  .side-nav__sub-list {
-    margin-top: 1rem;
-    padding-left: 1.5rem;
-  }
-
-  .side-nav__sub-item {
-    margin-bottom: 1rem;
-  }
-
-  .side-nav__sub-link,
-  .side-nav__item-link {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 1.1rem;
-
-    &:hover {
-      color: rgb(var(--v-theme-primary));
-    }
+    height: 100%;
+    background-color: white;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+    animation: fadeSlideIn 0.3s ease-out;
+    position: relative;
   }
 
   .close-btn {
@@ -271,10 +214,29 @@ function toggleSection(index: number) {
     right: 1rem;
     background: none;
     border: none;
-    color: #ffffff; /* ! */
+    color: black;
     font-size: 2rem;
     cursor: pointer;
     z-index: 2001;
+  }
+
+  @keyframes fadeSlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+@media (min-width: 1980px) {
+  .side-nav__item-header,
+  .side-nav__sub-link,
+  .side-nav__item-link {
+    font-size: 1.5rem;
   }
 }
 </style>
