@@ -19,10 +19,10 @@ function toggleSideNav() {
   sideNavOpen.value = !sideNavOpen.value;
 }
 
-const isMobile = ref(window.innerWidth <= 1000);
+const isMobile = ref(window.innerWidth <= 959);
 
 function updateScreenSize() {
-  isMobile.value = window.innerWidth <= 1000;
+  isMobile.value = window.innerWidth <= 959;
 }
 
 onMounted(() => {
@@ -49,19 +49,19 @@ onUnmounted(() => {
         </v-col>
       </v-row>
       <v-row style="min-height: calc(100vh - 5rem); margin: 0;">
+        <transition name="slide-nav">
+          <v-col
+              v-if="showNavigation && (!isMobile || sideNavOpen)"
+              cols="12"
+              sm="3"
+              md="2"
+              class="side-nav-col"
+          >
+            <SideNav :mobile="isMobile" @close="toggleSideNav"/>
+          </v-col>
+        </transition>
         <v-col
-            v-if="showNavigation && (!isMobile || sideNavOpen)"
-            cols="12"
-            sm="3"
-            md="2"
-            class="side-nav-col"
-            :class="{ 'mobile-overlay': isMobile, 'open': sideNavOpen }"
-        >
-          <SideNav :mobile="isMobile" @close="toggleSideNav"/>
-        </v-col>
-        <v-col
-            :cols="showNavigation ? (isMobile ? 12 : 9) : 12"
-            :md="showNavigation ? 10 : 12"
+            cols="12" md="10"
         >
           <main>
             <router-view/>
@@ -98,22 +98,6 @@ main {
 
 }
 
-.mobile-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  background: white;
-  z-index: 1500;
-  transform: translateX(-100%);
-  transition: transform 0.6s ease;
-  box-shadow: 4px 0 16px rgba(0, 0, 0, 0.2);
-
-  &.open {
-    transform: translateX(0);
-  }
-}
 
 .overlay {
   position: fixed;
@@ -123,5 +107,42 @@ main {
   width: 100vw;
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 1400;
+}
+
+.side-nav-col {
+  padding: 0;
+
+  @media (min-width: 959px) {
+    position: relative;
+    z-index: auto;
+  }
+
+  @media (max-width: 959px) {
+    position: fixed;
+    top: 5rem;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    z-index: 1500;
+    overflow-y: auto;
+  }
+
+}
+
+.slide-nav-enter-active,
+.slide-nav-leave-active {
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.slide-nav-enter-from,
+.slide-nav-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.slide-nav-enter-to,
+.slide-nav-leave-from {
+  transform: translateX(0);
+  opacity: 1;
 }
 </style>

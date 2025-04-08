@@ -49,14 +49,15 @@ onMounted(checkAccess);
 function toggleSection(index: number) {
   openIndex.value = openIndex.value === index ? null : index;
 }
+
+function closeSideNavWithDelay() {
+  setTimeout(() => emit('close'), 50);
+}
 </script>
 
 <template>
   <nav class="side-nav" :class="{ mobile }">
 
-    <v-btn v-if="mobile" class="close-btn" @click="emit('close')" size="small" icon="" variant="plain">
-      <v-icon size="32">mdi-close</v-icon>
-    </v-btn>
 
     <ul class="side-nav__list">
       <li
@@ -81,7 +82,7 @@ function toggleSection(index: number) {
               v-if="item.route"
               :to="linkTo(item)"
               class="side-nav__item-link"
-              @click="mobile ? emit('close') : null"
+              @click="props.mobile ? closeSideNavWithDelay() : null"
               :class="{ 'no-permission': !accessMap[item.name || ''] }"
           >
             {{ item.label }}
@@ -197,46 +198,19 @@ function toggleSection(index: number) {
   }
 }
 
-@media (max-width: 1000px) {
-  .side-nav {
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    padding: 2rem 1rem;
-    overflow-y: auto;
-    animation: fadeSlideIn 0.3s ease-out;
-    position: relative;
-  }
-
-  .close-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    color: black;
-    font-size: 2rem;
-    cursor: pointer;
-    z-index: 2001;
-  }
-
-  @keyframes fadeSlideIn {
-    from {
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-}
-
 @media (min-width: 1980px) {
   .side-nav__item-header,
   .side-nav__sub-link,
   .side-nav__item-link {
     font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 959px) and (max-width: 1200px) {
+  .side-nav__item-header,
+  .side-nav__sub-link,
+  .side-nav__item-link {
+    font-size: 1rem;
   }
 }
 </style>
