@@ -1,8 +1,6 @@
 <template>
-  <v-app class="bg-app">
-    <v-application class="v-application--wrap">
+  <v-app class="bg-app application--wrap">
       <router-view />
-    </v-application>
   </v-app>
 </template>
 
@@ -42,7 +40,7 @@ watch(
 .bg-app {
   background-color: rgb(var(--v-theme-background,#F8F9Fa));
 }
-.v-application--wrap{
+.application--wrap{
   
   height: 100vh;
   display: flex;

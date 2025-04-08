@@ -1,18 +1,23 @@
 <script lang="ts" setup>
-import {ref, onMounted, onUnmounted} from "vue";
-import {PanelNavbar, SideNav} from "@/components";
-import {usePageHomeStore, useUtilStore} from "@/stores";
-import {useMockupStore} from "@/mockup/useMockupStore";
+import { ref, onMounted, onUnmounted } from "vue";
+import { PanelNavbar, SideNav } from "@/components";
+import { usePageHomeStore, useUtilStore } from "@/stores";
+import { useMockupStore } from "@/mockup/useMockupStore";
 
 const useStore = usePageHomeStore();
 const SiteName = useStore.getSiteName();
 
-const {isCurrentRouteNotInSet} = useUtilStore();
-const showNavigation = isCurrentRouteNotInSet(["roleSelection", "yourTrip", "TripForm", "yourTripGuide"]);
+const { isCurrentRouteNotInSet } = useUtilStore();
+const showNavigation = isCurrentRouteNotInSet([
+  "roleSelection",
+  "yourTrip",
+  "TripForm",
+  "yourTripGuide",
+]);
 
 const sideNavOpen = ref(false);
 
-const {getUserInitials} = useMockupStore();
+const { getUserInitials } = useMockupStore();
 const userInitials = getUserInitials();
 
 function toggleSideNav() {
@@ -39,9 +44,11 @@ onUnmounted(() => {
     <v-container fluid class="full-width-container">
       <v-row>
         <v-col cols="12">
-          <PanelNavbar :account-icon="userInitials"
-                       :show-navigation="showNavigation"
-                       @toggleMenu="toggleSideNav">
+          <PanelNavbar
+            :account-icon="userInitials"
+            :show-navigation="showNavigation"
+            @toggleMenu="toggleSideNav"
+          >
             <template #logo>
               {{ SiteName }}
             </template>
@@ -60,17 +67,30 @@ onUnmounted(() => {
             <SideNav :mobile="isMobile" @close="toggleSideNav"/>
           </v-col>
         </transition>
+      <v-row style="min-height: calc(100vh - 5rem); margin: 0">
+        <v-col
+          v-if="showNavigation && (!isMobile || sideNavOpen)"
+          cols="12"
+          sm="3"
+          md="2"
+          class="side-nav-col"
+          :class="{ 'mobile-overlay': isMobile, open: sideNavOpen }"
+        >
+          <SideNav :mobile="isMobile" @close="toggleSideNav" />
+        </v-col>
         <v-col
             cols="12" md="10"
+          :cols="showNavigation ? (isMobile ? 12 : 9) : 12"
+          :md="showNavigation ? 10 : 12"
         >
           <main>
-            <router-view/>
+            <router-view />
           </main>
         </v-col>
         <div
-            v-if="sideNavOpen && isMobile"
-            class="overlay"
-            @click="toggleSideNav"
+          v-if="sideNavOpen && isMobile"
+          class="overlay"
+          @click="toggleSideNav"
         />
       </v-row>
     </v-container>
@@ -79,7 +99,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 main {
-  background-color: rgb(var(--v-theme-background, #F8F9Fa));
+  background-color: rgb(var(--v-theme-background, #f8f9fa));
 }
 
 .wrapper {
@@ -95,7 +115,6 @@ main {
 
 .side-nav-col {
   padding: 0;
-
 }
 
 

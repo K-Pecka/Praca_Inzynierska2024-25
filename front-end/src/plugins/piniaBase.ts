@@ -1,4 +1,3 @@
-import { Role } from "@/type/enum";
 import type { PiniaPluginContext } from "pinia";
 import { useRoleStore } from "@/stores/auth/useRoleStore";
 

@@ -1,28 +1,29 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import {FAQItem} from "@/type/interface";
-
+import { FAQItem } from "@/type/interface";
 
 const props = defineProps({
   faqList: {
-    type:  Array as () => FAQItem[],
+    type: Array as () => FAQItem[],
     required: true,
   },
 });
 
 const openIndex = ref<number | null>(null);
-
 const toggle = (index: number) => {
   openIndex.value = openIndex.value === index ? null : index;
 };
 </script>
 
 <template>
-  <div class="faq">
-    <div class="faq__items">
-      <div
-        v-for="(item, index) in faqList"
+  <div class="faq"
+  >
+    <div class="faq__items"
+    v-for="(item, index) in faqList"
         :key="index"
+    >
+      <div
+        
         class="faq__item"
         :class="{ open: openIndex === index }"
         @click="toggle(index)"
@@ -42,12 +43,23 @@ const toggle = (index: number) => {
         </div>
       </div>
     </div>
+    <!-- <v-expansion-panels>
+      <v-expansion-panel
+        v-for="(item, index) in faqList"
+        bg-color="secondary"
+        :key="index"
+        :title="item.question"
+        :text="item.answer"
+      >
+      </v-expansion-panel>
+    </v-expansion-panels> -->
   </div>
 </template>
 
 <style scoped lang="scss">
 .faq {
-  padding: 2rem 0;
+  position: relative;
+  padding: 2rem 0 5rem;
   .faq__items {
     .faq__item {
       transition: all 0.3s;

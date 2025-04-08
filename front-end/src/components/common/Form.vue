@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="wrapper">
       <v-col cols="12" md="6" lg="8" offset-md="3" offset-lg="2">
-        <form @submit.prevent="handleSubmit" class="form-container">
+        <v-form validate-on="submit lazy" @submit.prevent="handleSubmit" class="form-container">
           <div v-for="(inputData, index) in inputs" :key="index">
             <FormInput
               :inputData="inputData"
@@ -15,7 +15,7 @@
           <div class="moreOption">
             <slot name="moreOption"></slot>
           </div>
-        </form>
+        </v-form>
       </v-col>
     </v-row>
   </v-container>
