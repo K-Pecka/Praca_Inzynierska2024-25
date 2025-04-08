@@ -11,10 +11,9 @@ const footerData = computed(() => useStore.getFooterData());
 </script>
 
 <template>
-  <div class="wrapper">
-    <v-container fluid class="full-width-container">
+    <v-container class="full-width-container ">
     <v-row class="sticky-top fixed-center">
-      <v-col cols="12" md="10" offset-md="1">
+      <v-col cols="12" lg="10" offset-lg="1">
         <v-responsive>
           <Navbar :links="navData">
             <template #logo>
@@ -32,19 +31,13 @@ const footerData = computed(() => useStore.getFooterData());
         </main>
       </v-col>
     </v-row>
+</v-container>
 
-    <v-row>
-      <v-col cols="12">
         <Footer :footerData="footerData">
           <template #logo>
             {{ SiteName }}
           </template>
         </Footer>
-      </v-col>
-    </v-row>
-  </v-container>
-  </div>
-  
 </template>
 <style lang="scss" scoped>
 .v-container{

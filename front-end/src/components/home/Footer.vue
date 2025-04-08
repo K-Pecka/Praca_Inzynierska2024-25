@@ -13,10 +13,10 @@ const lastModifiedDate = formatDate(new Date(lastModified));
 </script>
 
 <template>
-  <footer>
-    <v-container fluid class="footer full-width-container">
+  <footer class="footer-bg">
+    <v-container class="footer">
       <v-row>
-        <v-col class="footer__top" cols="12" md="10" offset-md="1">
+        <v-col class="footer__top" cols="10" lg="12" offset="1" offset-lg="0">
           <div class="footer__top__logo">
             <slot name="logo"> </slot>
           </div>
@@ -53,7 +53,9 @@ const lastModifiedDate = formatDate(new Date(lastModified));
 
 <style scoped lang="scss">
 @use "@/assets/style.scss" as *;
-
+.footer-bg{
+  background-color: rgb(var(--v-theme-secondary));
+}
 .v-row + .v-row {
   margin-top: 0.25rem;
 }
@@ -102,7 +104,11 @@ const lastModifiedDate = formatDate(new Date(lastModified));
         padding: 0.5rem;
         margin: 0;
       }
-
+      @media (max-width: 600px) {
+        ul {
+          gap: 0.25rem;
+        }
+      }
       li {
         margin: 5px 0;
         @include font-regular;

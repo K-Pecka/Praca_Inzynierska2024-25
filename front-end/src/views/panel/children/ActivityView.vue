@@ -46,6 +46,9 @@ function addActivity(day: string, activityData: any) {
   activityStore.addActivity({
     ...activityData,
     date: day,
+  },{
+    tripId: id,
+    planId: planId,
   });
   showFormForDay.value = null;
 }

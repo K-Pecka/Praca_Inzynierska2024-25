@@ -10,6 +10,7 @@ const props = defineProps<{
   plans: any;
   btn: any;
 }>();
+console.log(props.plans);
 </script>
 
 <template>
