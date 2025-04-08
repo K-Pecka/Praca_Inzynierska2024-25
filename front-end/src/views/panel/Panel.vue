@@ -55,18 +55,6 @@ onUnmounted(() => {
           </PanelNavbar>
         </v-col>
       </v-row>
-      <v-row style="min-height: calc(100vh - 5rem); margin: 0;">
-        <transition name="slide-nav">
-          <v-col
-              v-if="showNavigation && (!isMobile || sideNavOpen)"
-              cols="12"
-              sm="3"
-              md="2"
-              class="side-nav-col"
-          >
-            <SideNav :mobile="isMobile" @close="toggleSideNav"/>
-          </v-col>
-        </transition>
       <v-row style="min-height: calc(100vh - 5rem); margin: 0">
         <v-col
           v-if="showNavigation && (!isMobile || sideNavOpen)"
@@ -79,7 +67,6 @@ onUnmounted(() => {
           <SideNav :mobile="isMobile" @close="toggleSideNav" />
         </v-col>
         <v-col
-            cols="12" md="10"
           :cols="showNavigation ? (isMobile ? 12 : 9) : 12"
           :md="showNavigation ? 10 : 12"
         >
