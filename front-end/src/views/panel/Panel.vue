@@ -71,6 +71,7 @@ onUnmounted(() => {
         <v-col
           :cols="showNavigation ? (isMobile ? 12 : 9) : 12"
           :md="showNavigation ? 10 : 12"
+          class="main-col"
         >
           <main>
             <router-view />
@@ -89,6 +90,9 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 main {
   background-color: rgb(var(--v-theme-background, #f8f9fa));
+  height: 100%;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
 }
 
 .wrapper {
@@ -152,5 +156,10 @@ main {
 .slide-nav-leave-from {
   transform: translateX(0);
   opacity: 1;
+}
+
+.main-col {
+  height: calc(100vh - 5rem);
+  overflow: hidden;
 }
 </style>

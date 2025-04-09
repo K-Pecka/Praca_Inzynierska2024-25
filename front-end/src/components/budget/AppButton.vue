@@ -4,7 +4,7 @@ defineProps<{ variant?: "primary" | "secondary", size?: "sm" | "md" | "lg" }>();
 </script>
 
 <template>
-  <v-btn clbuttonass="app-button" :class="variant, size">
+  <v-btn class="app-button" :class="variant, size" color="white">
     <slot/>
   </v-btn>
 </template>
@@ -12,7 +12,7 @@ defineProps<{ variant?: "primary" | "secondary", size?: "sm" | "md" | "lg" }>();
 <style scoped lang="scss">
 .app-button {
   padding: 8px 40px;
-  border-radius: 15px;
+  border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
