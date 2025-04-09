@@ -13,7 +13,7 @@ const footerData = computed(() => useStore.getFooterData());
 <template>
     <v-container class="full-width-container ">
     <v-row class="sticky-top fixed-center">
-      <v-col cols="8" lg="12" offset-lg="0">
+      <v-col cols="12" sm="12" lg="12" offset-lg="0" offset-sm="0">
         <v-responsive>
           <Navbar :links="navData">
             <template #logo>

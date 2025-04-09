@@ -30,7 +30,7 @@
         :id="inputData.name"
         :type="inputData.type"
         :placeholder="inputData.placeholder"
-        :value="modelValue"
+        @input="updateModel"
         @blur="handleInput"
         class="input"
         :class="{ error: inputData.error && inputData.error.length > 0 }"
@@ -63,17 +63,11 @@ const props = defineProps({
     required: true,
   },
 });
-const emit = defineEmits(["update"]);
+const emit = defineEmits(["update","updateModel"]);
 
 const localRange = ref<string[]>(
   Array.isArray(props.modelValue) ? props.modelValue : []
 );
-const minDate = computed(() => {
-  return props.inputData.config?.min;
-});
-const maxDate = computed(() => {
-  return props.inputData.config?.max;
-});
 watch(
   () => props.modelValue,
   (newVal) => {
@@ -82,6 +76,11 @@ watch(
     }
   }
 );
+const updateModel = (event: Event) =>{
+  const name = (event.target as HTMLInputElement).name;
+  const value = (event.target as HTMLInputElement).value;
+  emit("updateModel",name,value);
+}
 function formatDate(date: Date): string {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -100,11 +99,10 @@ function onRangeChange(value: string[] | string) {
   }
 }
 
-console.log(props.inputData.config?.edit?`${props.inputData.config?.min} - ${props.inputData.config?.max}` : props.inputData.placeholder);
 const handleInput = (event: Event) => {
   const name = (event.target as HTMLInputElement).name;
   const value = (event.target as HTMLInputElement).value;
-
+ console.log(props.inputData.error);
   emit("update", name, value);
 };
 </script>

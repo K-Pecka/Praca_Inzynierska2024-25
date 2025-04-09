@@ -4,6 +4,7 @@ import { useMockupStore } from "@/mockup/useMockupStore";
 import { APP_MODE_DEV } from "@/config/envParams";
 export const loginFetch = async (credentials: Record<string, string>) => {
   if (APP_MODE_DEV) {
+    console.log(credentials)
     const { login } = useMockupStore();
     return login(credentials.email, credentials.password);
   }

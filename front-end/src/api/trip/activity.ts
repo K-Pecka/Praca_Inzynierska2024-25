@@ -1,20 +1,8 @@
 import { apiEndpoints, fetchData, setParam } from "../apiEndpoints";
 import { APP_MODE_DEV } from "@/config/envParams";
-import { useMockupStore } from "@/mockup/useMockupStore";
-export interface Activity {
-    id: string;
-    type: string;
-    name: string;
-    date: string;
-    startTime: string;
-    duration: string;
-    location?: string;
-    assignedTo?: string;
-    description?: string;
-}
+import { Activity } from "@/type";
 export const createActivity = async (newActivity:Activity,param: Record<string, string>={}) => {
   if (APP_MODE_DEV) {
-    const { addTrip } = useMockupStore();
     return {};
   }
     const { data, error } = await fetchData<Activity>(
@@ -28,3 +16,18 @@ export const createActivity = async (newActivity:Activity,param: Record<string, 
   
     return data;
   };
+  export const fetchActivity = async (param: Record<string, string> = {}):Promise<Activity[]> => {
+    if (APP_MODE_DEV) {
+      return [];
+    }
+    const { data, error } = await fetchData<Activity>(
+      setParam(apiEndpoints.activity.all, param),
+      {},
+      "GET"
+    );
+    if (error) {
+      throw new Error(error);
+    }
+  
+    return Array.isArray(data) ? data : [];
+  }

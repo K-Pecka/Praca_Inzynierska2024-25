@@ -190,3 +190,14 @@ export interface BudgetData {
   convertedCurrency: string;
   expenses: number;
 }
+export interface Activity {
+  id: number;
+  type: string;
+  name: string;
+  date: string;
+  start_time: string;
+  duration: string;
+  location?: string;
+  assignedTo?: string;
+  description?: string;
+}

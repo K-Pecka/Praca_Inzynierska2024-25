@@ -4,14 +4,19 @@ import { useActivityStore } from "@/stores/trip/useActivityStore";
 import ActivityList from "@/components/trip/modul/activity/ActivityList.vue";
 import ActivityForm from "@/components/trip/modul/activity/ActivityForm.vue";
 import AppButton from "@/components/budget/AppButton.vue";
-import {Section} from "@/components";
-import  {useTripStore} from "@/stores/trip/useTripStore";
+import { Section } from "@/components";
+import { useTripStore } from "@/stores/trip/useTripStore";
 import { useRoute } from "vue-router";
+import { Activity } from "@/type/interface";
 const route = useRoute();
 const id = route.params.tripId as string;
 const planId = route.params.planId as string;
-const startDate = new Date("2025-04-15");
-const endDate = new Date("2025-04-24");
+
+const { data: activities, isSuccess } = useActivityStore().getActivity(
+  id,
+  planId
+);
+
 const { getPlans } = useTripStore();
 const { data: plansData, isLoading, error } = getPlans(id);
 function getDaysArray(start: Date, end: Date) {
@@ -38,21 +43,39 @@ const days = computed(() => {
 
 const activityStore = useActivityStore();
 
-
 const showFormForDay = ref<string | null>(null);
 
-
 function addActivity(day: string, activityData: any) {
-  activityStore.addActivity({
-    ...activityData,
-    date: day,
-  },{
-    tripId: id,
-    planId: planId,
-  });
-  showFormForDay.value = null;
+  console.warn("send")
+   activityStore.addActivity(
+    {
+      ...activityData,
+      date: day,
+    },
+    {
+      tripId: id,
+      planId: planId,
+    }
+  );
 }
 import HeaderSection from "@/components/common/HeaderSection.vue";
+
+const activity = computed(
+  () =>
+    activities.value &&
+    activities.value.reduce((acc, activity) => {
+      activity = {
+        ...activity,
+        date: activity.date || days?.value?.[0] || ""
+      };
+      if (!acc[activity.date]) {
+        acc[activity.date] = [];
+      }
+      acc[activity.date].push(activity);
+      console.log(acc)
+      return acc;
+    }, {} as Record<string, Activity[]>)
+  )
 </script>
 
 <template>
@@ -60,33 +83,34 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
     <Section>
       <template #title>
         <HeaderSection>
-              <template #subtitle>
-                 <h2 class="trip-title">Zarządzaj aktywnościami</h2>
-              </template>
-              </HeaderSection>
+          <template #subtitle>
+            <h2 class="trip-title">Zarządzaj aktywnościami</h2>
+          </template>
+        </HeaderSection>
       </template>
 
       <template #content>
-        <div
-            v-for="day in days"
-            :key="day"
-            class="day-card"
-        >
+        <div v-for="day in days" :key="day" class="day-card">
           <div class="day-card-header">
             <div class="day-date">{{ day }}</div>
-            <AppButton variant="primary" size="sm" @click="showFormForDay = day">
+            <AppButton
+              variant="primary"
+              size="sm"
+              @click="showFormForDay = day"
+              v-show="showFormForDay != day"
+            >
               Dodaj aktywność
             </AppButton>
           </div>
 
           <ActivityForm
-              v-if="showFormForDay === day"
-              @submitActivity="(data) => addActivity(day, data)"
-              @cancelForm="showFormForDay = null"
-              class="form-container"
+            v-if="showFormForDay === day"
+            @submitActivity="(data) => addActivity(day, data)"
+            @cancelForm="showFormForDay = null"
+            class="form-container"
           />
-
-          <ActivityList :activities="activityStore.activitiesByDate(day).value" />
+          <span v-if="!isSuccess">Ładuję...</span>
+          <ActivityList v-else :activities="activity?.[day] ?? []" />
         </div>
       </template>
     </Section>

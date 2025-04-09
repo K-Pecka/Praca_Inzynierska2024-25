@@ -9,7 +9,7 @@ const emit = defineEmits(["submitActivity", "cancelForm"]);
 const form = ref({
   type: "Zwiedzanie",
   name: "",
-  startTime: "",
+  start_time: "",
   duration: "",
   location: "",
   assignedTo: "",
@@ -23,7 +23,7 @@ function submitActivity() {
   form.value = {
     type: "tour",
     name: "",
-    startTime: "",
+    start_time: "",
     duration: "",
     location: "",
     assignedTo: "",
@@ -61,7 +61,7 @@ function submitActivity() {
 
         <v-col cols="12" sm="6">
           <v-text-field
-              v-model="form.startTime"
+              v-model="form.start_time"
               :active="timeMenu"
               :focus="timeMenu"
               variant="outlined"
@@ -78,7 +78,7 @@ function submitActivity() {
             >
               <v-time-picker
                   v-if="timeMenu"
-                  v-model="form.startTime"
+                  v-model="form.start_time"
                   full-width
               />
             </v-menu>

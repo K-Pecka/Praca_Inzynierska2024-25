@@ -8,6 +8,7 @@
               :inputData="inputData"
               v-model="formValues[inputData.name]"
               @update="handleFieldUpdate"
+              @update-model="updateState"
             />
           </div>
 
@@ -32,19 +33,20 @@ const props = defineProps<{
   submitButtonLabel: string | undefined;
 }>();
 const emit = defineEmits(["submitForm"]);
-
+const updateState = (name: string, value: string) =>props.formValues[name] = value;
 const handleFieldUpdate = (name: string, value: string) => {
   props.formValues[name] = value;
-
+  
   const input = props.inputs.find((input) => input.name === name);
+  console.log(props.formValues)
   if (input) {
-    input.error = input.validation.validate(value);
+    input.error = [...input.validation.validate(value)];
     input.related?.forEach((el) => {
       let related = props.inputs.find((input) => input.name === el);
       if (related) {
-        related.error = related.validation
+        related.error = [...related.validation
           .isEqual(value)
-          .validate(props.formValues[el]);
+          .validate(props.formValues[el])];
       }
     });
   }
@@ -52,6 +54,7 @@ const handleFieldUpdate = (name: string, value: string) => {
 };
 
 const handleSubmit = () => {
+  props.inputs.forEach(el => el.error=[...el.validation.validate(props.formValues[el.name])])
   emit("submitForm", props.formValues, { send: true });
 };
 </script>
