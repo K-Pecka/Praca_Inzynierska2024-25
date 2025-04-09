@@ -56,6 +56,7 @@ onUnmounted(() => {
         </v-col>
       </v-row>
       <v-row style="min-height: calc(100vh - 5rem); margin: 0">
+        <transition name="slide-nav">
         <v-col
           v-if="showNavigation && (!isMobile || sideNavOpen)"
           cols="12"
@@ -66,6 +67,7 @@ onUnmounted(() => {
         >
           <SideNav :mobile="isMobile" @close="toggleSideNav" />
         </v-col>
+        </transition>
         <v-col
           :cols="showNavigation ? (isMobile ? 12 : 9) : 12"
           :md="showNavigation ? 10 : 12"
