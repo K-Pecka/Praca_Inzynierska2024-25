@@ -80,7 +80,7 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
 
 <style scoped lang="scss">
 .page-container {
-  max-width: 88rem;
+  max-width: 120rem;
   margin: 0 auto;
   padding-top: 0;
 }

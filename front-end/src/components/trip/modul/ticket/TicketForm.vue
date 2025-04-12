@@ -59,7 +59,7 @@ const timeMenu = ref(false);
 
     <v-card-text>
       <v-row>
-        <v-col cols="12" sm="6">
+        <v-col cols="12" lg="6" md="6" class="tight-col">
           <v-select
               v-model="form.type"
               :items="ticketTypeOptions"
@@ -69,10 +69,11 @@ const timeMenu = ref(false);
               variant="outlined"
               chips
               bg-color="background"
+              density="comfortable"
           />
         </v-col>
 
-        <v-col cols="12" sm="6">
+        <v-col cols="12" lg="6" md="6" class="tight-col">
           <v-text-field
               v-model="form.name"
               label="Nazwa"
@@ -80,10 +81,11 @@ const timeMenu = ref(false);
               :rules="[v => !!v || 'Nazwa biletu jest wymagana']"
               required
               bg-color="background"
+              density="comfortable"
           />
         </v-col>
 
-        <v-col cols="12" sm="3">
+        <v-col cols="12" lg="3" md="6" class="tight-col">
           <v-date-input
               v-model="form.date"
               label="Wybierz datę"
@@ -92,10 +94,11 @@ const timeMenu = ref(false);
               variant="outlined"
               :min="today"
               bg-color="background"
+              density="comfortable"
           />
         </v-col>
 
-        <v-col cols="12" sm="3">
+        <v-col cols="12" lg="3" md="6" class="tight-col">
           <v-text-field
               v-model="form.time"
               :active="timeMenu"
@@ -105,17 +108,21 @@ const timeMenu = ref(false);
               prepend-inner-icon="mdi-clock-time-four-outline"
               readonly
               bg-color="background"
+              density="comfortable"
           >
             <v-menu
                 v-model="timeMenu"
                 :close-on-content-click="false"
                 activator="parent"
                 transition="scale-transition"
+                density="comfortable"
             >
               <v-time-picker
                   v-if="timeMenu"
                   v-model="form.time"
+                  format="24hr"
                   full-width
+                  scrollable
               >
               </v-time-picker>
             </v-menu>
@@ -123,7 +130,7 @@ const timeMenu = ref(false);
         </v-col>
 
 
-        <v-col cols="12" sm="6">
+        <v-col cols="12" lg="6" md="12" class="tight-col">
           <v-select
               v-model="form.assignedTo"
               label="Przypisz do osoby (Opcjonalnie)"
@@ -133,10 +140,11 @@ const timeMenu = ref(false);
               clearable
               multiple
               bg-color="background"
+              density="comfortable"
           />
         </v-col>
 
-        <v-col cols="12" sm="12">
+        <v-col cols="12" lg="12" class="tight-col">
           <v-file-input
               class="custom-file-input"
               v-model="form.file"
@@ -146,14 +154,14 @@ const timeMenu = ref(false);
               show-size
               variant="outlined"
               bg-color="background"
+              density="comfortable"
           >
           </v-file-input>
         </v-col>
       </v-row>
     </v-card-text>
 
-    <v-card-actions>
-      <v-spacer/>
+    <v-card-actions class="form-actions">
       <AppButton variant="secondary"
                  @click="$emit('cancelForm')">
         Anuluj
@@ -171,5 +179,26 @@ const timeMenu = ref(false);
   background-color: rgb(var(--v-theme-secondary), 0.5);
   border-radius: 1rem;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  margin: 0 auto;
+
+  @media (max-width: 600px) {
+    padding: 0.5rem !important;
+  }
 }
+
+.form-actions {
+  gap: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  @media (max-width: 600px) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.tight-col {
+  padding: 0.25rem !important;
+}
+
+
 </style>

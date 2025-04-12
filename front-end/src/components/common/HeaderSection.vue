@@ -40,17 +40,4 @@ const {data: tripData, isLoading, error} = getTripDetails(tripId);
   margin: 0 0 2rem 0;
 }
 
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.title-container {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-
 </style>
