@@ -31,6 +31,12 @@ function handleRemoveClick() {
 </template>
 
 <style scoped lang="scss">
+.participant-email,.participant-name{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 10rem;
+}
 .participant-item--noactive{
   background-color: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.1);

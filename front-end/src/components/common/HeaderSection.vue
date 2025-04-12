@@ -3,7 +3,7 @@ import {useRoute} from "vue-router";
 import {useTripStore} from "@/stores";
 
 const route = useRoute();
-const tripId = route.params.tripId as string;
+const tripId = Number(route.params.tripId);
 const {getTripDetails} = useTripStore();
 const {data: tripData, isLoading, error} = getTripDetails(tripId);
 </script>

@@ -5,7 +5,7 @@ import { pl } from 'vuetify/locale'
 export default createVuetify({
   defaults: {
     VBtn: {
-      color: 'text',
+      color: '#E0E0E0',
       variant: 'outlined',
     },
   },

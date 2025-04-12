@@ -88,6 +88,7 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
+
 main {
   background-color: rgb(var(--v-theme-background, #f8f9fa));
   height: 100%;

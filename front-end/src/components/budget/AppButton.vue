@@ -56,4 +56,9 @@ defineProps<{ variant?: "primary" | "secondary", size?: "sm" | "md" | "lg" }>();
 .secondary:hover {
   background-color: rgba(var(--v-theme-secondary), 0.8);
 }
+@media (max-width: 400px) {
+  .app-button {
+    padding: 8px 24px;
+  }
+}
 </style>

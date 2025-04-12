@@ -5,9 +5,6 @@ import {
   PlanForm, TripForm, BudgetForm
 } from "@/views/panel";
 
-
-import { Role } from "@/type/enum";
-
 const panelGuideRoutes: RouteRecordRaw = {
   path: "/guide",
   name: "panelGuide",
