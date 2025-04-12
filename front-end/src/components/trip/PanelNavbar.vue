@@ -159,7 +159,7 @@ function onHamburgerClick() {
   }
 
   .panel-navbar__logo {
-    font-size: 1.6rem;
+    //font-size: 1.6rem;
   }
 
   .panel-navbar__account-l {
