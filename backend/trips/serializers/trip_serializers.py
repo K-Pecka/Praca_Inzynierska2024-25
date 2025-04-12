@@ -15,6 +15,11 @@ class TripCreateSerializer(serializers.ModelSerializer):
     end_date = serializers.DateField()
     budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2, write_only=True)
 
+    def validate_budget_amount(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("Kwota budżetu musi być większa od zera.")
+        return value
+
     def validate(self, data):
         request = self.context['request']
 

@@ -10,3 +10,13 @@ class UserProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['id', 'email',]
+
+
+class UserProfileListJWTSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    type = serializers.CharField(read_only=True)
+    is_default = serializers.BooleanField(read_only=True)
+
+    class Meta:
+        model = UserProfile
+        fields = ['id', 'type', 'is_default']

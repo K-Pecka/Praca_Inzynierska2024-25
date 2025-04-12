@@ -44,7 +44,11 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
 
     def get_object(self):
-        return get_object_or_404(Trip, pk=self.kwargs['trip_id'])
+        print('self.kwargs', self.kwargs)
+        print('fgdfgfdg', self.kwargs['trip_pk'])
+        print(Trip.objects.all().first().pk)
+        print(Trip.objects.get(id=self.kwargs['trip_pk']))
+        return Trip.objects.get(pk=self.kwargs['trip_pk'])
 
     def update(self, request, *args, **kwargs):
         trip = self.get_object()
@@ -125,7 +129,8 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             'end_date': trip.end_date,
             'trip_link': invitation_link
         })
-        send_mail(
+        print('invitation_link', invitation_link)
+        sent_count = send_mail(
             subject=subject,
             message=strip_tags(html_message),
             from_email=settings.DEFAULT_FROM_EMAIL,
@@ -133,6 +138,8 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             html_message=html_message
         )
 
+        if sent_count == 0:
+            raise Exception("Nie udało się wysłać e-maila z zaproszeniem.")
 
 @extend_schema(
     tags=['trip invitation'],
