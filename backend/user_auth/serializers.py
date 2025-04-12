@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from users.serializers.user_profile_serializers import UserProfileListSerializer
+from users.serializers.user_profile_serializers import UserProfileListJWTSerializer
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -16,7 +16,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        profiles_data = UserProfileListSerializer(user.profiles.all(), many=True).data
+        profiles_data = UserProfileListJWTSerializer(user.profiles.all(), many=True).data
 
         token['profiles'] = profiles_data
         token['first_name'] = user.first_name
@@ -35,7 +35,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["refresh"] = str(refresh)
         data["access"] = str(refresh.access_token)
 
-        profiles_data = UserProfileListSerializer(self.user.profiles.all(), many=True).data
+        profiles_data = UserProfileListJWTSerializer(self.user.profiles.all(), many=True).data
 
         data['profiles'] = profiles_data
         data['first_name'] = self.user.first_name

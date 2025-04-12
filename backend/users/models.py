@@ -170,6 +170,14 @@ class UserProfile(BaseModel):
 
         super().save(*args, **kwargs)
 
+    def clean(self):
+        if not self.pk:
+            self.save()
+
+        if self.user.is_guest:
+            raise ValidationError(_("Nie można edytować profilu gościa."))
+
+
     class Meta:
         verbose_name = _("Profil")
         verbose_name_plural = _("Profile")
