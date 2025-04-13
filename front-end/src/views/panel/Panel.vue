@@ -35,11 +35,13 @@ function updateScreenSize() {
 
 onMounted(() => {
   window.addEventListener("resize", updateScreenSize);
-});
-
+  document.documentElement.style.overflowY = 'hidden';
+})
 onUnmounted(() => {
   window.removeEventListener("resize", updateScreenSize);
+  document.documentElement.style.overflowY = 'scroll';
 });
+
 </script>
 
 <template>
@@ -91,7 +93,6 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
-
 main {
   background-color: rgb(var(--v-theme-background, #f8f9fa));
   height: 100%;

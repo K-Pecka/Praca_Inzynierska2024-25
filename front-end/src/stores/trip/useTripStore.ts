@@ -23,9 +23,33 @@ function formatPL(dateString: string) {
   return new Intl.DateTimeFormat('pl-PL').format(dateObj);
 }
 
+
 export const useTripStore = defineStore("trip", () => {
   const queryClient = useQueryClient();
   const {getRole} = useRoleStore();
+  const getExpenseItem = () =>{
+  return {
+    expenseItem:[
+    {
+      title: "test",
+      date: "12-02-2022",
+      type: "food",
+      note: "bla bla bla",
+      amount: 100,
+      currency: "PLN",
+    },
+    {
+      title: "test",
+      date: "12-02-2022",
+      type: "food",
+      note: "bla bla bla",
+      amount: 100,
+      currency: "PLN",
+    },
+  ],
+  sectionName:getRole() == Role.TURIST ? "Ostatnie wydatki" : "Ostatnie zaległości uczestników"
+};
+}
   const { setErrorCurrentMessage, setSuccessCurrentMessage } =
     useNotificationStore();
     
@@ -119,6 +143,7 @@ export const useTripStore = defineStore("trip", () => {
         title: "Czas trwania",
         icon: "mdi-calendar-month-outline",
         content: tripTime.value,
+        className:['font-weight-bold'],
         set: {
           order: 1,
           size: {
@@ -302,6 +327,7 @@ export const useTripStore = defineStore("trip", () => {
   });
 
   return {
+    getExpenseItem,
     getPlans,
     getDashboard,
     yourTrips,
@@ -315,3 +341,4 @@ export const useTripStore = defineStore("trip", () => {
     addParticipant
   };
 });
+

@@ -43,6 +43,7 @@ export interface DashboardBox {
     };
     order: number;
   };
+  className?:string[];
 }
 
 export interface Button {

@@ -2,7 +2,6 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { BudgetData, DashboardBox } from "@/type/interface";
 
-
 const props = defineProps<DashboardBox>();
 const screenWidth = ref(window.innerWidth);
 const screenBreakpoint = ref("");
@@ -56,7 +55,8 @@ const getGridRows = () => {
 
   return size[breakpoint]?.row || size.lg?.row || 1;
 };
-import BudgetContent from "@/components/style/BudgetContent.vue"
+console.log(props);
+import BudgetContent from "@/components/style/BudgetContent.vue";
 </script>
 
 <template>
@@ -70,7 +70,8 @@ import BudgetContent from "@/components/style/BudgetContent.vue"
     }"
   >
     <v-card-title class="text-h6 font-weight-medium d-flex align-center">
-      <v-icon class="mr-2" color="primary">{{`${props.icon}`}}</v-icon> {{ props.title }}
+      <v-icon class="mr-2" color="primary">{{ `${props.icon}` }}</v-icon>
+      {{ props.title }}
     </v-card-title>
     <v-card-text>
       <template v-if="Array.isArray(props.content)">
@@ -80,16 +81,28 @@ import BudgetContent from "@/components/style/BudgetContent.vue"
           </v-list-item>
         </v-list>
       </template>
-
-      <BudgetContent v-if="typeof props.content === 'object' && props.content !== null" :content="props.content as BudgetData"></BudgetContent>
-
-      <template v-else>{{ props.content }}</template>
+      <template
+        v-if="typeof props.content === 'object' && props.content !== null"
+      >
+        <BudgetContent
+          v-if="
+            typeof props.content === 'object' &&
+            props.content !== null &&
+            !Array.isArray(props.content)
+          "
+          :content="props.content"
+        />
+      </template>
+      <template v-else>
+        <span :class="props.className"
+          >{{ props.content }} {{ props.className }}</span
+        >
+      </template>
     </v-card-text>
   </v-card>
 </template>
 
 <style scoped lang="scss">
-
 .v-card {
   transition: transform 0.2s, box-shadow 0.2s;
   background-color: rgb(var(--v-theme-secondary), 50%);
