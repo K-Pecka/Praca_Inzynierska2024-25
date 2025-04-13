@@ -7,20 +7,17 @@ const useStore = usePageHomeStore();
 const SiteName = computed(() => useStore.getSiteName());
 const navData = computed(() => useStore.navigationLinks);
 const footerData = computed(() => useStore.getFooterData());
-
 </script>
 
 <template>
-    <v-container class="full-width-container ">
+  <v-container class="full-width-container">
     <v-row class="sticky-top fixed-center">
       <v-col cols="12" sm="12" lg="12" offset-lg="0" offset-sm="0">
-        <v-responsive>
-          <Navbar :links="navData">
-            <template #logo>
-              {{ SiteName }}
-            </template>
-          </Navbar>
-        </v-responsive>
+        <Navbar :links="navData">
+          <template #logo>
+            {{ SiteName }}
+          </template>
+        </Navbar>
       </v-col>
     </v-row>
 
@@ -31,16 +28,16 @@ const footerData = computed(() => useStore.getFooterData());
         </main>
       </v-col>
     </v-row>
-</v-container>
+  </v-container>
 
-        <Footer :footerData="footerData">
-          <template #logo>
-            {{ SiteName }}
-          </template>
-        </Footer>
+  <Footer :footerData="footerData">
+    <template #logo>
+      {{ SiteName }}
+    </template>
+  </Footer>
 </template>
 <style lang="scss" scoped>
-.v-container{
+.v-container {
   position: relative;
   z-index: 2;
 }
@@ -48,7 +45,7 @@ const footerData = computed(() => useStore.getFooterData());
   position: relative;
   overflow-x: hidden;
 }
-main{
+main {
   min-height: 50vh;
 }
 .wrapper::after {
@@ -59,11 +56,8 @@ main{
   border-radius: 50%;
   background-color: rgb(var(--v-theme-secondary));
   position: absolute;
-  top:-7vw;
+  top: -7vw;
   right: -6vw;
   z-index: 1;
-}
-.v-responsive {
-  transition: all 0.3s ease;
 }
 </style>
