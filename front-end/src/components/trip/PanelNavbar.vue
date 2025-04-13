@@ -114,7 +114,7 @@ function onHamburgerClick() {
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: white;/* ! */;	
+  background-color: rgba(var(--v-theme-background));
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   padding: 0.5rem;
@@ -147,9 +147,23 @@ function onHamburgerClick() {
   color: rgb(var(--v-theme-primary));
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 959px) {
   .panel-navbar__hamburger {
     display: block;
+  }
+}
+
+@media (max-width: 600px) {
+  .panel-navbar {
+    padding: 1rem 1rem;
+  }
+
+  .panel-navbar__logo {
+    font-size: 1.6rem;
+  }
+
+  .panel-navbar__account-l {
+    display: none;
   }
 }
 

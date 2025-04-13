@@ -60,7 +60,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
             icon: image.icon.menu.budget,
             children: [
                 { label: "Pokaż",name:"budgetShow", route: { name: 'ExpenseTracker', params: { tripId:tripId }} },
-                { label: "zmień budżet",name:"budgetChange", route: { name: 'budget', params: { tripId:tripId }} },
+                { label: "Zmień budżet",name:"budgetChange", route: { name: 'budget', params: { tripId:tripId }} },
             ],
         },
         {

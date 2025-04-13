@@ -90,6 +90,12 @@ export const apiEndpoints = {
     delete: `${hostName}/trip/:tripId/itinerary/:planId/delete/`,
     create: `${hostName}/trip/:tripId/itinerary/create/`,
   },
+  activity: {
+    all: `${hostName}/trip/:tripId/activity/all/`,
+    detail: `${hostName}/trip/:tripId/activity/:activityId/`,
+    delete: `${hostName}/trip/:tripId/activity/:activityId/delete/`,
+    create: `${hostName}/trip/:tripId/itinerary/:planId/activities/create/`,
+  },
   ticket: {
     create: `${hostName}/trip/ticket/create/`,
   },

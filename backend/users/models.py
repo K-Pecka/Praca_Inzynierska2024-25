@@ -120,7 +120,7 @@ class CustomUser(AbstractBaseUser, BaseModel):
 
 class UserProfile(BaseModel):
     class ProfileType(models.TextChoices):
-        CLIENT = 'client', _("Klient")
+        TOURIST = 'tourist', _("Turysta")
         GUIDE = 'guide', _("Przewodnik")
         ADMIN = 'admin', _("Administrator")
         GUEST = 'guest', _("Gość")
@@ -137,7 +137,7 @@ class UserProfile(BaseModel):
         blank=False,
         null=False,
         choices=ProfileType.choices,
-        default=ProfileType.CLIENT,
+        default=ProfileType.TOURIST,
         verbose_name=_("Typ"),
         help_text=_("Typ profilu")
     )

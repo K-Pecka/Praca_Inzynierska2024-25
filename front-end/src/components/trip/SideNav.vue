@@ -39,24 +39,25 @@ const checkAccess = async () => {
   };
 };
 
-const linkTo = (item: SideNavItem) =>{
+const linkTo = (item: SideNavItem) => {
   return item.name && item.route && accessMap.value[item.name] ? item.route : goTo();
 }
-    
+
 
 onMounted(checkAccess);
 
 function toggleSection(index: number) {
   openIndex.value = openIndex.value === index ? null : index;
 }
+
+function closeSideNavWithDelay() {
+  setTimeout(() => emit('close'), 50);
+}
 </script>
 
 <template>
   <nav class="side-nav" :class="{ mobile }">
 
-    <v-btn v-if="mobile" class="close-btn" @click="emit('close')">
-      <v-icon size="42">mdi-close</v-icon>
-    </v-btn>
 
     <ul class="side-nav__list">
       <li
@@ -81,7 +82,7 @@ function toggleSection(index: number) {
               v-if="item.route"
               :to="linkTo(item)"
               class="side-nav__item-link"
-              @click="mobile ? emit('close') : null"
+              @click="props.mobile ? closeSideNavWithDelay() : null"
               :class="{ 'no-permission': !accessMap[item.name || ''] }"
           >
             {{ item.label }}
@@ -197,84 +198,19 @@ function toggleSection(index: number) {
   }
 }
 
-@media (max-width: 1000px) {
-  .side-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.9); /* ! */
-    z-index: 2000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .side-nav__list {
-    max-width: 450px;
-    text-align: left;
-  }
-
-  .side-nav__item {
-    width: 100%;
-    margin-bottom: 1.5rem;
-  }
-
-  .side-nav__item-header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    font-weight: 600;
-    color: #ffffff;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .side-nav__icon {
-    filter: brightness(0) invert(1);
-  }
-
-  .side-nav__arrow-icon {
-    filter: brightness(0) invert(1);
-    transition: transform 0.3s ease;
-
-    &.open {
-      transform: rotate(90deg);
-    }
-  }
-
-  .side-nav__sub-list {
-    margin-top: 1rem;
-    padding-left: 1.5rem;
-  }
-
-  .side-nav__sub-item {
-    margin-bottom: 1rem;
-  }
-
+@media (min-width: 1980px) {
+  .side-nav__item-header,
   .side-nav__sub-link,
   .side-nav__item-link {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 1.1rem;
-
-    &:hover {
-      color: rgb(var(--v-theme-primary));
-    }
+    font-size: 1.5rem;
   }
+}
 
-  .close-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    color: #ffffff; /* ! */
-    font-size: 2rem;
-    cursor: pointer;
-    z-index: 2001;
+@media (min-width: 959px) and (max-width: 1200px) {
+  .side-nav__item-header,
+  .side-nav__sub-link,
+  .side-nav__item-link {
+    font-size: 1rem;
   }
 }
 </style>

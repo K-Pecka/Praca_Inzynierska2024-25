@@ -1,5 +1,12 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+import {
+    useMutation,
+    useQuery,
+    useQueryClient
+  } from "@tanstack/vue-query";
+import { createActivity } from "@/api/trip/activity";
+import router from "@/router";
 
 export interface Activity {
     id: string;
@@ -29,12 +36,14 @@ export const useActivityStore = defineStore("activity", () => {
         { value: "relax", label: "Relaks", icon: "mdi-beach" },
     ]);
 
-    function addActivity(activityData: Omit<Activity, "id">) {
-        const newActivity: Activity = {
-            id: Date.now().toString(),
-            ...activityData,
-        };
-        activities.value.push(newActivity);
+    function addActivity(activityData: Activity,param: Record<string, string>={}) {
+        // const newActivity: Activity = {
+        //     id: Date.now().toString(),
+        //     ...activityData,
+        // };
+        // console.log("Adding activity:", newActivity);
+        // activities.value.push(newActivity);
+        activityMutationAdd.mutate({activityData, param});
     }
 
     function removeActivity(activityId: string) {
@@ -45,7 +54,16 @@ export const useActivityStore = defineStore("activity", () => {
         computed(() => {
             return activities.value.filter((a) => a.date === date);
         });
-
+    const activityMutationAdd = useMutation({
+        mutationFn: ({activityData,param}:{activityData:Activity,param:Record<string, string>}) => createActivity(activityData,param),
+        onSuccess: (data) => {
+        router.back();
+        setSuccessCurrentMessage("dodano aktywność");
+        },
+        onError: (err) => {
+        setErrorCurrentMessage("błąd");
+        },
+    });
     return {
         activities,
         activityTypes,
@@ -54,3 +72,11 @@ export const useActivityStore = defineStore("activity", () => {
         activitiesByDate,
     };
 });
+function setSuccessCurrentMessage(arg0: string) {
+    throw new Error("Function not implemented.");
+}
+
+function setErrorCurrentMessage(arg0: string) {
+    throw new Error("Function not implemented.");
+}
+
