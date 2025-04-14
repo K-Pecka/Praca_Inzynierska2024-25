@@ -11,7 +11,7 @@ import { useTripStore, useUtilStore, useNotificationStore } from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
 const { setErrorCurrentMessage } = useNotificationStore();
 const route = useRoute();
-const tripId = route.params.tripId as string;
+const tripId = Number(route.params.tripId);
 
 const { getTripDetails, removeParticipant, addParticipant } = useTripStore();
 const { data: tripData, isLoading, error } = getTripDetails(tripId);

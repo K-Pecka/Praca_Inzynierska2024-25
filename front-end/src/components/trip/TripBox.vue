@@ -61,6 +61,9 @@ const props = defineProps({
 </template>
 
 <style lang="scss" scoped>
+.v-row{
+  align-items: center;
+}
 .v-card-title {
   font-size: 1.5rem;
   font-family: var(--v-fontFamily);

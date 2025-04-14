@@ -3,6 +3,12 @@ import { APP_DARK_MODE } from '@/config/envParams';
 import 'vuetify/styles';
 import { pl } from 'vuetify/locale'
 export default createVuetify({
+  defaults: {
+    VBtn: {
+      color: '#E0E0E0',
+      variant: 'outlined',
+    },
+  },
   theme: {
     defaultTheme: APP_DARK_MODE ? 'dark' : 'light',
     themes: {

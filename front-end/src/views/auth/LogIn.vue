@@ -2,14 +2,16 @@
 import {Form,ListLink,Section} from "@/components/common";
 import { usePageHomeStore,useFormStore } from "@/stores/";
 import { FormType } from "@/type/enum";
+import { ref } from "vue";
 
 const { getSectionTitle } = usePageHomeStore();
 const { getMoreOptions,initForm,sendForm, formValues } = useFormStore();
 
 const sectionTitle = getSectionTitle(FormType.LOGIN);
-const inputs = initForm(FormType.LOGIN);
+const inputs = ref(initForm(FormType.LOGIN));
 const moreOptions = getMoreOptions();
 const handleSubmit = async (formValue: any, config: any) => {
+  console.warn("SEND")
   sendForm(formValue, config);
 };
 </script>

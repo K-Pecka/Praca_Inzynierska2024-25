@@ -7,8 +7,15 @@ import {useMockupStore} from "@/mockup/useMockupStore";
 const useStore = usePageHomeStore();
 const SiteName = useStore.getSiteName();
 
+const logoText = ref(SiteName);
+
 const {isCurrentRouteNotInSet} = useUtilStore();
-const showNavigation = isCurrentRouteNotInSet(["roleSelection", "yourTrip", "TripForm", "yourTripGuide"]);
+const showNavigation = isCurrentRouteNotInSet([
+  "roleSelection",
+  "yourTrip",
+  "TripForm",
+  "yourTripGuide",
+]);
 
 const sideNavOpen = ref(false);
 
@@ -23,15 +30,18 @@ const isMobile = ref(window.innerWidth <= 959);
 
 function updateScreenSize() {
   isMobile.value = window.innerWidth <= 959;
+  logoText.value = window.innerWidth <= 425 ? "P" : SiteName;
 }
 
 onMounted(() => {
   window.addEventListener("resize", updateScreenSize);
-});
-
+  document.documentElement.style.overflowY = 'hidden';
+})
 onUnmounted(() => {
   window.removeEventListener("resize", updateScreenSize);
+  document.documentElement.style.overflowY = 'scroll';
 });
+
 </script>
 
 <template>
@@ -39,16 +49,18 @@ onUnmounted(() => {
     <v-container fluid class="full-width-container">
       <v-row>
         <v-col cols="12">
-          <PanelNavbar :account-icon="userInitials"
-                       :show-navigation="showNavigation"
-                       @toggleMenu="toggleSideNav">
+          <PanelNavbar
+              :account-icon="userInitials"
+              :show-navigation="showNavigation"
+              @toggleMenu="toggleSideNav"
+          >
             <template #logo>
-              {{ SiteName }}
+              {{ logoText }}
             </template>
           </PanelNavbar>
         </v-col>
       </v-row>
-      <v-row style="min-height: calc(100vh - 5rem); margin: 0;">
+      <v-row style="min-height: calc(100vh - 5rem); margin: 0">
         <transition name="slide-nav">
           <v-col
               v-if="showNavigation && (!isMobile || sideNavOpen)"
@@ -56,12 +68,15 @@ onUnmounted(() => {
               sm="3"
               md="2"
               class="side-nav-col"
+              :class="{ 'mobile-overlay': isMobile, open: sideNavOpen }"
           >
             <SideNav :mobile="isMobile" @close="toggleSideNav"/>
           </v-col>
         </transition>
         <v-col
-            cols="12" md="10"
+            :cols="showNavigation ? (isMobile ? 12 : 9) : 12"
+            :md="showNavigation ? 10 : 12"
+            class="main-col"
         >
           <main>
             <router-view/>
@@ -79,7 +94,10 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 main {
-  background-color: rgb(var(--v-theme-background, #F8F9Fa));
+  background-color: rgb(var(--v-theme-background, #f8f9fa));
+  height: 100%;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
 }
 
 .wrapper {
@@ -95,7 +113,6 @@ main {
 
 .side-nav-col {
   padding: 0;
-
 }
 
 
@@ -144,5 +161,10 @@ main {
 .slide-nav-leave-from {
   transform: translateX(0);
   opacity: 1;
+}
+
+.main-col {
+  height: calc(100vh - 5rem);
+  overflow: hidden;
 }
 </style>

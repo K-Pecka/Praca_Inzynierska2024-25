@@ -6,6 +6,8 @@ import panelGuideRoutes from "./panelGuideRoutes";
 import authRoutes from "./authRoutes";
 import { useAuthStore, useNotificationStore } from "@/stores";
 
+import {APP_MODE_DEV} from "@/config/envParams"
+
 const routes: RouteRecordRaw[] = [...authRoutes, ...homeRoutes, panelRoutes,panelGuideRoutes];
 const router = createRouter({
   history: createWebHistory(),
@@ -19,9 +21,14 @@ router.beforeEach(async (to, from, next) => {
 
   const { validToken, checkPermission } = useAuthStore();
   const { setErrorCurrentMessage } = useNotificationStore();
+
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const goBack = to.matched.some((record) => record.meta.goBack);
+
   const routerName = typeof to.name === "string" ? to.name : undefined;
+  if(APP_MODE_DEV == true){
+    document.title = "[Mockup]"
+  }
   if (requiresAuth && !(await validToken())) {
     setErrorCurrentMessage(
       "Tylko zalogowani użytkownicy,\n posiadają dostępn do tej zawartości."

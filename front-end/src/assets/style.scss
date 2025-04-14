@@ -107,3 +107,12 @@ input{
 a{
   text-decoration: none;
 }
+.v-application__wrap{
+  justify-content: space-between;
+}
+body {
+  background-color: rgb(var(--v-theme-background,#F8F9Fa));
+}
+body .v-card-title{
+  padding: 1rem 0;
+}

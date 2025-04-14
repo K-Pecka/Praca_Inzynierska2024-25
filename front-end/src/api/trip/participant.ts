@@ -11,6 +11,7 @@ export const fetchAddParticipant = async (
     if (participantAdd?.error) {
       throw new Error(participantAdd.message);
     }
+    return participantAdd;
   }
   const { data, error } = await fetchData(
     setParam(`${apiEndpoints.trip.invateUser}?action=invite`, { tripId: String(idTrip) }),
@@ -33,6 +34,7 @@ export const fetchRemoveParticipant = async (
     if (participant?.error) {
       throw new Error(participant.message);
     }
+    return participant;
   }
   const { data, error } = await fetchData(
     setParam(`${apiEndpoints.trip.invateUser}?action=remove`, { tripId: String(idTrip) }),

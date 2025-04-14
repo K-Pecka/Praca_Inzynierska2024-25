@@ -43,6 +43,7 @@ export interface DashboardBox {
     };
     order: number;
   };
+  className?:string[];
 }
 
 export interface Button {
@@ -189,4 +190,15 @@ export interface BudgetData {
   convertedAmount: number;
   convertedCurrency: string;
   expenses: number;
+}
+export interface Activity {
+  id: number;
+  type: string;
+  name: string;
+  date: string;
+  start_time: string;
+  duration: string;
+  location?: string;
+  assignedTo?: string;
+  description?: string;
 }

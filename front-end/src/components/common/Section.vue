@@ -25,8 +25,8 @@
   }
   &__header {
     text-align: center;
-    font-size: 1.5rem;
-    margin: 2rem 0;
+    font-size: 2rem;
+    margin: 1rem 0 0.1rem 0;
     color: var(--v-theme-text, #333);
   }
 

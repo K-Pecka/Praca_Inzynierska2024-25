@@ -1,10 +1,9 @@
 import type { RouteRecordRaw } from "vue-router";
 
 import { 
-  Panel, RoleSelection, TripDashboard, YourTrip, YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm, ActivityView
+  Panel, RoleSelection, TripDashboard, YourTrip, YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm, ActivityView,
+  PlanForm, TripForm, BudgetForm
 } from "@/views/panel";
-
-import { PlanForm, TripForm, BugdetForm } from "@/views/panel/children/form";
 
 import { Role } from "@/type/enum";
 
@@ -12,7 +11,7 @@ const panelRoutes: RouteRecordRaw = {
   path: "/panel",
   name: "panel",
   component: Panel,
-  meta: { title: "Panel", requiresAuth: true, role: Role.TURIST },
+  meta: { title: "Panel", requiresAuth: true },
   children: [
     { path: "", name: "roleSelection", component: RoleSelection },
 
@@ -27,7 +26,7 @@ const panelRoutes: RouteRecordRaw = {
 
     { path: "your-trip/trip", name: "TripForm", component: TripForm },
     { path: "your-trip/:tripId/plan-form", name: "PlanForm", component: PlanForm },
-    { path: "your-trip/:tripId/budget", name: "budget", component: BugdetForm },
+    { path: "your-trip/:tripId/budget", name: "budget", component: BudgetForm },
   ],
 };
 

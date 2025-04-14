@@ -20,10 +20,6 @@ export const useFormStore = defineStore("form", () => {
     isEqual: "Hasła muszą być takie same",
     dateRange: "Data zakończenia nie może być wcześniejsza niż rozpoczęcia",
   };
-  const formValues = computed(() => {
-    const inputs = getFormInputs(formType.value);
-    return Object.fromEntries(inputs.map((input: { name: string }) => [input.name, ""]));
-  });
   const getLoginInputs = (): Input[] => loginInput(getErrorMessages());
 
   const getRegisterInputs = (): Input[] =>
@@ -50,6 +46,10 @@ export const useFormStore = defineStore("form", () => {
     formType.value = type;
     return getFormInputs(type);
   }
+  const createformValues = () => {
+    const inputs = getFormInputs(formType.value);
+    return Object.fromEntries(inputs.map((input: { name: string }) => [input.name, ""]));
+  };
   const isFormValid  = (type: FormType, formValues: Record<string, string>) => {
     return getFormInputs(type).every((input) => {
       const value = formValues[input.name];
@@ -59,21 +59,24 @@ export const useFormStore = defineStore("form", () => {
         errors = input.validation.validate(value);
       }
 
-      input.error = errors;
+      input.error = [...errors];
       return errors.length === 0;
     });
   };
   const isSend = ref(false);
   const sendForm =async (formValue: any, config: any)=>{
+    console.log(config?.send,isFormValid(FormType.LOGIN, formValue),!isSend.value)
     if (config?.send && isFormValid(FormType.LOGIN, formValue) && !isSend.value) {
       isSend.value = true;
       try {
-        await loginMutation.mutateAsync(formValue).then(() => isSend.value = false);
+        await loginMutation.mutateAsync(formValue);
         formType.value = FormType.REGISTER;
       } catch (error) {
-       
+       console.log("Brak danych")
       }
+      isSend.value = false
     }
   }
+  const formValues = ref(createformValues())
   return { sendForm,initForm,formValues,getFormInputs, isFormValid, getMoreOptions };
 });

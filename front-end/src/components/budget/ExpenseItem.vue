@@ -11,8 +11,8 @@ defineProps<{
 </script>
 
 <template>
-  <AppCard class="expense-item">
-    <div class="d-flex align-center">
+  <AppCard class="expense-item backgroud-card">
+    <div class="d-flex align-center"> 
       <v-icon size="32">mdi-food-fork-drink</v-icon>
     <div class="info">
       <h4>{{ title }}</h4>

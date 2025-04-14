@@ -23,9 +23,33 @@ function formatPL(dateString: string) {
   return new Intl.DateTimeFormat('pl-PL').format(dateObj);
 }
 
+
 export const useTripStore = defineStore("trip", () => {
   const queryClient = useQueryClient();
   const {getRole} = useRoleStore();
+  const getExpenseItem = () =>{
+  return {
+    expenseItem:[
+    {
+      title: "test",
+      date: "12-02-2022",
+      type: "food",
+      note: "bla bla bla",
+      amount: 100,
+      currency: "PLN",
+    },
+    {
+      title: "test",
+      date: "12-02-2022",
+      type: "food",
+      note: "bla bla bla",
+      amount: 100,
+      currency: "PLN",
+    },
+  ],
+  sectionName:getRole() == Role.TURIST ? "Ostatnie wydatki" : "Ostatnie zaległości uczestników"
+};
+}
   const { setErrorCurrentMessage, setSuccessCurrentMessage } =
     useNotificationStore();
     
@@ -66,15 +90,15 @@ export const useTripStore = defineStore("trip", () => {
     }
   };
 
-  const getTripDetails = (id: string) => {
-    return useQuery<Trip>({
+  const getTripDetails = (id: number) => {
+    return useQuery<Trip, Error, Trip, [string,number]>({
       queryKey: ["trip", id],
-      queryFn: () => fetchTrip({ tripId: id }),
+      queryFn: fetchTrip,
       //keepPreviousData: true,
     });
   };
   const getDashboard = (id: string) => {
-    const { data: tripRaw, isLoading, error } = getTripDetails(id);
+    const { data: tripRaw, isLoading, error } = getTripDetails(Number(id));
 
     const tripTime = computed(() => {
       if (!tripRaw.value) {
@@ -95,7 +119,14 @@ export const useTripStore = defineStore("trip", () => {
       return `${tripRaw.value?.members?.length ?? 0} Uczestników`;
     });
   
-    const activityCount = computed(() => "0 Aktywności");
+    const activityCount = computed(() => {
+      
+      return {
+        icon:getRole() == Role.TURIST ? "mdi-clock-outline" : "mdi-email",
+        title: getRole() == Role.TURIST ? "Aktywności" : "Wiamości",
+        content: getRole() == Role.TURIST ? "0 Aktywności" : "0 Wiadomoci",
+      }
+    });
   
     const upcomingActivities = computed(() => []);
   
@@ -112,6 +143,7 @@ export const useTripStore = defineStore("trip", () => {
         title: "Czas trwania",
         icon: "mdi-calendar-month-outline",
         content: tripTime.value,
+        className:['font-weight-bold'],
         set: {
           order: 1,
           size: {
@@ -138,7 +170,7 @@ export const useTripStore = defineStore("trip", () => {
             xs: { col: 12, row: 1 },
             sm: { col: 12, row: 1 },
             md: { col: 6, row: 1 },
-            lg: { col: 4, row: 1 },
+            lg: { col: 3, row: 1 },
           },
         },
       },
@@ -152,14 +184,14 @@ export const useTripStore = defineStore("trip", () => {
             xs: { col: 12, row: 1 },
             sm: { col: 12, row: 1 },
             md: { col: 6, row: 1 },
-            lg: { col: 2, row: 1 },
+            lg: { col: 3, row: 1 },
           },
         },
       },
       {
-        title: "Aktywności",
-        icon: "mdi-clock-outline",
-        content: activityCount.value,
+        title: activityCount.value.title,
+        icon: activityCount.value.icon,
+        content: activityCount.value.content,
         set: {
           order: 4,
           size: {
@@ -295,6 +327,7 @@ export const useTripStore = defineStore("trip", () => {
   });
 
   return {
+    getExpenseItem,
     getPlans,
     getDashboard,
     yourTrips,
@@ -308,3 +341,4 @@ export const useTripStore = defineStore("trip", () => {
     addParticipant
   };
 });
+

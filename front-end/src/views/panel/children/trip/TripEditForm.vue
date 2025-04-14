@@ -6,7 +6,7 @@ import {useFormStore, useTripStore} from "@/stores";
 import {FormType} from "@/type/enum";
 
 const route = useRoute();
-const id = route.params.tripId as string;
+const id = Number(route.params.tripId);
 
 const { getFormInputs, isFormValid } = useFormStore();
 const inputs = ref(getFormInputs(FormType.TRIP));
@@ -53,7 +53,7 @@ function handleSubmit(_formData: any, config: any) {
       start_date: start_date || '',
       end_date: end_date || '',
     };
-    tripMutationUpdate.mutateAsync({ tripId: id, newData });
+    tripMutationUpdate.mutateAsync({ tripId: String(id), newData });
   }
 }
 </script>

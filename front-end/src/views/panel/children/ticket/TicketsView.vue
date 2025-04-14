@@ -35,7 +35,7 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
           <div class="title-container">
             <HeaderSection>
               <template #subtitle>
-                <div class="title-container pb-4">
+                <div class="title-container pb-1">
                   <h2 class="section-title">Bilety</h2>
                  <AppButton
                 variant="primary"
@@ -46,7 +46,7 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
               Dodaj Bilet
             </AppButton>
                 </div>
-                 
+
               </template>
               </HeaderSection>
           </div>
@@ -80,40 +80,21 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
 
 <style scoped lang="scss">
 .page-container {
-  max-width: 88rem;
+  max-width: 120rem;
   margin: 0 auto;
   padding-top: 0;
 }
 
-.header-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  margin-top: 0;
-}
-
 .title-container {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-}
-
-.trip-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin: 0 0 0.2rem 0;
 }
 
 .section-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 600;
   margin: 0;
-}
-
-.button-container {
-  display: flex;
-  align-self: flex-end;
 }
 
 .empty-tickets {
@@ -145,4 +126,5 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
 .form-container {
   margin-bottom: 1rem;
 }
+
 </style>

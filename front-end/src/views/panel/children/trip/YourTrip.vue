@@ -41,9 +41,6 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
 h1 {
   font-size: 2.25rem;
   text-align: left;
-  @media (max-width: 600px) {
-        font-size: 1.5rem;
-      }
 }
 .v-btn{
   font-weight: bold;

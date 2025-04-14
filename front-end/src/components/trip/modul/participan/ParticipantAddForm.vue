@@ -23,6 +23,7 @@ function handleCancel() {
 
 <template>
   <div class="add-participant-card">
+    <div class="wrapper">
     <h3 class="card-title">{{ props.title }}</h3>
 
     <div class="form-fields">
@@ -41,10 +42,26 @@ function handleCancel() {
       <AppButton variant="primary" @click="handleSubmit">Dodaj</AppButton>
     </div>
   </div>
+  </div>
+  
 </template>
 
 <style scoped lang="scss">
+.wrapper{
+  min-width: 75%;
+  max-width: 80%;
+}
+@media (min-width: 1200px){
+  .wrapper{
+    min-width: 35%;
+    max-width: 40%;
+  }
+  
+}
 .add-participant-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: rgb(var(--v-theme-secondary), 0.5);
   border-radius: 12px;
   padding: 1.5rem;

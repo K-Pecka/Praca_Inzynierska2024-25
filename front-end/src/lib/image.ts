@@ -9,6 +9,7 @@ const images = {
   },
   icon: {
     menu: {
+      back: "mdi-arrow-left",
       dashboard: "mdi-home-outline",
       plan: "mdi-note-text-outline",
       ticket: "mdi-ticket-confirmation-outline",
@@ -16,7 +17,6 @@ const images = {
       participant: "mdi-account-multiple-outline",
       setting: "mdi-cog-outline",
       myAccount: "mdi-account-circle-outline",
-      back: "mdi-arrow-left"
     },
   }
 };

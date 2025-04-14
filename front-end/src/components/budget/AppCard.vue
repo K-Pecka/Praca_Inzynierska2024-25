@@ -16,7 +16,7 @@ defineProps({
 </script>
 
 <template>
-  <v-card class="pa-4 rounded-lg" :style="style" :class="className" :elevation="elevation">
+  <v-card class="pa-4 my-3 rounded-lg" :style="style" :class="className" :elevation="elevation">
     <slot />
   </v-card>
 </template>
@@ -27,6 +27,9 @@ defineProps({
   background-color: rgb(var(--v-theme-secondary), 50%);
   height: 100%;
   border-radius: 1.5rem;
+}
+.backgroud-card{
+  background-color: rgb(var(--v-theme-background));
 }
  /*.v-card:hover {
  transform: translateY(-3px);
