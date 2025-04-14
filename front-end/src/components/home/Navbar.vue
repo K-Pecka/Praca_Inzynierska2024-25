@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref } from "vue";
-import { Link } from "@/type";
+import {ref} from "vue";
+import {Link} from "@/type";
 
 defineProps<{ links: Link[] }>();
 
@@ -12,10 +12,10 @@ const toggleMenu = (mode?: boolean) => {
   menuOpen.value = currentMode;
 };
 
-import { watch } from "vue";
-import { useDisplay } from "vuetify";
+import {watch} from "vue";
+import {useDisplay} from "vuetify";
 
-const { smAndDown } = useDisplay();
+const {smAndDown} = useDisplay();
 
 watch(smAndDown, (isSmallScreen) => {
   if (!isSmallScreen) {
@@ -34,14 +34,14 @@ watch(smAndDown, (isSmallScreen) => {
         </slot>
       </router-link>
 
-      <v-icon class="navbar__hamburger" icon="mdi-menu" @click="() => toggleMenu(true)" />
+      <v-icon class="navbar__hamburger" icon="mdi-menu" @click="() => toggleMenu(true)"/>
 
       <ul class="navbar__links" :class="{ open: menuOpen }">
         <li
-          v-for="(link, index) in links"
-          :key="index"
-          class="navbar__item"
-          :class="[
+            v-for="(link, index) in links"
+            :key="index"
+            class="navbar__item"
+            :class="[
             ...(Array.isArray(link.className)
               ? link.className
               : link.className
@@ -50,10 +50,10 @@ watch(smAndDown, (isSmallScreen) => {
           ]"
         >
           <router-link
-            :to="link.href"
-            class="navbar__link"
-            :class="{ 'navbar__link--active': link.active }"
-            :style="link.style"
+              :to="link.href"
+              class="navbar__link"
+              :class="{ 'navbar__link--active': link.active }"
+              :style="link.style"
           >
             {{ link.label }}
           </router-link>
@@ -61,38 +61,41 @@ watch(smAndDown, (isSmallScreen) => {
       </ul>
 
       <Teleport to="body">
-        <div v-if="menuOpen" class="navbar__backdrop" @click="() => toggleMenu(false)">
-          <transition name="slide-menu">
-            <div class="navbar__sidebar slide-menu mobile" :class="{ open: menuOpen }">
-              <div class="navbar__close" @click="() => toggleMenu(false)">
-                <v-icon>mdi-close</v-icon>
-              </div>
-              <div class="navbar__links">
-                <div
+        <transition name="slide-menu">
+          <div v-if="menuOpen" class="navbar__sidebar mobile">
+            <div class="navbar__close" @click="() => toggleMenu(false)">
+              <v-icon>mdi-close</v-icon>
+            </div>
+            <div class="navbar__links">
+              <div
                   v-for="(link, index) in links"
                   :key="index"
                   class="navbar__item"
                   :class="[
-                    ...(Array.isArray(link.className)
-                      ? link.className
-                      : link.className
-                      ? [link.className]
-                      : [])
-                  ]"
+            ...(Array.isArray(link.className)
+              ? link.className
+              : link.className
+              ? [link.className]
+              : [])
+          ]"
                   @click="() => toggleMenu(false)"
-                >
-                  <router-link
+              >
+                <router-link
                     :to="link.href"
                     class="navbar__link"
                     :style="link.style"
-                  >
-                    {{ link.label }}
-                  </router-link>
-                </div>
+                >
+                  {{ link.label }}
+                </router-link>
               </div>
             </div>
-          </transition>
-        </div>
+          </div>
+        </transition>
+        <div
+            v-if="menuOpen"
+            class="navbar__backdrop"
+            @click="() => toggleMenu(false)"
+        />
       </Teleport>
     </div>
   </nav>
@@ -202,13 +205,7 @@ ul .navbar__link--active {
   justify-content: flex-start;
   align-items: flex-start;
   padding: 2rem 1rem;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease-in-out;
   z-index: 1000;
-
-  &.open {
-    transform: translateX(0); 
-  }
 
   .navbar__close {
     align-self: flex-end;
@@ -239,7 +236,7 @@ ul .navbar__link--active {
     color: var(--v-theme-text);
     font-size: 1.2rem;
     font-weight: bold;
-    transition: background-color 0.3s ease;
+    //transition: background-color 0.3s ease;
 
     &:hover {
       background-color: rgb(var(--v-theme-primary));
@@ -250,12 +247,13 @@ ul .navbar__link--active {
 
 .slide-menu-enter-active,
 .slide-menu-leave-active {
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.slide-menu-enter, 
-.slide-menu-leave-to  {
+.slide-menu-enter-from,
+.slide-menu-leave-to {
   transform: translateX(-100%);
+  opacity: 0;
 }
 
 .slide-menu-enter-to,
