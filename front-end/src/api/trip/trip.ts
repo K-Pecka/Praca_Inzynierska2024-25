@@ -69,7 +69,7 @@ export const createTrip = async (newTrip:NewTrip,param: Record<string, string>={
   }
     const { data, error } = await fetchData<NewTrip>(
       setParam(apiEndpoints.trip.create, param),
-      { body: JSON.stringify({...newTrip,budget_amount:0}) },
+      { body: JSON.stringify({...newTrip,budget_amount:1}) },
       "POST"
     );
     if (error) {
