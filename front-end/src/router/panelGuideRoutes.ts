@@ -12,18 +12,18 @@ const panelGuideRoutes: RouteRecordRaw = {
   meta: { title: "Panel", requiresAuth: true },
   children: [
 
-    { path: "your-trip", name: "yourTripGuide", component: YourTrip },
-    { path: "your-trip/:tripId", name: "tripDashboardGuide", component: TripDashboard },
-    { path: "your-trip/:tripId/your-plan", name: "yourPlanGuide", component: YourPlan },
-    { path: "your-trip/:tripId/tickets-view", name: "TicketsViewGuide", component: TicketsView },
-    { path: "your-trip/:tripId/expense-tracker", name: "ExpenseTrackerGuide", component: ExpenseTracker },
-    { path: "your-trip/:tripId/participants-view", name: "ParticipantsViewGuide", component: ParticipantsView },
-    { path: "your-trip/:tripId/trip-edit", name: "TripEditGuide", component: TripEditForm },
-    { path: "your-trip/:tripId/your-plan/:planId/activity", name: "ActivityViewGuide", component: ActivityView },
+    { path: "trips", name: "yourTripGuide", component: YourTrip },
+    { path: "trip/:tripId", name: "tripDashboardGuide", component: TripDashboard },
+    { path: "trip/:tripId/plan", name: "yourPlanGuide", component: YourPlan },
+    { path: "trip/:tripId/tickets-view", name: "TicketsViewGuide", component: TicketsView },
+    { path: "trip/:tripId/expense-tracker", name: "ExpenseTrackerGuide", component: ExpenseTracker },
+    { path: "trip/:tripId/participants-view", name: "ParticipantsViewGuide", component: ParticipantsView },
+    { path: "trip/:tripId/trip-edit", name: "TripEditGuide", component: TripEditForm },
+    { path: "trip/:tripId/plan/:planId/activity", name: "ActivityViewGuide", component: ActivityView },
 
-    { path: "your-trip/trip", name: "TripFormGuide", component: TripForm },
-    { path: "your-trip/:tripId/plan-form", name: "PlanFormGuide", component: PlanForm },
-    { path: "your-trip/:tripId/budget", name: "budgetGuide", component: BudgetForm },
+    { path: "trip/trip", name: "TripFormGuide", component: TripForm },
+    { path: "trip/:tripId/plan-form", name: "PlanFormGuide", component: PlanForm },
+    { path: "trip/:tripId/budget", name: "budgetGuide", component: BudgetForm },
   ],
 };
 

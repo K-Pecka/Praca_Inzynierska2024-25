@@ -36,6 +36,7 @@ export default createVuetify({
           primary: '#8C7AE6',
           secondary: '#5A4E8C',
           accent: '#C778DD',
+          surface:'#DEDCFF',
           text: '#E0E0E0',
           background: '#1E1E2E',
           heroBg:'#ac6ed9'

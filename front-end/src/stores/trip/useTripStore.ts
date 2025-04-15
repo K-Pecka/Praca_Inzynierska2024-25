@@ -229,7 +229,7 @@ export const useTripStore = defineStore("trip", () => {
     return {
       btn: [
         {
-          title: "Zarządzaj wycieczką",
+          title: "Przeglądaj wycieczkę",
           class: ["primary"],
           onclick: (id: string) =>
             router.push({ name: btnPath, params: { tripId: id } }),
