@@ -104,7 +104,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
 
             profile = user.get_default_profile()
 
-            if profile.type == UserProfile.ProfileType.GUEST:
+            if profile.type.code == 'guest':
                 user.delete()
                 return Response({
                     "message": _("Użytkownik został usunięty z wycieczki."),

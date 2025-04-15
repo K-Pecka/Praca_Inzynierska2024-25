@@ -7,7 +7,7 @@ from chats.views.chat_message_views import ChatMessageCreateAPIView, ChatMessage
     ChatMessageRetrieveAPIView, ChatMessageDestroyAPIView, ChatMessageListAPIView
 from chats.views.chatroom_views import ChatroomDestroyAPIView, ChatroomListAPIView, ChatroomRetrieveAPIView, \
     ChatroomUpdateAPIView, ChatroomCreateAPIView
-from users.models import CustomUser
+from users.models import CustomUser, UserProfile, UserProfileType
 
 from trips.models import Trip
 
@@ -18,6 +18,10 @@ class ChatAPITestCase(TestCase):
         Setup a test Chatroom, and set up URLs.
         """
         self.factory = APIRequestFactory()
+        self.default_user_profile = UserProfileType.objects.create(
+            code="tourist",
+            name="Tourist",
+        )
         self.user = CustomUser.objects.create_user(
             email="jacob@…",
             password="Top_secret12",

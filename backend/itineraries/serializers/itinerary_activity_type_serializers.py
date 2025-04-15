@@ -11,7 +11,7 @@ class ItineraryActivityTypeRetrieveSerializer(serializers.ModelSerializer):
         fields = ['name']
 
 
-class ItineraryActivityListSerializer(serializers.ModelSerializer):
+class ItineraryActivityTypeListSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True, max_length=100)
 

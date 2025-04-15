@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from dicts.models import BaseModel
+from dicts.validators import validate_only_alphabetic
 from trips.managers import TripManager, TicketManager, TripAccessTokenManager
 from users.models import UserProfile
 
@@ -132,6 +133,8 @@ class TripAccessToken(BaseModel):
 class TicketType(BaseModel):
     name = models.CharField(
         max_length=124,
+        unique=True,
+        validators=[validate_only_alphabetic],
         verbose_name=_("Nazwa"), help_text=_("Nazwa")
     )
 
@@ -231,6 +234,8 @@ class Budget(BaseModel):
 class ExpenseType(BaseModel):
     name = models.CharField(
         max_length=124,
+        unique=True,
+        validators=[validate_only_alphabetic],
         verbose_name=_("Nazwa"),
         help_text=_("Nazwa")
     )

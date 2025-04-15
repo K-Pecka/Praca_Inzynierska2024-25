@@ -7,7 +7,7 @@ from itineraries.views.itinerary_activity_views import ItineraryActivityRetrieve
     ItineraryActivityUpdateAPIView, ItineraryActivityDestroyAPIView, ItineraryActivityListAPIView
 from itineraries.views.itinerary_views import ItineraryCreateAPIView, ItineraryRetrieveAPIView, ItineraryUpdateAPIView, \
     ItineraryDestroyAPIView, ItineraryListAPIView
-from users.models import CustomUser, UserProfile
+from users.models import CustomUser, UserProfile, UserProfileType
 from trips.models import Trip
 from itineraries.models import Itinerary, ItineraryActivity, ItineraryActivityType
 
@@ -18,7 +18,10 @@ class ItineraryAPITestCase(TestCase):
         Set up the test data, including a user, their profile, a trip, and an itinerary.
         """
         self.factory = APIRequestFactory()
-
+        self.default_user_profile = UserProfileType.objects.create(
+            code="tourist",
+            name="Tourist",
+        )
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
@@ -170,7 +173,10 @@ class ItineraryActivityAPITestCase(TestCase):
         Set up the test data, including a user, their profile, a trip, an itinerary, and an itinerary activity.
         """
         self.factory = APIRequestFactory()
-
+        self.default_user_profile = UserProfileType.objects.create(
+            code="tourist",
+            name="Tourist",
+        )
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",

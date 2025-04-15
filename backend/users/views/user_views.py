@@ -4,7 +4,6 @@ from django.utils.http import urlsafe_base64_decode
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
@@ -86,7 +85,7 @@ class CheckAccessView(APIView):
         except CustomUser.DoesNotExist:
             return Response({"error": "Użytkownik nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
 
-        profile = user.profiles.filter(type='client').first()
+        profile = user.profiles.filter(type__name='client').first()
 
         if profile is None:
             return Response({"error": "Profil użytkownika nie istnieje."}, status=status.HTTP_404_NOT_FOUND)
@@ -112,7 +111,7 @@ class CheckAccountTypeAPIView(APIView):
             raise ValueError("Nie znaleziono użytkownika.")
 
         profile = user.get_default_profile()
-        profile_type = profile.type
+        profile_type = profile.type.name
         if not profile_type:
             raise ValueError("Profil użytkownika nie ma przypisanego typu.")
 

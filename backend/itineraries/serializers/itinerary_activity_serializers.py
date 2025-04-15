@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from itineraries.models import Itinerary, ItineraryActivity, ItineraryActivityType
-from itineraries.serializers.itinerary_activity_type_serializers import ItineraryActivityTypeRetrieveSerializer
+from itineraries.serializers.itinerary_activity_type_serializers import ItineraryActivityTypeRetrieveSerializer, ItineraryActivityTypeListSerializer
 from itineraries.serializers.itinerary_serializers import ItineraryRetrieveSerializer
 
 
@@ -22,7 +22,7 @@ class ItineraryActivityRetrieveSerializer(serializers.ModelSerializer):
 
 class ItineraryActivityListSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True, max_length=100)
-    type = ItineraryActivityTypeRetrieveSerializer(read_only=True)
+    type = ItineraryActivityTypeListSerializer(read_only=True)
     description = serializers.CharField(read_only=True, max_length=5120)
     location = serializers.CharField(read_only=True, max_length=100)
     start_time = serializers.TimeField(read_only=True)

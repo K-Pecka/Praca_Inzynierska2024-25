@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, User
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db import models, IntegrityError
@@ -71,7 +71,10 @@ class CustomUser(AbstractBaseUser, BaseModel):
 
     @property
     def is_guide(self):
-        return self.get_default_profile().type == 'Przewodnik'
+        default_profile = self.get_default_profile()
+        return (hasattr(default_profile, 'type') and
+                default_profile.type is not None and
+                getattr(default_profile.type, 'name', None) == 'Przewodnik')
 
     @property
     def full_name(self):
@@ -114,17 +117,38 @@ class CustomUser(AbstractBaseUser, BaseModel):
             raise ValueError("Nie znaleziono domyślnego profilu użytkownika.")
 
     class Meta:
-        verbose_name = "Użytkownik"
+        verbose_name = _("Użytkownik")
         verbose_name_plural = _("Użytkownicy")
 
 
-class UserProfile(BaseModel):
-    class ProfileType(models.TextChoices):
-        CLIENT = 'client', _("Klient")
-        GUIDE = 'guide', _("Przewodnik")
-        ADMIN = 'admin', _("Administrator")
-        GUEST = 'guest', _("Gość")
+class UserProfileType(BaseModel):
+    code = models.CharField(
+        max_length=16,
+        unique=True,
+        validators=[validate_only_alphabetic],
+        verbose_name=_("Kod"),
+        help_text=_("Kod typu profilu")
+    )
+    name = models.CharField(
+        max_length=32,
+        unique=True,
+        validators=[validate_only_alphabetic],
+        verbose_name=_("Nazwa"),
+        help_text=_("Nazwa typu profilu")
+    )
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _("Typ profilu użytkownika")
+        verbose_name_plural = _("Typy profili użytkowników")
+
+def get_default_user_profile_type():
+    return UserProfileType.objects.first()
+
+
+class UserProfile(BaseModel):
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
@@ -132,13 +156,12 @@ class UserProfile(BaseModel):
         verbose_name=_("Użytkownik"),
         help_text=_("Użytkownik")
     )
-    type = models.CharField(
-        max_length=32,
-        blank=False,
-        null=False,
-        choices=ProfileType.choices,
-        default=ProfileType.CLIENT,
-        verbose_name=_("Typ"),
+    type = models.ForeignKey(
+        UserProfileType,
+        on_delete=models.PROTECT,
+        related_name="profiles",
+        default=get_default_user_profile_type,
+        verbose_name=_("Typ profilu"),
         help_text=_("Typ profilu")
     )
     is_default = models.BooleanField(
@@ -148,7 +171,7 @@ class UserProfile(BaseModel):
     )
 
     def __str__(self):
-        return f"{self.user}({str(self.type).upper()})"
+        return f"{self.user}({str(self.type.name).upper()})"
 
     @property
     def created_trips(self):
@@ -177,8 +200,6 @@ class UserProfile(BaseModel):
             if self.is_default:
                 UserProfile.objects.filter(user=self.user, is_default=True).update(is_default=False)
         else:
-            if UserProfile.objects.filter(user=self.user, type=kwargs.get('type')).exists():
-                raise ValidationError(_("Użytkownik może mieć tylko jeden profil (klient, przewodnik lub administrator)."))
             if not UserProfile.objects.filter(user=self.user, is_default=True):
                 self.is_default = True
 
@@ -193,6 +214,7 @@ class UserProfile(BaseModel):
 
 
     class Meta:
+        unique_together = ("user", "type")
         verbose_name = _("Profil")
         verbose_name_plural = _("Profile")
         db_table = "users"
