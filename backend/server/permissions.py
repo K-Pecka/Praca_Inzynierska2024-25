@@ -9,9 +9,9 @@ from trips.models import Trip, Ticket
 from itineraries.models import Itinerary, ItineraryActivity
 
 
-##################################################################################3
+##################################################################################
 # Chat permissions
-##################################################################################3
+##################################################################################
 class IsCreatorForChatroom(BasePermission):
     """
     Custom permission to check if the user is the creator for the chatroom.

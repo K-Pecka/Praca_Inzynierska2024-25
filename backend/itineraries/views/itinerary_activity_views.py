@@ -3,7 +3,8 @@ from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIVie
 from rest_framework.permissions import IsAuthenticated
 
 from itineraries.serializers.itinerary_activity_serializers import ItineraryActivityCreateSerializer, \
-    ItineraryActivitySerializer, ItineraryActivityUpdateSerializer, ItineraryActivityDeleteSerializer
+    ItineraryActivityUpdateSerializer, ItineraryActivityDeleteSerializer, ItineraryActivityRetrieveSerializer, \
+    ItineraryActivityListSerializer
 
 from itineraries.models import ItineraryActivity, Itinerary
 from server.permissions import IsTripCreator, IsTripParticipant
@@ -19,13 +20,13 @@ class ItineraryActivityCreateAPIView(CreateAPIView):
 class ItineraryActivityRetrieveAPIView(RetrieveAPIView):
     queryset = ItineraryActivity.objects.all()
     permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = ItineraryActivitySerializer
+    serializer_class = ItineraryActivityRetrieveSerializer
 
 
 @extend_schema(tags=['itinerary activity'])
 class ItineraryActivityListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = ItineraryActivitySerializer
+    serializer_class = ItineraryActivityListSerializer
     lookup_url_kwarg = "itinerary_pk"
 
     def get_queryset(self):
