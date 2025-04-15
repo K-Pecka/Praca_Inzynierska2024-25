@@ -135,7 +135,6 @@ class UserProfile(BaseModel):
     type = models.CharField(
         max_length=32,
         blank=False,
-        null=False,
         choices=ProfileType.choices,
         default=ProfileType.CLIENT,
         verbose_name=_("Typ"),
