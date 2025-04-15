@@ -1,6 +1,6 @@
 from django.urls import path
 
-from users.views.user_profile_views import UserProfileListAPIView
+from users.views.user_profile_views import UserProfileListAPIView, UserProfileUpdateAPIView
 from users.views.user_views import UserUpdateAPIView, UserUpdatePasswordAPIView, UserCreateAPIView, ConfirmEmailView, \
     CheckAccessView, CheckAccountTypeAPIView
 
@@ -15,4 +15,6 @@ urlpatterns = [
     path('create/', UserCreateAPIView.as_view(), name='user-register'),
     path('confirm-email/<str:uidb64>/<str:token>/', ConfirmEmailView.as_view(), name='confirm_email'),
     path('check/<int:user_pk>/permission/<str:perm_code>/action/<str:perm_action>/', CheckAccessView.as_view(), name='check-permission'),
+
+    path('profile/<int:pk>/update/', UserProfileUpdateAPIView.as_view(), name='user-profile-update'),
 ]
