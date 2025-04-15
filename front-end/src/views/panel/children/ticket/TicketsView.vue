@@ -41,6 +41,7 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
                 variant="primary"
                 size="md"
                 class="add-button"
+                v-if="!showForm"
                 @click="showForm = !showForm"
             >
               Dodaj Bilet

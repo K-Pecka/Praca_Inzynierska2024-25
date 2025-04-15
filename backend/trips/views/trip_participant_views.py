@@ -1,10 +1,11 @@
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
+from django.http.response import HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
-from django.shortcuts import get_object_or_404
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
@@ -16,7 +17,7 @@ from rest_framework.response import Response
 from server.permissions import IsTripCreator
 from trips.models import Trip, TripAccessToken
 from trips.serializers.trip_participant_serializers import TripParticipantsUpdateSerializer
-from users.models import CustomUser
+from users.models import CustomUser, UserProfile
 
 
 @extend_schema(
@@ -32,11 +33,11 @@ from users.models import CustomUser
         )
     ],
     responses={
-        200: {"description": "Operacja wykonana pomyślnie"},
-        400: {"description": "Niepoprawne dane wejściowe"},
-        403: {"description": "Brak uprawnień"},
-        404: {"description": "Nie znaleziono wycieczki lub użytkownika"},
-        500: {"description": "Błąd serwera"}
+        200: {"description": f"{_('Operacja wykonana pomyślnie')}"},
+        400: {"description": f"{_('Niepoprawne dane wejściowe')}"},
+        403: {"description": f"{_('Brak uprawnień')}"},
+        404: {"description": f"{_('Nie znaleziono wycieczki lub użytkownika')}"},
+        500: {"description": f"{_('Błąd serwera')}"}
     }
 )
 class TripParticipantsUpdateAPIView(UpdateAPIView):
@@ -44,10 +45,6 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
 
     def get_object(self):
-        print('self.kwargs', self.kwargs)
-        print('fgdfgfdg', self.kwargs['trip_pk'])
-        print(Trip.objects.all().first().pk)
-        print(Trip.objects.get(id=self.kwargs['trip_pk']))
         return Trip.objects.get(pk=self.kwargs['trip_pk'])
 
     def update(self, request, *args, **kwargs):
@@ -64,7 +61,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
                 return self.handle_remove(trip, data)
         except Exception as e:
             return Response(
-                {"error": str(e)},
+                {"error": e},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -79,7 +76,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             profile = data['profile']
 
         if trip.members.filter(id=profile.id).exists():
-            raise ValidationError("Użytkownik już jest uczestnikiem wycieczki")
+            raise ValidationError(_("Użytkownik już jest uczestnikiem wycieczki"))
 
         invitation_link = self.create_invitation_link(trip, profile.user)
 
@@ -91,23 +88,40 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         )
 
         return Response({
-            "message": "Zaproszenie wysłane",
+            "message": f"{_('Zaproszenie wysłane')}",
             "invitation_link": invitation_link,
             "is_guest": 'profile' not in data
         })
 
     def handle_remove(self, trip, data):
-        if 'profile' not in data:
-            raise ValidationError("profile_id jest wymagane do usunięcia")
+        email = data.get('email')
+        profile = data.get('profile')
 
-        profile = data['profile']
-        if not trip.members.filter(id=profile.id).exists():
-            raise ValidationError("Użytkownik nie jest uczestnikiem tej wycieczki")
+        if email and trip.check_if_is_member(email):
+            user = CustomUser.objects.get(email=email)
+            if not user:
+                raise ValidationError(_("Użytkownik o podanym e-mailu nie istnieje."))
 
-        trip.members.remove(profile)
+            profile = user.get_default_profile()
+
+            if profile.type.code == 'guest':
+                user.delete()
+                return Response({
+                    "message": _("Użytkownik został usunięty z wycieczki."),
+                })
+
+        if profile:
+            if not trip.members.filter(id=profile.id).exists():
+                raise ValidationError(_("Użytkownik nie jest uczestnikiem tej wycieczki."))
+
+            trip.members.remove(profile)
+
+            return Response({
+                "message": _("Użytkownik został usunięty z wycieczki."),
+            })
+
         return Response({
-            "message": "Użytkownik został usunięty z wycieczki",
-            "removed_profile_id": profile.id
+            "message": _("Użytkownik nie był przypisany do tej wycieczki lub już został usunięty."),
         })
 
     def create_invitation_link(self, trip, user):
@@ -121,7 +135,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         return f"{self.request.build_absolute_uri(endpoint_path)}?token={token}"
 
     def send_invitation_email(self, name, email, trip, invitation_link):
-        subject = f"Zaproszenie do wycieczki {trip.name}"
+        subject = f"{_('Zaproszenie do wycieczki')} {trip.name}"
         html_message = render_to_string('emails/trip_invitation_email.html', {
             'name': name,
             'trip_name': trip.name,
@@ -129,7 +143,6 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             'end_date': trip.end_date,
             'trip_link': invitation_link
         })
-        print('invitation_link', invitation_link)
         sent_count = send_mail(
             subject=subject,
             message=strip_tags(html_message),
@@ -145,11 +158,11 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
     tags=['trip invitation'],
     parameters=[OpenApiParameter("token", str, description="Token dostępu do wycieczki", required=True)],
     responses={
-        200: OpenApiResponse(description="Użytkownik dołączył do wycieczki!"),
-        400: OpenApiResponse(description="Brak tokenu w linku."),
-        404: OpenApiResponse(description="Podany token nie istnieje."),
-        403: OpenApiResponse(description="Konto użytkownika jest nieaktywne."),
-        500: OpenApiResponse(description="Nie udało się zalogować.")
+        200: OpenApiResponse(description=f"{_('Użytkownik dołączył do wycieczki!')}"),
+        400: OpenApiResponse(description=f"{_('Brak tokenu w linku.')}"),
+        404: OpenApiResponse(description=f"{_('Podany token nie istnieje.')}"),
+        403: OpenApiResponse(description=f"{_('Konto użytkownika jest nieaktywne.')}"),
+        500: OpenApiResponse(description=f"{_('Nie udało się zalogować.')}")
     }
 )
 class JoinTripAPIView(RetrieveAPIView):
@@ -159,31 +172,31 @@ class JoinTripAPIView(RetrieveAPIView):
         token = request.GET.get('token')
 
         if not token:
-            return Response({'error': 'Brak tokenu w linku.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': f'{_()}Brak tokenu w linku.'}, status=status.HTTP_400_BAD_REQUEST)
 
         trip_access_token = self.get_trip_access_token(token)
         if not trip_access_token:
-            return Response({'error': 'Podany token nie istnieje.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': f'{_()}Podany token nie istnieje.'}, status=status.HTTP_404_NOT_FOUND)
 
         user_profile = trip_access_token.user_profile
         user = user_profile.user
 
         if not user.is_active:
-            return Response({'error': 'Konto użytkownika jest nieaktywne.'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({"error": f"{_('Konto użytkownika jest nieaktywne.')}"}, status=status.HTTP_403_FORBIDDEN)
         try:
             Trip.add_member(trip_access_token.trip, user_profile)
             trip_access_token.change_status()
         except Exception as e:
-            return Response({'error': f'Nie udało się dodać użytkownika do wycieczki: {str(e)}'},
+            return Response({"error": f"{_('Nie udało się dodać użytkownika do wycieczki:')} {str(e)}"},
                             status=status.HTTP_400_BAD_REQUEST)
 
         try:
             login(request, user)
         except Exception as e:
-            return Response({'error': f'Nie udało się zalogować użytkownika: {str(e)}'},
+            return Response({'error': f"{_('Nie udało się zalogować użytkownika:')} {str(e)}"},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        return Response({"message": "Użytkownik dołączył do wycieczki!"})
+        return HttpResponseRedirect(settings.TRIP_JOINING_PAGE)
 
     def get_trip_access_token(self, token):
         return TripAccessToken.objects.filter(token=token).get()

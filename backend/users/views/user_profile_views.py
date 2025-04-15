@@ -3,7 +3,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from users.models import UserProfile
-from users.serializers.user_profile_serializers import UserProfileListSerializer
+from users.serializers.user_profile_serializers import UserProfileListSerializer, UserProfileUpdateSerializer
 
 
 @extend_schema(tags=['user'], parameters = [
@@ -22,3 +22,11 @@ class UserProfileListAPIView(ListAPIView):
             return UserProfile.objects.filter(user__email__icontains=search_query, type='client')
         else:
             return UserProfile.objects.all()
+
+
+@extend_schema(tags=['user'])
+class UserProfileUpdateAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserProfileUpdateSerializer
+    queryset = UserProfile.objects.all()
+    lookup_field = 'pk'

@@ -7,7 +7,7 @@ from trips.views.budget_views import BudgetUpdateAPIView, BudgetDestroyAPIView
 from trips.views.expense_views import ExpenseCreateAPIView, ExpenseRetrieveAPIView, ExpenseUpdateAPIView, \
     ExpenseDestroyAPIView
 from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketDestroyAPIView
-from users.models import CustomUser, UserProfile
+from users.models import CustomUser, UserProfile, UserProfileType
 from trips.models import Trip, Budget, Expense, Ticket, TicketType, ExpenseType, Currency
 
 
@@ -17,7 +17,10 @@ class BudgetAPITestCase(TestCase):
         Set up the test data, including a user, their profile, a trip, and a budget.
         """
         self.factory = APIRequestFactory()
-
+        self.default_user_profile = UserProfileType.objects.create(
+            code="tourist",
+            name="Tourist",
+        )
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
@@ -76,7 +79,10 @@ class ExpenseAPITestCase(TestCase):
         Set up the test data, including a user, their profile, a trip, a budget, and an expense.
         """
         self.factory = APIRequestFactory()
-
+        self.default_user_profile = UserProfileType.objects.create(
+            code="tourist",
+            name="Tourist",
+        )
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
@@ -201,7 +207,10 @@ class TicketAPITestCase(TestCase):
         Set up the test data, including a user, their profile, a trip, and a ticket type.
         """
         self.factory = APIRequestFactory()
-
+        self.default_user_profile = UserProfileType.objects.create(
+            code="tourist",
+            name="Tourist",
+        )
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",

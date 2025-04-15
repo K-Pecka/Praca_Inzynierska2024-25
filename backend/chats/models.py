@@ -28,7 +28,7 @@ class Chatroom(BaseModel):
     )
     creator = models.ForeignKey(
         UserProfile,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="chat_rooms_creator",
         verbose_name=_("Przewodnik"), help_text=_("Przewodnik")
     )

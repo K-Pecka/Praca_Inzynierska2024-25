@@ -2,14 +2,19 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 
-from .models import UserProfile
+from .models import UserProfile, UserProfileType, get_default_user_profile_type
 
 
 @receiver(post_save, sender=get_user_model())
 def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Create a user profile when a new user is created.
+    """
     if created:
         if not instance.is_guest:
-            UserProfile.objects.create(user=instance, is_default=True)
+            default_type = get_default_user_profile_type()
+            UserProfile.objects.create(user=instance, type=default_type, is_default=True)
         else:
-            UserProfile.objects.create(user=instance, type='guest')
+            guest_type = UserProfileType.objects.get(code='guest')
+            UserProfile.objects.create(user=instance, type=guest_type)
 

@@ -3,7 +3,7 @@ from rest_framework.test import APIRequestFactory
 from rest_framework import status
 from rest_framework.test import force_authenticate
 
-from users.models import CustomUser
+from users.models import CustomUser, UserProfileType
 from users.views.user_views import UserCreateAPIView, UserUpdatePasswordAPIView, UserUpdateAPIView
 
 
@@ -13,6 +13,10 @@ class UserAPITestCase(TestCase):
         Setup a test user, generate a token for them, and set up URLs.
         """
         self.factory = APIRequestFactory()
+        self.user_profile_type = UserProfileType.objects.create(
+            code="tourist",
+            name="Turysta",
+        )
         self.user = CustomUser.objects.create_user(
             email="jacob@…",
             password="Top_secret12",

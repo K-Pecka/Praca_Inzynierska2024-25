@@ -15,7 +15,7 @@ export const fetchData = async <T = unknown>(
   options: RequestInit = { body: undefined },
   method: "GET" | "POST" | "DELETE" | "PATCH" | "PUT" = "GET"
 ): Promise<{ data?: T; error?: string }> => {
-  if (notificationTimeout)
+  if (notificationTimeout = null)
     return { error: "Jestem w trakcie wykonania\n poprzedniego zapytania..." };
   
   const controller = new AbortController();
@@ -82,7 +82,7 @@ export const apiEndpoints = {
     delete: `${hostName}/trip/:tripId/delete/`,
     create: `${hostName}/trip/create/`,
     update: `${hostName}/trip/:tripId/update/`,
-    invateUser: `${hostName}/trip/:tripId/invite/`,
+    invateUser: `${hostName}/trip/:tripId/participants/manage/`,
   },
   plan: {
     all: `${hostName}/trip/:tripId/itinerary/all/`,

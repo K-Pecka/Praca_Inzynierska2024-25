@@ -7,9 +7,9 @@ from itineraries.views.itinerary_activity_views import ItineraryActivityRetrieve
     ItineraryActivityUpdateAPIView, ItineraryActivityDestroyAPIView, ItineraryActivityListAPIView
 from itineraries.views.itinerary_views import ItineraryCreateAPIView, ItineraryRetrieveAPIView, ItineraryUpdateAPIView, \
     ItineraryDestroyAPIView, ItineraryListAPIView
-from users.models import CustomUser, UserProfile
-from trips.models import Trip  # Assuming the Trip model is in the 'trips' app
-from itineraries.models import Itinerary, ItineraryActivity
+from users.models import CustomUser, UserProfile, UserProfileType
+from trips.models import Trip
+from itineraries.models import Itinerary, ItineraryActivity, ItineraryActivityType
 
 
 class ItineraryAPITestCase(TestCase):
@@ -18,7 +18,10 @@ class ItineraryAPITestCase(TestCase):
         Set up the test data, including a user, their profile, a trip, and an itinerary.
         """
         self.factory = APIRequestFactory()
-
+        self.default_user_profile = UserProfileType.objects.create(
+            code="tourist",
+            name="Tourist",
+        )
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
@@ -170,7 +173,10 @@ class ItineraryActivityAPITestCase(TestCase):
         Set up the test data, including a user, their profile, a trip, an itinerary, and an itinerary activity.
         """
         self.factory = APIRequestFactory()
-
+        self.default_user_profile = UserProfileType.objects.create(
+            code="tourist",
+            name="Tourist",
+        )
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
@@ -196,9 +202,13 @@ class ItineraryActivityAPITestCase(TestCase):
             trip=self.trip
         )
 
+        self.itinerary_activity_type = ItineraryActivityType.objects.create(
+            name="Sightseeing",
+        )
+
         self.activity = ItineraryActivity.objects.create(
             name="Visit Eiffel Tower",
-            type="Sightseeing",
+            type=self.itinerary_activity_type,
             description="A guided tour to the Eiffel Tower.",
             location="Paris",
             start_time="10:00:00",
@@ -212,7 +222,7 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         data = {
             'name': 'Louvre Museum Visit',
-            'type': 'test1',
+            'type': self.itinerary_activity_type.id,
             'description': 'Visit to the Louvre Museum.',
             'location': 'Paris',
             'start_time': '12:00:00',
@@ -243,7 +253,7 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         data = {
             'name': 'Updated Eiffel Tower Visit',
-            'type': 'test1',
+            'type': self.itinerary_activity_type.id,
             'description': 'An updated guided tour.',
             'location': 'Paris',
             'start_time': '11:00:00',
@@ -291,7 +301,7 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         data = {
             'name': 'Notre Dame Visit',
-            'type': 'Sightseeing',
+            'type': self.itinerary_activity_type,
             'description': 'Visit to the Notre Dame Cathedral.',
             'location': 'Paris',
             'start_time': '14:00:00',
@@ -309,7 +319,7 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         data = {
             'name': 'Unauthorized Update',
-            'type': 'Tour',
+            'type': self.itinerary_activity_type,
             'description': 'Attempt to update without authentication.',
             'location': 'Paris',
             'start_time': '10:00:00',

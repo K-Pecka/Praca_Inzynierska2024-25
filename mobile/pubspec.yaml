@@ -57,14 +57,6 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  assets:
-    - C:\Users\Mateusz\PycharmProjects\PI\mobile\assets\images\logo.png
-  fonts:
-    - family: Quicksand
-      fonts:
-        - asset: assets/fonts/Quicksand/static/Quicksand-Regular.ttf
-        - asset: assets/fonts/Quicksand/static/Quicksand-Bold.ttf
-          weight: 700
 
   # To add assets to your application, add an assets section, like this:
   # assets:

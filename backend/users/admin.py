@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 
-from .models import UserPermission, UserProfile, CustomUser
+from .models import UserPermission, UserProfile, CustomUser, UserProfileType
 
 from dicts.helpers import get_admin_change_link
 
@@ -47,7 +47,6 @@ class ClientProfileAdmin(admin.ModelAdmin):
     get_user_link.short_description = 'User'
 
 
-
 @admin.register(UserPermission)
 class UserPermissionAdmin(admin.ModelAdmin):
     list_select_related = ('profile', 'permission')
@@ -62,4 +61,10 @@ class UserPermissionAdmin(admin.ModelAdmin):
         return get_admin_change_link(obj.permission)
 
     get_permission_link.short_description = 'Permission'
-    #a
+
+
+@admin.register(UserProfileType)
+class UserProfileTypeAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'code')
+    search_fields = ('name', 'code')
+    ordering = ('name',)

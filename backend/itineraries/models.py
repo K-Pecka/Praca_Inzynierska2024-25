@@ -1,5 +1,7 @@
 from django.db import models
 from dicts.models import BaseModel
+from django.utils.translation import gettext_lazy as _
+
 from trips.models import Trip
 from itineraries.managers import ItineraryManager, ItineraryActivityManager
 
@@ -19,19 +21,60 @@ class Itinerary(BaseModel):
         verbose_name_plural = "Wycieczki"
 
 
+class ItineraryActivityType(BaseModel):
+    name = models.CharField(
+        max_length=124,
+        verbose_name=_("Nazwa"), help_text=_("Nazwa")
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Typ aktywności planu"
+        verbose_name_plural = _("Typy aktywności planu")
+
+def get_default_itinerary_activity_type():
+    return ItineraryActivity.objects.first()
+
+
 class ItineraryActivity(BaseModel):
-    CHOICES = [
-        ("test1", "test1"),
-        ("test2", "test2"),
-        ("test3", "test3")
-    ]
-    name = models.CharField(max_length=255)
-    type = models.CharField(max_length=255, choices=CHOICES)
-    description = models.TextField(max_length=5120)
-    location = models.CharField(max_length=255)
-    start_time = models.TimeField()
-    duration = models.IntegerField()
-    itinerary = models.ForeignKey(Itinerary, on_delete=models.CASCADE, related_name="activities")
+    name = models.CharField(
+        max_length=255,
+        verbose_name=_("Nazwa"), help_text=_("Nazwa")
+    )
+    type = models.ForeignKey(
+        ItineraryActivityType,
+        on_delete=models.CASCADE,
+        default=get_default_itinerary_activity_type,
+        verbose_name=_("Typ"),
+        help_text=_("Typ")
+    )
+    description = models.TextField(
+        max_length=5120,
+        verbose_name=_("Opis"),
+        help_text=_("Opis")
+    )
+    location = models.CharField(
+        max_length=255,
+        verbose_name=_("Lokacja"),
+        help_text=_("Lokacja")
+    )
+    start_time = models.TimeField(
+        verbose_name=_("Czas zakończenia"),
+        help_text=_("Czas rozpoczęcia")
+    )
+    duration = models.IntegerField(
+        verbose_name=_("Czas trwania"),
+        help_text=_("Czas trawania")
+    )
+    itinerary = models.ForeignKey(
+        Itinerary,
+        on_delete=models.CASCADE,
+        related_name="activities",
+        verbose_name=_("Plan"),
+        help_text=_("Plan")
+    )
 
     objects = ItineraryActivityManager()
 
@@ -39,3 +82,4 @@ class ItineraryActivity(BaseModel):
         db_table = "itinerary_activities"
         verbose_name = "Aktywność"
         verbose_name_plural = "Aktywności"
+

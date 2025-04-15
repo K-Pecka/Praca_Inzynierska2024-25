@@ -8,6 +8,7 @@ from datetime import timedelta
 
 load_dotenv()
 
+TRIP_JOINING_PAGE = "https://plannder.com/trip/invite/"
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 

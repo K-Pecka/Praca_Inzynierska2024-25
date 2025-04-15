@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from dicts.models import BaseModel
+from dicts.validators import validate_only_alphabetic
 from trips.managers import TripManager, TicketManager, TripAccessTokenManager
 from users.models import UserProfile
 
@@ -74,6 +75,11 @@ class Trip(BaseModel):
         trip.members.remove(user_profile)
         return Response({"message": "User successfully removed from the trip."})
 
+    def check_if_is_member(self, email):
+        if self.members.filter(user__email=email).exists():
+            return True
+        return False
+
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
@@ -127,6 +133,8 @@ class TripAccessToken(BaseModel):
 class TicketType(BaseModel):
     name = models.CharField(
         max_length=124,
+        unique=True,
+        validators=[validate_only_alphabetic],
         verbose_name=_("Nazwa"), help_text=_("Nazwa")
     )
 
@@ -226,6 +234,8 @@ class Budget(BaseModel):
 class ExpenseType(BaseModel):
     name = models.CharField(
         max_length=124,
+        unique=True,
+        validators=[validate_only_alphabetic],
         verbose_name=_("Nazwa"),
         help_text=_("Nazwa")
     )
