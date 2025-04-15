@@ -74,6 +74,11 @@ class Trip(BaseModel):
         trip.members.remove(user_profile)
         return Response({"message": "User successfully removed from the trip."})
 
+    def check_if_is_member(self, email):
+        if self.members.filter(user__email=email).exists():
+            return True
+        return False
+
     def clean(self):
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))

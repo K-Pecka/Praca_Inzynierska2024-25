@@ -1,0 +1,1 @@
+TRIP_JOINING_PAGE = "https://plannder.com/trip/invite/"

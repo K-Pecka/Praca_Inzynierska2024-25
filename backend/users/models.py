@@ -158,6 +158,20 @@ class UserProfile(BaseModel):
     def trips(self):
         return self.trips_as_member.all()
 
+    @classmethod
+    def get_profile_by_email(cls, email):
+        """
+        Get the user profile by email.
+        """
+        try:
+            user = CustomUser.objects.get(email=email)
+            return cls.objects.filter(user=user).first()
+        except CustomUser.DoesNotExist:
+            return None
+        except IntegrityError:
+            raise ValueError("Niepoprawny adres email.")
+
+
     def save(self, *args, **kwargs):
         if self.pk:
             if self.is_default:
