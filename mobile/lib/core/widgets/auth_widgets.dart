@@ -1,6 +1,27 @@
 import 'package:flutter/material.dart';
 
-Widget buildButtons({
+Widget buildTitle(String text) {
+  return Text(
+    text,
+    style: const TextStyle(
+      fontSize: 18,
+      fontFamily: 'Quicksand',
+      fontWeight: FontWeight.w500,
+      color: Colors.black87,
+    ),
+  );
+}
+
+Widget buildLogo() {
+  return Column(
+    children: [
+      Image.asset('assets/images/logo.png', height: 36),
+      const SizedBox(height: 64),
+    ],
+  );
+}
+
+Widget buildChooseProfileButtons({
   required VoidCallback onTouristTap,
   required VoidCallback onGuideTap,
 }) {
@@ -55,24 +76,63 @@ Widget buildButtons({
   );
 }
 
-Widget buildLogo() {
-  return Column(
-    children: [
-      Image.asset(
-        'assets/images/logo.png',
-        height: 36,
-      ),
-      const SizedBox(height: 64),
-    ],
+Widget buildTouristLoginForm({
+  required TextEditingController emailController,
+  required TextEditingController passwordController,
+  required bool isLoading,
+  required VoidCallback onLogin,
+}) {
+  return Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      border: Border.all(color: Color(0xFFBFDFFF), width: 2),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Column(
+      children: [
+        TextField(
+          controller: emailController,
+          decoration: InputDecoration(
+            labelText: 'Email',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
+        const SizedBox(height: 16),
+        TextField(
+          controller: passwordController,
+          obscureText: true,
+          decoration: InputDecoration(
+            labelText: 'Hasło',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
+        const SizedBox(height: 24),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: isLoading ? null : onLogin,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2D1ED6),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : const Text(
+              'Zaloguj',
+              style: TextStyle(
+                fontFamily: 'Quicksand',
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
 
-const Widget buildTitle = Text(
-  'Wybierz typ profilu',
-  style: TextStyle(
-    fontSize: 18,
-    fontFamily: 'Quicksand',
-    fontWeight: FontWeight.w500,
-    color: Colors.black87,
-  ),
-);
