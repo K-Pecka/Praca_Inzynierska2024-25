@@ -13,7 +13,7 @@ class TripCreateSerializer(serializers.ModelSerializer):
     members = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=UserProfile.objects.all())
     start_date = serializers.DateField()
     end_date = serializers.DateField()
-    budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2, write_only=True)
+    budget_amount = serializers.DecimalField(required=False, max_digits=10, decimal_places=2, write_only=True)
 
     def validate_budget_amount(self, value):
         if value <= 0:
