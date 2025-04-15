@@ -170,26 +170,19 @@ class IsTripCreator(BasePermission):
     message = "Tylko twórca wycieczki może wykonać tę akcję."
 
     def has_permission(self, request, view):
-        print('1')
         profile = request.user.get_default_profile()
-        print('2')
         if not profile:
-            print('xxxxxxxxxxx')
             return False
 
         if request.method == 'POST' or request.method == 'DELETE':
-            print('yyyyyyyyyyy')
             return self.is_creator_for_post_request(view, profile)
 
         try:
-            print('4234324')
             obj = view.get_object()
-            print('6576575')
             return self.is_trip_creator(obj, profile)
         except NotFound:
             raise
         except Exception:
-            print('ghgfhh')
             return False
 
     def is_creator_for_post_request(self, view, profile):

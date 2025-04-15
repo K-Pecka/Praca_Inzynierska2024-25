@@ -44,10 +44,6 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsTripCreator]
 
     def get_object(self):
-        print('self.kwargs', self.kwargs)
-        print('fgdfgfdg', self.kwargs['trip_pk'])
-        print(Trip.objects.all().first().pk)
-        print(Trip.objects.get(id=self.kwargs['trip_pk']))
         return Trip.objects.get(pk=self.kwargs['trip_pk'])
 
     def update(self, request, *args, **kwargs):
@@ -129,7 +125,6 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             'end_date': trip.end_date,
             'trip_link': invitation_link
         })
-        print('invitation_link', invitation_link)
         sent_count = send_mail(
             subject=subject,
             message=strip_tags(html_message),
