@@ -19,7 +19,12 @@ const homeRoutes: RouteRecordRaw[] = [
         name: "pricingSection",
         component: PricingSection,
       },
-    ],
+      {
+        path: "/about-us",
+        name: "aboutUs",
+        component: () => import("@/views/home/children/AboutUs.vue"),
+      }
+    ]
   },
   {
     path: "/500",
