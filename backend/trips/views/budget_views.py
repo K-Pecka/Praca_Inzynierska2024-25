@@ -14,7 +14,7 @@ class BudgetUpdateAPIView(UpdateAPIView):
 
     def get_object(self):
         try:
-            trip = Trip.objects.get(id=self.kwargs['trip_id'])
+            trip = Trip.objects.get(id=self.kwargs['trip_pk'])
             budget = trip.budgets
             if not budget:
                 raise NotFound(detail="Nie znaleziono budżetu dla tego tripu.")
@@ -32,7 +32,7 @@ class BudgetDestroyAPIView(DestroyAPIView):
 
     def get_object(self):
         try:
-            trip = Trip.objects.get(id=self.kwargs['trip_id'])
+            trip = Trip.objects.get(id=self.kwargs['trip_pk'])
         except Trip.DoesNotExist:
             raise NotFound(detail="Nie znaleziono wycieczki o podanym ID.")
 

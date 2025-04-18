@@ -41,7 +41,6 @@ class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
     location = serializers.CharField(max_length=100)
     start_time = serializers.TimeField()
     duration = serializers.IntegerField()
-    itinerary = serializers.PrimaryKeyRelatedField(required=False, queryset=Itinerary.objects.all())
 
     def create(self, validated_data):
         view = self.context['view']

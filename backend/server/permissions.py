@@ -190,24 +190,24 @@ class IsTripCreator(BasePermission):
         Handles POST requests to check if the user is the creator of the trip or itinerary.
         """
         trip = None
-        trip_id = view.kwargs.get('trip_pk')
+        trip_pk = view.kwargs.get('trip_pk')
         itinerary_id = view.kwargs.get('itinerary_pk')
 
         obj = None
-        if not trip_id and not itinerary_id and hasattr(view, 'get_object'):
+        if not trip_pk and not itinerary_id and hasattr(view, 'get_object'):
             try:
                 obj = view.get_object()
             except Exception:
                 pass
 
-        if not trip_id and isinstance(obj, Trip):
-            trip_id = obj.pk
+        if not trip_pk and isinstance(obj, Trip):
+            trip_pk = obj.pk
 
         if not itinerary_id and isinstance(obj, Itinerary):
             itinerary_id = obj.pk
 
-        if trip_id:
-            trip = Trip.objects.filter(pk=trip_id).first()
+        if trip_pk:
+            trip = Trip.objects.filter(pk=trip_pk).first()
         elif itinerary_id:
             itinerary = Itinerary.objects.filter(pk=itinerary_id).first()
             if itinerary:

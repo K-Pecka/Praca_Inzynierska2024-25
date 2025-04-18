@@ -35,8 +35,8 @@ class ChatroomCreateSerializer(BaseChatroomSerializer):
         try:
             request = self.context['request']
             kwargs = self.context['view'].kwargs
-            trip_id = kwargs.pop('trip_pk', None)
-            trip = Trip.objects.get(id=trip_id)
+            trip_pk = kwargs.pop('trip_pk', None)
+            trip = Trip.objects.get(id=trip_pk)
             if not trip:
                 raise serializers.ValidationError("Nie znaleziono wycieczki.")
 

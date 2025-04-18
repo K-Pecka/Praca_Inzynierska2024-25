@@ -22,13 +22,13 @@ urlpatterns = [
     path('ticket/<int:pk>/delete/', TicketDestroyAPIView.as_view(), name='ticket-delete'),
 
     # Budget URLs
-    path('<int:trip_id>/budget/<int:pk>/update/', BudgetUpdateAPIView.as_view(), name='budget-update'),
-    path('<int:trip_id>/budget/<int:pk>/delete/', BudgetDestroyAPIView.as_view(), name='budget-delete'),
+    path('<int:trip_pk>/budget/<int:pk>/update/', BudgetUpdateAPIView.as_view(), name='budget-update'),
+    path('<int:trip_pk>/budget/<int:pk>/delete/', BudgetDestroyAPIView.as_view(), name='budget-delete'),
 
     # Expense URLs
-    path('<int:trip_id>/expense/', ExpenseCreateAPIView.as_view(), name='expense-create'),
-    path('<int:trip_id>/expense/<int:pk>/', ExpenseRetrieveAPIView.as_view(), name='expense-retrieve'),
-    path('<int:trip_id>/expense/all/', ExpenseListAPIView.as_view(), name='expense-list'),
-    path('<int:trip_id>/expense/<int:pk>/update/', ExpenseUpdateAPIView.as_view(), name='expense-update'),
-    path('<int:trip_id>/expense/<int:pk>/delete/', ExpenseDestroyAPIView.as_view(), name='expense-delete'),
+    path('<int:trip_pk>/expense/', ExpenseCreateAPIView.as_view(), name='expense-create'),
+    path('<int:trip_pk>/expense/<int:pk>/', ExpenseRetrieveAPIView.as_view(), name='expense-retrieve'),
+    path('<int:trip_pk>/expense/all/', ExpenseListAPIView.as_view(), name='expense-list'),
+    path('<int:trip_pk>/expense/<int:pk>/update/', ExpenseUpdateAPIView.as_view(), name='expense-update'),
+    path('<int:trip_pk>/expense/<int:pk>/delete/', ExpenseDestroyAPIView.as_view(), name='expense-delete'),
 ]
