@@ -3,6 +3,7 @@ from rest_framework import serializers
 from itineraries.models import Itinerary
 from trips.models import Trip
 
+activities = serializers.SerializerMethodField()
 
 class ItineraryRetrieveSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=100, read_only=True)
@@ -12,6 +13,11 @@ class ItineraryRetrieveSerializer(serializers.ModelSerializer):
     trip = serializers.PrimaryKeyRelatedField(
         read_only=True
     )
+    activities_count = serializers.SerializerMethodField()
+
+    def get_activities_count(self, obj):
+        return obj.activities.count()
+
     def validate(self, data):
         if data['end_date'] < data['start_date']:
             raise serializers.ValidationError(
@@ -20,7 +26,7 @@ class ItineraryRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Itinerary
-        fields = ['id', 'name', 'country', 'start_date', 'end_date', 'trip']
+        fields = ['id', 'name', 'country', 'start_date', 'end_date', 'trip', 'activities_count']
 
 
 class ItineraryCreateSerializer(serializers.ModelSerializer):
