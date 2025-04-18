@@ -15,14 +15,18 @@ const footerData = computed(() => useStore.getFooterData());
       <v-col cols="12" sm="12" lg="12" offset-lg="0" offset-sm="0">
         <Navbar :links="navData">
           <template #logo>
-            {{ SiteName }}
+              <img
+                src="/picture/logo.svg"
+                :alt="SiteName"
+                lazy-src="/images/placeholder.jpg"
+              />
           </template>
         </Navbar>
       </v-col>
     </v-row>
 
-    <v-row>
-      <v-col cols="12" md="10" lg="8" offset-lg="2" offset-md="1">
+    <v-row class="d-flex justify-center">
+      <v-col cols="12">
         <main>
           <router-view />
         </main>
@@ -32,7 +36,11 @@ const footerData = computed(() => useStore.getFooterData());
 
   <Footer :footerData="footerData">
     <template #logo>
-      {{ SiteName }}
+      <img
+          src="/picture/logo.svg"
+          :alt="SiteName"
+          lazy-src="/images/placeholder.jpg"
+        />
     </template>
   </Footer>
 </template>

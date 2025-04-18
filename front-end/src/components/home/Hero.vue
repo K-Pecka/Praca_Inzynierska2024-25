@@ -12,7 +12,7 @@ const props = defineProps({
 
 <template>
   <header class="hero">
-    <v-container fluid class="full-width-container">
+    <v-container fluid class="full-width-container" style="width: 65%">
       <v-row>
         <v-col :cols="$vuetify.display.smAndDown ? 12 : 7" 
         class="hero__text" ref="heroText"

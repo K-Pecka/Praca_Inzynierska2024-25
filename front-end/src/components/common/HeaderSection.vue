@@ -10,7 +10,7 @@ const {data: tripData, isLoading, error} = getTripDetails(tripId);
 <template>
   <section class="section">
     <header class="section__title">
-      <h1 class="trip-title" v-if="!isLoading && !error">{{ tripData?.name }}</h1>
+      <h1 class="trip-title mt-10" v-if="!isLoading && !error">{{ tripData?.name }}</h1>
       <h1 class="trip-title" v-else>...</h1>
     </header>
     <div class="section__subtitle">
@@ -30,13 +30,14 @@ const {data: tripData, isLoading, error} = getTripDetails(tripId);
 
 .section__subtitle {
   margin: 2rem 0 2rem 0;
+  color: rgb(var(--v-theme-text), 0.75);
 }
 
 .trip-title {
   font-family: var(--v-fontFamily);
   font-size: 2rem;
   font-weight: 700;
-  text-align: start;
+  color: rgb(var(--v-theme-text), 0.75);
   margin: 0 0 2rem 0;
 }
 

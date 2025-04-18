@@ -55,7 +55,11 @@ onUnmounted(() => {
               @toggleMenu="toggleSideNav"
           >
             <template #logo>
-              {{ logoText }}
+              <img
+                src="/picture/logo.svg"
+                :alt="SiteName"
+                lazy-src="/images/placeholder.jpg"
+              />
             </template>
           </PanelNavbar>
         </v-col>
@@ -69,6 +73,7 @@ onUnmounted(() => {
               md="2"
               class="side-nav-col"
               :class="{ 'mobile-overlay': isMobile, open: sideNavOpen }"
+              style="max-width: 12%;"
           >
             <SideNav :mobile="isMobile" @close="toggleSideNav"/>
           </v-col>
@@ -114,7 +119,6 @@ main {
 .side-nav-col {
   padding: 0;
 }
-
 
 .overlay {
   position: fixed;

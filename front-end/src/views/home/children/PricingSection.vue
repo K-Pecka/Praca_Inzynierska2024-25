@@ -19,7 +19,6 @@ import PricingCard from "@/components/home/PricingCard.vue";
 
 <style scoped lang="scss">
 .pricing-section {
-  width: 100%;
   display: flex;
   justify-content: center;
   gap: 1.5rem;

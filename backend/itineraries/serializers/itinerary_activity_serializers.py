@@ -50,7 +50,7 @@ class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItineraryActivity
-        fields = ["name", "type", "description", "location", "start_time", "duration"]
+        fields = ["name", "type", "description", "location", "start_time", "duration", "itinerary"]
 
 
 class ItineraryActivityUpdateSerializer(serializers.ModelSerializer):

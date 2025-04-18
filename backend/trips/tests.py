@@ -56,7 +56,7 @@ class BudgetAPITestCase(TestCase):
         view = BudgetUpdateAPIView.as_view()
         request = self.factory.patch(f'/trip/{self.trip.id}/budget/{self.budget.id}/update/', data)
         force_authenticate(request, user=self.user)
-        response = view(request, trip_id=self.budget.id)
+        response = view(request, trip_pk=self.budget.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.budget.refresh_from_db()
         self.assertEqual(str(self.budget.amount), "1500.00")
@@ -68,7 +68,7 @@ class BudgetAPITestCase(TestCase):
         view = BudgetDestroyAPIView.as_view()
         request = self.factory.delete(f'/trips/{self.trip.id}/budget/{self.budget.id}/delete/')
         force_authenticate(request, user=self.user)
-        response = view(request, trip_id=self.trip.id, budget_id=self.budget.id)
+        response = view(request, trip_pk=self.trip.id, budget_id=self.budget.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Budget.objects.filter(id=self.budget.id).exists())
 
@@ -124,19 +124,17 @@ class ExpenseAPITestCase(TestCase):
         Test creating an expense when the request is valid.
         """
         data = {
-            'trip': self.trip.id,
+            'title': "obiad smażalnia ryb",
             'user': self.user_profile.id,
             'amount': 150.00,
-            'title': "obiad smażalnia ryb",
             'currency': self.currency.id,
             'date': "2025-06-06",
-            'note': "obiad w smażalni w złotych tarasach",
             'category': self.expense_category.id
         }
         view = ExpenseCreateAPIView.as_view()
         request = self.factory.post(f'/trips/{self.trip.id}/expense/', data)
         force_authenticate(request, user=self.user)
-        response = view(request)
+        response = view(request, trip_pk=self.trip.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_expense_retrieve(self):

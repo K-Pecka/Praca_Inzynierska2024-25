@@ -140,7 +140,9 @@ input[type="checkbox"] {
 
 .input {
   padding: 0.5rem;
+  border-radius: 10px;
   font-size: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 input {
@@ -158,8 +160,11 @@ span {
   display: block;
 }
 
+:deep(.v-field) {
+  border-radius: 10px;
+}
+
 .date-range-field {
   background-color: rgba(var(--rgb-secondary-color), 0.9);
-  border-radius: 0.5rem;
 }
 </style>

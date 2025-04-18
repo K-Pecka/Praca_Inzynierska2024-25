@@ -50,19 +50,23 @@ class ExpenseListSerializer(serializers.ModelSerializer):
         ]
 
 class ExpenseCreateSerializer(serializers.ModelSerializer):
-    title = serializers.CharField(required=True)
-    amount = serializers.DecimalField(required=True, max_digits=10, decimal_places=2)
-    currency = serializers.PrimaryKeyRelatedField(required=True, queryset=Currency.objects.all())
-    date = serializers.DateField(required=False, format="%d.%m.%Y")
-    note = serializers.CharField(required=False)
-    trip = serializers.PrimaryKeyRelatedField(required=True, queryset=Trip.objects.all())
-    user = serializers.PrimaryKeyRelatedField(required=True, queryset=UserProfile.objects.all())
-    category = serializers.PrimaryKeyRelatedField(required=True, queryset=ExpenseType.objects.all())
+    title = serializers.CharField()
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    currency = serializers.PrimaryKeyRelatedField(queryset=Currency.objects.all())
+    date = serializers.DateField(format="%d.%m.%Y")
+    user = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
+    category = serializers.PrimaryKeyRelatedField(queryset=ExpenseType.objects.all())
+
+    def create(self, validated_data):
+        view = self.context['view']
+        trip_pk = view.kwargs.get('trip_pk')
+        validated_data['trip'] = Trip.objects.get(pk=trip_pk)
+        return Expense.objects.create(**validated_data)
 
     class Meta:
         model = Expense
         fields = [
-            'title', 'amount', 'currency', 'date', 'note', 'trip', 'user', 'category'
+            'title', 'amount', 'currency', 'date', 'user', 'category'
         ]
 
 class ExpenseUpdateSerializer(serializers.ModelSerializer):

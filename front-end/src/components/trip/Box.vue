@@ -61,7 +61,7 @@ import BudgetContent from "@/components/style/BudgetContent.vue";
 
 <template>
   <v-card
-    class="pa-4 rounded-lg"
+    class="px-5 pt-2 pb-3 rounded-lg"
     elevation="3"
     :style="{
       gridColumn: `span ${getGridCols()}`,
@@ -69,11 +69,11 @@ import BudgetContent from "@/components/style/BudgetContent.vue";
       order: props.set.order,
     }"
   >
-    <v-card-title class="text-h6 font-weight-medium d-flex align-center">
+    <v-card-title class="text-h6 d-flex align-center">
       <v-icon class="mr-2" color="primary">{{ `${props.icon}` }}</v-icon>
       {{ props.title }}
     </v-card-title>
-    <v-card-text>
+    <v-card-text class="px-0 py-0 text-h6 font-weight-bold">
       <template v-if="Array.isArray(props.content)">
         <v-list v-if="props.content.length > 0">
           <v-list-item v-for="(item, index) in props.content" :key="index">
@@ -113,7 +113,8 @@ import BudgetContent from "@/components/style/BudgetContent.vue";
   font-size: 20px;
   font-weight: bold;
   font-family: var(--v-fontFamily);
-  padding-bottom: 2rem;
+  color: rgb(var(--v-theme-text), 75%);
+  padding-bottom: 1.2rem;
 }
 .v-card-text {
   font-size: 20px;

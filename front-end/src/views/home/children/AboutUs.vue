@@ -40,7 +40,7 @@ const teamMembers = [
 </script>
 
 <template>
-  <v-container class="py-10">
+  <v-container class="py-10" style="width: 65%;">
     <h1 class="text-h4 text-center text-primary font-weight-bold mb-6">
       {{ aboutTeam.mainTitle }}
     </h1>
