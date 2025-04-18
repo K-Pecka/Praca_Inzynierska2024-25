@@ -124,19 +124,17 @@ class ExpenseAPITestCase(TestCase):
         Test creating an expense when the request is valid.
         """
         data = {
-            'trip': self.trip.id,
+            'title': "obiad smażalnia ryb",
             'user': self.user_profile.id,
             'amount': 150.00,
-            'title': "obiad smażalnia ryb",
             'currency': self.currency.id,
             'date': "2025-06-06",
-            'note': "obiad w smażalni w złotych tarasach",
             'category': self.expense_category.id
         }
         view = ExpenseCreateAPIView.as_view()
         request = self.factory.post(f'/trips/{self.trip.id}/expense/', data)
         force_authenticate(request, user=self.user)
-        response = view(request)
+        response = view(request, trip_pk=self.trip.id)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_expense_retrieve(self):
