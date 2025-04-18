@@ -7,18 +7,22 @@ defineProps<{
 <template>
     <div class="participant-item">
       <div class="participant-left">
-        <v-icon size="48">mdi-food-fork-drink</v-icon>
+        <v-img
+          src="/picture/expense-item-image.svg"
+          width="45"
+          height="45"
+          class="rounded-circle"/>
   
         <div class="participant-texts">
-          <strong class="participant-name">{{ expense?.title }}</strong>
+          <strong class="participant-name text-h6 font-weight-bold">{{ expense?.title }}</strong>
           <div class="email-row">
-            <span class="participant-email">{{ expense?.date }} {{ expense?.type }} {{ expense?.note }}</span>
+            <span>{{ expense?.date }} <span class="expense-item-type">{{ expense?.type }}</span> {{ expense?.note }}</span>
           </div>
         </div>
       </div>
   
       <div class="price">
-        <span size="24">{{expense?.amount}} {{expense?.currency}}</span>
+        <span class="expense-item-amount text-subtitle-1">{{expense?.amount}} {{expense?.currency}}</span>
       </div>
     </div>
   </template>
@@ -41,6 +45,16 @@ defineProps<{
     align-items: flex-start;
     gap: 0.75rem;
   }
+
+  .expense-item-type {
+    color: rgb(var(--v-theme-primary), 0.75);
+  }
+
+  .expense-item-amount {
+    font-weight: bold;
+    color: rgb(var(--v-theme-text), 0.75);
+    font-family: var(--v-fontFamily);
+  }
   
   .participant-texts {
     display: flex;
@@ -48,20 +62,14 @@ defineProps<{
   }
   
   .participant-name {
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 0.25rem;
+    color: rgb(var(--v-theme-text), 0.75);
+    line-height: 1.2;
   }
   
   .email-row {
     display: flex;
     align-items: center;
     gap: 0.25rem;
-  }
-  
-  .participant-email {
-    font-size: 0.9rem;
-    color: #555;
   }
   
   .price {

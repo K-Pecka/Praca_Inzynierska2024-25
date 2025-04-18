@@ -8,7 +8,7 @@ const getRoleSelection = pagePanelStore.getRoleSelection;
 </script>
 
 <template>
-  <div class="role-selection">
+  <div class="role-selection mt-15">
     <h1 class="title">{{ getRoleSelection.title }}</h1>
     <p class="subtitle">{{ getRoleSelection.subtitle }}</p>
     <div class="roles-container">
@@ -31,16 +31,16 @@ const getRoleSelection = pagePanelStore.getRoleSelection;
 
   .title {
     font-size: 2.5rem;
-    font-weight: 600;
+    font-weight: 800;
     margin-bottom: 0.5rem;
-    color: rgb(var(--v-theme-text));
+    color: rgb(var(--v-theme-text), 0.75);
   }
 
   .subtitle {
     font-size: 2.5rem;
-    font-weight: 600;
-    margin-bottom: 3.5rem;
-    color: rgb(var(--v-theme-text));
+    font-weight: 800;
+    margin-bottom: 5rem;
+    color: rgb(var(--v-theme-text), 0.75);
 
     @media (max-width: 480px) {
       margin-bottom: 2rem;

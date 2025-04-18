@@ -11,7 +11,6 @@
               @update-model="updateState"
             />
           </div>
-
           <v-btn type="submit">{{ submitButtonLabel }}</v-btn>
           <div class="moreOption">
             <slot name="moreOption"></slot>
@@ -61,21 +60,25 @@ const handleSubmit = () => {
 
 <style scoped lang="scss">
 .form-container {
-  background-color: rgb(var(--v-theme-secondary), 0.9);
+  background-color: rgba(var(--v-theme-secondary),50%);
   padding: 0.25rem;
-  border-radius: 0.5rem;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
 }
 
 .v-btn {
   background-color: rgb(var(--v-theme-primary));
   color: rgb(var(--v-theme-text));
   width: calc(100% - 3rem);
-  padding: 0.75rem;
+  height: 3rem;
   margin: 1.5rem;
   border: none;
   border-radius: 0.5rem;
+  font-size: 17px;
   cursor: pointer;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  text-transform: none;
+  font-weight: bold;
 }
 .v-btn{
   margin-top: 0;

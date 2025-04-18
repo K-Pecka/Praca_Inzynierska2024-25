@@ -33,9 +33,10 @@ const handleSubmit = (_formData: any, config: any) => {
 </script>
 
 <template>
-  <Section>
+  <Section style="">
     <template #title>
-      <h1>Stwórz wycieczkę</h1>
+      <h4 class="pb-2">Stwórz wycieczkę</h4>
+      <h6 style="font-weight: 500">Zaplanuj swoją wymarzoną wycieczkę</h6>
       <p></p>
     </template>
 
@@ -56,6 +57,7 @@ h1 {
   color: rgb(var(--v-theme-primary));
   font-size: 2rem;
   margin-bottom: 0.5rem;
+  color: rgba(0, 0, 0, .75);
 }
 p {
   margin: 0 0 2rem 0;

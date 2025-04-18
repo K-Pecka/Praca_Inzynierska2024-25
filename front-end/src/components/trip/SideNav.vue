@@ -57,8 +57,6 @@ function closeSideNavWithDelay() {
 
 <template>
   <nav class="side-nav" :class="{ mobile }">
-
-
     <ul class="side-nav__list">
       <li
           v-for="(item, index) in items"
@@ -136,6 +134,7 @@ function closeSideNavWithDelay() {
 
 .side-nav {
   height: 100%;
+  width: 14rem;
   left: 0;
   background-color: rgba(var(--v-theme-background));
   border-right: 2px solid rgb(var(--v-theme-primary));
@@ -198,19 +197,10 @@ function closeSideNavWithDelay() {
   }
 }
 
-@media (min-width: 1980px) {
-  .side-nav__item-header,
-  .side-nav__sub-link,
-  .side-nav__item-link {
-    font-size: 1.5rem;
-  }
+.side-nav__item-header,
+.side-nav__sub-link,
+.side-nav__item-link {
+  font-size: inherit;
 }
 
-@media (min-width: 959px) and (max-width: 1200px) {
-  .side-nav__item-header,
-  .side-nav__sub-link,
-  .side-nav__item-link {
-    font-size: 1rem;
-  }
-}
 </style>

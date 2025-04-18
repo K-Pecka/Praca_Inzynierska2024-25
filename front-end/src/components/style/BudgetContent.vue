@@ -14,8 +14,8 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
 
 <template>
   <div v-if="typeof props.content === 'object' && props.content !== null">
-    <div class="amount my-2">
-      <span class="text-h5 font-weight-bold">
+    <div class="mb-2 budget-amount">
+      <span class="text-h6 font-weight-bold">
         {{ props.content.amount }} {{ props.content.currency }}
       </span>
     </div>
@@ -24,20 +24,25 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
       :model-value="safeDivision(props.content.expenses, props.content.convertedAmount, true)"
       height="6"
       rounded
-      color="green"
+      class="expenses-green"
       background-color="grey-lighten-3"
     ></v-progress-linear>
 
     <v-row justify="space-between" class="mt-1">
-      <span class="text-green font-weight-medium">
+      <span class="text-subtitle-1 expenses-green" style="font-weight: bold;">
         {{ props.content.convertedAmount }} {{ props.content.convertedCurrency }}
       </span>
-      <span class="text-grey-darken-1">
+      <span class="text-grey-darken-1 text-subtitle-1" style="font-weight: bold">
         {{ safeDivision(props.content.expenses, props.content.convertedAmount, false) }}%
       </span>
     </v-row>
   </div>
 </template>
 <style scoped lang="scss">
-/* ! */
+  .text-h6 {
+      font-family: var(--v-fontFamily);
+  }
+  .expenses-green {
+    color: rgba(22, 163, 74, .75)
+  }
 </style>

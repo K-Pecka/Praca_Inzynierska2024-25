@@ -47,7 +47,7 @@ export const useTripStore = defineStore("trip", () => {
       currency: "PLN",
     },
   ],
-  sectionName:getRole() == Role.TURIST ? "Ostatnie wydatki" : "Ostatnie zaległości uczestników"
+  sectionName:getRole() == Role.TURIST ? "Twoje ostatnie wydatki" : "Ostatnie zaległości uczestników"
 };
 }
   const { setErrorCurrentMessage, setSuccessCurrentMessage } =
@@ -229,13 +229,13 @@ export const useTripStore = defineStore("trip", () => {
     return {
       btn: [
         {
-          title: "Przeglądaj wycieczkę",
+          title: "Zarządzaj wycieczką",
           class: ["primary"],
           onclick: (id: string) =>
             router.push({ name: btnPath, params: { tripId: id } }),
         },
         {
-          title: "usuń wycieczkę",
+          title: "Usuń wycieczkę",
           class: ["accent"],
           onclick: (id: string) => handleDeleteTrip(id),
         },
@@ -249,12 +249,14 @@ export const useTripStore = defineStore("trip", () => {
         {
           title: "Zarządzaj planem",
           class: ["primary"],
+          img: "/picture/plan-edit.svg",
           onclick: (trip: string, id: string) =>
               router.push({ name: "ActivityView", params: { tripId: trip, planId: id } }),
         },
         {
           title: "usuń plan",
           class: ["accent"],
+          img: "/picture/plan-delete.svg",
           onclick: (tripId: string,itineraryId:string) => handleDeleteItinerary(tripId,itineraryId),
         },
       ],

@@ -13,7 +13,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <router-link :to="role.path">
+  <router-link :to="role.path" style="display: flex; justify-content: center;">
     <button class="role-button">
       <img :src="role.image" alt="" class="role-icon" />
       <h2 class="role-title">{{ role.title }}</h2>
@@ -29,16 +29,12 @@ const props = defineProps({
   flex-direction: column;
   align-items: center;
   background-color: rgb(var(--v-theme-secondary), 0.5);
-  border: none;
   border-radius: 15px;
-  padding: 2rem 1.5rem;
+  padding: 2.5rem 1.5rem;
   cursor: pointer;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-width: 18rem;
-  max-width: 25rem;
-  flex: 1 1 auto;
-  width: 100%;
+  width: 33rem;
 
   @media (max-width: 480px) {
     width: 20rem;
@@ -56,7 +52,6 @@ const props = defineProps({
     width: 153px;
     height: 153px;
     margin-bottom: 1rem;
-    object-fit: contain;
 
     @media (max-width: 480px) {
       width: 90px;
@@ -65,9 +60,8 @@ const props = defineProps({
   }
 
   .role-title {
-    font-size: 1.9rem;
+    font-size: 38px;
     color: rgb(var(--v-theme-text));
-    margin-bottom: 0.5rem;
 
     @media (max-width: 480px) {
       font-size: 1.4rem;
@@ -75,9 +69,10 @@ const props = defineProps({
   }
 
   .role-description {
-    font-size: 1rem;
+    font-size: 18px;
+    font-weight: 700;
     color: rgb(var(--v-theme-text));
-    line-height: 1.5;
+    line-height: 1.1;
     text-align: center;
   }
 }

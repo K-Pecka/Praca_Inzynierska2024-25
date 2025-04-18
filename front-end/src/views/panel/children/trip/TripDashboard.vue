@@ -22,7 +22,7 @@ const expenseItem: Expense[] = getExpenseItem().expenseItem;
     <template #title>
       <HeaderSection>
         <template #subtitle>
-          <h2 class="trip-title">Panel</h2>
+          <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600">Panel</h2>
         </template>
       </HeaderSection>
     </template>
@@ -71,7 +71,7 @@ const expenseItem: Expense[] = getExpenseItem().expenseItem;
           </template>
         </div>
         <v-card class="dashboard-card" elevation="3">
-          <v-card-title class="text-h6 font-weight-medium d-flex align-center">
+          <v-card-title class="text-h6 pt-0 font-weight-bold expense-card-title">
             {{getExpenseItem().sectionName}}
           </v-card-title>
           <ExpenseList :expenses="expenseItem" />
@@ -82,6 +82,9 @@ const expenseItem: Expense[] = getExpenseItem().expenseItem;
 </template>
 
 <style scoped lang="scss">
+.expense-card-title {
+  font-family: var(--v-fontFamily);
+}
 .grid-container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);

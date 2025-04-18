@@ -17,7 +17,7 @@ export const tripInput = (errorMessage: Record<string, string>) => [
       },
       {
         name: "tripDates",
-        label: "Data wycieczki",
+        label: "Termin wycieczki",
         type: InputType.DATE_RANGE,
         placeholder: "dd.mm.rrrr - dd.mm.rrrr",
         validation: getValidator(errorMessage),
