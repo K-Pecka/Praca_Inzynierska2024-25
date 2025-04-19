@@ -14,16 +14,19 @@
         v-model="localRange"
         :label="inputData.config?.edit ? `${inputData.config?.min} - ${inputData.config?.max}` : inputData.placeholder"
         :multiple="inputData.config?.multiple ? 'range' : false"
-        :placeholder= "inputData.placeholder"
+        :placeholder="inputData.placeholder"
         max-width="auto"
         variant="outlined"
-        class="date-range-field"
         prepend-icon=""
         prepend-inner-icon="mdi-calendar"
         bg-color="background"
         @update:modelValue="onRangeChange"
+        color="primary"
+        :clearable="true"
+        header-color="primary"
       />
     </template>
+
     <template v-else>
       <input
         :name="inputData.name"
@@ -36,6 +39,7 @@
         :class="{ error: inputData.error && inputData.error.length > 0 }"
       />
     </template>
+
     <div>
       <span
         v-for="(error, index) in inputData.error"
@@ -48,8 +52,7 @@
 </template>
 
 <script setup lang="ts">
-
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { VDateInput } from "vuetify/labs/components";
 import { Input } from "@/type/interface";
 
@@ -63,11 +66,12 @@ const props = defineProps({
     required: true,
   },
 });
-const emit = defineEmits(["update","updateModel"]);
+const emit = defineEmits(["update", "updateModel"]);
 
 const localRange = ref<string[]>(
   Array.isArray(props.modelValue) ? props.modelValue : []
 );
+
 watch(
   () => props.modelValue,
   (newVal) => {
@@ -76,17 +80,20 @@ watch(
     }
   }
 );
-const updateModel = (event: Event) =>{
+
+const updateModel = (event: Event) => {
   const name = (event.target as HTMLInputElement).name;
   const value = (event.target as HTMLInputElement).value;
-  emit("updateModel",name,value);
-}
+  emit("updateModel", name, value);
+};
+
 function formatDate(date: Date): string {
   const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
 function onRangeChange(value: string[] | string) {
   if (Array.isArray(value) && value.length >= 2) {
     const startDate = formatDate(new Date(value[0]));
@@ -94,7 +101,6 @@ function onRangeChange(value: string[] | string) {
     emit("update", props.inputData.name, `${startDate} - ${endDate}`);
   } else {
     const singleDate = formatDate(new Date(value[0]));
-
     emit("update", props.inputData.name, `${singleDate} - ${singleDate}`);
   }
 }
@@ -102,13 +108,13 @@ function onRangeChange(value: string[] | string) {
 const handleInput = (event: Event) => {
   const name = (event.target as HTMLInputElement).name;
   const value = (event.target as HTMLInputElement).value;
- console.log(props.inputData.error);
   emit("update", name, value);
 };
 </script>
 
 <style scoped lang="scss">
 @use "@/assets/style" as *;
+@use "@/assets/input.scss";
 
 .input-wrapper > input[type="checkbox"] {
   flex-direction: row-reverse;
@@ -160,11 +166,4 @@ span {
   display: block;
 }
 
-:deep(.v-field) {
-  border-radius: 10px;
-}
-
-.date-range-field {
-  background-color: rgba(var(--rgb-secondary-color), 0.9);
-}
 </style>

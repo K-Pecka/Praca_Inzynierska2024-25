@@ -34,15 +34,6 @@ export const registerInput = (errorMessage: Record<string, string>) => [
         error: [],
       },
       {
-        name: "date_of_birth",
-        label: "Data urodzenia:",
-        type: InputType.DATE,
-        placeholder: "Wprowadź date urodzenia",
-        validation: getValidator(errorMessage),
-        config: { required: true },
-        error: [],
-      },
-      {
         name: "password",
         related: ["pass_2"],
         label: "Podaj hasło:",
