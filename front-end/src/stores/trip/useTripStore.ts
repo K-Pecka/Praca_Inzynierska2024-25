@@ -3,15 +3,15 @@ import {useParticipants} from "./useParticipants";
 import {useDashboard} from "./useDashboard";
 import {usePlans} from "./usePlans";
 import {useTrips} from "./useTrips";
-import {useTripMutations} from "./useTripMutations";
+import { useBudget } from "./useBudget";
 
 export const useTripStore = defineStore("trip", () => {
 
   const { getDashboard, getExpenseItem } = useDashboard();
   const { getPlans, yourPlans, planMutationAdd } = usePlans();
-  const { yourTrips, getTripDetails, getTrips } = useTrips();
-  const { tripMutationAdd, tripMutationUpdate, tripMutationBudget } = useTripMutations();
+  const { yourTrips, getTripDetails, getTrips, tripMutationAdd, tripMutationUpdate } = useTrips();
   const { addParticipant, removeParticipant } = useParticipants();
+  const { tripMutationBudget } = useBudget();
 
   return {
     getExpenseItem,

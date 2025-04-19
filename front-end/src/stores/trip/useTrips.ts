@@ -1,5 +1,5 @@
 import {useQuery, useMutation, useQueryClient} from "@tanstack/vue-query";
-import {fetchTrips, fetchTrip, deleteTrip} from "@/api";
+import {fetchTrips, fetchTrip, deleteTrip, createTrip, updateTrip} from "@/api";
 import router from "@/router";
 import {computed} from "vue";
 import {useRoleStore} from "@/stores/auth/useRoleStore";
@@ -37,6 +37,28 @@ export const useTrips = () => {
         },
     });
 
+    const tripMutationAdd = useMutation({
+        mutationFn: createTrip,
+        onSuccess: () => {
+            router.back();
+            notifications.setSuccessCurrentMessage("Dodano wycieczkę");
+        },
+        onError: (err: any) => {
+            notifications.setErrorCurrentMessage(err?.message || "Błąd");
+        },
+    });
+
+    const tripMutationUpdate = useMutation({
+        mutationFn: ({tripId, newData}: { tripId: string; newData: any }) =>
+            updateTrip({tripId}, newData),
+        onSuccess: () => {
+            notifications.setSuccessCurrentMessage("Zaktualizowano wycieczkę");
+        },
+        onError: (err: any) => {
+            notifications.setErrorCurrentMessage(err?.message || "Błąd");
+        },
+    });
+
     const handleDeleteTrip = async (id: string) => {
         try {
             await deleteTripMutation.mutateAsync({tripId: id});
@@ -65,5 +87,5 @@ export const useTrips = () => {
         };
     });
 
-    return {getTrips, getTripDetails, yourTrips};
+    return {getTrips, getTripDetails, yourTrips, tripMutationUpdate, tripMutationAdd};
 };
