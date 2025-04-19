@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import Section from '@/components/common/Section.vue';
 import AppButton from '@/components/budget/AppButton.vue';
 import { useNotificationStore } from '@/stores';
 
-const { setSuccessCurrentMessage } = useNotificationStore();
+const { setSuccessCurrentMessage, setErrorCurrentMessage } = useNotificationStore();
 
 const form = ref({
   name: '',
@@ -12,9 +12,30 @@ const form = ref({
   message: '',
 });
 
+const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/;
+const isEmailValid = (email: string) => emailRegex.test(email);
+
+const isFormValid = computed(() =>
+    form.value.name.trim() !== '' &&
+    form.value.message.trim() !== '' &&
+    isEmailValid(form.value.email)
+);
+
+const nameRules = [(v: string) => !!v || 'Imię jest wymagane'];
+const emailRules = [
+  (v: string) => !!v || 'E‑mail jest wymagany',
+  (v: string) => isEmailValid(v) || 'Niepoprawny adres e‑mail',
+];
+const messageRules = [(v: string) => !!v || 'Wiadomość nie może być pusta'];
+
+
 function handleSubmit() {
+  if (!isFormValid.value) {
+    setErrorCurrentMessage('Uzupełnij poprawnie wszystkie pola, aby wysłać wiadomość.');
+    return;
+  }
   setSuccessCurrentMessage('Dziękujemy za wiadomość! Odpiszemy najszybciej jak to możliwe.');
-  console.log({name: '', email: '', message: ''});
+  console.log(form.value);
 }
 </script>
 
@@ -41,6 +62,7 @@ function handleSubmit() {
             <v-form validate-on="blur lazy" @submit.prevent="handleSubmit" class="form-wrapper">
               <v-text-field
                   v-model="form.name"
+                  :rules="nameRules"
                   label="Imię"
                   variant="outlined"
                   required
@@ -49,6 +71,7 @@ function handleSubmit() {
               />
               <v-text-field
                   v-model="form.email"
+                  :rules="emailRules"
                   label="E‑mail"
                   type="email"
                   variant="outlined"
@@ -58,6 +81,7 @@ function handleSubmit() {
               />
               <v-textarea
                   v-model="form.message"
+                  :rules="messageRules"
                   label="Wiadomość"
                   variant="outlined"
                   rows="4"
@@ -65,7 +89,7 @@ function handleSubmit() {
                   bg-color="background"
                   density="comfortable"
               />
-              <AppButton size="md" variant="primary" type="submit" class="mt-4">Wyślij</AppButton>
+              <AppButton size="md" variant="primary" type="submit" class="mt-4" :disabled="!isFormValid">Wyślij</AppButton>
             </v-form>
           </v-col>
         </v-row>
