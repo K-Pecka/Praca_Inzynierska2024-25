@@ -27,6 +27,7 @@ h3{
 h1{
   font-size: 2rem;
   font-family: var(--v-fontFamily);
+  color: rgb(var(--v-theme-primary));
 }
 
 @media (max-width: 600px) {

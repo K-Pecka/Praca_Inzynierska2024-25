@@ -2,66 +2,72 @@
 import AppButton from "@/components/budget/AppButton.vue";
 import { PricingCard } from "@/type/interface";
 
-defineProps<PricingCard>();
+const props = defineProps<PricingCard>();
+console.log("PricingCard", props);
 </script>
 
 <template>
-  <div class="pricing-card" :class="buttonVariant">
-    <h2 class="pricing-card__name">{{ name }}</h2>
-    <p class="pricing-card__price">{{ price }}</p>
+  <v-card
+    :class="['pricing-card', contentVariant ?? buttonVariant]"
+    class="d-flex flex-column align-center pa-6"
+    :style="{ width: '280px' }"
+    elevation="4"
+  >
+    <v-card-title
+      class="pricing-card__name text-h6 font-weight-bold text-center"
+    >
+      {{ name }}
+    </v-card-title>
 
-    <ul class="pricing-card__features">
-      <li v-for="(feature, idx) in features" :key="idx">
-        <v-icon size="22" class="checkmark">mdi-check</v-icon>
+    <v-card-subtitle
+      class="pricing-card__price text-center text-subtitle-2 mb-6"
+    >
+      {{ price }}
+    </v-card-subtitle>
+
+    <v-list class="pricing-card__features mb-8" style="background-color: transparent; box-shadow: none;">
+      <v-list-item
+        v-for="(feature, idx) in features"
+        :key="idx"
+        class="justify-center py-1"
+        
+      >
+        <v-icon size="22" class="checkmark me-2">mdi-check</v-icon>
         <span>{{ feature }}</span>
-      </li>
-    </ul>
+      </v-list-item>
+    </v-list>
 
     <AppButton :variant="buttonVariant">Wybierz</AppButton>
-  </div>
+  </v-card>
 </template>
 
 <style scoped lang="scss">
 .pricing-card {
-  background-color: rgba(var(--v-theme-secondary),0.3);
-  padding: 2rem 1.5rem;
+  background-color: rgba(var(--v-theme-secondary), 0.3);
   border-radius: 20px;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   text-align: center;
   transition: transform 0.3s ease;
-  width: 280px;
 
   &.primary {
-    background-color: rgba(var(--v-theme-primary),0.6);
+    background-color: rgba(var(--v-theme-primary), 0.6);
     color: white;
-    transform: scale(1);
 
     .checkmark {
       color: rgb(var(--v-theme-secondary));
     }
-
   }
 
   &.secondary {
-    background-color: rgba(var(--v-theme-secondary),0.8);
-    transform: scale(1);
+    background-color: rgba(var(--v-theme-secondary), 0.8);
 
     .checkmark {
       color: rgb(var(--v-theme-primary));
-    }
-    .app-button {
-      background-color: rgba(var(--v-theme-primary), 0.15);
-      color: rgb(var(--v-theme-primary));
-      &:hover {
-        background-color: rgba(var(--v-theme-primary), 0.25);
-      }
     }
   }
 
   &__name {
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
-    font-weight: bold;
   }
 
   &__price {
@@ -72,13 +78,10 @@ defineProps<PricingCard>();
   &__features {
     list-style: none;
     padding: 0;
-    margin-bottom: 2rem;
 
-    li {
-      margin: 0.5rem 0;
+    .v-list-item {
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 0.5rem;
       font-size: 1rem;
     }

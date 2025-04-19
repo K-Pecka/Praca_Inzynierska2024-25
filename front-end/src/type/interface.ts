@@ -169,6 +169,7 @@ export interface PricingCard {
   price: string;
   features: string[];
   buttonVariant?: "primary" | "secondary";
+  contentVariant?: "primary" | "secondary";
 }
 export interface InvateUser{
   id:string,

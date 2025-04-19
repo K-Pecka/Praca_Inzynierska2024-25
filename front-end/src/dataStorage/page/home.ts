@@ -93,18 +93,19 @@ export const pricingPlans = [
     name: "Podstawowy",
     price: "Darmowy",
     features: ["Tekst", "Tekst", "Tekst"],
-    buttonVariant: "secondary" as "secondary",
+    buttonVariant: "primary" as "primary",
   },
   {
     name: "Turysta",
     price: "15.0 zł / miesiąc",
     features: ["Tekst", "Tekst", "Tekst"],
+    contentVariant: "secondary" as "secondary",
     buttonVariant: "primary" as "primary",
   },
   {
     name: "Podróżnik",
     price: "40.0 zł / miesiąc",
     features: ["Tekst", "Tekst", "Tekst"],
-    buttonVariant: "secondary" as "secondary",
+    buttonVariant: "primary" as "primary",
   },
 ];

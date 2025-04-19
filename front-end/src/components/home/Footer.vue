@@ -106,7 +106,10 @@ const lastModifiedDate = formatDate(new Date(lastModified));
       }
       @media (max-width: 600px) {
         ul {
-          gap: 0.25rem;
+          flex-direction: column;
+          gap: 0.5rem;
+          padding: 0;
+          margin: 0;
         }
       }
       li {
