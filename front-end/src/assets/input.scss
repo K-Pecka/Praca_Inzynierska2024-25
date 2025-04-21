@@ -1,17 +1,12 @@
-
-  .v-date-picker-controls__month-btn .v-btn__content {
-    color: rgb(var(--v-theme-primary));
-    font-weight: 600;
-  }
-  .v-picker__actions__date-picker > .v-btn__content {
-    color: rgb(var(--v-theme-primary));
-    background-color: rgb(var(--v-theme-primary));
-  }
-
-  
-  .v-date-picker .v-date-picker-controls__month-btn .v-btn__content {
-    color: rgb(var(--v-theme-primary));
-    font-weight: 600;
-  }
-  
-
+.v-date-picker-controls__month-btn .v-btn__content {
+  color: rgb(var(--v-theme-primary));
+  font-weight: 600;
+}
+.v-picker__actions__date-picker > .v-btn__content {
+  color: rgb(var(--v-theme-primary));
+  background-color: rgb(var(--v-theme-primary));
+}
+.v-date-picker .v-date-picker-controls__month-btn .v-btn__content {
+  color: rgb(var(--v-theme-primary));
+  font-weight: 600;
+}

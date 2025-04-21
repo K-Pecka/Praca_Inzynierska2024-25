@@ -1,4 +1,4 @@
-import { apiEndpoints, fetchData, setParam } from "../apiEndpoints";
+import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
 import { APP_MODE_DEV } from "@/config/envParams";
 import { Activity } from "@/type";
 export const createActivity = async (newActivity:Activity,param: Record<string, string>={}) => {

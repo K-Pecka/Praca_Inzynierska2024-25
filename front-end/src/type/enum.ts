@@ -20,3 +20,6 @@ export enum Role {
   GUIDE = "guide",
   ADMIN = "admin",
 }
+export enum TypeOfButton{
+  TRIP = 'trip',
+}

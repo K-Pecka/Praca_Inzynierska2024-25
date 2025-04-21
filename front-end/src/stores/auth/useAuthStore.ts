@@ -12,7 +12,7 @@ import {
     fetchVerify,
     fetchLogOut,
     fetchPermission,
-} from "@/api/auth";
+} from "@/api/endpoints/auth";
 import { useMockupStore } from '@/mockup/useMockupStore';
 
 export const useAuthStore = defineStore(

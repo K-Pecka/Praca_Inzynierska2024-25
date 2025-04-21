@@ -1,4 +1,4 @@
-import { apiEndpoints, fetchData, setParam } from "../apiEndpoints";
+import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
 import { Ticket, NewTrip } from "@/type/interface";
 
 export const createPlan = async (

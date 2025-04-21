@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useMutation, useQuery } from "@tanstack/vue-query";
-import { createActivity } from "@/api/trip/activity";
+import { createActivity } from "@/api/endpoints/trip/activity";
 import { useNotificationStore } from "@/stores";
-import { fetchActivity } from "@/api/trip/activity";
+import { fetchActivity } from "@/api/endpoints/trip/activity";
 import router from "@/router";
 
 export interface Activity {

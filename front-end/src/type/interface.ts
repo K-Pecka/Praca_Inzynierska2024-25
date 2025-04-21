@@ -1,5 +1,6 @@
 import { Validator } from "@/utils/validator/validation";
 import { NavigationFailure } from "vue-router";
+import { TypeOfButton } from "./enum";
 
 export interface TOKEN {
   refresh?: string;
@@ -47,6 +48,7 @@ export interface DashboardBox {
 }
 
 export interface Button {
+  type: TypeOfButton;
   title: string;
   class: String[];
   onclick: (id: string) => Promise<void> | void;
@@ -69,11 +71,10 @@ export interface Budget {
   trip: number;
 }
 export interface Btn {
-  actions: {
+    type: TypeOfButton;
     title: string;
     class: String[];
     onclick: (id: string) => Promise<void> | void;
-  }[];
 }
 
 export interface Phrase {

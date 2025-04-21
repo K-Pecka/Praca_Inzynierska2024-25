@@ -3,7 +3,7 @@ import { setActivePinia, createPinia } from 'pinia';
 import { useAuthStore } from '@/stores';
 import { useNotificationStore } from '@/stores/ui/useNotificationStore';
 import router from '@/router';
-import { fetchVerify, fetchRefreshToken, loginFetch, registerFetch } from '@/api/auth';
+import { fetchVerify, fetchRefreshToken, loginFetch, registerFetch } from '@/api/endpoints/auth';
 
 vi.mock('@/api/auth', async () => {
   return {
