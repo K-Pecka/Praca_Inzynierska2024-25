@@ -8,6 +8,7 @@ import {
   tripInput,
   budgetInput,
   getMoreOptions,
+  profileInput,
 } from "@/dataStorage/index";
 import { computed, ref } from "vue";
 import { useAuthStore,useNotificationStore } from "@/stores";
@@ -33,12 +34,16 @@ export const useFormStore = defineStore("form", () => {
 
   const getBudgetInputs = (): Input[] => budgetInput(getErrorMessages());
 
+  const getProfileInputs = (): Input[] =>
+      profileInput(getErrorMessages({ isEqual: extraValidationMessages.isEqual }));
+
   const formInputGenerators: Record<FormType, () => Input[]> = {
     [FormType.LOGIN]: getLoginInputs,
     [FormType.REGISTER]: getRegisterInputs,
     [FormType.PLAN]: getPlanInputs,
     [FormType.TRIP]: getTripInputs,
     [FormType.BUDGET]: getBudgetInputs,
+    [FormType.PROFILE]: getProfileInputs,
   };
   const getFormInputs = (type: FormType): Input[] =>
     formInputGenerators[type]?.() ?? [];

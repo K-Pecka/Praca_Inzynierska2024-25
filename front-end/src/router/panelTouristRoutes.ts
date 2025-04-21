@@ -4,7 +4,7 @@ import {
   Panel, RoleSelection, TripDashboard, YourTrip, YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm, ActivityView,
   PlanForm, TripForm, BudgetForm
 } from "@/views/panel";
-
+import { AccountSettings } from "@/views/account";
 import { Role } from "@/type/enum";
 
 const panelRoutes: RouteRecordRaw = {
@@ -14,6 +14,7 @@ const panelRoutes: RouteRecordRaw = {
   meta: { title: "Panel", requiresAuth: true },
   children: [
     { path: "", name: "roleSelection", component: RoleSelection },
+    { path: "account-settings", name: "AccountSettings", component: AccountSettings },
 
     { path: "trips", name: "yourTrip", component: YourTrip },
     { path: "trip/:tripId", name: "tripDashboard", component: TripDashboard },
