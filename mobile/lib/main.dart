@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'features/auth/start_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'features/auth/screens/start_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,6 +17,16 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Quicksand',
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: const Locale('pl', 'PL'),
+      supportedLocales: const [
+        Locale('pl', 'PL'),
+        Locale('en', 'US'),
+      ],
       home: const StartScreen(),
     );
   }

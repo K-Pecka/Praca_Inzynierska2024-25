@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/core/widgets/auth_widgets.dart';
+import '../widgets/auth_widgets.dart';
 import 'login_screen.dart';
 
 class StartScreen extends StatelessWidget {

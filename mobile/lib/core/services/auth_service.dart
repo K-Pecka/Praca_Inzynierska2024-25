@@ -12,7 +12,6 @@ class AuthService {
     final headers = {
       'accept': 'application/json',
       'Content-Type': 'application/json',
-      'X-CSRFTOKEN': 'emQDUV5mbHvU0I7yKcVmQEyCwv5xrgqPZWnipscqu7sYR152wgYrPtvW1Jj1wJYK',
     };
 
     final body = jsonEncode({

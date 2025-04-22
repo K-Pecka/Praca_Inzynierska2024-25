@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import '/core/widgets/auth_widgets.dart';
+import 'package:http/http.dart' as http;
+import '../../../core/widgets/bottom_navigation_scaffold.dart';
+import '../widgets/auth_widgets.dart';
 import '/core/services/auth_service.dart';
-import '../dashboard/tourist_dashboard.dart';
 
 class TouristLoginScreen extends StatefulWidget {
   const TouristLoginScreen({super.key});
@@ -23,13 +25,41 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
         password: _passwordController.text,
       );
 
-      final token = response['access']; // zakładamy, że API zwraca 'access'
-      if (token == null) throw Exception("Brak tokena w odpowiedzi");
+      final token = response['access'];
+      final profiles = response['profiles'] as List<dynamic>;
+      final profileId = profiles.isNotEmpty ? profiles[0]['id'] : null;
+
+      if (token == null || profileId == null) {
+        throw Exception("Brak tokena lub ID profilu");
+      }
+
+      // pobierz pierwszą wycieczkę
+      final tripResponse = await http.get(
+        Uri.parse('https://api.plannder.com/trip/all/'),
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (tripResponse.statusCode != 200) {
+        throw Exception("Nie udało się pobrać listy wycieczek");
+      }
+
+      final trips = List<Map<String, dynamic>>.from(
+          jsonDecode(tripResponse.body) as List<dynamic>);
+      if (trips.isEmpty) throw Exception("Brak wycieczek");
+
+      final tripId = trips.first['id'];
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => TouristDashboard(token: token),
+          builder: (context) => BottomNavScaffold(
+            token: token,
+            userProfileId: profileId,
+            tripId: tripId,
+          ),
         ),
       );
     } catch (e) {
@@ -70,7 +100,8 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
                       'powrót',
                       style: TextStyle(
                         fontFamily: 'Quicksand',
-                        fontSize: 14,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                         color: Color(0xFF7C4DFF),
                       ),
                     ),

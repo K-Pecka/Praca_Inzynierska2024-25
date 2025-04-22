@@ -4,9 +4,9 @@ Widget buildTitle(String text) {
   return Text(
     text,
     style: const TextStyle(
-      fontSize: 18,
+      fontSize: 26,
       fontFamily: 'Quicksand',
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
       color: Colors.black87,
     ),
   );
@@ -42,9 +42,9 @@ Widget buildChooseProfileButtons({
             'Turysta',
             style: TextStyle(
               fontFamily: 'Quicksand',
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black54,
             ),
           ),
         ),
@@ -65,9 +65,9 @@ Widget buildChooseProfileButtons({
             'Przewodnik',
             style: TextStyle(
               fontFamily: 'Quicksand',
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black54,
             ),
           ),
         ),
@@ -92,18 +92,42 @@ Widget buildTouristLoginForm({
       children: [
         TextField(
           controller: emailController,
+          style: TextStyle(
+            fontFamily: 'Quicksand',
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.black54,
+          ),
           decoration: InputDecoration(
             labelText: 'Email',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            labelStyle: TextStyle(
+              fontFamily: 'Quicksand',
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black54,
+            ),
           ),
         ),
         const SizedBox(height: 16),
         TextField(
           controller: passwordController,
           obscureText: true,
+          style: TextStyle(
+            fontFamily: 'Quicksand',
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.black54,
+          ),
           decoration: InputDecoration(
             labelText: 'Hasło',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            labelStyle: TextStyle(
+              fontFamily: 'Quicksand',
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black54,
+            ),
           ),
         ),
         const SizedBox(height: 24),
@@ -118,17 +142,18 @@ Widget buildTouristLoginForm({
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
-            child: isLoading
-                ? const CircularProgressIndicator(color: Colors.white)
-                : const Text(
-              'Zaloguj',
-              style: TextStyle(
-                fontFamily: 'Quicksand',
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            child:
+                isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text(
+                      'Zaloguj',
+                      style: TextStyle(
+                        fontFamily: 'Quicksand',
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
           ),
         ),
       ],

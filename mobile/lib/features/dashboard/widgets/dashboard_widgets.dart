@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '/core/models/trip_model.dart';
+import '/core/theme/text_styles.dart';
+import '/core/theme/icons.dart'; // <--- dodane
 
 class TripDropdownCard extends StatelessWidget {
   final List<TripModel> trips;
@@ -25,11 +28,9 @@ class TripDropdownCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/icons/location.png',
-            height: 36,
-            width: 36,
-            color: const Color(0xB32F27CE),
+          ColorFiltered(
+            colorFilter: const ColorFilter.mode(Color(0xB32F27CE), BlendMode.srcIn),
+            child: SizedBox(width: 32, height: 32, child: AppIcons.location),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -54,17 +55,12 @@ class TripDropdownCard extends StatelessWidget {
                     children: [
                       const Text(
                         'Obecna wycieczka',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black54,
-                          fontFamily: 'Quicksand',
-                        ),
+                        style: TextStyles.cardTitleHeading,
                       ),
                       Text(
                         trip.name,
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: Colors.black87,
                           fontFamily: 'Quicksand',
@@ -81,7 +77,7 @@ class TripDropdownCard extends StatelessWidget {
                       child: Text(
                         trip.name,
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 18,
                           fontWeight: FontWeight.w500,
                           color: Colors.black87,
                         ),
@@ -127,21 +123,14 @@ class TripDetailsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image.asset(
-                'assets/icons/map.png',
-                height: 36,
-                width: 36,
-                color: const Color(0xB32F27CE),
+              ColorFiltered(
+                colorFilter: const ColorFilter.mode(Color(0xB32F27CE), BlendMode.srcIn),
+                child: SizedBox(width: 32, height: 32, child: AppIcons.map),
               ),
               const SizedBox(width: 8),
               const Text(
                 'O Wycieczce',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black54,
-                  fontFamily: 'Quicksand',
-                ),
+                style: TextStyles.cardTitleHeading,
               ),
             ],
           ),
@@ -149,7 +138,7 @@ class TripDetailsCard extends StatelessWidget {
           Text(
             trip.name,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
@@ -161,7 +150,8 @@ class TripDetailsCard extends StatelessWidget {
               Text(
                 '$start - $end',
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                   color: Colors.black54,
                 ),
               ),
@@ -175,7 +165,7 @@ class TripDetailsCard extends StatelessWidget {
                   '$duration dni',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -187,3 +177,4 @@ class TripDetailsCard extends StatelessWidget {
     );
   }
 }
+
