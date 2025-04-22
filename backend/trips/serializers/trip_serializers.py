@@ -61,7 +61,7 @@ class TripCreateSerializer(serializers.ModelSerializer):
 class TripRetrieveSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True)
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = UserProfileListSerializer(read_only=True, many=True)
+    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     pending_members = serializers.SerializerMethodField()
     start_date = serializers.DateField(read_only=True)
     end_date = serializers.DateField(read_only=True)
@@ -86,7 +86,7 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
 
 class TripListSerializer(TripRetrieveSerializer):
     id = serializers.IntegerField(read_only=True)
-    members = UserProfileListSerializer(read_only=True, many=True)
+    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     class Meta:
         model = Trip
         fields = ['id', 'name', 'creator', 'members',  'start_date', 'end_date']

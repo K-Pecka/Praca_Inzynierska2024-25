@@ -8,7 +8,7 @@ class UserProfileListSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(
         read_only=True
     )
-    type = UserProfileTypeRetrieveSerializer(
+    type = serializers.PrimaryKeyRelatedField(
         read_only=True
     )
     email = serializers.EmailField(
@@ -24,7 +24,7 @@ class UserProfileListJWTSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(
         read_only=True
     )
-    type = UserProfileTypeRetrieveSerializer(
+    type = serializers.PrimaryKeyRelatedField(
         read_only=True
     )
     is_default = serializers.BooleanField(

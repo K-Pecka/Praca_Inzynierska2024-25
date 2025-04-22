@@ -19,12 +19,12 @@ class ExpenseTypeRetrieveSerializer(serializers.ModelSerializer):
 class ExpenseRetrieveSerializer(serializers.ModelSerializer):
     title = serializers.CharField(read_only=True)
     amount = serializers.DecimalField(read_only=True, max_digits=10, decimal_places=2)
-    currency = CurrencyRetrieveSerializer(read_only=True)
+    currency = serializers.PrimaryKeyRelatedField(read_only=True)
     date = serializers.DateField(read_only=True, format="%d.%m.%Y")
     note = serializers.CharField(read_only=True)
-    trip = TripRetrieveSerializer(read_only=True)
-    user = UserRetrieveSerializer(read_only=True)
-    category = ExpenseTypeRetrieveSerializer(read_only=True)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    category = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Expense
@@ -36,12 +36,12 @@ class ExpenseListSerializer(serializers.ModelSerializer):
     id  = serializers.IntegerField(read_only=True)
     title = serializers.CharField(read_only=True)
     amount = serializers.DecimalField(read_only=True, max_digits=10, decimal_places=2)
-    currency = CurrencyRetrieveSerializer(read_only=True)
+    currency = serializers.PrimaryKeyRelatedField(read_only=True)
     date = serializers.DateField(read_only=True, format="%d.%m.%Y")
     note = serializers.CharField(read_only=True)
-    trip = TripRetrieveSerializer(read_only=True)
-    user = UserRetrieveSerializer(read_only=True)
-    category = ExpenseTypeRetrieveSerializer(read_only=True)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    category = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Expense

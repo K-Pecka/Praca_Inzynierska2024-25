@@ -8,12 +8,12 @@ from itineraries.serializers.itinerary_serializers import ItineraryRetrieveSeria
 class ItineraryActivityRetrieveSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True, max_length=100)
-    type = ItineraryActivityTypeRetrieveSerializer(read_only=True)
+    type = serializers.PrimaryKeyRelatedField(read_only=True)
     description = serializers.CharField(read_only=True, max_length=5120)
     location = serializers.CharField(read_only=True, max_length=100)
     start_time = serializers.TimeField(read_only=True)
     duration = serializers.IntegerField(read_only=True)
-    itinerary = ItineraryRetrieveSerializer(read_only=True)
+    itinerary = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = ItineraryActivity
@@ -22,12 +22,12 @@ class ItineraryActivityRetrieveSerializer(serializers.ModelSerializer):
 
 class ItineraryActivityListSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True, max_length=100)
-    type = ItineraryActivityTypeListSerializer(read_only=True)
+    type = serializers.PrimaryKeyRelatedField(read_only=True)
     description = serializers.CharField(read_only=True, max_length=5120)
     location = serializers.CharField(read_only=True, max_length=100)
     start_time = serializers.TimeField(read_only=True)
     duration = serializers.IntegerField(read_only=True)
-    itinerary = ItineraryRetrieveSerializer(read_only=True)
+    itinerary = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = ItineraryActivity
