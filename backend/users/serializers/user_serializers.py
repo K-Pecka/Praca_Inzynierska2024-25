@@ -57,10 +57,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data['is_active'] = False
-
         validated_data['password'] = make_password(validated_data['password'])
+
         with transaction.atomic():
-            user = super().create(validated_data)
+            user, created = CustomUser.objects.get_or_create(
+                email=validated_data['email'],
+                defaults=validated_data
+            )
 
             uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
@@ -73,7 +76,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
             except Exception as e:
                 raise serializers.ValidationError({"error": f"Błąd przy tworzeniu użytkownika {e}"})
 
+            if user.is_guest:
+                return user.register_guest_account(validated_data)
+
             return user
+
+
 
     def send_confirmation_email(self, user, confirmation_link):
         subject = 'Potwierdź swój adres email.'

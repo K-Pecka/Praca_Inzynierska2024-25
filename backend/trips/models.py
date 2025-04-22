@@ -101,15 +101,11 @@ class Trip(BaseModel):
 
 class TripAccessToken(BaseModel):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="access_tokens")
-    token = models.CharField(max_length=24, verbose_name=_("Token"), help_text=_("Token"))
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    token = models.CharField(max_length=24, verbose_name=_("Token"), help_text=_("Token"), unique=True)
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="trip_access_tokens")
     is_pending = models.BooleanField(default=True, verbose_name=_("Czy oczekujący"), help_text=_("Czy oczekujący"))
 
     objects = TripAccessTokenManager()
-
-    @classmethod
-    def generate_token(cls):
-        return secrets.token_urlsafe(18)[:24]
 
     def generate_new_token(self):
         self.token = self.generate_token()
@@ -120,6 +116,17 @@ class TripAccessToken(BaseModel):
         self.is_pending = not self.is_pending
         self.save(update_fields=['is_pending'])
         return self.is_pending
+
+    @classmethod
+    def generate_token(cls):
+        return secrets.token_urlsafe(18)[:24]
+
+    @classmethod
+    def get_token_by_profile(cls, profile):
+        try:
+            return cls.objects.get(user_profile=profile)
+        except cls.DoesNotExist:
+            return None
 
     def __str__(self):
         return f"{self.trip} - {self.token}"

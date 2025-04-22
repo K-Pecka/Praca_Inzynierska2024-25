@@ -75,6 +75,16 @@ class CustomUser(AbstractBaseUser, BaseModel):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
+    def register_guest_account(self, data):
+        """
+        Register a guest account.
+        """
+        if not self.is_guest:
+            raise ValueError("Nieprawidłowy typ konta.")
+        self.password = data["password"]
+
+        self.save()
+
     @classmethod
     def create_guest_account(cls, name, email):
         try:
