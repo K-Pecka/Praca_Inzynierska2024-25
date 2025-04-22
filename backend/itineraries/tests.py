@@ -25,7 +25,6 @@ class ItineraryAPITestCase(TestCase):
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
-            date_of_birth="19000101",
             first_name="Test",
             last_name="User",
         )
@@ -180,7 +179,6 @@ class ItineraryActivityAPITestCase(TestCase):
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
-            date_of_birth="19000101",
             first_name="Test",
             last_name="User",
         )

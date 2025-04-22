@@ -4,7 +4,7 @@ Permission configuration for server project.
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import BasePermission
-from chats.models import Chatroom, ChatMessage
+from chats.models import Chatroom, Message
 from trips.models import Trip, Ticket
 from itineraries.models import Itinerary, ItineraryActivity
 
@@ -49,7 +49,7 @@ class IsParticipantForChatroom(BasePermission):
         if not profile:
             return False
 
-        trip_related_objects = (Chatroom, ChatMessage)
+        trip_related_objects = (Chatroom, Message)
 
         for obj_type in trip_related_objects:
             if isinstance(obj, obj_type):
@@ -80,12 +80,12 @@ class IsParticipantForChatroom(BasePermission):
         if isinstance(obj, Chatroom):
             return obj.creator == profile or profile in obj.members.all()
 
-        elif isinstance(obj, ChatMessage):
+        elif isinstance(obj, Message):
             return obj.chatroom.creator == profile or profile in obj.chatroom.members.all()
         return False
 
 
-class IsCreatorForChatMessage(BasePermission):
+class IsCreatorForMessage(BasePermission):
     """
     Custom permission to check if the user is the creator for the chat message.
     """
@@ -97,7 +97,7 @@ class IsCreatorForChatMessage(BasePermission):
         except Exception:
             return False
 
-        if isinstance(obj, ChatMessage):
+        if isinstance(obj, Message):
             profile = request.user.get_default_profile()
             if not profile:
                 return False
@@ -153,7 +153,7 @@ class IsTripParticipant(BasePermission):
             return obj
         elif isinstance(obj, Chatroom):
             return obj.trip
-        elif isinstance(obj, ChatMessage):
+        elif isinstance(obj, Message):
             return obj.chatroom.trip
         elif isinstance(obj, Ticket):
             return obj.trip
@@ -226,7 +226,7 @@ class IsTripCreator(BasePermission):
             return obj.creator == profile
         if isinstance(obj, Chatroom):
             return obj.trip.creator == profile
-        if isinstance(obj, ChatMessage):
+        if isinstance(obj, Message):
             return obj.chatroom.trip.creator == profile
         if isinstance(obj, Ticket):
             return obj.trip.creator == profile

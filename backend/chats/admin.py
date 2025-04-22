@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from chats.models import Chatroom, ChatMessage
+from chats.models import Chatroom, Message
 from dicts.helpers import get_admin_change_link
 
 
@@ -23,10 +23,10 @@ class ChatroomAdmin(admin.ModelAdmin):
     get_members_link.short_description = 'Members'
 
 
-@admin.register(ChatMessage)
-class ChatMessageAdmin(admin.ModelAdmin):
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
     list_select_related = ("profile", "chatroom")
-    list_display = ("pk", "text", "get_profile_link", "get_chatroom_link")
+    list_display = ("pk", "content", "get_profile_link", "get_chatroom_link")
 
     def get_profile_link(self, obj):
         return get_admin_change_link(obj.profile)

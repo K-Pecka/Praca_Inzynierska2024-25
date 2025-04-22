@@ -15,7 +15,7 @@ class ChatroomManager(models.Manager):
         return self.filter(Q(creator=profile) | Q(members=profile)).distinct()
 
 
-class ChatMessageManager(models.Manager):
+class MessageManager(models.Manager):
     def by_chatroom_pk(self, room_pk):
         try:
             return self.get(chatroom=room_pk)

@@ -1,9 +1,13 @@
+import json
+
+from channels.generic.websocket import AsyncWebsocketConsumer
+
 from django.db import models
 
 from django.utils.translation import gettext_lazy as _
 
 from chats.choices import ChatroomType
-from chats.managers import ChatroomManager, ChatMessageManager
+from chats.managers import ChatroomManager, MessageManager
 from dicts.models import BaseModel
 from users.models import UserProfile
 from trips.models import Trip
@@ -56,15 +60,15 @@ class Chatroom(BaseModel):
         ordering = ["-created_at"]
 
 
-class ChatMessage(BaseModel):
-    text = models.TextField(
+class Message(BaseModel):
+    content = models.TextField(
         max_length=512,
         verbose_name=_("Nazwa"), help_text=_("Nazwa")
     )
     profile = models.ForeignKey(
         UserProfile,
         on_delete=models.PROTECT,
-        related_name="chat_messages",
+        related_name="messages",
         verbose_name=_("Autor wiadomości"), help_text=_("Autor wiadomości")
     )
     file = models.FileField(
@@ -75,14 +79,53 @@ class ChatMessage(BaseModel):
     chatroom = models.ForeignKey(
         Chatroom,
         on_delete=models.CASCADE,
-        related_name="chat_messages",
+        related_name="messages",
         verbose_name=_("Pokój do czatowania"), help_text=_("Pokój do czatowania")
     )
 
-    objects = ChatMessageManager()
+    objects = MessageManager()
 
     class Meta:
-        db_table = "chat_messages"
+        db_table = "messages"
         verbose_name = "Wiadomość czatu"
         verbose_name_plural = "Wiadomości czatu"
         ordering = ["-created_at"]
+
+
+class ChatConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.room_id = self.scope['url_route']['kwargs']['room_id']
+        self.room_group_name = f"chat_{self.room_id}"
+
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        message = data["message"]
+        username = data["username"]
+
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "chat_message",
+                "message": message,
+                "username": username,
+            }
+        )
+
+    async def chat_message(self, event):
+        await self.send(text_data=json.dumps({
+            "message": event["message"],
+            "username": event["username"],
+        }))
+

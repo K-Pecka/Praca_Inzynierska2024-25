@@ -19,11 +19,10 @@ class UserRetrieveSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(read_only=True)
     first_name = serializers.CharField(read_only=True)
     last_name = serializers.CharField(read_only=True)
-    date_of_birth = serializers.DateField(read_only=True)
 
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name', 'date_of_birth']
+        fields = ['email', 'first_name', 'last_name']
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -31,11 +30,10 @@ class UserListSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(read_only=True)
     first_name = serializers.CharField(read_only=True)
     last_name = serializers.CharField(read_only=True)
-    date_of_birth = serializers.DateField(read_only=True)
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'first_name', 'last_name', 'date_of_birth']
+        fields = ['id', 'email', 'first_name', 'last_name']
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -87,14 +85,14 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name', 'date_of_birth', 'password']
+        fields = ['email', 'first_name', 'last_name', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'first_name', 'last_name', 'date_of_birth']
+        fields = ['id', 'email', 'first_name', 'last_name']
         read_only_fields = ['id']
 
 

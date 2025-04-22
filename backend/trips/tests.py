@@ -24,7 +24,6 @@ class BudgetAPITestCase(TestCase):
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
-            date_of_birth="19000101",
             first_name="Test",
             last_name="User",
         )
@@ -86,7 +85,6 @@ class ExpenseAPITestCase(TestCase):
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
-            date_of_birth="19000101",
             first_name="Test",
             last_name="User",
         )
@@ -212,7 +210,6 @@ class TicketAPITestCase(TestCase):
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
-            date_of_birth="19900101",
             first_name="Test",
             last_name="User",
         )

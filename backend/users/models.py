@@ -32,11 +32,6 @@ class CustomUser(AbstractBaseUser, BaseModel):
         verbose_name=_("Nazwisko"),
         help_text=_("Nazwisko użytkownika")
     )
-    date_of_birth = models.DateField(
-        blank=True, null=True,
-        verbose_name=_("Data urodzenia"),
-        help_text=_("Data urodzenia")
-    )
     is_guest = models.BooleanField(
         default=False,
         verbose_name=_("Czy gość"),

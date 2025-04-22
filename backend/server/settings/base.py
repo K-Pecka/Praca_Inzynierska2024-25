@@ -10,7 +10,18 @@ load_dotenv()
 
 TRIP_JOINING_PAGE = "https://plannder.com/trip/invite/"
 
+ASGI_APPLICATION = "server.asgi.application"
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # Application definition
 
@@ -32,6 +43,7 @@ OWN_ADDITIONAL_APPS = [
     'user_auth',
     'itineraries',
     'chats',
+    'channels',
 ]
 
 INSTALLED_APPS = [

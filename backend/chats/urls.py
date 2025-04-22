@@ -1,7 +1,7 @@
 from django.urls import path
 
-from chats.views.chat_message_views import ChatMessageCreateAPIView, ChatMessageRetrieveAPIView, ChatMessageListAPIView, \
-    ChatMessageUpdateAPIView, ChatMessageDestroyAPIView
+from chats.views.message_views import MessageCreateAPIView, MessageRetrieveAPIView, MessageListAPIView, \
+    MessageUpdateAPIView, MessageDestroyAPIView
 from chats.views.chatroom_views import ChatroomCreateAPIView, ChatroomRetrieveAPIView, ChatroomListAPIView, \
     ChatroomUpdateAPIView, ChatroomDestroyAPIView
 
@@ -13,10 +13,10 @@ urlpatterns = [
     path('update/', ChatroomUpdateAPIView.as_view(), name='chatroom-update'),
     path('delete/', ChatroomDestroyAPIView.as_view(), name='chatroom-delete'),
 
-    # ChatMessage URLs
-    path('<int:room_pk>/chat-message/create/', ChatMessageCreateAPIView.as_view(), name='chat-message-create'),
-    path('<int:room_pk>/chat-message/<int:pk>/', ChatMessageRetrieveAPIView.as_view(), name='chat-message-retrieve'),
-    path('<int:room_pk>/chat-message/all/', ChatMessageListAPIView.as_view(), name='chat-message-list'),
-    path('<int:room_pk>/chat-message/<int:pk>/update/', ChatMessageUpdateAPIView.as_view(), name='chat-message-update'),
-    path('<int:room_pk>/chat-message/<int:pk>/delete/', ChatMessageDestroyAPIView.as_view(), name='chat-message-delete'),
+    # Message URLs
+    path('<int:room_pk>/chat-message/create/', MessageCreateAPIView.as_view(), name='chat-message-create'),
+    path('<int:room_pk>/chat-message/<int:pk>/', MessageRetrieveAPIView.as_view(), name='chat-message-retrieve'),
+    path('<int:room_pk>/chat-message/all/', MessageListAPIView.as_view(), name='chat-message-list'),
+    path('<int:room_pk>/chat-message/<int:pk>/update/', MessageUpdateAPIView.as_view(), name='chat-message-update'),
+    path('<int:room_pk>/chat-message/<int:pk>/delete/', MessageDestroyAPIView.as_view(), name='chat-message-delete'),
 ]
