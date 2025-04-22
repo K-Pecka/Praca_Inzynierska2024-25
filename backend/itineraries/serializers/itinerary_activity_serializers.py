@@ -1,8 +1,6 @@
 from rest_framework import serializers
 
 from itineraries.models import Itinerary, ItineraryActivity, ItineraryActivityType
-from itineraries.serializers.itinerary_activity_type_serializers import ItineraryActivityTypeRetrieveSerializer, ItineraryActivityTypeListSerializer
-from itineraries.serializers.itinerary_serializers import ItineraryRetrieveSerializer
 
 
 class ItineraryActivityRetrieveSerializer(serializers.ModelSerializer):
@@ -11,13 +9,14 @@ class ItineraryActivityRetrieveSerializer(serializers.ModelSerializer):
     type = serializers.PrimaryKeyRelatedField(read_only=True)
     description = serializers.CharField(read_only=True, max_length=5120)
     location = serializers.CharField(read_only=True, max_length=100)
+    date = serializers.DateField(read_only=True)
     start_time = serializers.TimeField(read_only=True)
     duration = serializers.IntegerField(read_only=True)
     itinerary = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = ItineraryActivity
-        fields = ['id', 'name', 'type', 'description', 'location', 'start_time', 'duration', 'itinerary']
+        fields = ['id', 'name', 'type', 'description', 'location', 'date', 'start_time', 'duration', 'itinerary']
 
 
 class ItineraryActivityListSerializer(serializers.ModelSerializer):
@@ -25,13 +24,14 @@ class ItineraryActivityListSerializer(serializers.ModelSerializer):
     type = serializers.PrimaryKeyRelatedField(read_only=True)
     description = serializers.CharField(read_only=True, max_length=5120)
     location = serializers.CharField(read_only=True, max_length=100)
+    date = serializers.DateField(read_only=True)
     start_time = serializers.TimeField(read_only=True)
     duration = serializers.IntegerField(read_only=True)
     itinerary = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = ItineraryActivity
-        fields = ['name', 'type', 'description', 'location', 'start_time', 'duration', 'itinerary']
+        fields = ['name', 'type', 'description', 'location', 'date', 'start_time', 'duration', 'itinerary']
 
 
 class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
@@ -39,6 +39,7 @@ class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
     type = serializers.PrimaryKeyRelatedField(queryset=ItineraryActivityType.objects.all())
     description = serializers.CharField(max_length=5120)
     location = serializers.CharField(max_length=100)
+    date = serializers.DateField()
     start_time = serializers.TimeField()
     duration = serializers.IntegerField()
 
@@ -50,7 +51,7 @@ class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItineraryActivity
-        fields = ["name", "type", "description", "location", "start_time", "duration", "itinerary"]
+        fields = ["name", "type", "description", "location", "date", "start_time", "duration", "itinerary"]
 
 
 class ItineraryActivityUpdateSerializer(serializers.ModelSerializer):
@@ -58,12 +59,13 @@ class ItineraryActivityUpdateSerializer(serializers.ModelSerializer):
     type = serializers.PrimaryKeyRelatedField(write_only=True, queryset=ItineraryActivityType.objects.all())
     description = serializers.CharField(write_only=True, max_length=5120)
     location = serializers.CharField(write_only=True, max_length=100)
+    date = serializers.DateField(write_only=True)
     start_time = serializers.TimeField(write_only=True)
     duration = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = ItineraryActivity
-        fields = ["name", "type", "description", "location", "start_time", "duration",]
+        fields = ["name", "type", "description", "location", "date", "start_time", "duration"]
 
 
 class ItineraryActivityDeleteSerializer(serializers.ModelSerializer):

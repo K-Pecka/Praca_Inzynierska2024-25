@@ -25,7 +25,6 @@ class ItineraryAPITestCase(TestCase):
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
-            date_of_birth="19000101",
             first_name="Test",
             last_name="User",
         )
@@ -180,7 +179,6 @@ class ItineraryActivityAPITestCase(TestCase):
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
-            date_of_birth="19000101",
             first_name="Test",
             last_name="User",
         )
@@ -211,6 +209,7 @@ class ItineraryActivityAPITestCase(TestCase):
             type=self.itinerary_activity_type,
             description="A guided tour to the Eiffel Tower.",
             location="Paris",
+            date="2025-06-06",
             start_time="10:00:00",
             duration=120,
             itinerary=self.itinerary
@@ -225,6 +224,7 @@ class ItineraryActivityAPITestCase(TestCase):
             'type': self.itinerary_activity_type.id,
             'description': 'Visit to the Louvre Museum.',
             'location': 'Paris',
+            'date': '2025-06-07',
             'start_time': '12:00:00',
             'duration': 90,
             'itinerary': self.itinerary.id
@@ -256,6 +256,7 @@ class ItineraryActivityAPITestCase(TestCase):
             'type': self.itinerary_activity_type.id,
             'description': 'An updated guided tour.',
             'location': 'Paris',
+            'date': '2025-06-08',
             'start_time': '11:00:00',
             'duration': 150,
             'itinerary': self.itinerary.id
@@ -301,9 +302,10 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         data = {
             'name': 'Notre Dame Visit',
-            'type': self.itinerary_activity_type,
+            'type': self.itinerary_activity_type.id,
             'description': 'Visit to the Notre Dame Cathedral.',
             'location': 'Paris',
+            'date': '2025-06-09',
             'start_time': '14:00:00',
             'duration': 60,
             'itinerary': self.itinerary.id
@@ -319,9 +321,10 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         data = {
             'name': 'Unauthorized Update',
-            'type': self.itinerary_activity_type,
+            'type': self.itinerary_activity_type.id,
             'description': 'Attempt to update without authentication.',
             'location': 'Paris',
+            'date': '2025-06-10',
             'start_time': '10:00:00',
             'duration': 90,
             'itinerary': self.itinerary.id

@@ -32,11 +32,6 @@ class CustomUser(AbstractBaseUser, BaseModel):
         verbose_name=_("Nazwisko"),
         help_text=_("Nazwisko użytkownika")
     )
-    date_of_birth = models.DateField(
-        blank=True, null=True,
-        verbose_name=_("Data urodzenia"),
-        help_text=_("Data urodzenia")
-    )
     is_guest = models.BooleanField(
         default=False,
         verbose_name=_("Czy gość"),
@@ -79,6 +74,16 @@ class CustomUser(AbstractBaseUser, BaseModel):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    def register_guest_account(self, data):
+        """
+        Register a guest account.
+        """
+        if not self.is_guest:
+            raise ValueError("Nieprawidłowy typ konta.")
+        self.password = data["password"]
+
+        self.save()
 
     @classmethod
     def create_guest_account(cls, name, email):

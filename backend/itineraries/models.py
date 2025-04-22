@@ -60,6 +60,10 @@ class ItineraryActivity(BaseModel):
         verbose_name=_("Lokacja"),
         help_text=_("Lokacja")
     )
+    date = models.DateField(
+        verbose_name=_("data"),
+        help_text=_("data aktywności")
+    )
     start_time = models.TimeField(
         verbose_name=_("Czas zakończenia"),
         help_text=_("Czas rozpoczęcia")

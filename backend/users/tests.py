@@ -22,7 +22,7 @@ class UserAPITestCase(TestCase):
             password="Top_secret12",
             first_name="jacob",
             last_name="ereres",
-            date_of_birth="1995-05-15")
+            )
 
     def test_user_create(self):
         """
@@ -33,7 +33,6 @@ class UserAPITestCase(TestCase):
             'password': 'NewPassword123',
             'first_name': 'New',
             'last_name': 'User',
-            'date_of_birth': '1995-05-15'
         }
         view = UserCreateAPIView.as_view()
         request = self.factory.post('/user/', data)
@@ -75,7 +74,6 @@ class UserAPITestCase(TestCase):
             'password': 'NewPassword123',
             'first_name': 'New',
             'last_name': 'User',
-            'date_of_birth': '1995-05-15'
         }
         user = CustomUser.objects.filter(pk=1).first()
         view = UserUpdateAPIView.as_view()
@@ -93,7 +91,6 @@ class UserAPITestCase(TestCase):
             'password': 'NewPassword123',
             'first_name': 'New',
             'last_name': 'User',
-            'date_of_birth': '1995-05-15'
         }
         view = UserUpdateAPIView.as_view()
         request = self.factory.post('/user/', data)
