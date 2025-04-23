@@ -243,39 +243,6 @@ def get_default_expense_type():
     return ExpenseType.objects.first()
 
 
-class Currency(BaseModel):
-    code = models.CharField(
-        max_length=3,
-        verbose_name=_("Kod waluty"),
-        help_text=_("Kod waluty (np. PLN, EUR, USD)")
-    )
-
-    @classmethod
-    def get_currency_choices(cls):
-        """Generuje listę wyboru walut dla formularzy"""
-        currencies = sorted(
-            [(c.alpha_3, f"{c.alpha_3} - {c.name}")
-             for c in pycountry.currencies],
-            key=lambda x: x[0]
-        )
-        return currencies
-
-    def __str__(self):
-        return self.code
-
-    class Meta:
-        db_table = "currencies"
-        verbose_name = "Waluta"
-        verbose_name_plural = "Waluty"
-
-
-def get_default_currency():
-    currency = Currency.objects.first()
-    if currency:
-        return currency.id
-    return None
-
-
 class Expense(BaseModel):
     title = models.CharField(
         max_length=255,
@@ -290,10 +257,10 @@ class Expense(BaseModel):
         verbose_name=_("Kwota wydatku"),
         help_text=_("Kwota wydatku")
     )
-    currency = models.ForeignKey(
-        Currency,
-        on_delete=models.PROTECT,
-        default=get_default_currency,
+    currency = models.CharField(
+        choices=[(c.alpha_3, c.name) for c in pycountry.currencies],
+        max_length=3,
+        default="PLN",
         verbose_name=_("Waluta"),
         help_text=_("Waluta wydatku")
     )

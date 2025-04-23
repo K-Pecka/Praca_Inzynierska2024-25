@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from dicts.models import BaseModel
 from django.utils.translation import gettext_lazy as _
@@ -34,10 +35,6 @@ class ItineraryActivityType(BaseModel):
         verbose_name = "Typ aktywności planu"
         verbose_name_plural = _("Typy aktywności planu")
 
-def get_default_itinerary_activity_type():
-    return ItineraryActivity.objects.first()
-
-
 class ItineraryActivity(BaseModel):
     name = models.CharField(
         max_length=255,
@@ -46,7 +43,6 @@ class ItineraryActivity(BaseModel):
     type = models.ForeignKey(
         ItineraryActivityType,
         on_delete=models.CASCADE,
-        default=get_default_itinerary_activity_type,
         verbose_name=_("Typ"),
         help_text=_("Typ")
     )

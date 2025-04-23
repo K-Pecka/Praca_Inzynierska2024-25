@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Trip, Ticket, TicketType, ExpenseType, Expense, Budget, TripAccessToken, Currency
+from .models import Trip, Ticket, TicketType, ExpenseType, Expense, Budget, TripAccessToken
 
 
 @admin.register(Trip)
@@ -30,13 +30,6 @@ class ExpenseTypeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     search_fields = ('name',)
     list_filter = ('name',)
-
-
-@admin.register(Currency)
-class CurrencyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'code')
-    search_fields = ('code', )
-    list_filter = ('code',)
 
 
 @admin.register(Expense)

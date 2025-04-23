@@ -8,7 +8,7 @@ from trips.views.expense_views import ExpenseCreateAPIView, ExpenseRetrieveAPIVi
     ExpenseDestroyAPIView
 from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketDestroyAPIView
 from users.models import CustomUser, UserProfile, UserProfileType
-from trips.models import Trip, Budget, Expense, Ticket, TicketType, ExpenseType, Currency
+from trips.models import Trip, Budget, Expense, Ticket, TicketType, ExpenseType
 
 
 class BudgetAPITestCase(TestCase):
@@ -102,14 +102,13 @@ class ExpenseAPITestCase(TestCase):
             trip=self.trip,
             amount=3000.00,
         )
-        self.currency = Currency.objects.create(code="USD")
         self.expense_category = ExpenseType.objects.create(name='food')
         self.expense = Expense.objects.create(
             trip=self.trip,
             user=self.user_profile,
             amount=200.00,
             title="Obiad w restauracji",
-            currency=self.currency,
+            currency='USD',
             date="2025-06-05",
             note="Obiad w dobrej restauracji",
             category=self.expense_category
@@ -123,7 +122,7 @@ class ExpenseAPITestCase(TestCase):
             'title': "obiad smażalnia ryb",
             'user': self.user_profile.id,
             'amount': 150.00,
-            'currency': self.currency.id,
+            'currency':  "USD",
             'date': "2025-06-06",
             'category': self.expense_category.id
         }
@@ -184,7 +183,7 @@ class ExpenseAPITestCase(TestCase):
             'user': self.user_profile.id,
             'amount': 100.00,
             'title': "Bilet do muzeum",
-            'currency': self.currency.id,
+            'currency': "USD",
             'date': "2025-06-07",
             'note': "Bilet do muzeum w paryżu",
             'category': self.expense_category.id
