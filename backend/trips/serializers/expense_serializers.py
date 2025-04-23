@@ -1,10 +1,9 @@
+import pycountry
+
 from rest_framework import serializers
 
-from trips.models import Trip, Currency, Expense, ExpenseType
-from trips.serializers.currency_serializers import CurrencyRetrieveSerializer
-from trips.serializers.trip_serializers import TripRetrieveSerializer
+from trips.models import Trip, Expense, ExpenseType
 from users.models import UserProfile
-from users.serializers.user_serializers import UserRetrieveSerializer
 
 
 class ExpenseTypeRetrieveSerializer(serializers.ModelSerializer):
@@ -36,7 +35,7 @@ class ExpenseListSerializer(serializers.ModelSerializer):
     id  = serializers.IntegerField(read_only=True)
     title = serializers.CharField(read_only=True)
     amount = serializers.DecimalField(read_only=True, max_digits=10, decimal_places=2)
-    currency = serializers.PrimaryKeyRelatedField(read_only=True)
+    currency = serializers.CharField(read_only=True, max_length=3)
     date = serializers.DateField(read_only=True, format="%d.%m.%Y")
     note = serializers.CharField(read_only=True)
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -52,7 +51,7 @@ class ExpenseListSerializer(serializers.ModelSerializer):
 class ExpenseCreateSerializer(serializers.ModelSerializer):
     title = serializers.CharField()
     amount = serializers.DecimalField(max_digits=10, decimal_places=2)
-    currency = serializers.PrimaryKeyRelatedField(queryset=Currency.objects.all())
+    currency = serializers.CharField(max_length=3)
     date = serializers.DateField(format="%d.%m.%Y")
     user = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
     category = serializers.PrimaryKeyRelatedField(queryset=ExpenseType.objects.all())
@@ -72,7 +71,7 @@ class ExpenseCreateSerializer(serializers.ModelSerializer):
 class ExpenseUpdateSerializer(serializers.ModelSerializer):
     title = serializers.CharField(required=False, write_only=True)
     amount = serializers.DecimalField(required=False, write_only=True, max_digits=10, decimal_places=2)
-    currency = serializers.PrimaryKeyRelatedField(required=True, write_only=True, queryset=Currency.objects.all())
+    currency = serializers.CharField(write_only=True, default="PLN", max_length=3)
     date = serializers.DateField(required=False, write_only=True, format="%d.%m.%Y")
     note = serializers.CharField(required=False, write_only=True)
     category = serializers.PrimaryKeyRelatedField(required=False, write_only=True, queryset=ExpenseType.objects.all())
