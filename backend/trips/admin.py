@@ -51,7 +51,7 @@ class ExpenseAdmin(admin.ModelAdmin):
 @admin.register(Budget)
 class BudgetAdmin(admin.ModelAdmin):
     list_select_related = ('trip',)
-    list_display = ('amount', 'currency', 'trip')
+    list_display = ('amount', 'trip')
     list_filter = ('trip',)
 
 

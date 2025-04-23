@@ -76,7 +76,6 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
         budget = obj.budget
         return {
             'amount': str(budget.amount),
-            'currency': budget.currency,
         }
 
     class Meta:

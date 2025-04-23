@@ -208,12 +208,6 @@ class Budget(BaseModel):
         verbose_name=_("Kwota budżetu"),
         help_text=_("Kwota budżetu")
     )
-    currency = models.CharField(
-        max_length=3,
-        verbose_name=_("Waluta"),
-        validators=[validate_iso_currency],
-        help_text =_( "Kod waluty zgodny z ISO 4217 (np. PLN, EUR, USD)")
-    )
     trip = models.OneToOneField(
         Trip,
         on_delete=models.CASCADE,
@@ -221,16 +215,6 @@ class Budget(BaseModel):
         verbose_name=_("Wycieczka"),
         help_text=_("Powiązana wycieczka")
     )
-
-    @classmethod
-    def get_currency_choices(cls):
-        """Generuje listę wyboru walut dla formularzy"""
-        currencies = sorted(
-            [(c.alpha_3, f"{c.alpha_3} - {c.name}")
-             for c in pycountry.currencies],
-            key=lambda x: x[0]
-        )
-        return currencies
 
     class Meta:
         db_table = "budgets"
@@ -265,6 +249,16 @@ class Currency(BaseModel):
         verbose_name=_("Kod waluty"),
         help_text=_("Kod waluty (np. PLN, EUR, USD)")
     )
+
+    @classmethod
+    def get_currency_choices(cls):
+        """Generuje listę wyboru walut dla formularzy"""
+        currencies = sorted(
+            [(c.alpha_3, f"{c.alpha_3} - {c.name}")
+             for c in pycountry.currencies],
+            key=lambda x: x[0]
+        )
+        return currencies
 
     def __str__(self):
         return self.code
