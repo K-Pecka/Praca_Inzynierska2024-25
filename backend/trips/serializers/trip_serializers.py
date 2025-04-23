@@ -47,7 +47,7 @@ class TripCreateSerializer(serializers.ModelSerializer):
 
             trip = super().create(validated_data)
 
-            Budget.objects.create(currency='PLN', trip=trip, amount=budget_amount)
+            Budget.objects.create(trip=trip, amount=budget_amount)
 
             return trip
         except Exception as e:
