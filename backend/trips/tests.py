@@ -41,7 +41,6 @@ class BudgetAPITestCase(TestCase):
         self.budget = Budget.objects.create(
             trip=self.trip,
             amount=1000.00,
-            currency="USD"
         )
 
     def test_budget_update(self):
@@ -102,7 +101,6 @@ class ExpenseAPITestCase(TestCase):
         self.budget = Budget.objects.create(
             trip=self.trip,
             amount=3000.00,
-            currency="USD"
         )
         self.currency = Currency.objects.create(code="USD")
         self.expense_category = ExpenseType.objects.create(name='food')
