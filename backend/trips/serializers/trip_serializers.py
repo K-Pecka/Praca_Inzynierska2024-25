@@ -1,4 +1,5 @@
 from django.utils import timezone
+from django.db import transaction
 
 from rest_framework import serializers
 
@@ -39,17 +40,18 @@ class TripCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         try:
-            request = self.context['request']
-            budget_amount = validated_data.pop('budget_amount')
+            with transaction.atomic:
+                request = self.context['request']
+                budget_amount = validated_data.pop('budget_amount')
 
-            if 'creator' not in validated_data:
-                validated_data['creator'] = request.user.get_default_profile()
+                if 'creator' not in validated_data:
+                    validated_data['creator'] = request.user.get_default_profile()
 
-            trip = super().create(validated_data)
+                trip = super().create(validated_data)
 
-            Budget.objects.create(trip=trip, amount=budget_amount)
+                Budget.objects.create(trip=trip, amount=budget_amount)
 
-            return trip
+                return trip
         except Exception as e:
             raise e
 
