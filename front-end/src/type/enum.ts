@@ -12,10 +12,14 @@ export enum FormType {
   PLAN = "plan",
   TRIP = "trip",
   BUDGET = "budget",
+  PROFILE = "profile",
 }
 export enum Role {
   UNKNOWN = "unknown",
   TURIST = "turist",
   GUIDE = "guide",
   ADMIN = "admin",
+}
+export enum TypeOfButton{
+  TRIP = 'trip',
 }

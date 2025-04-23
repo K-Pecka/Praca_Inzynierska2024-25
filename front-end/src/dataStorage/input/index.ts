@@ -3,3 +3,4 @@ export * from "./register";
 export * from "./plan";
 export * from "./trip";
 export * from "./budget";
+export * from "./profile"

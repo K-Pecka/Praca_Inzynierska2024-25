@@ -1,7 +1,7 @@
 export const defaultNavLinks = [
     { label: "Oferta", href: "pricing-section", className: ["navbar__link--base"] },
     { label: "O nas", href: {name: "aboutUs"}, className: ["navbar__link--base"] },
-    { label: "Kontakt", href: "/", className: ["navbar__link--base"] },
+    { label: "Kontakt", href: "contact-us", className: ["navbar__link--base"] },
   ];
   
   export const loggedInNavLinks = [
@@ -93,18 +93,19 @@ export const pricingPlans = [
     name: "Podstawowy",
     price: "Darmowy",
     features: ["Tekst", "Tekst", "Tekst"],
-    buttonVariant: "secondary" as "secondary",
+    buttonVariant: "primary" as "primary",
   },
   {
     name: "Turysta",
     price: "15.0 zł / miesiąc",
     features: ["Tekst", "Tekst", "Tekst"],
+    contentVariant: "secondary" as "secondary",
     buttonVariant: "primary" as "primary",
   },
   {
     name: "Podróżnik",
     price: "40.0 zł / miesiąc",
     features: ["Tekst", "Tekst", "Tekst"],
-    buttonVariant: "secondary" as "secondary",
+    buttonVariant: "primary" as "primary",
   },
 ];

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import AppButton from "@/components/budget/AppButton.vue";
 import { VTimePicker } from "vuetify/labs/VTimePicker";
 import { defineEmits } from "vue";
@@ -19,6 +19,7 @@ const form = ref({
 const timeMenu = ref(false);
 
 function submitActivity() {
+  console.log(form.value)
   emit("submitActivity", { ...form.value });
   form.value = {
     type: "tour",
@@ -30,6 +31,9 @@ function submitActivity() {
     description: "",
   };
 }
+import activityGroups from "@/dataStorage/category/activity";
+
+const selected = ref<(typeof activityGroups)[0]>(activityGroups[0]);
 </script>
 
 <template>
@@ -40,46 +44,48 @@ function submitActivity() {
       <v-row>
         <v-col cols="12" sm="6">
           <v-select
-              v-model="form.type"
-              :items="['Zwiedzanie', 'Jedzenie', 'Sport', 'Relaks']"
-              label="Typ aktywności"
-              variant="outlined"
-              chips
-              bg-color="background"
+            v-model="form.type"
+            :items="activityGroups"
+            label="Typ aktywności"
+            variant="outlined"
+            bg-color="background"
+            item-value="id"
+            item-title="name"
+          >
+          </v-select>
+        </v-col>
+
+        <v-col cols="12" sm="6">
+          <v-text-field
+            v-model="form.name"
+            label="Nazwa aktywności"
+            variant="outlined"
+            required
+            bg-color="background"
           />
         </v-col>
 
         <v-col cols="12" sm="6">
           <v-text-field
-              v-model="form.name"
-              label="Nazwa aktywności"
-              variant="outlined"
-              required
-              bg-color="background"
-          />
-        </v-col>
-
-        <v-col cols="12" sm="6">
-          <v-text-field
-              v-model="form.start_time"
-              :active="timeMenu"
-              :focus="timeMenu"
-              variant="outlined"
-              label="Godzina rozpoczęcia"
-              prepend-inner-icon="mdi-clock-time-four-outline"
-              readonly
-              bg-color="background"
+            v-model="form.start_time"
+            :active="timeMenu"
+            :focus="timeMenu"
+            variant="outlined"
+            label="Godzina rozpoczęcia"
+            prepend-inner-icon="mdi-clock-time-four-outline"
+            readonly
+            bg-color="background"
           >
             <v-menu
-                v-model="timeMenu"
-                :close-on-content-click="false"
-                activator="parent"
-                transition="scale-transition"
+              v-model="timeMenu"
+              :close-on-content-click="false"
+              activator="parent"
+              transition="scale-transition"
             >
               <v-time-picker
-                  v-if="timeMenu"
-                  v-model="form.start_time"
-                  full-width
+                v-if="timeMenu"
+                v-model="form.start_time"
+                full-width
               />
             </v-menu>
           </v-text-field>
@@ -87,39 +93,39 @@ function submitActivity() {
 
         <v-col cols="12" sm="6">
           <v-text-field
-              v-model="form.duration"
-              label="Czas trwania (min)"
-              variant="outlined"
-              type="number"
-              bg-color="background"
+            v-model="form.duration"
+            label="Czas trwania (min)"
+            variant="outlined"
+            type="number"
+            bg-color="background"
           />
         </v-col>
 
         <v-col cols="12" sm="6">
           <v-text-field
-              v-model="form.location"
-              label="Miejsce"
-              variant="outlined"
-              bg-color="background"
+            v-model="form.location"
+            label="Miejsce"
+            variant="outlined"
+            bg-color="background"
           />
         </v-col>
 
         <v-col cols="12" sm="6">
           <v-select
-              v-model="form.assignedTo"
-              label="Wybierz bilet"
-              variant="outlined"
-              :items="['Bilet A', 'Bilet B', 'Bilet C']"
-              bg-color="background"
+            v-model="form.assignedTo"
+            label="Wybierz bilet"
+            variant="outlined"
+            :items="['Bilet A', 'Bilet B', 'Bilet C']"
+            bg-color="background"
           />
         </v-col>
 
         <v-col cols="12" sm="12">
           <v-textarea
-              v-model="form.description"
-              label="Opis"
-              variant="outlined"
-              bg-color="background"
+            v-model="form.description"
+            label="Opis"
+            variant="outlined"
+            bg-color="background"
           />
         </v-col>
       </v-row>
@@ -130,9 +136,7 @@ function submitActivity() {
       <AppButton variant="secondary" @click="$emit('cancelForm')">
         Anuluj
       </AppButton>
-      <AppButton variant="primary" @click="submitActivity">
-        Dodaj
-      </AppButton>
+      <AppButton variant="primary" @click="submitActivity"> Dodaj </AppButton>
     </v-card-actions>
   </v-card>
 </template>

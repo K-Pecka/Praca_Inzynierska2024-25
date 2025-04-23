@@ -6,6 +6,9 @@
     <div class="section__content">
       <slot name="content"></slot>
     </div>
+    <div class="section__footer">
+      <slot name="footer"></slot>
+    </div>
   </section>
 </template>
 

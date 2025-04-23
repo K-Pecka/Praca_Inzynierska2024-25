@@ -49,7 +49,7 @@ function onHamburgerClick() {
           class="panel-navbar__dropdown"
       >
         <router-link
-            to="/settings"
+            :to="{ name: 'AccountSettings'}"
             class="dropdown-link"
         >
           Ustawienia konta

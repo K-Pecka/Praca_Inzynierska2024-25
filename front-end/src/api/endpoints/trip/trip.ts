@@ -1,4 +1,4 @@
-import { apiEndpoints, fetchData, setParam } from "../apiEndpoints";
+import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
 import { Trip,NewTrip } from "@/type/interface";
 import { APP_MODE_DEV } from "@/config/envParams";
 import { useMockupStore } from "@/mockup/useMockupStore";
@@ -83,6 +83,9 @@ export const updateTrip = async (
     param: Record<string, string>,
     tripData: Partial<Trip>
 ) => {
+  if (APP_MODE_DEV) {
+    return {};
+  }
     const url = setParam(apiEndpoints.trip.update, param);
     const { data, error } = await fetchData<Trip>(
         url,

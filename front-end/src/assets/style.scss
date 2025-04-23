@@ -1,4 +1,5 @@
 @use "@/assets/scroll.scss";
+@use "@/assets/input.scss";
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 :root{
@@ -27,6 +28,7 @@ h3{
 h1{
   font-size: 2rem;
   font-family: var(--v-fontFamily);
+  color: rgb(var(--v-theme-primary));
 }
 
 @media (max-width: 600px) {

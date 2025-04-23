@@ -1,4 +1,4 @@
-import { apiEndpoints, fetchData, setParam } from "../apiEndpoints";
+import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
 import { useMockupStore } from "@/mockup/useMockupStore";
 import { APP_MODE_DEV } from "@/config/envParams";
 export const fetchAddParticipant = async (

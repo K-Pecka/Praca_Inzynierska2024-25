@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from "vue-router";
-import { Home, Landing, PricingSection } from "@/views/home";
+import { Home, Landing, PricingSection, ContactUs } from "@/views/home";
 import { Error_500,Error_404 } from "@/views/unexpected";
 
 const homeRoutes: RouteRecordRaw[] = [
@@ -23,6 +23,11 @@ const homeRoutes: RouteRecordRaw[] = [
         path: "/about-us",
         name: "aboutUs",
         component: () => import("@/views/home/children/AboutUs.vue"),
+      },
+      {
+        path: "/contact-us",
+        name: "contactUs",
+        component: ContactUs,
       }
     ]
   },
