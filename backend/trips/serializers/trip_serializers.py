@@ -40,7 +40,7 @@ class TripCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         try:
-            with transaction.atomic:
+            with transaction.atomic():
                 request = self.context['request']
                 budget_amount = validated_data.pop('budget_amount')
 
