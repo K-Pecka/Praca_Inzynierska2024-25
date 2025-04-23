@@ -81,8 +81,12 @@ class Trip(BaseModel):
         return False
 
     def clean(self):
+        super().clean()
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
+
+        if self.pk and self.members.count() > 5:
+            raise ValidationError("Wycieczka może mieć maksymalnie 5 uczestników.")
 
     def save(self, *args, **kwargs):
         self.clean()

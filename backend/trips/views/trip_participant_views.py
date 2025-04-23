@@ -66,6 +66,9 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             )
 
     def handle_invite(self, trip, data):
+        if trip.members.count() >= 5:
+            raise ValidationError(_("Wycieczka może mieć maksymalnie 5 uczestników."))
+
         if 'profile' not in data:
             user = CustomUser.create_guest_account(
                 data['name'],
