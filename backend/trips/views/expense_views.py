@@ -28,7 +28,7 @@ class ExpenseListAPIView(ListAPIView):
     def get_queryset(self):
         return (Expense.objects
             .filter(trip=self.kwargs['trip_pk'])
-            .select_related('trip', 'user', 'category','currency')
+            .select_related('trip', 'user', 'category')
         )
 
 

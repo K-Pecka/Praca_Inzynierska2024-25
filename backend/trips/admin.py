@@ -34,9 +34,9 @@ class ExpenseTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Expense)
 class ExpenseAdmin(admin.ModelAdmin):
-    list_select_related = ('trip', 'user', 'category', 'currency')
-    list_display = ('title', 'amount', 'currency', 'date', 'note', 'trip', 'user', 'category')
-    list_filter = ('trip', 'category', 'currency', 'date')
+    list_select_related = ('trip', 'user', 'category')
+    list_display = ('title', 'amount', 'date', 'note', 'trip', 'user', 'category')
+    list_filter = ('trip', 'category', 'date')
     search_fields = ('title', 'note', 'user__user__first_name', 'user__user__last_name')
     date_hierarchy = 'date'
 
