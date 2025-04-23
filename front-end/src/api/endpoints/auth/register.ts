@@ -1,4 +1,4 @@
-import {Register} from "@/type/interface";
+import {Register} from "@/types/interface";
 import { apiEndpoints } from "@/api/apiEndpoints";
 
 export const registerFetch = async (userData: Register) => {

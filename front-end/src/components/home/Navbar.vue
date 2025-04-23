@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {ref} from "vue";
-import {Link} from "@/type";
+import {Link} from "@/types";
 
 defineProps<{ links: Link[] }>();
 

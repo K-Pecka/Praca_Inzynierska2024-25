@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
 import {useNotificationStore} from "@/stores";
-import {NewTrip} from "@/type";
+import {NewTrip} from "@/types";
 
 interface Participant {
     id: number;

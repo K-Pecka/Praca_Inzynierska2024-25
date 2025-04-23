@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { defineProps } from "vue";
-import { BudgetData } from "@/type/interface";
+import { BudgetData } from "@/types/interface";
 
 const props = defineProps<{ content: BudgetData }>();
 

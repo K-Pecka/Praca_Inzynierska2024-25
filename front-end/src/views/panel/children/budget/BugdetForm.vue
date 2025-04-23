@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import {Section,Form} from "@/components";
 import { useFormStore,useTripStore } from "@/stores";
-import { FormType } from "@/type/enum";
+import { FormType } from "@/types/enum";
 import { useRoute } from "vue-router";
 const { getFormInputs, isFormValid } = useFormStore();
 const {tripMutationBudget} = useTripStore();

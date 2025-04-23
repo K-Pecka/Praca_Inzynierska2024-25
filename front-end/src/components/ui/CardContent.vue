@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { defineProps } from "vue";
-import { DashboardBox } from "@/type/interface";
+import { DashboardBox } from "@/types/interface";
 
 const props = defineProps<DashboardBox>();
 </script>

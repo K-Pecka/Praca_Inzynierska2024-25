@@ -10,7 +10,7 @@ import {
   faqList,
   advantagesBox,
   sectionTitles,
-} from "@/dataStorage";
+} from "@/data";
 export const usePageHomeStore = defineStore("pagHome", () => {
   const { validToken } = useAuthStore();
   const navigationLinks = ref<Array<{ label: string; href: string | { name: string }; className?: string[]; active?: boolean }>>([]);

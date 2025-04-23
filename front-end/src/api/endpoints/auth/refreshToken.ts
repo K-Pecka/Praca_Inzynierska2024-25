@@ -1,4 +1,4 @@
-import { TOKEN } from "@/type/interface";
+import { TOKEN } from "@/types/interface";
 import { apiEndpoints, backendNotification } from "@/api/apiEndpoints";
 import { useNotificationStore } from "@/stores";
 import { APP_MODE_DEV } from "@/config/envParams";

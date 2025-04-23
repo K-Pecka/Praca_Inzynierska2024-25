@@ -1,4 +1,4 @@
-import {TOKEN} from "@/type/interface";
+import {TOKEN} from "@/types/interface";
 import { apiEndpoints } from "@/api/apiEndpoints";
 import { errorStatus } from "@/api/standardError";
 import { APP_MODE_DEV } from "@/config/envParams";

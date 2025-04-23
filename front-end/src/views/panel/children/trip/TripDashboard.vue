@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Box, Section } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
-import { Expense } from "@/type";
+import { Expense } from "@/types";
 import ExpenseList from "@/components/expenseItem/ExpenseList.vue";
 import HeaderSection from "@/components/common/HeaderSection.vue";
 import { useRoute } from "vue-router";

@@ -1,4 +1,4 @@
-import { InputType } from '@/type/enum';
+import { InputType } from '@/types/enum';
 import { Validator } from '@/utils/validator/validation';
 
 const base = (err: Record<string,string>) => new Validator(err).isEmpty().save();

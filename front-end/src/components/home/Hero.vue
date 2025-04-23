@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import TypewriterText from "@/components/common/TypeWriterText.vue";
-import { Phrase } from "@/type";
+import { Phrase } from "@/types";
 
 const props = defineProps({
   phrases: {

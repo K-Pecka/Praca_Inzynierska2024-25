@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Button, Trip} from "@/type/interface";
+import {Button, Trip} from "@/types/interface";
 
 function formatPL(dateString: string): string {
   const dateObj = new Date(dateString);

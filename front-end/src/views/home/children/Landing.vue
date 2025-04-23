@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Hero, Sections } from "@/components";
 import { usePageHomeStore } from "@/stores";
-import { image } from "@/lib";
+import { images } from "@/data";
 
 const { getHeroBannerText } = usePageHomeStore();
 </script>
@@ -10,8 +10,8 @@ const { getHeroBannerText } = usePageHomeStore();
   <Hero :phrases="getHeroBannerText()">
     <template #hero>
       <img
-        :src="image.hero.img"
-        :alt="image.hero.alt"
+        :src="images.hero.img"
+        :alt="images.hero.alt"
         class="hero-image"
         lazy-src="/images/placeholder.jpg"
         transition="scale-transition"

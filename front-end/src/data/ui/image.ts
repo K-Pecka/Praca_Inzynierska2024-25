@@ -1,4 +1,4 @@
-const images = {
+export const images = {
   hero: {
     img: "/picture/hero.svg",
     alt: "hero banner",
@@ -20,5 +20,3 @@ const images = {
     },
   }
 };
-
-export default images;

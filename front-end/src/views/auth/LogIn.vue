@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {Form,ListLink,Section} from "@/components/common";
 import { usePageHomeStore,useFormStore } from "@/stores/";
-import { FormType } from "@/type/enum";
+import { FormType } from "@/types/enum";
 import { ref } from "vue";
 
 const { getSectionTitle } = usePageHomeStore();

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {SubSection} from "@/components";
-import { SubSectionData } from "@/type";
+import { SubSectionData } from "@/types";
 
 
 defineProps({

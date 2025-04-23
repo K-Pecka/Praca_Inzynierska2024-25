@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Expense } from "@/type";
+import { Expense } from "@/types";
 import ExpenseItem from "./ExpenseItem.vue";
 defineProps<{expenses: Expense[]}>();
 </script>

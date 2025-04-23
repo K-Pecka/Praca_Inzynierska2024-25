@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { FooterData} from "@/type/interface";
+import { FooterData} from "@/types/interface";
 import lastModified from "@/assets/last-modified.txt?raw";
 import { useUtilStore } from "@/stores";
  defineProps({
@@ -16,7 +16,7 @@ const lastModifiedDate = formatDate(new Date(lastModified));
   <footer class="footer-bg">
     <v-container class="footer">
       <v-row>
-        <v-col class="footer__top" cols="10" lg="12" offset="1" offset-lg="0">
+        <v-col class="footer__top" cols="12" sm="12" md="10" offset-sm="0" offset-md="1">
           <div class="footer__top__logo">
             <slot name="logo"> </slot>
           </div>
@@ -66,7 +66,7 @@ const lastModifiedDate = formatDate(new Date(lastModified));
 
 .footer {
   @include section-width;
-  padding: 3rem 0 1rem 0;
+  padding: 3rem 1rem 1rem 1rem;
   background-color: rgb(var(--v-theme-secondary));
   font-family: var(--v-fontFamily);
 

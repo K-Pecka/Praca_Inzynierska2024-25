@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Participant} from "@/type";
+import { Participant} from "@/types";
 
 const props = defineProps<Participant>();
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Expense} from "@/type";
+import { Expense} from "@/types";
 defineProps<{
     expense?: Expense;
 }>();

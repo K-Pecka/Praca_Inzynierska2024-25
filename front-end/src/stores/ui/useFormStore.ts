@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { Input } from "@/type/interface";
-import { FormType } from "@/type/enum";
+import { Input } from "@/types/interface";
+import { FormType } from "@/types/enum";
 import {
   loginInput,
   registerInput,
@@ -9,7 +9,7 @@ import {
   budgetInput,
   getMoreOptions,
   profileInput,
-} from "@/dataStorage/index";
+} from "@/data/index";
 import { computed, ref } from "vue";
 import { useAuthStore,useNotificationStore } from "@/stores";
 

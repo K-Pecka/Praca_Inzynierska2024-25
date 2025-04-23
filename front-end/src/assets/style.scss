@@ -6,6 +6,11 @@
   font-size: 16px;
 }
 
+.v-container{
+  max-width: calc(2560px);
+  padding: 0;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;

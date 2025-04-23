@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import { FAQItem } from "@/type/interface";
+import { FAQItem } from "@/types/interface";
 
 const props = defineProps({
   faqList: {

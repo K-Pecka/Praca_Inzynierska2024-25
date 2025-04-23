@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { pricingPlans } from "@/dataStorage/page/home";
+import { pricingPlans } from "@/data/page/home";
 import PricingCard from "@/components/home/PricingCard.vue";
 import { Section } from "@/components/common";
 </script>

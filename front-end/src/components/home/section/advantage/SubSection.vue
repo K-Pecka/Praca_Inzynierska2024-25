@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { SubSectionItem } from "@/type";
+import { SubSectionItem } from "@/types";
 defineProps({
   items: {
     type: Array as () => SubSectionItem[],

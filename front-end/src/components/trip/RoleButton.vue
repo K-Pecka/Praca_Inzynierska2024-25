@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Role} from "@/type/interface";
+import {Role} from "@/types/interface";
 import { PropType } from "vue";
 
 const props = defineProps({

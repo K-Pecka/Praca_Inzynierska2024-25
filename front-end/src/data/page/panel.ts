@@ -1,24 +1,24 @@
-import { image } from "@/lib";
+import { images } from "@/data";
 import router from "@/router";
-import { Btn } from "@/type";
-import { Role } from "@/type/enum";
+import { Btn } from "@/types";
+import { Role } from "@/types/enum";
 export const getTouristNav = (tripId: string) => [
   {
     label: "Powrót",
-    icon: image.icon.menu.back,
+    icon: images.icon.menu.back,
     name: "goBack",
     route: { name: "yourTrip" },
   },
   {
     label: "Panel",
-    icon: image.icon.menu.dashboard,
+    icon: images.icon.menu.dashboard,
     name: "panel",
     route: { name: "tripDashboard", params: { tripId: tripId } },
   },
   {
     label: "Plany",
     name: "plan",
-    icon: image.icon.menu.plan,
+    icon: images.icon.menu.plan,
     children: [
       {
         label: "Utworzone",
@@ -35,13 +35,13 @@ export const getTouristNav = (tripId: string) => [
   {
     label: "Bilety",
     name: "ticket",
-    icon: image.icon.menu.ticket,
+    icon: images.icon.menu.ticket,
     route: { name: "TicketsView", params: { tripId: tripId } },
   },
   {
     label: "Budżet",
     name: "budget",
-    icon: image.icon.menu.budget,
+    icon: images.icon.menu.budget,
     children: [
       {
         label: "Pokaż",
@@ -58,13 +58,13 @@ export const getTouristNav = (tripId: string) => [
   {
     label: "Uczestnicy",
     name: "participant",
-    icon: image.icon.menu.participant,
+    icon: images.icon.menu.participant,
     route: { name: "ParticipantsView", params: { tripId: tripId } },
   },
   {
     label: "Ustawienia",
     name: "setting",
-    icon: image.icon.menu.setting,
+    icon: images.icon.menu.setting,
     children: [
       {
         label: "Edycja wycieczki",
@@ -77,14 +77,14 @@ export const getTouristNav = (tripId: string) => [
 export const getGudieNav = (tripId: string) => [
   {
     label: "Panel",
-    icon: image.icon.menu.dashboard,
+    icon: images.icon.menu.dashboard,
     name: "panel",
     route: { name: "tripDashboard", params: { tripId: tripId } },
   },
   {
     label: "Plany",
     name: "plan",
-    icon: image.icon.menu.plan,
+    icon: images.icon.menu.plan,
     children: [
       {
         label: "Utworzone",
@@ -101,13 +101,13 @@ export const getGudieNav = (tripId: string) => [
   {
     label: "Bilety",
     name: "ticket",
-    icon: image.icon.menu.ticket,
+    icon: images.icon.menu.ticket,
     route: { name: "TicketsView", params: { tripId: tripId } },
   },
   {
     label: "Zaległości",
     name: "budget",
-    icon: image.icon.menu.budget,
+    icon: images.icon.menu.budget,
     children: [
       {
         label: "Pokaż",
@@ -124,13 +124,13 @@ export const getGudieNav = (tripId: string) => [
   {
     label: "Uczestnicy",
     name: "participant",
-    icon: image.icon.menu.participant,
+    icon: images.icon.menu.participant,
     route: { name: "ParticipantsView", params: { tripId: tripId } },
   },
   {
     label: "Ustawienia",
     name: "setting",
-    icon: image.icon.menu.setting,
+    icon: images.icon.menu.setting,
     children: [
       {
         label: "Edycja wycieczki",
@@ -141,7 +141,7 @@ export const getGudieNav = (tripId: string) => [
   },
   {
     label: "Powrót",
-    icon: image.icon.menu.back,
+    icon: images.icon.menu.back,
     name: "goBack",
     route: { name: "yourTripGuide" },
   },

@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { VDateInput } from "vuetify/labs/components";
-import { Input } from "@/type/interface";
+import { Input } from "@/types/interface";
 
 const props = defineProps({
   inputData: {

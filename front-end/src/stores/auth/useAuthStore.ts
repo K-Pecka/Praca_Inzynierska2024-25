@@ -3,7 +3,7 @@ import {ref} from "vue";
 import {useMutation} from "@tanstack/vue-query";
 import {useNotificationStore} from "../ui/useNotificationStore";
 import router from "@/router";
-import {TOKEN} from "@/type";
+import {TOKEN} from "@/types";
 import {usePermissionStore} from "@/stores";
 import {
     loginFetch,
