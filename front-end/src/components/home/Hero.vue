@@ -12,7 +12,7 @@ const props = defineProps({
 
 <template>
   <header class="hero">
-    <v-container fluid class="full-width-container" style="width: 65%">
+    <v-container fluid class="full-width-container" style="width: 75%">
       <v-row>
         <v-col :cols="$vuetify.display.smAndDown ? 12 : 7" 
         class="hero__text" ref="heroText"
@@ -44,14 +44,11 @@ const props = defineProps({
   fill: rgb(var(--v-theme-hero-bg));
 }
 .hero {
-  padding: 1rem 0;
-  margin-bottom: 10rem;
-  @media (max-width: 600px) {
-    margin-bottom: 5rem;
-  }
+  padding: 6% 0;
+  margin-bottom: 25vh;
   @include font-large;
   &__text {
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: -4px;
     display: flex;
@@ -65,16 +62,11 @@ const props = defineProps({
     &__word {
       @include gradient-text;
     }
+    font-size: clamp(2rem, 4.5vw, 30rem);
+    line-height: 1;
 
-    @media (max-width: 600px) {
-      margin-top: -2rem;
-      font-size: 2rem;
-    }
-    @media (min-width: 600px) and (max-width: 800px) {
-      font-size: 3rem;
-    }
-    @media (min-width: 800px) and (max-width: 1200px) {
-      font-size: 3.5rem;
+    @media (max-width: 959px) {
+      font-size: 10vw;
     }
   }
 

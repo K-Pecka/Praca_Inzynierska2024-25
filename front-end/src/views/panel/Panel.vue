@@ -68,18 +68,15 @@ onUnmounted(() => {
         <transition name="slide-nav">
           <v-col
               v-if="showNavigation && (!isMobile || sideNavOpen)"
-              cols="12"
-              sm="3"
-              md="2"
+              cols="2"
               class="side-nav-col"
               :class="{ 'mobile-overlay': isMobile, open: sideNavOpen }"
-              style="max-width: 12%;"
           >
             <SideNav :mobile="isMobile" @close="toggleSideNav"/>
           </v-col>
         </transition>
         <v-col
-            :cols="showNavigation ? (isMobile ? 12 : 9) : 12"
+            :cols="showNavigation ? (isMobile ? 12 : 10) : 12"
             :md="showNavigation ? 10 : 12"
             class="main-col"
         >
@@ -116,10 +113,6 @@ main {
   }
 }
 
-.side-nav-col {
-  padding: 0;
-}
-
 .overlay {
   position: fixed;
   top: 0;
@@ -132,6 +125,7 @@ main {
 
 .side-nav-col {
   padding: 0;
+
 
   @media (min-width: 959px) {
     position: relative;
@@ -170,5 +164,6 @@ main {
 .main-col {
   height: calc(100vh - 5rem);
   overflow: hidden;
+  padding: 0;
 }
 </style>

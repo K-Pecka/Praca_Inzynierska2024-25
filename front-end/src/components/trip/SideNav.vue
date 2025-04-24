@@ -134,7 +134,7 @@ function closeSideNavWithDelay() {
 
 .side-nav {
   height: 100%;
-  width: 14rem;
+  width: 100%;
   left: 0;
   background-color: rgba(var(--v-theme-background));
   border-right: 2px solid rgb(var(--v-theme-primary));

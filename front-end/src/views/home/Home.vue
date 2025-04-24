@@ -10,7 +10,7 @@ const footerData = computed(() => useStore.getFooterData());
 </script>
 
 <template>
-  <v-container class="full-width-container">
+  <v-container style="max-width: 100%; padding-left: 10%; padding-right: 10%">
     <v-row class="sticky-top fixed-center">
       <v-col cols="12" sm="12" md="10" offset-sm="0" offset-md="1">
         <Navbar :links="navData">
@@ -19,6 +19,7 @@ const footerData = computed(() => useStore.getFooterData());
                 src="/picture/logo.svg"
                 :alt="SiteName"
                 lazy-src="/images/placeholder.jpg"
+                style="width: 8.5vw; min-width: 6rem"
               />
           </template>
         </Navbar>

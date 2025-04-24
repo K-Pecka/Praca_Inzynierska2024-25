@@ -26,19 +26,23 @@ const {data: tripData, isLoading, error} = getTripDetails(tripId);
 
 .section__title {
   margin: 0 0 2rem 0;
+  display: flex;
+  justify-content: center;
 }
 
 .section__subtitle {
   margin: 2rem 0 2rem 0;
   color: rgb(var(--v-theme-text), 0.75);
+  display: flex;
+  justify-content: center;
 }
 
 .trip-title {
   font-family: var(--v-fontFamily);
   font-size: 2rem;
+  width: 80%;
   font-weight: 700;
   color: rgb(var(--v-theme-text), 0.75);
-  margin: 0 0 2rem 0;
 }
 
 .button-container {

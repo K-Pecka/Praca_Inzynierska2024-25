@@ -25,10 +25,8 @@ const { getHeroBannerText } = usePageHomeStore();
 <style scoped lang="scss">
 
 .hero-image {
-  max-width: 100%;
+  min-width: 10rem;
+  width: 16vw;
   transition: transform 0.3s ease-in-out;
-  @media (min-width: 800px) {
-    transform: scale(0.9);
-  }
 }
 </style>

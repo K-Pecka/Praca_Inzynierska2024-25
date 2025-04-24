@@ -16,11 +16,10 @@ const toggle = (index: number) => {
 </script>
 
 <template>
-  <div class="faq"
-  >
+  <div class="faq">
     <div class="faq__items"
     v-for="(item, index) in faqList"
-        :key="index"
+         :key="index"
     >
       <div
         
@@ -60,13 +59,14 @@ const toggle = (index: number) => {
 .faq {
   position: relative;
   padding: 2rem 0 5rem;
+  width: 75%;
   .faq__items {
     .faq__item {
       transition: all 0.3s;
       border: 1px solid rgb(var(--v-theme-primary));
       width: 100%;
-      padding: 1rem;
-      margin: 1rem 0;
+      padding: 1vw;
+      margin: 1vw 0;
       border-radius: 0.5rem;
       background-color: rgb(var(--v-theme-secondary));
       cursor: pointer;
@@ -74,6 +74,7 @@ const toggle = (index: number) => {
         color: rgb(var(--v-theme-primary));
         display: flex;
         justify-content: space-between;
+        font-size: 0.8vw;
         align-items: center;
         font-weight: bold;
         cursor: pointer;
@@ -81,12 +82,13 @@ const toggle = (index: number) => {
 
       .faq__answer {
         margin-top: 0.5rem;
+        font-size: 0.6vw;
         color: rgb(var(--v-theme-primary));
       }
 
       .toggle__icon {
         transition: all 0.3s;
-        font-size: 1.5rem;
+        font-size: 1vw;
         line-height: 1;
         &--open {
           transform: rotate(45deg);

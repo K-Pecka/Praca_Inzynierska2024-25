@@ -55,6 +55,8 @@ const lastModifiedDate = formatDate(new Date(lastModified));
 @use "@/assets/style.scss" as *;
 .footer-bg{
   background-color: rgb(var(--v-theme-secondary));
+  display: flex;
+  justify-content: center;
 }
 .v-row + .v-row {
   margin-top: 0.25rem;
@@ -64,11 +66,17 @@ const lastModifiedDate = formatDate(new Date(lastModified));
   font-family: var(--v-fontFamily);
 }
 
+.v-container {
+  margin: 0;
+  max-width: 72%;
+}
+
 .footer {
   @include section-width;
   padding: 3rem 1rem 1rem 1rem;
   background-color: rgb(var(--v-theme-secondary));
   font-family: var(--v-fontFamily);
+
 
   &__top {
     display: flex;
