@@ -15,8 +15,8 @@ const lastModifiedDate = formatDate(new Date(lastModified));
 <template>
   <footer class="footer-bg">
     <v-container class="footer">
-      <v-row>
-        <v-col class="footer__top" cols="12" sm="12" md="10" offset-sm="0" offset-md="1">
+      <v-row class="d-flex justify-center">
+        <v-col class="footer__top px-0" cols="12" sm="12" md="10">
           <div class="footer__top__logo">
             <slot name="logo"> </slot>
           </div>

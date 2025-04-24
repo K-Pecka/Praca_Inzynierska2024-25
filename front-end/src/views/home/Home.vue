@@ -11,8 +11,8 @@ const footerData = computed(() => useStore.getFooterData());
 
 <template>
   <v-container style="max-width: 100%; padding-left: 10%; padding-right: 10%">
-    <v-row class="sticky-top fixed-center">
-      <v-col cols="12" sm="12" md="10" offset-sm="0" offset-md="1">
+    <v-row class="sticky-top">
+      <v-col cols="12" sm="12" style="padding-top: 1%;">
         <Navbar :links="navData">
           <template #logo>
               <img
@@ -27,7 +27,7 @@ const footerData = computed(() => useStore.getFooterData());
     </v-row>
 
     <v-row class="d-flex justify-center">
-      <v-col cols="12" sm="12" md="10">
+      <v-col cols="12" sm="12">
         <main>
           <router-view />
         </main>
