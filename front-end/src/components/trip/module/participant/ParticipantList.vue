@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ParticipantItem from "./ParticipantItem.vue";
-import { Participant} from "@/type";
+import { Participant} from "@/types";
 
 const props = defineProps<{
   participants: Participant[];

@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
 import { fetchPlans, createPlan, deleteItinerary } from "@/api";
 import router from "@/router";
 import { computed } from "vue";
-import { Plan } from "@/type";
+import { Plan } from "@/types";
 import { useNotificationStore } from "@/stores";
 
 export const usePlans = () => {

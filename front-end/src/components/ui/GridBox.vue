@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted,ref,onUnmounted } from "vue";
-import { DashboardBox } from "@/type/interface";
+import { DashboardBox } from "@/types/interface";
 
 const props = defineProps<DashboardBox>();
 const screenWidth = ref(window.innerWidth);

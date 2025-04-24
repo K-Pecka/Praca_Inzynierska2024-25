@@ -3,7 +3,7 @@ import {ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {Section, Form} from "@/components";
 import {useFormStore, useTripStore} from "@/stores";
-import {FormType} from "@/type/enum";
+import {FormType} from "@/types/enum";
 
 const route = useRoute();
 const id = Number(route.params.tripId);

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {ref} from "vue";
-import {Link} from "@/type";
+import {Link} from "@/types";
 
 defineProps<{ links: Link[] }>();
 
@@ -118,8 +118,7 @@ watch(smAndDown, (isSmallScreen) => {
 .navbar__logo {
   @include font-large;
   @include gradient-text;
-  font-size: 2rem;
-  padding: 1rem;
+  display: flex;
 }
 </style>
 
@@ -128,11 +127,13 @@ watch(smAndDown, (isSmallScreen) => {
   margin: 0 auto;
   position: sticky;
   top: 0;
-  padding: 1rem;
-  height: 6rem;
+  padding-left: 1.8vw;
+  padding-right: 1.8vw;
+  height: 5vw;
+  min-height: 5rem;
   background-color: rgb(var(--v-theme-background), 0.75);
-  border: 2px solid rgb(var(--v-theme-primary));
-  border-radius: var(--v-borderRadius);
+  border: clamp(2px, 0.15vw, 10px) solid rgb(var(--v-theme-primary));
+  border-radius: 1.5vw;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -167,18 +168,18 @@ ul .navbar__item {
 }
 
 ul .navbar__link {
-  padding: 10px;
+  padding: 0.5vw 1vw;
   text-decoration: none;
   color: rgb(var(--v-theme-text));
+  font-size: clamp(1rem, 0.9vw, 50rem);
   font-weight: bold;
   transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 ul .navbar__link--active {
   color: #fff;
-  padding: calc(1rem + 4px);
   background-color: rgb(var(--v-theme-primary));
-  border-radius: calc(var(--v-borderRadius) - 9px);
+  border-radius: 0.5vw;
 }
 
 @media (max-width: 959px) {

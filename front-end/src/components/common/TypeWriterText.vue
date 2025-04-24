@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import Typewriter from "typewriter-effect/dist/core";
-import { Phrase } from "@/type";
+import { Phrase } from "@/types";
 
 const props = defineProps({
   phrases: {

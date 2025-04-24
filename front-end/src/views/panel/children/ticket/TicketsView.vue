@@ -4,8 +4,8 @@ import {useRoute} from "vue-router";
 import {Section} from "@/components";
 import {useTicketStore} from "@/stores/trip/useTicketStore";
 import {useTripStore} from "@/stores/trip/useTripStore";
-import TicketList from "@/components/trip/modul/ticket/TicketList.vue";
-import TicketForm from "@/components/trip/modul/ticket/TicketForm.vue";
+import TicketList from "@/components/trip/module/ticket/TicketList.vue";
+import TicketForm from "@/components/trip/module/ticket/TicketForm.vue";
 import AppButton from "@/components/budget/AppButton.vue";
 
 const route = useRoute();

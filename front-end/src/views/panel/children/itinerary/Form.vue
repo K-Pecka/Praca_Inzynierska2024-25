@@ -2,9 +2,9 @@
 import { ref, watch } from "vue";
 import {Section,Form} from "@/components";
 import { useFormStore,useTripStore } from "@/stores";
-import { FormType } from "@/type/enum";
+import { FormType } from "@/types/enum";
 import { useRoute } from "vue-router";
-import { Plan } from "@/type/interface";
+import { Plan } from "@/types/interface";
 
 const { planMutationAdd } = useTripStore();
 const { getFormInputs, isFormValid } = useFormStore();

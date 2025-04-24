@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useActivityStore } from "@/stores/trip/useActivityStore";
-import ActivityList from "@/components/trip/modul/activity/ActivityList.vue";
-import ActivityForm from "@/components/trip/modul/activity/ActivityForm.vue";
+import ActivityList from "@/components/trip/module/activity/ActivityList.vue";
+import ActivityForm from "@/components/trip/module/activity/ActivityForm.vue";
 import AppButton from "@/components/budget/AppButton.vue";
 import { Section } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
 import { useRoute } from "vue-router";
-import { Activity } from "@/type/interface";
+import { Activity } from "@/types/interface";
 const route = useRoute();
 const id = route.params.tripId as string;
 const planId = route.params.planId as string;

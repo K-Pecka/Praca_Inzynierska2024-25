@@ -23,7 +23,7 @@
 
 <script lang="ts" setup>
 import FormInput from "@/components/common/FormInput.vue";
-import { Input } from "@/type/interface";
+import { Input } from "@/types/interface";
 
 
 const props = defineProps<{

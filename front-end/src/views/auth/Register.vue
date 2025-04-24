@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { Section,Form } from "@/components";
-import { Input,Register } from "@/type/interface";
-import { FormType } from "@/type/enum";
+import { Input,Register } from "@/types/interface";
+import { FormType } from "@/types/enum";
 import { useAuthStore,useFormStore,usePageHomeStore } from "@/stores";
 
 const { getSectionTitle } = usePageHomeStore();

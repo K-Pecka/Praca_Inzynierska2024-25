@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fetchRefreshToken } from '@/api';
 import { apiEndpoints} from "@/api/apiEndpoints";
-import { TOKEN } from "@/type/interface";
+import { TOKEN } from "@/types/interface";
 
 vi.mock("@/stores", () => ({
   useAuthStore: vi.fn().mockReturnValue({

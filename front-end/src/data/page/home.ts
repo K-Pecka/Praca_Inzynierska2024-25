@@ -42,7 +42,7 @@ export const defaultNavLinks = [
       title: "Jako Turysta",
       items: [
         {
-          image: "picture/p1.svg",
+          image: "picture/p4.svg",
           alt: "picture",
           caption: "Elastyczny planer podróży",
         },
@@ -62,7 +62,7 @@ export const defaultNavLinks = [
       title: "Jako Przewodnik",
       items: [
         {
-          image: "picture/p1.svg",
+          image: "picture/p4.svg",
           alt: "picture",
           caption: "Proste planowanie i udostępnianie",
         },

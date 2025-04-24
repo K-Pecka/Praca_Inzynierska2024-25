@@ -13,7 +13,7 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
       <v-col cols="12" md="10" offset-md="1">
         <Section>
           <template #title>
-            <div class="d-flex justify-between align-center justify-space-between mt-15">
+            <div class="d-flex justify-between align-center justify-space-between mt-15" style="width: 100%;">
               <h1 class="mr-1 pb-4">Zarządzaj wycieczkami</h1>
               <router-link :to="{name: 'TripForm'}">
                  <v-btn  outlined class="text-primary p-5" style="text-transform: none; border-radius: 8px;">

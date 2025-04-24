@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import {Section,Form} from "@/components";
 import { useFormStore,useTripStore } from "@/stores";
-import { FormType } from "@/type/enum";
+import { FormType } from "@/types/enum";
 
 const { tripMutationAdd } = useTripStore();
 

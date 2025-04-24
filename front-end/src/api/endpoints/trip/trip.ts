@@ -1,5 +1,5 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
-import { Trip,NewTrip } from "@/type/interface";
+import { Trip,NewTrip } from "@/types/interface";
 import { APP_MODE_DEV } from "@/config/envParams";
 import { useMockupStore } from "@/mockup/useMockupStore";
 import { QueryFunctionContext } from "@tanstack/vue-query";

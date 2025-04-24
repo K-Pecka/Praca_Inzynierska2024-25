@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Link } from "@/type/interface";
+import { Link } from "@/types/interface";
 defineProps({
   links: {
     type: Array as () => Link[],

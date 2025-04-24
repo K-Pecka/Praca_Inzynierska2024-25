@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import { RoleSelection, SideNavItem } from "@/type/interface";
-import { image } from "@/lib";
+import { RoleSelection, SideNavItem } from "@/types/interface";
+import { images } from "@/data";
 import { useRoleStore } from "../auth/useRoleStore";
-import { Role } from "@/type/enum";
-import { getGudieNav,getTouristNav } from "@/dataStorage/page/panel";
+import { Role } from "@/types/enum";
+import { getGudieNav,getTouristNav } from "@/data/page/panel";
 
 export const usePagePanelStore = defineStore("pagePanel", () => {
     const { getRole } = useRoleStore();
@@ -14,13 +14,13 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
             {
                 title: "Turysta",
                 description: "Planowanie indywidualnych podróży dla siebie i rodziny",
-                image: image.role.turist,
+                image: images.role.turist,
                 path:{name:"yourTrip"}
             },
             {
                 title: "Przewodnik",
                 description: "Tworzenie i zarządzanie wycieczkami dla grup turystycznych",
-                image: image.role.guide,
+                image: images.role.guide,
                 path:{name:"yourTripGuide"}
             },
         ],

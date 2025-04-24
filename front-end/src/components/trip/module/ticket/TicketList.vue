@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TicketCard from "./TicketCard.vue";
-import { Ticket} from "@/type";
+import { Ticket} from "@/types";
 
 const props = defineProps({
   tickets: {

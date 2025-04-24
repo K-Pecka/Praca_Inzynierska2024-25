@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import {ref, onMounted} from "vue";
-import {SideNavItem} from "@/type/interface";
+import {SideNavItem} from "@/types/interface";
 import {usePermissionStore, useAuthStore} from "@/stores";
 import {useRoute} from "vue-router";
 import {usePagePanelStore, useUtilStore} from "@/stores";
-import {Role} from "@/type/enum";
+import {Role} from "@/types/enum";
 
 const {getSideNavItems} = usePagePanelStore();
 const route = useRoute();
@@ -134,7 +134,7 @@ function closeSideNavWithDelay() {
 
 .side-nav {
   height: 100%;
-  width: 14rem;
+  width: 100%;
   left: 0;
   background-color: rgba(var(--v-theme-background));
   border-right: 2px solid rgb(var(--v-theme-primary));

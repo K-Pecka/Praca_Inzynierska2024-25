@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import { BudgetData, DashboardBox } from "@/type/interface";
+import { BudgetData, DashboardBox } from "@/types/interface";
 
 const props = defineProps<DashboardBox>();
 const screenWidth = ref(window.innerWidth);
@@ -56,7 +56,7 @@ const getGridRows = () => {
   return size[breakpoint]?.row || size.lg?.row || 1;
 };
 console.log(props);
-import BudgetContent from "@/components/style/BudgetContent.vue";
+import BudgetContent from "@/components/ui/BudgetContent.vue";
 </script>
 
 <template>

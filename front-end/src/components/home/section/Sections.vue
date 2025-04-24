@@ -9,7 +9,21 @@ const subSections = useStore.getAdvantagesData();
 <template>
   <Section>
     <template #title>
-      <h1 class="gradient-text">Co zyskasz korzystając z naszej aplikacji?</h1>
+      <h1
+          class="gradient-text"
+          style="
+            font-size: clamp(
+              1rem,
+              4.5vw,
+              20rem
+            );
+            line-height: 1;
+            width: 80%;
+            margin-bottom: 5vh;
+          "
+      >
+        Co zyskasz korzystając z naszej aplikacji?
+      </h1>
     </template>
     <template #content>
       <Advantage :subSections="subSections">
@@ -19,8 +33,8 @@ const subSections = useStore.getAdvantagesData();
   </Section>
   <Section>
     <template #title>
-      <h2>FAQ</h2>
-      <span>Najczęściej zadawane pytania</span>
+      <span style="font-size: 3vw; font-weight: 700;">FAQ</span>
+      <span style="font-size: 2vw;">Najczęściej zadawane pytania</span>
     </template>
     <template #content>
       <FAQ :faqList="faqList">

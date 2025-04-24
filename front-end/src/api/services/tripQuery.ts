@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/vue-query"
-import type { Trip } from "@/type";
+import type { Trip } from "@/types";
 import {fetchTrips, fetchTrip, deleteTrip, createTrip, updateTrip} from "@/api";
 import router from "@/router";
 

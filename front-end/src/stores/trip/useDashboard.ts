@@ -2,8 +2,8 @@ import {computed} from "vue";
 import {useQuery} from "@tanstack/vue-query";
 import {useRoleStore} from "@/stores/auth/useRoleStore";
 import {fetchTrip} from "@/api";
-import {Role} from "@/type/enum";
-import type {Trip} from "@/type";
+import {Role} from "@/types/enum";
+import type {Trip} from "@/types";
 
 function formatPL(dateString: string) {
     const dateObj = new Date(dateString);

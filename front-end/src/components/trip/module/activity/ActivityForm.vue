@@ -31,7 +31,7 @@ function submitActivity() {
     description: "",
   };
 }
-import activityGroups from "@/dataStorage/category/activity";
+import activityGroups from "@/data/category/activity";
 
 const selected = ref<(typeof activityGroups)[0]>(activityGroups[0]);
 </script>

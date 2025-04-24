@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { SubSectionItem } from "@/type";
+import { SubSectionItem } from "@/types";
 defineProps({
   items: {
     type: Array as () => SubSectionItem[],
@@ -39,43 +39,39 @@ img {
 }
 .subSection {
   margin: 5rem 0;
+  width: 100%;
 
   &__title {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
+    font-size: 3vw;
+    margin-bottom: clamp(0.5rem, 5vw, 1.5rem);
     text-align: center;
   }
 
   &__content {
     display: flex;
-    gap: 1rem;
+    width: auto;
     flex-wrap: wrap;
     justify-content: center;
   }
 
   &__item {
     text-align: center;
-    width: 14rem;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
+    width: clamp(20rem, 15vw, 150rem);
+    margin-left: 1%;
+    margin-right: 1%;
   }
 
   &__imageContainer {
     width: 100%;
-    height: 13rem;
-    margin-bottom: 0.5rem;
 
     &-colorBox {
       width: 100%;
-      min-height: 12rem;
       background-color: rgba(var(--v-theme-secendar,47, 39, 206, 0.3));
-      border-radius: 15px;
+      border-radius: 10%;
     }
   }
   &__caption {
-    font-size: 1rem;
+    font-size: 1.2vw;
     color: rgb(var(--v-theme-text));
     letter-spacing: 2px;
     font-weight: 700;

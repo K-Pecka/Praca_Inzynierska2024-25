@@ -1,5 +1,5 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
-import { Budget } from "@/type/interface";
+import { Budget } from "@/types/interface";
 
 import { APP_MODE_DEV } from "@/config/envParams";
 import { useMockupStore } from "@/mockup/useMockupStore";

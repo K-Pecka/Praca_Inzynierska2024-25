@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Role } from '@/type/enum';
+import { Role } from '@/types/enum';
 import { ref } from 'vue';
 
 export const useRoleStore = defineStore('roleStore', () => {

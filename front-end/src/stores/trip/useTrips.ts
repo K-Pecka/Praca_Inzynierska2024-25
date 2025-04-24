@@ -2,11 +2,11 @@ import {useQueryClient} from "@tanstack/vue-query";
 import {computed} from "vue";
 import {useRoleStore} from "@/stores/auth/useRoleStore";
 import {useNotificationStore} from "@/stores";
-import {Role} from "@/type/enum";
-import type { Btn } from "@/type";
-import { getTripQuery,getTripDetailsQuery, getMutationCreate, getMutationDelete,getMutationUpdate } from "@/api/serwis/tripQuery";
-import { getBtn } from "@/dataStorage/page/panel";
-import { TypeOfButton } from "@/type/enum";
+import {Role} from "@/types/enum";
+import type { Btn } from "@/types";
+import { getTripQuery,getTripDetailsQuery, getMutationCreate, getMutationDelete,getMutationUpdate } from "@/api/services/tripQuery";
+import { getBtn } from "@/data/page/panel";
+import { TypeOfButton } from "@/types/enum";
 export const useTrips = () => {
     const queryClient = useQueryClient();
     const notifications = useNotificationStore();

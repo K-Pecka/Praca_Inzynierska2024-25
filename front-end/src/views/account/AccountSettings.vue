@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import {Section, Form} from '@/components';
-import {Input} from '@/type/interface';
+import {Input} from '@/types/interface';
 import {useFormStore} from '@/stores';
-import {FormType} from '@/type/enum';
+import {FormType} from '@/types/enum';
 import {useAuthStore} from '@/stores';
 
 const {getFormInputs, isFormValid} = useFormStore();
