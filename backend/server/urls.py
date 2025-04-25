@@ -28,6 +28,7 @@ urlpatterns = [
     path('user_auth/', include('user_auth.urls')),
     path('trip/<int:trip_pk>/itinerary/', include('itineraries.urls')),
     path('trip/<int:trip_pk>/itinerary/<int:itinerary_pk>/chat/', include('chats.urls')),
+    path('dict/', include('dicts.urls')),
     path('trip/', include('trips.urls')),
     path('apis/', include('apis.urls')),
 ]

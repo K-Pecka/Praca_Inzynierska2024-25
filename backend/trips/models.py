@@ -20,7 +20,7 @@ def validate_iso_currency(value):
     if not pycountry.currencies.get(alpha_3=value):
         available = [c.alpha_3 for c in pycountry.currencies]
         raise ValidationError(
-            f"'{value}' nie jest prawidłowym kodem waluty ISO 4217. "
+            f"'{value}' nie jest prawidłowym kodem waluty. "
             f"Dostępne kody: {', '.join(available)}"
         )
 
@@ -48,7 +48,7 @@ class Trip(BaseModel):
         verbose_name=_("Data zakończenia"), help_text=_("Data zakończenia")
     )
     settings = models.JSONField(
-        default=dict,  # TODO: stworzyć defaultowe, customowe ustawienia
+        default=dict,
         verbose_name=_("Ustawienia"), help_text=_("Ustawienia")
     )
 
@@ -81,8 +81,12 @@ class Trip(BaseModel):
         return False
 
     def clean(self):
+        super().clean()
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
+
+        if self.pk and self.members.count() > 5:
+            raise ValidationError("Wycieczka może mieć maksymalnie 5 uczestników.")
 
     def save(self, *args, **kwargs):
         self.clean()

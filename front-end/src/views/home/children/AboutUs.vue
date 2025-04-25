@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import TeamMemberCard from "@/components/TeamMemberCard.vue";
+import TeamMemberCard from "@/components/ui/TeamMemberCard.vue";
 
 const aboutTeam = {
   mainTitle: "Dowiedź się więcej o nas",
