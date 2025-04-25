@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import '../../core/models/trip_model.dart';
 import '../../features/dashboard/screens/tourist_dashboard_screen.dart';
 import '../../features/itineraries/screens/itinerary_screen.dart';
 import '../../features/budget/screens/tourist_budget_screen.dart';
-import 'bottom_navigation.dart';
+import '../../core/widgets/bottom_navigation.dart';
 
 class BottomNavScaffold extends StatefulWidget {
   final String token;
   final int userProfileId;
-  final int tripId;
+  final TripModel trip;
 
   const BottomNavScaffold({
     super.key,
     required this.token,
     required this.userProfileId,
-    required this.tripId,
+    required this.trip,
   });
 
   @override
@@ -22,6 +23,19 @@ class BottomNavScaffold extends StatefulWidget {
 
 class _BottomNavScaffoldState extends State<BottomNavScaffold> {
   int _currentIndex = 0;
+  late TripModel _currentTrip;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentTrip = widget.trip;
+  }
+
+  void _updateTrip(TripModel newTrip) {
+    setState(() {
+      _currentTrip = newTrip;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +43,16 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
       TouristDashboard(
         token: widget.token,
         userProfileId: widget.userProfileId,
-        tripId: widget.tripId,
+        trip: _currentTrip,
+        onTripChange: _updateTrip,
       ),
       ItineraryScreen(
-        tripId: widget.tripId,
+        trip: _currentTrip,
         token: widget.token,
       ),
       TouristBudgetScreen(
         token: widget.token,
-        tripId: widget.tripId,
+        trip: _currentTrip,
         userProfileId: widget.userProfileId,
       ),
       const Placeholder(),
@@ -53,3 +68,7 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
     );
   }
 }
+
+
+
+

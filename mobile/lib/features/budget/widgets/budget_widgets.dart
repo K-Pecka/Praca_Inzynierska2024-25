@@ -40,7 +40,7 @@ class BudgetOverviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '${totalBudget.toStringAsFixed(0)} EUR',
+            '${totalBudget.toStringAsFixed(0)} PLN',
             style: TextStyles.totalBudgetAmount,
           ),
           const SizedBox(height: 8),
@@ -55,7 +55,7 @@ class BudgetOverviewCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${used.toStringAsFixed(0)} EUR',
+                '${used.toStringAsFixed(0)} PLN',
                 style: TextStyles.usedBudget,
               ),
               Text(

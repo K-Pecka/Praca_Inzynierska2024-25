@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '/core/models/trip_model.dart';
 import '/core/theme/text_styles.dart';
-import '/core/theme/icons.dart'; // <--- dodane
+import '/core/theme/icons.dart';
 
 class TripDropdownCard extends StatelessWidget {
   final List<TripModel> trips;
@@ -59,12 +58,7 @@ class TripDropdownCard extends StatelessWidget {
                       ),
                       Text(
                         trip.name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                          fontFamily: 'Quicksand',
-                        ),
+                        style: TextStyles.cardTitleHeading,
                       ),
                     ],
                   );
@@ -76,11 +70,7 @@ class TripDropdownCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                       child: Text(
                         trip.name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
+                        style: TextStyles.subtitle,
                       ),
                     ),
                   );
@@ -137,11 +127,7 @@ class TripDetailsCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             trip.name,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
+            style: TextStyles.cardTitleHeading,
           ),
           const SizedBox(height: 12),
           Row(
@@ -149,11 +135,7 @@ class TripDetailsCard extends StatelessWidget {
             children: [
               Text(
                 '$start - $end',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black54,
-                ),
+                style: TextStyles.subtitle,
               ),
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
@@ -163,11 +145,7 @@ class TripDetailsCard extends StatelessWidget {
                 ),
                 child: Text(
                   '$duration dni',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TextStyles.whiteSubtitle,
                 ),
               ),
             ],

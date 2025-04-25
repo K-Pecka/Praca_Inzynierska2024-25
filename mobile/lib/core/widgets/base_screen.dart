@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import '../models/trip_model.dart';
 import 'title_header.dart';
 
 class BaseScreen extends StatelessWidget {
-  final String title;
+  final TripModel trip;
+  final String token;
   final Widget child;
   final bool scrollable;
 
   const BaseScreen({
     super.key,
-    required this.title,
+    required this.trip,
+    required this.token,
     required this.child,
     this.scrollable = true,
   });
@@ -18,21 +21,24 @@ class BaseScreen extends StatelessWidget {
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TripTitleHeader(title: title),
+        TripTitleHeader(title: trip.name, token: token),
         const SizedBox(height: 16),
         child,
       ],
     );
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: scrollable
-            ? SingleChildScrollView(
-          padding: const EdgeInsets.only(bottom: 24),
-          child: content,
-        )
-            : content,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: scrollable
+              ? SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 24),
+            child: content,
+          )
+              : content,
+        ),
       ),
     );
   }

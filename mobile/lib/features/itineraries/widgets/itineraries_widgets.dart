@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '/core/models/itinerary_model.dart';
+import '/core/models/activity_model.dart';
 import '/core/theme/text_styles.dart';
 import '/core/theme/icons.dart';
 
@@ -28,7 +29,6 @@ class _DaySelectorState extends State<DaySelector> {
   final _scrollController = ScrollController();
 
   List<DateTime> _generateVisibleDays() {
-    // Twórz 5 dni: wybrany na środku, po 2 w lewo i prawo
     return List.generate(5, (i) => widget.selected.add(Duration(days: i - 2)));
   }
 
@@ -46,8 +46,9 @@ class _DaySelectorState extends State<DaySelector> {
   void didUpdateWidget(covariant DaySelector oldWidget) {
     super.didUpdateWidget(oldWidget);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final index = 2; // wybrany dzień zawsze na środku
-      final offset = (index * 64.0) - MediaQuery.of(context).size.width / 2 + 32;
+      final index = 2;
+      final offset =
+          (index * 64.0) - MediaQuery.of(context).size.width / 2 + 32;
       _scrollController.animateTo(
         offset.clamp(0, _scrollController.position.maxScrollExtent),
         duration: const Duration(milliseconds: 300),
@@ -78,10 +79,10 @@ class _DaySelectorState extends State<DaySelector> {
             final isActive = _isActive(date);
 
             final bgColor = isSelected
-                ? const Color(0xBF2F27CE) // #2F27CE 75%
+                ? const Color(0xBF2F27CE)
                 : isInPlan && isActive
-                ? const Color(0x90DEDCFF) // #DEDCFF 50%
-                : const Color(0x40000000); // #000000 10%
+                ? const Color(0x90DEDCFF)
+                : const Color(0x40000000);
 
             return GestureDetector(
               onTap: () => widget.onSelect(date),
@@ -94,11 +95,7 @@ class _DaySelectorState extends State<DaySelector> {
                 ),
                 child: Text(
                   DateFormat('d').format(date),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
+                  style: TextStyles.cardTitleHeading,
                 ),
               ),
             );
@@ -109,14 +106,23 @@ class _DaySelectorState extends State<DaySelector> {
   }
 }
 
+class ActivitiesList extends StatelessWidget {
+  final List<ActivityModel> activities;
 
-class MockActivitiesList extends StatelessWidget {
-  const MockActivitiesList({super.key});
+  const ActivitiesList({super.key, required this.activities});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: List.generate(3, (index) {
+    if (activities.isEmpty) {
+      return const Center(child: Text('Brak aktywności na ten dzień'));
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: activities.length,
+      itemBuilder: (context, index) {
+        final a = activities[index];
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
@@ -127,29 +133,32 @@ class MockActivitiesList extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+              Row(
                 children: [
-                  Icon(Icons.restaurant, color: Colors.black87),
-                  SizedBox(width: 8),
-                  Text('Tytuł', style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Icon(Icons.event, color: Colors.black87),
+                  const SizedBox(width: 8),
+                  Text(
+                    a.name,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
-              const Row(
+              Row(
                 children: [
-                  Icon(Icons.access_time, size: 16, color: Colors.black54),
-                  SizedBox(width: 4),
-                  Text('12:00:00', style: TextStyle(color: Colors.black54)),
-                  SizedBox(width: 12),
-                  Icon(Icons.access_time_filled, size: 16, color: Colors.black54),
-                  SizedBox(width: 4),
-                  Text('1h 30m', style: TextStyle(color: Colors.black54)),
+                  const Icon(Icons.access_time, size: 16, color: Colors.black54),
+                  const SizedBox(width: 4),
+                  Text(a.startTime, style: const TextStyle(color: Colors.black54)),
+                  const SizedBox(width: 12),
+                  const Icon(Icons.access_time_filled, size: 16, color: Colors.black54),
+                  const SizedBox(width: 4),
+                  Text('${a.duration} min', style: const TextStyle(color: Colors.black54)),
                 ],
               ),
             ],
           ),
         );
-      }),
+      },
     );
   }
 }
@@ -178,7 +187,8 @@ class PlanDropdownCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ColorFiltered(
-            colorFilter: const ColorFilter.mode(Color(0xB32F27CE), BlendMode.srcIn),
+            colorFilter:
+            const ColorFilter.mode(Color(0xB32F27CE), BlendMode.srcIn),
             child: SizedBox(width: 32, height: 32, child: AppIcons.map),
           ),
           const SizedBox(width: 12),
@@ -187,7 +197,8 @@ class PlanDropdownCard extends StatelessWidget {
               child: DropdownButton<ItineraryModel>(
                 isExpanded: true,
                 value: selectedPlan,
-                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.black54),
+                icon: const Icon(Icons.keyboard_arrow_down_rounded,
+                    color: Colors.black54),
                 dropdownColor: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 style: const TextStyle(
@@ -202,7 +213,8 @@ class PlanDropdownCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Obecny plan', style: TextStyles.cardTitleHeading),
+                      const Text('Obecny plan',
+                          style: TextStyles.cardTitleHeading),
                       Text(
                         plan.name,
                         style: const TextStyle(
@@ -242,3 +254,4 @@ class PlanDropdownCard extends StatelessWidget {
     );
   }
 }
+

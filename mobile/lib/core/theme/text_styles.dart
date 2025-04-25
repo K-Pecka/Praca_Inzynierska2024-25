@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
 
 class TextStyles {
+  static const loginTitleHeading = TextStyle(
+    fontSize: 26,
+    fontWeight: FontWeight.w600,
+    color: Colors.black87,
+  );
+
+  static const loginReturnButton = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: Color(0xFF7C4DFF)
+  );
+
+  static const sectionHeading = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.w600,
+    color: Colors.black87,
+  );
+
   static const cardTitleHeading = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w600,
     color: Colors.black87,
   );
 
-  static const cardSubtitle = TextStyle(
+  static const subtitle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w600,
     color: Colors.black54,
@@ -19,7 +37,7 @@ class TextStyles {
     color: Colors.black38,
   );
 
-  static const addExpenseButton = TextStyle(
+  static const whiteSubtitle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w600,
     color: Colors.white,

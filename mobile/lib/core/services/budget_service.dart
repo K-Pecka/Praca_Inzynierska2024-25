@@ -18,7 +18,7 @@ class BudgetService {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
+      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
       return data.map((e) => ExpenseModel.fromJson(e)).toList();
     } else {
       throw Exception('Błąd podczas pobierania wydatków');
@@ -45,7 +45,7 @@ class BudgetService {
     final body = jsonEncode({
       'title': title,
       'amount': amount.toStringAsFixed(2),
-      'currency': 1,
+      'currency': "USD",
       'date': date,
       'note': note,
       'trip': tripId,
@@ -57,6 +57,28 @@ class BudgetService {
 
     if (response.statusCode != 201) {
       throw Exception('Błąd podczas dodawania wydatku: ${response.body}');
+    }
+  }
+
+  Future<double> getExchangeRate({
+    required String from,
+    required String to,
+    required String token,
+  }) async {
+    final url = Uri.parse('$baseUrl/apis/currency/?from=$from&to=$to');
+    final response = await http.get(
+      url,
+      headers: {
+        'accept': '*/*',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return double.parse(json['rate'].toString());
+    } else {
+      throw Exception('Błąd pobierania kursu: ${response.body}');
     }
   }
 }

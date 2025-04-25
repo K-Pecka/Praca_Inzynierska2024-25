@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/text_styles.dart';
+
 Widget buildTitle(String text) {
   return Text(
     text,
-    style: const TextStyle(
-      fontSize: 26,
-      fontFamily: 'Quicksand',
-      fontWeight: FontWeight.w600,
-      color: Colors.black87,
-    ),
+    style: TextStyles.loginTitleHeading ,
   );
 }
 
@@ -40,12 +37,7 @@ Widget buildChooseProfileButtons({
           ),
           child: const Text(
             'Turysta',
-            style: TextStyle(
-              fontFamily: 'Quicksand',
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black54,
-            ),
+            style: TextStyles.subtitle,
           ),
         ),
       ),
@@ -63,12 +55,7 @@ Widget buildChooseProfileButtons({
           ),
           child: const Text(
             'Przewodnik',
-            style: TextStyle(
-              fontFamily: 'Quicksand',
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black54,
-            ),
+              style: TextStyles.subtitle,
           ),
         ),
       ),
@@ -92,42 +79,22 @@ Widget buildTouristLoginForm({
       children: [
         TextField(
           controller: emailController,
-          style: TextStyle(
-            fontFamily: 'Quicksand',
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.black54,
-          ),
+          style: TextStyles.subtitle,
           decoration: InputDecoration(
             labelText: 'Email',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            labelStyle: TextStyle(
-              fontFamily: 'Quicksand',
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black54,
-            ),
+            labelStyle: TextStyles.subtitle,
           ),
         ),
         const SizedBox(height: 16),
         TextField(
           controller: passwordController,
           obscureText: true,
-          style: TextStyle(
-            fontFamily: 'Quicksand',
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.black54,
-          ),
+          style: TextStyles.subtitle,
           decoration: InputDecoration(
             labelText: 'Hasło',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            labelStyle: TextStyle(
-              fontFamily: 'Quicksand',
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.black54,
-            ),
+            labelStyle: TextStyles.subtitle,
           ),
         ),
         const SizedBox(height: 24),
@@ -147,12 +114,7 @@ Widget buildTouristLoginForm({
                     ? const CircularProgressIndicator(color: Colors.white)
                     : const Text(
                       'Zaloguj',
-                      style: TextStyle(
-                        fontFamily: 'Quicksand',
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: TextStyles.whiteSubtitle,
                     ),
           ),
         ),

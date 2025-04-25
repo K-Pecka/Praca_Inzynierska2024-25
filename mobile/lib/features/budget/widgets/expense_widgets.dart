@@ -25,11 +25,11 @@ class ExpenseTile extends StatelessWidget {
         ),
         subtitle: Text(
           DateFormat('dd.MM.yyyy').format(expense.date),
-          style: TextStyles.cardSubtitle,
+          style: TextStyles.subtitle,
         ),
         trailing: Text(
           '${expense.amount.toStringAsFixed(0)} ${expense.currency}',
-          style: TextStyles.cardSubtitle,
+          style: TextStyles.subtitle,
         ),
       ),
     );
@@ -137,7 +137,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
               children: [
                 const Text(
                   'Dodaj wydatek',
-                  style: TextStyles.cardSubtitle,
+                  style: TextStyles.subtitle,
                 ),
                 const SizedBox(height: 16),
                 buildInputField(
@@ -199,7 +199,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                     ),
                     child: const Text(
                       'Zapisz',
-                      style: TextStyles.addExpenseButton,
+                      style: TextStyles.whiteSubtitle,
                     ),
                   ),
                 ),

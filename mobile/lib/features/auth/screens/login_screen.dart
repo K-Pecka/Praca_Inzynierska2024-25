@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../../../core/models/trip_model.dart';
+import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/bottom_navigation_scaffold.dart';
 import '../widgets/auth_widgets.dart';
 import '/core/services/auth_service.dart';
@@ -33,7 +35,7 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
         throw Exception("Brak tokena lub ID profilu");
       }
 
-      // pobierz pierwszą wycieczkę
+      // Pobierz pierwszą wycieczkę
       final tripResponse = await http.get(
         Uri.parse('https://api.plannder.com/trip/all/'),
         headers: {
@@ -50,7 +52,7 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
           jsonDecode(tripResponse.body) as List<dynamic>);
       if (trips.isEmpty) throw Exception("Brak wycieczek");
 
-      final tripId = trips.first['id'];
+      final trip = TripModel.fromJson(trips.first);
 
       Navigator.pushReplacement(
         context,
@@ -58,7 +60,7 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
           builder: (context) => BottomNavScaffold(
             token: token,
             userProfileId: profileId,
-            tripId: tripId,
+            trip: trip,
           ),
         ),
       );
@@ -98,12 +100,7 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
                       'powrót',
-                      style: TextStyle(
-                        fontFamily: 'Quicksand',
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF7C4DFF),
-                      ),
+                      style: TextStyles.loginReturnButton,
                     ),
                   ),
                 ],

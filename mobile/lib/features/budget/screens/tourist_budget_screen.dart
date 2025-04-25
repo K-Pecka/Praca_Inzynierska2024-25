@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import '../../../../core/models/expense_model.dart';
 import '../../../../core/services/budget_service.dart';
-import '../../../core/widgets/title_header.dart';
+import '../../../../core/models/trip_model.dart';
 import '../widgets/expense_widgets.dart';
 import '../widgets/budget_widgets.dart';
 import '../../../../core/widgets/base_screen.dart';
 
 class TouristBudgetScreen extends StatefulWidget {
   final String token;
-  final int tripId;
+  final TripModel trip;
   final int userProfileId;
 
   const TouristBudgetScreen({
     super.key,
     required this.token,
-    required this.tripId,
+    required this.trip,
     required this.userProfileId,
   });
 
@@ -24,30 +24,56 @@ class TouristBudgetScreen extends StatefulWidget {
 
 class _TouristBudgetScreenState extends State<TouristBudgetScreen> {
   List<ExpenseModel> _expenses = [];
+  double _used = 0.0;
   bool _loading = true;
   bool _showForm = false;
 
   @override
   void initState() {
     super.initState();
-    _loadExpenses();
+    _loadData();
   }
 
-  Future<void> _loadExpenses() async {
+  Future<void> _loadData() async {
     final data = await BudgetService().fetchExpenses(
-      tripId: widget.tripId,
+      tripId: widget.trip.id,
       token: widget.token,
     );
+    final used = await _calculateUsedInPLN(data);
+
     setState(() {
       _expenses = data;
+      _used = used;
       _loading = false;
     });
+  }
+
+  Future<double> _calculateUsedInPLN(List<ExpenseModel> expenses) async {
+    double total = 0.0;
+    final Map<String, double> rateCache = {};
+
+    for (final e in expenses) {
+      if (e.currency == 'PLN') {
+        total += e.amount;
+      } else {
+        if (!rateCache.containsKey(e.currency)) {
+          final rate = await BudgetService().getExchangeRate(
+            from: e.currency,
+            to: 'PLN',
+            token: widget.token,
+          );
+          rateCache[e.currency] = rate;
+        }
+        total += e.amount * rateCache[e.currency]!;
+      }
+    }
+
+    return total;
   }
 
   @override
   Widget build(BuildContext context) {
     final double totalBudget = 5000.0;
-    final double used = _expenses.fold(0, (sum, e) => sum + e.amount);
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -55,24 +81,24 @@ class _TouristBudgetScreenState extends State<TouristBudgetScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : BaseScreen(
-        title: 'Majówka we Francji',
+        trip: widget.trip,
+        token: widget.token,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BudgetOverviewCard(totalBudget: totalBudget, used: used),
+            BudgetOverviewCard(totalBudget: totalBudget, used: _used),
             const SizedBox(height: 16),
             ToggleExpenseFormButton(
               showForm: _showForm,
-              onToggle: () =>
-                  setState(() => _showForm = !_showForm),
+              onToggle: () => setState(() => _showForm = !_showForm),
             ),
             const SizedBox(height: 16),
             if (_showForm)
               ExpenseForm(
                 token: widget.token,
-                tripId: widget.tripId,
+                tripId: widget.trip.id,
                 userProfileId: widget.userProfileId,
-                onSaved: _loadExpenses,
+                onSaved: _loadData,
               ),
             const SizedBox(height: 24),
             ListView.builder(
@@ -89,3 +115,6 @@ class _TouristBudgetScreenState extends State<TouristBudgetScreen> {
     );
   }
 }
+
+
+

@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: 'Quicksand',
+        scaffoldBackgroundColor: Colors.white,
       ),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
