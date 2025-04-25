@@ -20,7 +20,7 @@ def validate_iso_currency(value):
     if not pycountry.currencies.get(alpha_3=value):
         available = [c.alpha_3 for c in pycountry.currencies]
         raise ValidationError(
-            f"'{value}' nie jest prawidłowym kodem waluty ISO 4217. "
+            f"'{value}' nie jest prawidłowym kodem waluty. "
             f"Dostępne kody: {', '.join(available)}"
         )
 
@@ -48,7 +48,7 @@ class Trip(BaseModel):
         verbose_name=_("Data zakończenia"), help_text=_("Data zakończenia")
     )
     settings = models.JSONField(
-        default=dict,  # TODO: stworzyć defaultowe, customowe ustawienia
+        default=dict,
         verbose_name=_("Ustawienia"), help_text=_("Ustawienia")
     )
 
