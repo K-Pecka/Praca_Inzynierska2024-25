@@ -67,7 +67,7 @@ function onHamburgerClick() {
 </template>
 
 <style scoped lang="scss">
-@use "@/assets/style" as *;
+@use "@/assets/styles/style" as *;
 
 .panel-navbar {
   display: flex;

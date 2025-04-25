@@ -9,7 +9,7 @@ console.log("PricingCard", props);
 <template>
   <v-card
     :class="['pricing-card', contentVariant ?? buttonVariant]"
-    class="d-flex flex-column align-center pa-6"
+    class="d-flex flex-column align-center pa-6 w-100"
     :style="{ width: '280px' }"
     elevation="4"
   >

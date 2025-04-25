@@ -19,7 +19,7 @@ export const fetchData = async <T = unknown>(
     return { error: "Jestem w trakcie wykonania\n poprzedniego zapytania..." };
   
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 5000);
+  const timeoutId = setTimeout(() => controller.abort(), 2000);
 
   try {
     const response = await fetch(url, {

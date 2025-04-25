@@ -13,7 +13,7 @@
 </template>
 
 <style scoped lang="scss">
-@use "@/assets/style" as *;
+@use "@/assets/styles/style" as *;
 .section__content {
   display: flex;
   flex-direction: column;

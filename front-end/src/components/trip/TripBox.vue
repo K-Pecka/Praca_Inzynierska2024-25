@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Button, Trip} from "@/types/interface";
+import {Button, Trip, Image} from "@/types/interface";
 
 function formatPL(dateString: string): string {
   const dateObj = new Date(dateString);
@@ -18,7 +18,7 @@ const props = defineProps({
     default: () => []
   },
   image:{
-    type: String,
+    type: Object as () => Image,
   }
 });
 console.log(props);
@@ -41,7 +41,7 @@ console.log(props);
         <v-card style="border-radius: 15px;padding-bottom:0.5rem;width: 100%;">
           <v-row style="height: 100%">
             <v-col cols="12" sm="4" style="height: 100%; width: 20rem; padding-right: 0px;">
-              <img :src="image" style="height:100%;width:100%;" class="pl-2"/>
+              <img :src="image?.img" :alt="image?.alt" style="height:100%;width:100%;" class="pl-2"/>
             </v-col>
             <v-col cols="12" sm="8" class="d-center">
               <div style="max-width:80%">

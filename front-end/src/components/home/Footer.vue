@@ -52,7 +52,7 @@ const lastModifiedDate = formatDate(new Date(lastModified));
 </template>
 
 <style scoped lang="scss">
-@use "@/assets/style.scss" as *;
+@use "@/assets/styles/style.scss" as *;
 .footer-bg{
   background-color: rgb(var(--v-theme-secondary));
   display: flex;

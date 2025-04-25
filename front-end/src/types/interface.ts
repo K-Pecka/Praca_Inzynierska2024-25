@@ -98,14 +98,12 @@ export interface FooterData {
 export interface SubSectionData {
   title: string;
   items: {
-    image: string;
-    alt: string;
+    image: Image
     caption: string;
   }[];
 }
 export interface SubSectionItem {
-  image: string;
-  alt: string;
+  image: Image;
   caption: string;
 }
 
@@ -123,11 +121,15 @@ export interface FAQItem {
   question: string;
   answer: string;
 }
-
+export interface Image {  
+  img: string;
+  alt: string;
+  caption?: string;
+}
 export interface Role{
   title: String,
   description: String,
-  image: string,
+  image: Image,
   path: string | { name: string; params?: Record<string, string> };
 }
 export interface RoleSelection{

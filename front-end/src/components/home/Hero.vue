@@ -39,7 +39,7 @@ const props = defineProps({
   </header>
 </template>
 <style scoped lang="scss">
-@use "@/assets/style" as *;
+@use "@/assets/styles/style" as *;
 .hero__image{
   fill: rgb(var(--v-theme-hero-bg));
 }

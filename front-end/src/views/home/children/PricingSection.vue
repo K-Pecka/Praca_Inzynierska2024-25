@@ -16,18 +16,19 @@ import { Section } from "@/components/common";
     <template #content>
       <v-container fluid class="my-6">
         <v-row
-          class="pricing-row"
+          class="d-flex justify-center"
+          align="center"
           justify="center"
-          no-gutters
+          :style="{ maxWidth: '100%' }" 
         >
           <v-col
             v-for="(plan, index) in pricingPlans"
             :key="plan.name"
             cols="12"
             sm="6"
-            md="4"
+            md="3"
             lg="3"
-            class="d-flex px-4 mb-6"
+            class="mx-5"
           >
             <v-fade-transition>
               <div

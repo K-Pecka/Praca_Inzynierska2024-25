@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {Section,TripBox} from "@/components";
+import { images } from "@/data";
 import { useTripStore } from "@/stores/trip/useTripStore";
 import { useRoute } from "vue-router";
 useTripStore().initialize(useRoute().name as string);
@@ -29,7 +30,7 @@ const { data: trips, isLoading, error, isSuccess } = yourTrips.trips()
           <template #content>
             <p v-if="isLoading">Ładowanie...</p>
             <p v-else-if="error">Błąd: {{ error.message }}</p>
-            <TripBox v-else-if="trips && trips.length > 0" :btn="yourTrips.btn.map(btn => ({ ...btn, onclick: async (id: string) => { await btn.onclick(id); return; } }))" :trip="trips" image="/picture/p1.svg" />
+            <TripBox v-else-if="trips && trips.length > 0" :btn="yourTrips.btn.map(btn => ({ ...btn, onclick: async (id: string) => { await btn.onclick(id); return; } }))" :trip="trips" :image="images.backgrounds.trip" />
           </template>
         </Section>
       </v-col>
