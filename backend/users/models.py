@@ -214,9 +214,6 @@ class UserProfile(BaseModel):
         if not self.pk:
             self.save()
 
-        if self.user.is_guest:
-            raise ValidationError(_("Nie można edytować profilu gościa."))
-
 
     class Meta:
         unique_together = ("user", "type")

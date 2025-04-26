@@ -46,8 +46,8 @@ function removeParticipantById(id: number) {
       <template #title>
             <HeaderSection>
               <template #subtitle>
-                  <div class="title-container pb-4">
-                    <h2 class="section-title">Zarządzaj uczestnikami</h2>
+                  <div class="title-container pb-4 w-100">
+                    <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Zarządzaj uczestnikami</h2>
                  <AppButton
                     variant="primary"
                     size="md"

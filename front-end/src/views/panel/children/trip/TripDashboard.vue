@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { Box, Section } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
-import { Expense } from "@/types";
-import ExpenseList from "@/components/expenseItem/ExpenseList.vue";
+import ExpenseList from "@/components/budget/ExpenseList.vue";
 import HeaderSection from "@/components/common/HeaderSection.vue";
 import { useRoute } from "vue-router";
 
@@ -13,8 +12,6 @@ const route = useRoute();
 const id = route.params.tripId as string;
 
 const { boxes, isLoading, error, tripName } = getDashboard(id);
-
-const expenseItem: Expense[] = getExpenseItem().expenseItem;
 </script>
 
 <template>
@@ -60,7 +57,7 @@ const expenseItem: Expense[] = getExpenseItem().expenseItem;
         </div>
       </template>
       <template v-else>
-        <div class="grid-container" style="width: 80%;">
+        <div class="grid-container w-100">
           <template v-for="(box, index) in boxes" :key="index">
             <Box
               :title="box.title"
@@ -70,11 +67,11 @@ const expenseItem: Expense[] = getExpenseItem().expenseItem;
             />
           </template>
         </div>
-        <v-card class="dashboard-card" elevation="3" style="width: 80%;">
+        <v-card class="dashboard-card w-100" elevation="3">
           <v-card-title class="text-h6 pt-0 font-weight-bold expense-card-title">
             {{getExpenseItem().sectionName}}
           </v-card-title>
-          <ExpenseList :expenses="expenseItem" />
+          <ExpenseList variant="view" :limit="4"/>
         </v-card>
       </template>
     </template>

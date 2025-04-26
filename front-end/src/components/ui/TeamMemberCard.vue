@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
 defineProps<{
   members: {
@@ -7,7 +7,7 @@ defineProps<{
     role: string;
     description: string;
     photo?: string;
-  }[]
+  }[];
 }>();
 
 const isSmallScreen = ref(false);
@@ -16,14 +16,19 @@ onMounted(() => {
   isSmallScreen.value = window.innerWidth <= 952;
 });
 
-
-window.addEventListener('resize', () => {
+window.addEventListener("resize", () => {
   isSmallScreen.value = window.innerWidth <= 952;
 });
 </script>
 
 <template>
-  <v-row class="d-flex ga-md-0 ga-8">
+  <v-row
+    class="d-flex ga-md-0 ga-8"
+    :style="{
+      'max-width': $vuetify.display.lgAndUp ? '80%' : '100%',
+      margin: 'auto',
+    }"
+  >
     <v-col
       v-for="(member, index) in members"
       :key="member.name"
@@ -39,11 +44,13 @@ window.addEventListener('resize', () => {
         elevation="4"
         color="primary"
         variant="tonal"
-        
       >
         <v-row
           class="d-flex align-center pa-4"
-          :class="{'flex-row-reverse': member?.photo && isSmallScreen && index % 2 === 1}"
+          :class="{
+            'flex-row-reverse':
+              member?.photo && isSmallScreen && index % 2 === 1,
+          }"
         >
           <v-col
             v-if="member.photo"
@@ -64,7 +71,15 @@ window.addEventListener('resize', () => {
 
           <v-col cols="12" sm="8">
             <v-card-text>
-              <h3 class="text-h6 font-weight-bold">{{ member.name }}</h3>
+              <h3
+                class="font-weight-bold"
+                :class="{
+                  'text-body-1': !$vuetify.display.smAndUp,
+                  'text-h6': $vuetify.display.smAndUp,
+                }"
+              >
+                {{ member.name }}
+              </h3>
               <p class="text-subtitle-1 font-italic">{{ member.role }}</p>
               <p class="text-body-1">{{ member.description }}</p>
             </v-card-text>

@@ -34,7 +34,7 @@ console.log(props.plans.activities_count)
                 {{ trip.name }}
               </v-card-title>
               <v-card-subtitle class="px-0 pb-1 font-weight-medium">
-                {{ trip.country }} to do zmiany bo tu opis powinien byc
+                {{ trip.country }} {{ trip?.description ?? "brak opisu" }}
               </v-card-subtitle>
               <v-card-text class="px-0 py-0 font-weight-medium">
                 {{ formatPL(trip.start_date) }} - {{ formatPL(trip.end_date) }} <span class="activity-number ml-2">{{trip.activities_count || 0}} aktywności</span>
@@ -48,8 +48,11 @@ console.log(props.plans.activities_count)
                 variant="flat"
                 :style="{'min-width': 'auto', 'background-color': 'transparent'}"
                 class="px-2"
+                
               >
-                <v-img :src="action.img" alt="Image button" style="width: 30px; height: 30px;" contain/>
+                <v-icon style="width: 30px; height: 30px;" contain :color="action.class">
+                  {{ action.icon }}
+                </v-icon>
               </v-btn>
             </v-col>
           </v-row>

@@ -1,7 +1,7 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
 import { Ticket, NewTrip } from "@/types/interface";
 
-export const createPlan = async (
+export const createTicket = async (
   ticket: Ticket,
   body: Record<string, string>={},
   param: Record<string, string> = {}

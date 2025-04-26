@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { Navbar, Footer } from "@/components/home";
 import { usePageHomeStore } from "@/stores";
+import { images } from "@/data";
 
 const useStore = usePageHomeStore();
 const SiteName = computed(() => useStore.getSiteName());
@@ -16,9 +17,8 @@ const footerData = computed(() => useStore.getFooterData());
         <Navbar :links="navData">
           <template #logo>
               <img
-                src="/picture/logo.svg"
-                :alt="SiteName"
-                lazy-src="/images/placeholder.jpg"
+                :src="images.logo.img"
+                :alt="images.logo.alt"
                 style="width: 8.5vw; min-width: 6rem"
               />
           </template>
@@ -38,8 +38,8 @@ const footerData = computed(() => useStore.getFooterData());
   <Footer :footerData="footerData">
     <template #logo>
       <img
-          src="/picture/logo.svg"
-          :alt="SiteName"
+          :src="images.logo.img"
+          :alt="images.logo.alt"
           lazy-src="/images/placeholder.jpg"
         />
     </template>

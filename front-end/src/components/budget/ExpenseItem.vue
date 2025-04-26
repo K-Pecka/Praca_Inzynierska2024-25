@@ -1,31 +1,35 @@
 <script setup lang="ts">
+import { Expense } from "@/types";
 import AppCard from "./AppCard.vue";
-
-defineProps<{
-  title: string;
-  category: string;
-  date: string;
-  amount: number;
-  notes: string;
+import { useUtilStore } from "@/stores";
+const { mapCategoryBudget} = useUtilStore();
+const props=defineProps<{
+  expense: Expense;
+  variant?: "manage" | "view";
 }>();
+const {icon, name:categoryName} = mapCategoryBudget(props.expense.category);
 </script>
 
 <template>
   <AppCard class="expense-item backgroud-card">
-    <div class="d-flex align-center"> 
-      <v-icon size="32">mdi-food-fork-drink</v-icon>
-    <div class="info">
-      <h4>{{ title }}</h4>
-      <p>
-        {{ date }} - <span class="category">{{ category }}</span> 
-        <span class="notes"> - {{ notes }}</span>
-      </p>
+    <div class="d-flex align-center">
+      <v-icon size="32" class="mr-4">{{icon}}</v-icon>
+      <div class="info">
+        <h4>{{ expense.title }}</h4>
+        <p>
+          {{ expense.date }} - <span class="category">{{categoryName}}</span>
+          <span class="notes"> - {{ }}</span>
+        </p>
+      </div>
     </div>
+    <template v-if="!!variant && variant === 'manage'">
+      <div class="amount">
+      <strong>{{ expense.amount }}{{ expense.currency }}</strong>
+      <v-icon :style="{ marginTop: '-6px' }">mdi-trash-can-outline</v-icon>
     </div>
-    
-    <div class="amount">
-      <strong>{{ amount }} EUR</strong>
-      <v-icon>mdi-trash-can-outline</v-icon>
+      </template> 
+    <div v-else>
+      <strong>{{ expense.amount }} {{ expense.currency }}</strong>
     </div>
   </AppCard>
 </template>

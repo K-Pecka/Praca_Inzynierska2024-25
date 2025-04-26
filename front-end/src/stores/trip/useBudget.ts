@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/vue-query";
 import { saveBudget } from "@/api";
 import router from "@/router";
 import { useNotificationStore } from "@/stores";
-
+import { getExpensesQuery } from "@/api/services/expenseQuery";
 export const useBudget = () => {
     const notifications = useNotificationStore();
 
@@ -17,5 +17,5 @@ export const useBudget = () => {
         },
     });
 
-    return { tripMutationBudget };
+    return { tripMutationBudget,getExpensesQuery };
 };

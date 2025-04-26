@@ -47,15 +47,15 @@ export const usePlans = () => {
         btn: [
             {
                 title: "Zarządzaj planem",
-                class: ["primary"],
-                img: "/picture/plan-edit.svg",
+                class: "primary",
+                icon: "mdi-pencil",
                 onclick: (trip: string, id: string) =>
                     router.push({ name: "ActivityView", params: { tripId: trip, planId: id } }),
             },
             {
                 title: "usuń plan",
-                class: ["accent"],
-                img: "/picture/plan-delete.svg",
+                class: "red",
+                icon: "mdi-delete",
                 onclick: (tripId: string, itineraryId: string) =>
                     handleDeleteItinerary(tripId, itineraryId),
             },

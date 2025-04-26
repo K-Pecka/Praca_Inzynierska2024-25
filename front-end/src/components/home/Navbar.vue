@@ -102,7 +102,7 @@ watch(smAndDown, (isSmallScreen) => {
 </template>
 
 <style lang="scss" scoped>
-@use "@/assets/style" as *;
+@use "@/assets/styles/style" as *;
 
 .navbar__backdrop {
   position: fixed;

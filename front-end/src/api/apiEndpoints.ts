@@ -19,7 +19,7 @@ export const fetchData = async <T = unknown>(
     return { error: "Jestem w trakcie wykonania\n poprzedniego zapytania..." };
   
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 5000);
+  const timeoutId = setTimeout(() => controller.abort(), 2000);
 
   try {
     const response = await fetch(url, {
@@ -75,6 +75,12 @@ export const apiEndpoints = {
     verify: `${hostName}/user_auth/token/verify/`,
     profile: `${hostName}/user/profile/`,
     logout: `${hostName}/user_auth/logout/`,
+  },
+  expense: {
+    all: `${hostName}/trip/:tripId/expense/all/`,
+    detail: `${hostName}/trip/:tripId/expense/:expenseId/`,
+    delete: `${hostName}/trip/:tripId/expense/:expenseId/delete/`,
+    create: `${hostName}/trip/:tripId/expense/create/`,
   },
   trip: {
     all: `${hostName}/trip/all/`,

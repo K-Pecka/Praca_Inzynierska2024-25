@@ -3,6 +3,7 @@ import {ref, onMounted, onUnmounted} from "vue";
 import {PanelNavbar, SideNav} from "@/components";
 import {usePageHomeStore, useUtilStore} from "@/stores";
 import {useMockupStore} from "@/mockup/useMockupStore";
+import { images } from "@/data";
 
 const useStore = usePageHomeStore();
 const SiteName = useStore.getSiteName();
@@ -56,9 +57,8 @@ onUnmounted(() => {
           >
             <template #logo>
               <img
-                src="/picture/logo.svg"
-                :alt="SiteName"
-                lazy-src="/images/placeholder.jpg"
+                :src="images.logo.img"
+                :alt="images.logo.alt"
               />
             </template>
           </PanelNavbar>

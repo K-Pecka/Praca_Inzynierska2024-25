@@ -113,8 +113,8 @@ const handleInput = (event: Event) => {
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/style" as *;
-@use "@/assets/input.scss";
+@use "@/assets/styles/style" as *;
+@use "@/assets/styles/input.scss";
 
 .input-wrapper > input[type="checkbox"] {
   flex-direction: row-reverse;

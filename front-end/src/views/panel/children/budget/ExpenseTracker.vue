@@ -4,21 +4,39 @@ import AppButton from "@/components/budget/AppButton.vue";
 import AppProgress from "@/components/budget/AppProgress.vue";
 import ExpenseList from "@/components/budget/ExpenseList.vue";
 import Section from "@/components/common/Section.vue";
-import { ref } from "vue";
-const budget = 1500;
-const spent = 322;
-const remaining = budget - spent;
-const expenses = [
-  {
-    id: 1,
-    title: "Tytuł",
-    category: "jedzenie",
-    date: "26.02.2025",
-    amount: 322,
-    notes: "Notatki bla bla",
-  },
-];
-const categories = ref(["Jedzenie", "Transport", "Nocleg", "Rozrywka"]);
+import { useUtilStore } from "@/stores";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const { mapCategoryBudget } = useUtilStore();
+const id = route.params.tripId as string;
+import { useTripStore } from "@/stores/trip/useTripStore";
+const { getTripDetails,getExpensesQuery } = useTripStore();
+import { computed, ref } from "vue";
+const {data: tripRaw, isLoading, error} = getTripDetails(Number(id));
+const {data: expenses} = getExpensesQuery(Number(id));
+
+const budget = computed(() => Number(tripRaw.value?.budget?.amount) ?? 0);
+
+const spent = computed(() =>{
+  console.log("expenses", expenses.value);
+  return expenses.value?.reduce((acc, expense) => Number(acc) + Number(expense.amount), 0) ?? 0;
+});
+
+const remaining = computed(() => Number(budget.value) - spent.value);
+
+const categories = computed(() => {
+  return [
+    ...new Set(expenses.value?.map(expense => expense.category) ?? [])
+  ]
+  .map((categoryId) => {
+    const category = mapCategoryBudget(categoryId);
+    return {
+      title: category.name,
+      value: categoryId,
+      icon: category.icon,
+    };
+  });
+});
 const participants = ref(["Jan", "Kasia", "Tomek"]);
 import HeaderSection from "@/components/common/HeaderSection.vue";
 
@@ -36,8 +54,8 @@ const dateTo = ref<string | null>(null);
     <template #title>
       <HeaderSection>
         <template #subtitle>
-          <div class="title-container pb-4">
-            <h2 class="section-title">Wydatki</h2>
+          <div class="title-container pb-4 w-100">
+            <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Wydatki</h2>
             <div class="d-flex">
               <AppButton
                 variant="primary"
@@ -98,7 +116,7 @@ const dateTo = ref<string | null>(null);
                 </AppButton>
               </div>
 
-              <ExpenseList :expenses="expenses" />
+              <ExpenseList variant="manage"/>  
             </AppCard>
           </v-col>
         </v-row>
@@ -117,7 +135,6 @@ const dateTo = ref<string | null>(null);
         </v-row>
       </v-container>
 
-      <!-- FILTRY W DIALOGU -->
       <v-dialog v-model="showFilters" max-width="500" >
         <v-card class="pa-3">
           <v-card-title class="text-h6">Filtry</v-card-title>
@@ -127,6 +144,7 @@ const dateTo = ref<string | null>(null);
                 <v-col cols="12">
                   <v-select
                     v-model="selectedCategory"
+                    :placeholder="selectedCategory || 'Wybierz kategorię'"
                     :items="categories"
                     label="Kategoria"
                     variant="outlined"

@@ -21,7 +21,7 @@ defineProps({
       >
         <div class="subSection__imageContainer">
           <div class="subSection__imageContainer-colorBox">
-            <img :src="item.image" :alt="item.alt" />
+            <img :src="item.image.img" :alt="item.image.alt" />
           </div>
         </div>
         <div class="subSection__caption">
