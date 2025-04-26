@@ -49,16 +49,16 @@ function handleSubmit() {
     </template>
 
     <template #content>
-      <v-container class="contact-container" fluid>
+      <v-container class="contact-container mx-auto" max-width="1280">
         <v-row>
-          <v-col cols="12" md="6" class="mb-6 mb-md-0">
+          <v-col cols="12" md="5" class="mb-6 mb-md-0">
             <h3 class="contact-heading">Dane kontaktowe</h3>
-            <p><v-icon start size="20">mdi-email-outline</v-icon> kontakt.plannder@gmail.com</p>
+            <p><v-icon start size="20">mdi-email-outline</v-icon> info.plannder@gmail.com</p>
             <p><v-icon start size="20">mdi-phone-outline</v-icon> +48&nbsp;123&nbsp;456&nbsp;789</p>
             <p><v-icon start size="20">mdi-map-marker-outline</v-icon> Gdańsk, ul.&nbsp;Gdańska&nbsp;1</p>
           </v-col>
 
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="7">
             <v-form validate-on="blur lazy" @submit.prevent="handleSubmit" class="form-wrapper">
               <v-text-field
                   v-model="form.name"
@@ -115,11 +115,9 @@ function handleSubmit() {
   font-weight: 600;
   margin-bottom: 1rem;
 }
-.contact-container p {
+.contact-container {
   font-size: 1rem;
   margin: .5rem 0;
-  display: flex;
-  align-items: center;
   gap: .25rem;
 }
 .form-wrapper {
