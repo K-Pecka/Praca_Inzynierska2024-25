@@ -76,6 +76,12 @@ export const apiEndpoints = {
     profile: `${hostName}/user/profile/`,
     logout: `${hostName}/user_auth/logout/`,
   },
+  expense: {
+    all: `${hostName}/trip/:tripId/expense/all/`,
+    detail: `${hostName}/trip/:tripId/expense/:expenseId/`,
+    delete: `${hostName}/trip/:tripId/expense/:expenseId/delete/`,
+    create: `${hostName}/trip/:tripId/expense/create/`,
+  },
   trip: {
     all: `${hostName}/trip/all/`,
     detail: `${hostName}/trip/:tripId/`,

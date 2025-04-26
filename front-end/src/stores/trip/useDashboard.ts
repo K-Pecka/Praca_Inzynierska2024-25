@@ -4,6 +4,7 @@ import {useRoleStore} from "@/stores/auth/useRoleStore";
 import {fetchTrip} from "@/api";
 import {Role} from "@/types/enum";
 import type {Trip} from "@/types";
+import { getExpensesQuery } from "@/api/services/expenseQuery";
 
 function formatPL(dateString: string) {
     const dateObj = new Date(dateString);
@@ -13,27 +14,8 @@ function formatPL(dateString: string) {
 
 export const useDashboard = () => {
     const {getRole} = useRoleStore();
-
     const getExpenseItem = () => {
         return {
-            expenseItem: [
-                {
-                    title: "test",
-                    date: "12-02-2022",
-                    type: "food",
-                    note: "bla bla bla",
-                    amount: 100,
-                    currency: "PLN",
-                },
-                {
-                    title: "test",
-                    date: "12-02-2022",
-                    type: "food",
-                    note: "bla bla bla",
-                    amount: 100,
-                    currency: "PLN",
-                },
-            ],
             sectionName:
                 getRole() == Role.TURIST
                     ? "Twoje ostatnie wydatki"
@@ -51,7 +33,8 @@ export const useDashboard = () => {
 
     const getDashboard = (id: string) => {
         const {data: tripRaw, isLoading, error} = getTripDetails(Number(id));
-
+        const getExpenseQuery = getExpensesQuery(Number(id));
+        const {data: tripExpenseRaw} = getExpenseQuery;
         const tripTime = computed(() => {
             if (!tripRaw.value) return "...";
             return `${formatPL(tripRaw.value.start_date)} - ${formatPL(
@@ -72,7 +55,7 @@ export const useDashboard = () => {
 
         const tripName = computed(() => tripRaw.value?.name ?? "...");
         const members = computed(() => tripRaw.value?.members ?? []);
-
+        const expenses = computed(() => tripExpenseRaw.value?.reduce((acc, expense) => Number(acc) + Number(expense.amount), 0) ?? 0);
         const boxes = computed(() => [
             {
                 title: "Czas trwania",
@@ -88,7 +71,7 @@ export const useDashboard = () => {
                 title: "Budżet",
                 icon: "mdi-currency-usd",
                 content: {
-                    expenses: 200,
+                    expenses: expenses.value,
                     amount: Number(budget.value),
                     currency: "PLN",
                     convertedAmount: Number(budget.value) * 0.24,

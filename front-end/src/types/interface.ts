@@ -53,7 +53,14 @@ export interface Button {
   class: String[];
   onclick: (id: string) => Promise<void> | void;
 }
-
+export interface Expense{
+  title: string;
+  amount: number;
+  currency: string;
+  date: string;
+  user: number;
+  category: number;
+}
 export interface Trip {
   id: number;
   name: string;
@@ -177,15 +184,6 @@ export interface PricingCard {
 export interface InvateUser{
   id:string,
   email:string,
-}
-
-export interface Expense {
-  title: string;
-  date: string;
-  type: string;
-  note: string;
-  amount: number;
-  currency: string;
 }
 
 export interface BudgetData {

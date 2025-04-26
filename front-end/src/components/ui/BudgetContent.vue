@@ -8,6 +8,9 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
   if (denominator === 0) {
     return percent ? 100 : 0;
   }
+  if(percent) {
+    return ((numerator / denominator) * 100).toFixed(2);
+  }
   return (numerator / denominator).toFixed(2);
 };
 </script>
@@ -21,7 +24,7 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
     </div>
 
     <v-progress-linear
-      :model-value="safeDivision(props.content.expenses, props.content.convertedAmount, true)"
+      :model-value="safeDivision(props.content.expenses, props.content.amount, true)"
       height="6"
       rounded
       class="expenses-green"
@@ -33,7 +36,7 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
         {{ props.content.convertedAmount }} {{ props.content.convertedCurrency }}
       </span>
       <span class="text-grey-darken-1 text-subtitle-1" style="font-weight: bold">
-        {{ safeDivision(props.content.expenses, props.content.convertedAmount, false) }}%
+        {{ safeDivision(props.content.expenses, props.content.amount, true) }}%
       </span>
     </v-row>
   </div>

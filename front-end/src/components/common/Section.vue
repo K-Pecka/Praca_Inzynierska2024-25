@@ -20,6 +20,7 @@
   align-items: center;
 }
 .section {
+  margin: 1rem 3rem 1rem 3rem;
   &__header {
     text-align: center;
     display: flex;

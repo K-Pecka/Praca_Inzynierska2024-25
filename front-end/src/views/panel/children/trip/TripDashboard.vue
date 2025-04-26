@@ -2,7 +2,7 @@
 import { Box, Section } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
 import { Expense } from "@/types";
-import ExpenseList from "@/components/expenseItem/ExpenseList.vue";
+import ExpenseList from "@/components/budget/ExpenseList.vue";
 import HeaderSection from "@/components/common/HeaderSection.vue";
 import { useRoute } from "vue-router";
 
@@ -13,8 +13,6 @@ const route = useRoute();
 const id = route.params.tripId as string;
 
 const { boxes, isLoading, error, tripName } = getDashboard(id);
-
-const expenseItem: Expense[] = getExpenseItem().expenseItem;
 </script>
 
 <template>
@@ -74,7 +72,7 @@ const expenseItem: Expense[] = getExpenseItem().expenseItem;
           <v-card-title class="text-h6 pt-0 font-weight-bold expense-card-title">
             {{getExpenseItem().sectionName}}
           </v-card-title>
-          <ExpenseList :expenses="expenseItem" />
+          <ExpenseList variant="view" :limit="4"/>
         </v-card>
       </template>
     </template>

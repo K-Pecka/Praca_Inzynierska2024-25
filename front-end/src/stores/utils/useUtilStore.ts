@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useRoute } from "vue-router";
 import router from "@/router";
 import { computed } from "vue";
-
+import { budget } from "@/data/category/budget"; // Adjust the import to match the correct export
 export const useUtilStore = defineStore("utils", () => {
   const route = useRoute();
   const useRouter = () => router;
@@ -27,5 +27,18 @@ export const useUtilStore = defineStore("utils", () => {
     };
     return new Intl.DateTimeFormat("pl-PL", options).format(date);
   };
-  return { useRouter, getTripId, isCurrentRouteNotInSet, getCurrentPath,formatDate };
+  const mapCategoryBudget = (categoryId: number) => {
+    const category = budget.find((cat: any) => cat.id === categoryId);
+    if (category) {
+      return {
+        name: category.name,
+        icon: category.icon
+      };
+    }
+    return {
+      name: "Unknown",
+      icon: "mdi-help-circle"
+    };
+  };
+  return {mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, getCurrentPath,formatDate };
 });
