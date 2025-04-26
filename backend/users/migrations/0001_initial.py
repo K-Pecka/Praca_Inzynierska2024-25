@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('is_default', models.BooleanField(default=False, help_text='Czy jest podstawowym profilem', verbose_name='Czy jest podstawowym profilem')),
                 ('user', models.ForeignKey(help_text='Użytkownik', on_delete=django.db.models.deletion.CASCADE, related_name='profiles', to=settings.AUTH_USER_MODEL, verbose_name='Użytkownik')),
-                ('type', models.ForeignKey(default=users.models.get_default_user_profile_type, help_text='Typ profilu', on_delete=django.db.models.deletion.PROTECT, related_name='profiles', to='users.userprofiletype', verbose_name='Typ profilu')),
+                ('type', models.ForeignKey(default=users.models.get_or_create_default_user_profile_type, help_text='Typ profilu', on_delete=django.db.models.deletion.PROTECT, related_name='profiles', to='users.userprofiletype', verbose_name='Typ profilu')),
             ],
             options={
                 'verbose_name': 'Profil',

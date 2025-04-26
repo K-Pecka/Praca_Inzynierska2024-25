@@ -149,8 +149,8 @@ class UserProfileType(BaseModel):
         verbose_name = _("Typ profilu użytkownika")
         verbose_name_plural = _("Typy profili użytkowników")
 
-def get_default_user_profile_type():
-    return UserProfileType.objects.first()
+def get_or_create_default_user_profile_type():
+    return UserProfileType.objects.get_or_create(code="tourist", name="Turysta")[0]
 
 
 class UserProfile(BaseModel):
@@ -165,7 +165,7 @@ class UserProfile(BaseModel):
         UserProfileType,
         on_delete=models.PROTECT,
         related_name="profiles",
-        default=get_default_user_profile_type,
+        default=get_or_create_default_user_profile_type,
         verbose_name=_("Typ profilu"),
         help_text=_("Typ profilu")
     )
