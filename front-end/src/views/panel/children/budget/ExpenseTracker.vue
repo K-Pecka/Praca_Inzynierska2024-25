@@ -55,7 +55,7 @@ const dateTo = ref<string | null>(null);
       <HeaderSection>
         <template #subtitle>
           <div class="title-container pb-4 w-100">
-            <h2 class="section-title">Wydatki</h2>
+            <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Wydatki</h2>
             <div class="d-flex">
               <AppButton
                 variant="primary"

@@ -29,14 +29,12 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
 </script>
 
 <template>
-  <div class="page-container">
     <Section>
       <template #title>
-          <div class="title-container">
             <HeaderSection>
               <template #subtitle>
-                <div class="title-container pb-1">
-                  <h2 class="section-title">Bilety</h2>
+                <div class="title-container pb-1 w-100">
+                  <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Bilety</h2>
                  <AppButton
                 variant="primary"
                 size="md"
@@ -50,11 +48,10 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
 
               </template>
               </HeaderSection>
-          </div>
       </template>
 
       <template #content>
-        <div class="content-container">
+        <div class="w-100">
           <TicketForm
               v-if="showForm"
               @submitTicket="handleAddTicket"
@@ -75,16 +72,10 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
         </div>
       </template>
     </Section>
-  </div>
 </template>
 
 
 <style scoped lang="scss">
-.page-container {
-  max-width: 120rem;
-  margin: 0 auto;
-  padding-top: 0;
-}
 
 .title-container {
   display: flex;

@@ -17,7 +17,7 @@ const visibleExpenses = computed(() => {
 </script>
 
 <template>
-  <div class="expense-list">
+  <div class="expense-list w-100">
     <ExpenseItem
       v-for="(expense, index) in visibleExpenses"
       :key="index"

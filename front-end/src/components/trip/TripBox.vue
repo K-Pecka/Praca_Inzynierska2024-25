@@ -40,11 +40,11 @@ console.log(props);
       >
         <v-card style="border-radius: 15px;padding-bottom:0.5rem;width: 100%;">
           <v-row style="height: 100%">
-            <v-col cols="12" sm="4" style="height: 100%; width: 20rem; padding-right: 0px;">
+            <v-col cols="12" sm="4" style="height: 100%; padding-right: 0px;">
               <img :src="image?.img" :alt="image?.alt" style="height:100%;width:100%;" class="pl-2"/>
             </v-col>
             <v-col cols="12" sm="8" class="d-center">
-              <div style="max-width:80%">
+              <div>
                 <div class="trip-detail">
                   <div style="margin-bottom: .55rem;" class="d-center">
                     <v-card-title>

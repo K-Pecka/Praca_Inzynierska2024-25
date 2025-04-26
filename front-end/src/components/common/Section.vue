@@ -1,9 +1,9 @@
 <template>
-  <section class="section">
+  <section class="section" style="width: 80%;margin: auto;">
     <header class="section__header">
       <slot name="title"></slot>
     </header>
-    <div class="section__content">
+    <div class="section__content" >
       <slot name="content"></slot>
     </div>
     <div class="section__footer">
@@ -20,7 +20,7 @@
   align-items: center;
 }
 .section {
-  margin: 1rem 3rem 1rem 3rem;
+  margin: 6rem 6rem 6rem 6rem;
   &__header {
     text-align: center;
     display: flex;
@@ -28,7 +28,6 @@
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    margin: 1rem 0 0.1rem 0;
     color: var(--v-theme-text, #333);
   }
 
