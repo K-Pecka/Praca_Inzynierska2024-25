@@ -42,6 +42,14 @@ class _TouristBudgetScreenState extends State<TouristBudgetScreen> {
     final used = await _calculateUsedInPLN(data);
 
     setState(() {
+      data.sort((a, b) {
+        int dateComparison = b.date.compareTo(a.date);
+        if (dateComparison != 0) {
+          return dateComparison;
+        } else {
+          return b.id.compareTo(a.id);
+        }
+      });
       _expenses = data;
       _used = used;
       _loading = false;
