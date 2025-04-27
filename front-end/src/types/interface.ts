@@ -54,6 +54,7 @@ export interface Button {
   onclick: (id: string) => Promise<void> | void;
 }
 export interface Expense{
+  trip?: number;
   title: string;
   amount: number;
   currency: string;

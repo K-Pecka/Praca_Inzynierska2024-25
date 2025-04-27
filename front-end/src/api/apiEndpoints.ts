@@ -3,7 +3,7 @@ import router from "@/router";
 export const hostName = "https://api.plannder.com";
 export const backendNotification = false;
 import {errorStatus} from "@/api/standardError";
-import { all } from "axios";
+
 export const standardHeaders = () => {
   const { getToken } = useAuthStore();
   return {
@@ -43,6 +43,7 @@ export const fetchData = async <T = unknown>(
     }, 3000);
     if (!response.ok) {
       errorStatus(response.status);
+      console.error("Error response:", result);
       throw new Error(result?.message || `Błąd HTTP: ${response.status}`);
     }
     
