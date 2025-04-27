@@ -49,9 +49,11 @@ class TextStyles {
     color: Colors.black87,
   );
 
-  static const usedBudget = TextStyle(
-    color: Colors.green,
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
-  );
+  static TextStyle usedBudget(Color color) {
+    return TextStyle(
+      color: color,
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+    );
+  }
 }

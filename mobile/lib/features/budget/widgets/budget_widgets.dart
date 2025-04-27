@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/theme/icons.dart';
 
-class BudgetOverviewCard extends StatelessWidget {
+class BudgetOverviewCard extends StatefulWidget {
   final double totalBudget;
   final double used;
 
@@ -13,8 +13,22 @@ class BudgetOverviewCard extends StatelessWidget {
   });
 
   @override
+  State<BudgetOverviewCard> createState() => _BudgetOverviewCardState();
+}
+
+class _BudgetOverviewCardState extends State<BudgetOverviewCard> {
+  @override
   Widget build(BuildContext context) {
-    final double percent = (used / totalBudget).clamp(0, 1);
+    final double percent = widget.used / widget.totalBudget;
+    Color progressColor;
+
+    if (percent <= 0.8) {
+      progressColor = Colors.green;
+    } else if (percent <= 1.0) {
+      progressColor = Colors.amber;
+    } else {
+      progressColor = Colors.red;
+    }
 
     return Container(
       decoration: BoxDecoration(
@@ -40,14 +54,14 @@ class BudgetOverviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '${totalBudget.toStringAsFixed(0)} PLN',
+            '${widget.totalBudget.toStringAsFixed(0)} PLN',
             style: TextStyles.totalBudgetAmount,
           ),
           const SizedBox(height: 8),
           LinearProgressIndicator(
-            value: percent,
+            value: percent.clamp(0.0, 1.0),
             backgroundColor: Colors.grey[300],
-            color: Colors.green,
+            color: progressColor,
             minHeight: 6,
           ),
           const SizedBox(height: 4),
@@ -55,12 +69,12 @@ class BudgetOverviewCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${used.toStringAsFixed(0)} PLN',
-                style: TextStyles.usedBudget,
+                '${widget.used.toStringAsFixed(0)} PLN',
+                style: TextStyles.usedBudget(progressColor),
               ),
               Text(
                 '${(percent * 100).toStringAsFixed(1)}%',
-                style: TextStyles.usedBudget,
+                style: TextStyles.usedBudget(progressColor),
               ),
             ],
           ),
@@ -69,6 +83,7 @@ class BudgetOverviewCard extends StatelessWidget {
     );
   }
 }
+
 
 class ToggleExpenseFormButton extends StatelessWidget {
   final bool showForm;
