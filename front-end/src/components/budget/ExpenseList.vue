@@ -5,14 +5,36 @@ import { useTripStore } from "@/stores/trip/useTripStore";
 import { useUtilStore } from "@/stores";
 const {getTripId} = useUtilStore();
 const {data:expenses,isLoading} = useTripStore().getExpensesQuery(getTripId() as unknown as number);
-const { variant, limit } = defineProps<{
+const { variant, limit,config } = defineProps<{
   variant?: "manage" | "view";
+  config?: Record<string, any>;
   limit?: number;
 }>();
-import { computed} from "vue";
+import { computed, ref} from "vue";
+function convertToDate(dateStr : string): number {
+  const [day, month, year] = dateStr.split('.');
+  return new Date(`${year}-${month}-${day}`).getTime();
+}
 const visibleExpenses = computed(() => {
   if (!expenses.value) return [];
-  return limit ? expenses.value.slice(0, limit) : expenses.value;
+  const expense = ref([...expenses.value]);
+  expense.value = expense.value.sort((b, a) => 
+    convertToDate(a.date) - convertToDate(b.date)
+  );
+  if (config?.category) {
+    expense.value = expense.value.filter((expense) => expense.category === config.category);
+  }
+  if (config?.user) {
+    expense.value = expense.value.filter((expense) => expense.user === config.user);
+  }
+  if (config?.dateFrom) {
+    expense.value = expense.value.filter((expense) => convertToDate(expense.date) >= convertToDate(config.dateFrom));
+  }
+  if (config?.dateTo) {
+    expense.value = expense.value.filter((expense) => convertToDate(expense.date) <= convertToDate(config.dateTo));
+  }
+  console.log("expense", expense.value);
+  return limit ? expense.value.slice(0, limit) : expense.value;
 });
 </script>
 

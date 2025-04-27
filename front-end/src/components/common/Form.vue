@@ -11,7 +11,7 @@
               @update-model="updateState"
             />
           </div>
-          <v-btn type="submit">{{ submitButtonLabel }}</v-btn>
+          <v-btn type="submit" color="white">{{ submitButtonLabel }}</v-btn>
           <div class="moreOption">
             <slot name="moreOption"></slot>
           </div>
@@ -59,6 +59,9 @@ const handleSubmit = () => {
 </script>
 
 <style scoped lang="scss">
+.v-btn{
+  color:rgba(var(--v-theme-text));
+}
 .form-container {
   background-color: rgba(var(--v-theme-secondary),50%);
   padding: 0.25rem;

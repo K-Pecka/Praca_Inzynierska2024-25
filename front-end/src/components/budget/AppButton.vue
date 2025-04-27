@@ -4,7 +4,7 @@ defineProps<{ variant?: "primary" | "secondary", size?: "sm" | "md" | "lg" }>();
 </script>
 
 <template>
-  <v-btn class="app-button" :class="variant, size" color="white">
+  <v-btn class="app-button" :class="variant, size">
     <slot/>
   </v-btn>
 </template>
@@ -44,12 +44,12 @@ defineProps<{ variant?: "primary" | "secondary", size?: "sm" | "md" | "lg" }>();
 }
 
 .primary:hover {
-  background-color: rgba(var(--v-theme-primary), 0.8);
+  background-color: rgba(var(--v-theme-primary),1);
 }
 
 .secondary {
   background-color: rgb(var(--v-theme-secondary));
-  color: white;
+  color: rgba(var(--v-theme-text), 0.8);
   border: none;
 }
 

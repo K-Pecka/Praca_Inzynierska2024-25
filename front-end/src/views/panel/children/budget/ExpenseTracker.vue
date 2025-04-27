@@ -16,9 +16,7 @@ const { data: tripRaw, isLoading, error } = getTripDetails(Number(id));
 const { data: expenses } = getExpensesQuery(Number(id));
 
 const budget = computed(() => Number(tripRaw.value?.budget?.amount) ?? 0);
-const budgetCurrency = computed(
-  () => tripRaw.value?.budget?.currency ?? "PLN"
-);
+const budgetCurrency = computed(() => tripRaw.value?.budget?.currency ?? "PLN");
 const members = computed(() => {
   if (!tripRaw.value) return [];
   return [
@@ -97,29 +95,31 @@ const dateTo = ref<string | null>(null);
           <v-col col="12" sm="12" md="4" order="1" order-md="1">
             <AppCard class="summary-card ml-md-0">
               <h3>Budżet</h3>
-              <p class="amount">{{ budget }} {{budgetCurrency}}</p>
+              <p class="amount">{{ budget }} {{ budgetCurrency }}</p>
             </AppCard>
           </v-col>
           <v-col col="12" sm="12" md="4" order="3" order-md="2">
             <AppCard class="summary-card">
               <h3>Wydano</h3>
-              <BudgetContent :content="{ 
-                amount: budget, 
-                currency: budgetCurrency, 
-                convertedAmount: (budget / 4.6), 
-                convertedCurrency: 'EUR', 
-                expenses: spent
-              }" />
+              <BudgetContent
+                :content="{
+                  amount: budget,
+                  currency: budgetCurrency,
+                  convertedAmount: budget / 4.6,
+                  convertedCurrency: 'EUR',
+                  expenses: spent,
+                }"
+              />
             </AppCard>
           </v-col>
           <v-col col="12" sm="12" md="4" order="2" order-md="3">
             <AppCard class="summary-card mr-md-0">
               <h3>Pozostało</h3>
               <template v-if="remaining > 0">
-                <p class="remaining">{{ remaining }} {{budgetCurrency}}</p>
+                <p class="remaining">{{ remaining }} {{ budgetCurrency }}</p>
               </template>
               <template v-else>
-                <p class="amount" style="color: red">0 {{budgetCurrency}}</p>
+                <p class="amount" style="color: red">0 {{ budgetCurrency }}</p>
               </template>
             </AppCard>
           </v-col>
@@ -149,7 +149,15 @@ const dateTo = ref<string | null>(null);
                 </AppButton>
               </div>
 
-              <ExpenseList variant="manage" />
+              <ExpenseList
+                variant="manage"
+                :config="{
+                  categories: selectedCategory,
+                  participants: selectedParticipant,
+                  dateFrom: dateFrom,
+                  dateTo: dateTo,
+                }"
+              />
             </AppCard>
           </v-col>
         </v-row>
@@ -177,7 +185,6 @@ const dateTo = ref<string | null>(null);
                 <v-col cols="12">
                   <v-select
                     v-model="selectedCategory"
-                    :placeholder="selectedCategory || 'Wybierz kategorię'"
                     :items="categories"
                     label="Kategoria"
                     variant="outlined"

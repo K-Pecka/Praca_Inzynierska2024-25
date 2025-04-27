@@ -11,7 +11,7 @@ const {icon, name:categoryName} = mapCategoryBudget(props.expense.category);
 </script>
 
 <template>
-  <AppCard class="expense-item backgroud-card">
+  <AppCard class="expense-item backgroud-card" :elevation="0">
     <div class="d-flex align-center">
       <v-icon size="48" class="mr-4">{{icon}}</v-icon>
       <div class="info">
