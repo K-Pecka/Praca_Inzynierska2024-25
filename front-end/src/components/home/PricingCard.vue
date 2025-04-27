@@ -32,8 +32,8 @@ console.log("PricingCard", props);
         class="justify-center py-1"
         
       >
-        <v-icon size="22" class="checkmark me-2">mdi-check</v-icon>
-        <span>{{ feature }}</span>
+        <v-icon size="22" class="checkmark me-2 ">mdi-check</v-icon>
+        <span :class="contentVariant">{{ feature }}</span>
       </v-list-item>
     </v-list>
 

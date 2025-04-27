@@ -40,16 +40,16 @@ function handleSubmit() {
 </script>
 
 <template>
-  <Section>
+  <Section class="py-10">
     <template #title>
-      <h1 class="contact-title">Skontaktuj się z nami</h1>
+      <h1 class="text-h4 text-center text-primary font-weight-bold mb-6">Skontaktuj się z nami</h1>
       <p class="contact-subtitle">
         Masz pytania? Skontaktuj się z nami – chętnie pomożemy.
       </p>
     </template>
 
     <template #content>
-      <v-container class="contact-container mx-auto" max-width="1280">
+      <v-container class="contact-container mx-auto">
         <v-row>
           <v-col cols="12" md="5" class="mb-6 mb-md-0">
             <h3 class="contact-heading">Dane kontaktowe</h3>

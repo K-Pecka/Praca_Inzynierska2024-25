@@ -60,6 +60,7 @@ export interface Expense{
   date: string;
   user: number;
   category: number;
+  note?: string;
 }
 export interface Trip {
   id: number;
@@ -165,6 +166,15 @@ export interface Ticket{
   date: string;
   assignedTo?: string | string[];
   file?: File;
+}
+export interface TicketData{
+  id: number;
+  file: string;
+  type: string;
+  profile: number;
+  valid_from: string;
+  trip: number;
+  type_display?: string;
 }
 
 export interface Participant {

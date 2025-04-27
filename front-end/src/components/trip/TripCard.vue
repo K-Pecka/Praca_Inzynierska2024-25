@@ -50,7 +50,7 @@ console.log(props.plans.activities_count)
                 class="px-2"
                 
               >
-                <v-icon style="width: 30px; height: 30px;" contain :color="action.class">
+                <v-icon size="32" contain :color="action.class">
                   {{ action.icon }}
                 </v-icon>
               </v-btn>

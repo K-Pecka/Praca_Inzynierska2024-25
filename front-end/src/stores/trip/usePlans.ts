@@ -55,7 +55,7 @@ export const usePlans = () => {
             {
                 title: "usuń plan",
                 class: "red",
-                icon: "mdi-delete",
+                icon: "mdi-trash-can-outline",
                 onclick: (tripId: string, itineraryId: string) =>
                     handleDeleteItinerary(tripId, itineraryId),
             },

@@ -4,6 +4,7 @@ import {useTicketStore} from "@/stores/trip/useTicketStore";
 import AppButton from "@/components/budget/AppButton.vue";
 import {VTimePicker} from 'vuetify/labs/VTimePicker'
 import {VDateInput} from "vuetify/labs/components";
+import { ticketCategory } from "@/data/category/ticket";
 
 const emit = defineEmits(["submitTicket", "cancelForm"]);
 
@@ -11,7 +12,7 @@ const store = useTicketStore();
 
 
 const form = ref({
-  type: "Atrakcja",
+  type: ticketCategory[0].text,
   name: "",
   date: null,
   time: "",
@@ -19,12 +20,7 @@ const form = ref({
   file: null as File | null,
 });
 
-const ticketTypeOptions = computed(() => {
-  return store.ticketTypes.map((t) => ({
-    value: t.value,
-    text: t.label,
-  }));
-});
+const ticketTypeOptions = computed(() => ticketCategory);
 
 const today = computed(() => new Date().toISOString().split("T")[0]);
 
@@ -35,12 +31,13 @@ function formatDateToYYYYMMDD(date: Date): string {
 function submitTicket() {
   const payload = {
     ...form.value,
-    date: form.value.date ? formatDateToYYYYMMDD(form.value.date) : null,
+    date: form.value.date ? formatDateToYYYYMMDD(form.value.date) : new Date("YYYY-MM-DD").getDate(),
   };
+  console.log("Payload", payload);
   emit("submitTicket", payload);
 
   form.value = {
-    type: "train",
+    type: ticketCategory[0].text,
     name: "",
     date: null,
     time: "",
@@ -67,7 +64,6 @@ const timeMenu = ref(false);
               item-value="value"
               label="Typ biletu"
               variant="outlined"
-              chips
               bg-color="background"
               density="comfortable"
           />

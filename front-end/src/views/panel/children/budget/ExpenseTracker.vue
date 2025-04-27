@@ -95,7 +95,12 @@ const dateTo = ref<string | null>(null);
           <v-col col="12" sm="12" md="4" order="2" order-md="3">
             <AppCard class="summary-card mr-md-0">
               <h3>Pozostało</h3>
-              <p class="remaining">{{ remaining }} EUR</p>
+              <template v-if="remaining > 0">
+                <p class="remaining">{{ remaining }} EUR</p>
+                </template>
+              <template v-else>
+                <p class="amount" style="color: red;">0 EUR</p>
+              </template> 
             </AppCard>
           </v-col>
         </v-row>

@@ -2,6 +2,8 @@ import { useAuthStore } from "@/stores";
 import router from "@/router";
 export const hostName = "https://api.plannder.com";
 export const backendNotification = false;
+import {errorStatus} from "@/api/standardError";
+import { all } from "axios";
 export const standardHeaders = () => {
   const { getToken } = useAuthStore();
   return {
@@ -10,6 +12,7 @@ export const standardHeaders = () => {
   };
 };
 let notificationTimeout: ReturnType<typeof setTimeout> | null = null;
+
 export const fetchData = async <T = unknown>(
   url: string,
   options: RequestInit = { body: undefined },
@@ -38,13 +41,8 @@ export const fetchData = async <T = unknown>(
     notificationTimeout = setTimeout(() => {
       notificationTimeout = null;
     }, 3000);
-    if (response.status == 401) {
-      router.push({name: "login", query: { redirect: router.currentRoute.value.fullPath } });
-    }
-    if (response.status == 404) {
-      router.push({ name: "error_404", query: { message: "Podane żądanie nie istnieje.", code: "Błąd w żądaniu" } });
-    }
     if (!response.ok) {
+      errorStatus(response.status);
       throw new Error(result?.message || `Błąd HTTP: ${response.status}`);
     }
     
@@ -104,6 +102,7 @@ export const apiEndpoints = {
   },
   ticket: {
     create: `${hostName}/trip/ticket/create/`,
+    all: `${hostName}/trip/ticket/all/`,
   },
   budget: {
     update: `${hostName}/trip/:tripId/budget/update/`,
