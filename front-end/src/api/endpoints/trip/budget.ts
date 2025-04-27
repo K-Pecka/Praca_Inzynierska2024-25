@@ -1,5 +1,5 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
-import { Budget } from "@/types/interface";
+import { Budget, Expense } from "@/types/interface";
 
 import { APP_MODE_DEV } from "@/config/envParams";
 import { useMockupStore } from "@/mockup/useMockupStore";
@@ -23,3 +23,18 @@ export const saveBudget = async (newBudget:Budget,param: Record<string, string>=
   
     return data;
   };
+export const createExpenseMutation = async (newExpense:Expense,param: Record<string, string>={}) => {
+  if (APP_MODE_DEV) {
+    return {tripId: String(newExpense.trip)};
+  } 
+  const { data, error } = await fetchData(
+      setParam(apiEndpoints.expense.create, {tripId: String(newExpense.trip)}),
+      { body: JSON.stringify(newExpense) },
+      "POST"
+    );
+    if (error) {
+      throw new Error(error);
+    }
+  
+    return {tripId: String(newExpense.trip)};
+  }

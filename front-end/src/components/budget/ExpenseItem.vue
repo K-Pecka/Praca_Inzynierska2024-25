@@ -11,25 +11,25 @@ const {icon, name:categoryName} = mapCategoryBudget(props.expense.category);
 </script>
 
 <template>
-  <AppCard class="expense-item backgroud-card">
+  <AppCard class="expense-item backgroud-card" :elevation="0">
     <div class="d-flex align-center">
-      <v-icon size="32" class="mr-4">{{icon}}</v-icon>
+      <v-icon size="48" class="mr-4">{{icon}}</v-icon>
       <div class="info">
         <h4>{{ expense.title }}</h4>
         <p>
-          {{ expense.date }} - <span class="category">{{categoryName}}</span>
-          <span class="notes"> - {{ }}</span>
+          {{ expense.date }} <span class="category font-regular">{{categoryName}}</span>
+          <span class="notes"> {{ expense?.note ?? '' }}</span>
         </p>
       </div>
     </div>
     <template v-if="!!variant && variant === 'manage'">
       <div class="amount">
-      <strong>{{ expense.amount }}{{ expense.currency }}</strong>
+      <strong class="text-black-70">{{ expense.amount }}{{ expense.currency }}</strong>
       <v-icon :style="{ marginTop: '-6px' }">mdi-trash-can-outline</v-icon>
     </div>
       </template> 
     <div v-else>
-      <strong>{{ expense.amount }} {{ expense.currency }}</strong>
+      <strong class="text-black-70">{{ expense.amount }} {{ expense.currency }}</strong>
     </div>
   </AppCard>
 </template>
@@ -42,8 +42,8 @@ const {icon, name:categoryName} = mapCategoryBudget(props.expense.category);
 }
 
 .category {
-  color: #4a90e2;
-  font-weight: bold;
+  color: rgba(var(--v-theme-primary));
+  font-weight: 400;
 }
 
 .notes {

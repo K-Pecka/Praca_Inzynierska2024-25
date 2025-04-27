@@ -150,10 +150,7 @@ class UserProfileType(BaseModel):
         verbose_name_plural = _("Typy profili użytkowników")
 
 def get_or_create_default_user_profile_type():
-    try:
-        return UserProfileType.objects.get_or_create(code="tourist", defaults={'name': "Turysta"})[0]
-    except IntegrityError:
-        return UserProfileType.objects.get(code="tourist")
+    return UserProfileType.objects.get_or_create(code="tourist", name="Turysta")[0]
 
 
 class UserProfile(BaseModel):

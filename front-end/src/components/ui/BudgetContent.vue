@@ -19,7 +19,7 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
   <div v-if="typeof props.content === 'object' && props.content !== null">
     <div class="mb-2 budget-amount">
       <span class="text-h6 font-weight-bold">
-        {{ props.content.amount }} {{ props.content.currency }}
+        {{ props.content.expenses }} {{ props.content.currency }}
       </span>
     </div>
 
@@ -33,7 +33,7 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
 
     <v-row justify="space-between" class="mt-1">
       <span class="text-subtitle-1 expenses-green" style="font-weight: bold;">
-        {{ props.content.convertedAmount }} {{ props.content.convertedCurrency }}
+        {{ props.content.convertedAmount.toFixed(2) }} {{ props.content.convertedCurrency }}
       </span>
       <span class="text-grey-darken-1 text-subtitle-1" style="font-weight: bold">
         {{ safeDivision(props.content.expenses, props.content.amount, true) }}%
@@ -48,4 +48,13 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
   .expenses-green {
     color: rgba(22, 163, 74, .75)
   }
+  .progress {
+  height: 100%;
+  background-color: rgba(22, 163, 74, .75);
+  transition: width 0.3s ease-in-out;
+}
+.progress.overflow {
+  background-color: #f44336;
+  transition: width 0.3s ease-in-out;
+}
 </style>

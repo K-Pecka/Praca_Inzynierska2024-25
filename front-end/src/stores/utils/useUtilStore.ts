@@ -40,5 +40,18 @@ export const useUtilStore = defineStore("utils", () => {
       icon: "mdi-help-circle"
     };
   };
-  return {mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, getCurrentPath,formatDate };
+  const  combineDateAndTime = (date: string, time: string): string => {
+
+    const dateTimeString = `${date}T${time}Z`;
+  
+    const dateTime = new Date(dateTimeString);
+  
+    if (isNaN(dateTime.getTime())) {
+      throw new Error("Nieprawidłowa data lub czas");
+    }
+
+    return dateTime.toISOString();
+  }
+  
+  return {combineDateAndTime,mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, getCurrentPath,formatDate };
 });

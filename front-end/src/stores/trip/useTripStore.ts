@@ -4,15 +4,15 @@ import {useDashboard} from "./useDashboard";
 import {usePlans} from "./usePlans";
 import {useTrips} from "./useTrips";
 import { useBudget } from "./useBudget";
-
+import { useTicketStore } from "./useTicketStore";
 export const useTripStore = defineStore("trip", () => {
 
   const { getDashboard, getExpenseItem } = useDashboard();
   const { getPlans, yourPlans, planMutationAdd } = usePlans();
   const { yourTrips, getTripDetails, getTrips, tripMutationAdd, tripMutationUpdate } = useTrips();
   const { addParticipant, removeParticipant } = useParticipants();
-  const { tripMutationBudget,getExpensesQuery } = useBudget();
-
+  const { tripMutationBudget,getExpensesQuery,createExpense } = useBudget();
+  const { getTickets } = useTicketStore();
   return {
     getExpenseItem,
     getPlans,
@@ -28,5 +28,7 @@ export const useTripStore = defineStore("trip", () => {
     tripMutationUpdate,
     removeParticipant,
     addParticipant,
+    getTickets,
+    createExpense
   };
 });

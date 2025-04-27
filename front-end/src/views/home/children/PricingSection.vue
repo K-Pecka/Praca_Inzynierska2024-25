@@ -5,10 +5,10 @@ import { Section } from "@/components/common";
 </script>
 
 <template>
-  <Section>
+  <Section class="py-10">
     <template #title>
       <h1 class="text-h4 font-weight-bold text-center">Wybierz plan</h1>
-      <p class="text-center">
+      <p class="contact-subtitle">
         Wybierz plan, który najlepiej odpowiada Twoim potrzebom.
       </p>
     </template>
@@ -25,10 +25,10 @@ import { Section } from "@/components/common";
             v-for="(plan, index) in pricingPlans"
             :key="plan.name"
             cols="12"
-            sm="6"
-            md="3"
-            lg="3"
-            class="mx-5"
+            sm="4"
+            md="4"
+            lg="4"
+            class="mx-1"
           >
             <v-fade-transition>
               <div

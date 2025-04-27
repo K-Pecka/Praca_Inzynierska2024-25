@@ -10,25 +10,36 @@ const route = useRoute();
 const { mapCategoryBudget } = useUtilStore();
 const id = route.params.tripId as string;
 import { useTripStore } from "@/stores/trip/useTripStore";
-const { getTripDetails,getExpensesQuery } = useTripStore();
+const { getTripDetails, getExpensesQuery } = useTripStore();
 import { computed, ref } from "vue";
-const {data: tripRaw, isLoading, error} = getTripDetails(Number(id));
-const {data: expenses} = getExpensesQuery(Number(id));
+const { data: tripRaw, isLoading, error } = getTripDetails(Number(id));
+const { data: expenses } = getExpensesQuery(Number(id));
 
 const budget = computed(() => Number(tripRaw.value?.budget?.amount) ?? 0);
-
-const spent = computed(() =>{
+const budgetCurrency = computed(() => tripRaw.value?.budget?.currency ?? "PLN");
+const members = computed(() => {
+  if (!tripRaw.value) return [];
+  return [
+    ...(tripRaw.value?.members || []),
+    ...(tripRaw.value?.pending_members || []),
+  ];
+});
+const spent = computed(() => {
   console.log("expenses", expenses.value);
-  return expenses.value?.reduce((acc, expense) => Number(acc) + Number(expense.amount), 0) ?? 0;
+  return (
+    expenses.value?.reduce(
+      (acc, expense) => Number(acc) + Number(expense.amount),
+      0
+    ) ?? 0
+  );
 });
 
 const remaining = computed(() => Number(budget.value) - spent.value);
 
 const categories = computed(() => {
   return [
-    ...new Set(expenses.value?.map(expense => expense.category) ?? [])
-  ]
-  .map((categoryId) => {
+    ...new Set(expenses.value?.map((expense) => expense.category) ?? []),
+  ].map((categoryId) => {
     const category = mapCategoryBudget(categoryId);
     return {
       title: category.name,
@@ -39,8 +50,10 @@ const categories = computed(() => {
 });
 const participants = ref(["Jan", "Kasia", "Tomek"]);
 import HeaderSection from "@/components/common/HeaderSection.vue";
+import ExpenseForm from "@/components/trip/module/expnese/ExpenseForm.vue";
+import BudgetContent from "@/components/ui/BudgetContent.vue";
 
-const showForm = ref(true);
+const showForm = ref(false);
 const showFilters = ref(false);
 
 const selectedCategory = ref<string | null>(null);
@@ -55,7 +68,12 @@ const dateTo = ref<string | null>(null);
       <HeaderSection>
         <template #subtitle>
           <div class="title-container pb-4 w-100">
-            <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Wydatki</h2>
+            <h2
+              class="trip-title mb-10"
+              style="font-size: 30px; font-weight: 600; width: 80%"
+            >
+              Wydatki
+            </h2>
             <div class="d-flex">
               <AppButton
                 variant="primary"
@@ -77,29 +95,44 @@ const dateTo = ref<string | null>(null);
           <v-col col="12" sm="12" md="4" order="1" order-md="1">
             <AppCard class="summary-card ml-md-0">
               <h3>Budżet</h3>
-              <p class="amount">{{ budget }} EUR</p>
+              <p class="amount">{{ budget }} {{ budgetCurrency }}</p>
             </AppCard>
           </v-col>
           <v-col col="12" sm="12" md="4" order="3" order-md="2">
-            <AppCard class="summary-card" >
+            <AppCard class="summary-card">
               <h3>Wydano</h3>
-              <AppProgress :value="spent" :max="budget" />
-              <div class="d-flex justify-space-between mt-4">
-                <p class="spent">{{ spent }} EUR</p>
-                <p class="percent">
-                  {{ ((spent / budget) * 100).toFixed(2) }}%
-                </p>
-              </div>
+              <BudgetContent
+                :content="{
+                  amount: budget,
+                  currency: budgetCurrency,
+                  convertedAmount: budget / 4.6,
+                  convertedCurrency: 'EUR',
+                  expenses: spent,
+                }"
+              />
             </AppCard>
           </v-col>
           <v-col col="12" sm="12" md="4" order="2" order-md="3">
             <AppCard class="summary-card mr-md-0">
               <h3>Pozostało</h3>
-              <p class="remaining">{{ remaining }} EUR</p>
+              <template v-if="remaining > 0">
+                <p class="remaining">{{ remaining }} {{ budgetCurrency }}</p>
+              </template>
+              <template v-else>
+                <p class="amount" style="color: red">0 {{ budgetCurrency }}</p>
+              </template>
             </AppCard>
           </v-col>
         </v-row>
-
+        <v-row>
+          <v-col col="12">
+            <ExpenseForm
+              v-if="showForm"
+              @cancelForm="showForm = false"
+              class="form-container"
+            />
+          </v-col>
+        </v-row>
         <v-row>
           <v-col>
             <AppCard class="expenses">
@@ -116,7 +149,15 @@ const dateTo = ref<string | null>(null);
                 </AppButton>
               </div>
 
-              <ExpenseList variant="manage"/>  
+              <ExpenseList
+                variant="manage"
+                :config="{
+                  categories: selectedCategory,
+                  participants: selectedParticipant,
+                  dateFrom: dateFrom,
+                  dateTo: dateTo,
+                }"
+              />
             </AppCard>
           </v-col>
         </v-row>
@@ -124,18 +165,18 @@ const dateTo = ref<string | null>(null);
         <v-row>
           <v-col>
             <AppCard class="chart-card ml-0">
-              <h2 class="section-title ">Wydatki - Kategorie</h2>
+              <h2 class="section-title">Wydatki - Kategorie</h2>
             </AppCard>
           </v-col>
           <v-col>
             <AppCard class="chart-card mr-0">
-              <h2 class="section-title ">Wydatki - Uczestnicy</h2>
+              <h2 class="section-title">Wydatki - Uczestnicy</h2>
             </AppCard>
           </v-col>
         </v-row>
       </v-container>
 
-      <v-dialog v-model="showFilters" max-width="500" >
+      <v-dialog v-model="showFilters" max-width="500">
         <v-card class="pa-3">
           <v-card-title class="text-h6">Filtry</v-card-title>
           <v-card-text>
@@ -144,18 +185,20 @@ const dateTo = ref<string | null>(null);
                 <v-col cols="12">
                   <v-select
                     v-model="selectedCategory"
-                    :placeholder="selectedCategory || 'Wybierz kategorię'"
                     :items="categories"
                     label="Kategoria"
                     variant="outlined"
+                    bg-color="background"
                   />
                 </v-col>
                 <v-col cols="12">
                   <v-select
                     v-model="selectedParticipant"
                     :items="participants"
+                    :disabled="members.length === 0"
                     label="Uczestnik"
                     variant="outlined"
+                    bg-color="background"
                   />
                 </v-col>
                 <v-col cols="12" md="6">
@@ -164,6 +207,7 @@ const dateTo = ref<string | null>(null);
                     label="Data od"
                     type="date"
                     variant="outlined"
+                    bg-color="background"
                   />
                 </v-col>
                 <v-col cols="12" md="6">
@@ -172,6 +216,7 @@ const dateTo = ref<string | null>(null);
                     label="Data do"
                     type="date"
                     variant="outlined"
+                    bg-color="background"
                   />
                 </v-col>
               </v-row>
@@ -220,15 +265,15 @@ h3 {
   margin-top: 2rem;
   border-radius: 12px;
 }
-.summary-card{
+.summary-card {
   width: 95%;
-  margin:auto;
+  margin: auto;
 }
-.chart-card{
+.chart-card {
   width: 97%;
-  margin:auto;
+  margin: auto;
 }
-.v-col{
+.v-col {
   margin: 0.5rem 0;
 }
 @media (min-width: 600px) {

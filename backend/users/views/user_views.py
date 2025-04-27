@@ -63,8 +63,8 @@ class ConfirmEmailView(APIView):
                 profile = user.get_default_profile()
                 profile.type = 'tourist'
                 profile.save()
-                profile.trip_access_tokens().delete()
             user.is_active = True
+            user.trip_access_tokens().delete()
             user.save()
             return Response({"message": "Email confirmed successfully!"}, status=200)
         else:

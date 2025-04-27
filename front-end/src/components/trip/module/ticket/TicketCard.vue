@@ -1,66 +1,65 @@
 <script setup lang="ts">
-import {computed} from "vue";
-import {useTicketStore} from "@/stores/trip/useTicketStore";
+import { computed } from "vue";
+import { useTicketStore } from "@/stores/trip/useTicketStore";
 import AppButton from "@/components/budget/AppButton.vue";
+import { TicketData } from "@/types";
 
 const props = defineProps({
   ticket: {
-    type: Object,
+    type: Object as () => TicketData,
     required: true,
   },
 });
 
 const store = useTicketStore();
-const icon = computed(() => {
-  const found = store.ticketTypes.find((t) => t.value === props.ticket.type);
-  return found ? found.icon : "mdi-ticket";
-});
 
-function previewTicket() {
-  alert(`Podgląd biletu: ${props.ticket.name}`);
-}
 
 function formatDate(dateString: string): string {
-  return new Intl.DateTimeFormat('pl-PL').format(new Date(dateString));
+  return new Intl.DateTimeFormat("pl-PL").format(new Date(dateString));
+}
+const downloadFile = (ticket:string) => {
+  const link = document.createElement('a');
+  link.href = ticket;
+  link.download = 'bilet.pdf';
+  link.click();
 }
 </script>
 
 <template>
   <v-card class="ticket-card">
     <div class="ticket-header">
-      <v-icon class="ticket-icon" large>{{ icon }}</v-icon>
+      <v-icon class="ticket-icon" large> mdi-dowland</v-icon>
       <div class="ticket-header-text">
-        <div class="ticket-name">{{ ticket.name }}</div>
-        <div class="ticket-date" v-if="ticket.date">
-          {{ ticket.time + "  " + formatDate(ticket.date) }}
+        <div class="ticket-name">{{ ticket.type_display }}</div>
+        <div class="ticket-date" v-if="ticket.valid_from">
+          {{  }}
         </div>
       </div>
     </div>
 
-    <hr class="ticket-divider"/>
+    <hr class="ticket-divider" />
 
     <div class="ticket-body">
       <v-select
-          clearable
-          chips
-          v-model="ticket.assignedTo"
-          :items="['Jan', 'Anna', 'Piotr']"
-          label="Przypisz do osoby (Opcjonalnie)"
-          variant="outlined"
-          class="assign-select"
-          multiple
-          bg-color="background"
-          density="comfortable"
+        clearable
+        chips
+        
+        :items="['Jan', 'Anna', 'Piotr']"
+        label="Przypisz do osoby (Opcjonalnie)"
+        variant="outlined"
+        class="assign-select"
+        multiple
+        bg-color="background"
+        density="comfortable"
       />
       <div class="ticket-btn-wrapper">
-        <AppButton variant="primary" @click="previewTicket">
-          Podgląd
+        <AppButton variant="primary" @click="() => downloadFile(ticket.file)">
+          <v-icon>mdi-download</v-icon>Pobierz bilet
         </AppButton>
       </div>
     </div>
   </v-card>
 </template>
-
 
 <style scoped lang="scss">
 .ticket-card {

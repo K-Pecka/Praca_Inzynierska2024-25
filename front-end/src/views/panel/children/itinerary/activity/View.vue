@@ -79,7 +79,7 @@ const activity = computed(
 </script>
 
 <template>
-  <div class="page-container">
+  <div class="page-container py-10">
     <Section>
       <template #title>
         <HeaderSection>
@@ -90,7 +90,7 @@ const activity = computed(
       </template>
 
       <template #content>
-        <div v-for="day in days" :key="day" class="day-card">
+        <div v-for="day in days" :key="day" class="day-card w-100">
           <div class="day-card-header">
             <div class="day-date">{{ day }}</div>
             <AppButton
