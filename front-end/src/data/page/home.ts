@@ -139,23 +139,23 @@ export const aboutTeam ={
   teamMembers: [
     {
       name: "Andrzej Ebertowski",
-      role: "...",
-      description: "...",
+      role: "Specjalista ds. Dokumentacji",
+      description: "Tworzenie dokumentacji, testowanie funkcjonalności, wspieranie frontendu.",
     },
     {
       name: "Kacper Pecka",
-      role: "Frontend Developer",
-      description: "...",
+      role: "Główny Frontend Developer",
+      description: "Projektowanie interfejsu, wdrażanie responsywności, integracja frontendu z API.",
     },
     {
       name: "Jakub Pobłocki",
-      role: "Backend Developer",
-      description: "...",
+      role: "Główny Backend Developer",
+      description: "Budowanie API, dostosowywanie logiki serwera do potrzeb aplikacji.",
     },
     {
       name: "Mateusz Wiśniewski",
-      role: "...",
-      description: "...",
+      role: "Project Manager",
+      description: "Koordynowanie zespołu, zarządzanie sprintami, kontrolowanie realizacji zadań.",
     },
   ],
 };

@@ -69,7 +69,7 @@ window.addEventListener("resize", () => {
             </div>
           </v-col>
 
-          <v-col cols="12" sm="8">
+          <v-col cols="12" :class="member.photo ? 'sm:col-span-8' : 'sm:col-span-12'">
             <v-card-text>
               <h3
                 class="font-weight-bold"

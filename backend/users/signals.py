@@ -15,6 +15,6 @@ def create_user_profile(sender, instance, created, **kwargs):
             default_type = get_or_create_default_user_profile_type()
             UserProfile.objects.create(user=instance, type=default_type, is_default=True)
         else:
-            guest_type, created = UserProfileType.objects.get_or_create(code='guest', name='Gosc')
+            guest_type, created = UserProfileType.objects.get_or_create(code='guest', defaults={'name': "Gosc"})
             UserProfile.objects.create(user=instance, type=guest_type, is_default=True)
 
