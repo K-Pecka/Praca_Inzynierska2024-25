@@ -117,7 +117,6 @@ const timeMenu = ref(false);
                   v-if="timeMenu"
                   v-model="form.time"
                   format="24hr"
-                  full-width
                   scrollable
               >
               </v-time-picker>
