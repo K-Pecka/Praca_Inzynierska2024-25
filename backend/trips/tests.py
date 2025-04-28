@@ -226,7 +226,8 @@ class TicketAPITestCase(TestCase):
         self.ticket = Ticket.objects.create(
             file="tickets/sample.pdf",
             type=self.ticket_type,
-            valid_from="2025-06-05T12:00:00Z",
+            valid_from_date="2025-06-05",
+            valid_from_time="12:00",
             profile=self.user_profile,
             trip=self.trip
         )
@@ -239,7 +240,8 @@ class TicketAPITestCase(TestCase):
         data = {
             'file': file,
             'type': self.ticket_type.id,
-            'valid_from': "2025-06-07T14:00:00Z",
+            'valid_from_date': "2025-06-07",
+            'valid_from_time': "14:00",
             'profile': self.user_profile.id,
             'trip': self.trip.id
         }
@@ -300,7 +302,8 @@ class TicketAPITestCase(TestCase):
         data = {
             'file': "tickets/no_auth_ticket.pdf",
             'type': self.ticket_type.id,
-            'valid_from': "2025-06-09T15:00:00Z",
+            'valid_from_date': "2025-06-09",
+            'valid_from_time': "15:00",
             'profile': self.user_profile.id,
             'trip': self.trip.id
         }
