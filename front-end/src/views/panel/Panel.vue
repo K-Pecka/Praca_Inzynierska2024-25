@@ -96,7 +96,7 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 main {
-  background-color: rgb(var(--v-theme-background, #f8f9fa));
+  background-color: rgb(var(--v-theme-background));
   height: 100%;
   max-height: calc(100vh - 5rem);
   overflow-y: auto;

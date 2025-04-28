@@ -38,7 +38,7 @@ watch(
 
 <style lang="scss" scoped>
 .bg-app {
-  background-color: rgb(var(--v-theme-background,#F8F9Fa));
+  background-color: rgb(var(--v-theme-background));
 }
 .application--wrap{
   
