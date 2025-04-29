@@ -18,7 +18,7 @@ export default createVuetify({
           secondary: '#dedcff',
           accent: '#ac6ed9',
           text: '#030309',
-          background: '#F8F9Fa',
+          background: '#F5F4FC',
           heroBg:'#ac6ed9',
           progressBarProgress:'#4caf50',
           progressBar:'#e0e0e0',

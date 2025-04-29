@@ -1,7 +1,6 @@
 import { images } from "@/data";
 import router from "@/router";
-import { Btn } from "@/types";
-import { Role } from "@/types/enum";
+
 export const getTouristNav = (tripId: string) => [
   {
     label: "Powrót",

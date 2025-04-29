@@ -4,19 +4,7 @@ import { useMutation, useQuery } from "@tanstack/vue-query";
 import { createActivity } from "@/api/endpoints/trip/activity";
 import { useNotificationStore } from "@/stores";
 import { fetchActivity } from "@/api/endpoints/trip/activity";
-import router from "@/router";
-
-export interface Activity {
-  id: number;
-  type: string;
-  name: string;
-  date: string;
-  start_time: string;
-  duration: string;
-  location?: string;
-  assignedTo?: string;
-  description?: string;
-}
+import { Activity } from "@/types/interface";
 
 interface ActivityType {
   value: string;

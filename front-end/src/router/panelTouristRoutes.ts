@@ -1,11 +1,10 @@
 import type { RouteRecordRaw } from "vue-router";
 
 import { 
-  Panel, RoleSelection, TripDashboard, YourTrip, YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm, ActivityView,
+  Panel, RoleSelection, YourTrip, YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm, ActivityView,
   PlanForm, TripForm, BudgetForm
 } from "@/views/panel";
 import { AccountSettings } from "@/views/account";
-import { Role } from "@/types/enum";
 
 const panelRoutes: RouteRecordRaw = {
   path: "/panel",
@@ -17,7 +16,6 @@ const panelRoutes: RouteRecordRaw = {
     { path: "account-settings", name: "AccountSettings", component: AccountSettings },
 
     { path: "trips", name: "yourTrip", component: YourTrip },
-    { path: "trip/:tripId", name: "tripDashboard", component: TripDashboard },
     { path: "trip/:tripId/plan", name: "yourPlan", component: YourPlan },
     { path: "trip/:tripId/tickets-view", name: "TicketsView", component: TicketsView },
     { path: "trip/:tripId/expense-tracker", name: "ExpenseTracker", component: ExpenseTracker },
@@ -30,6 +28,8 @@ const panelRoutes: RouteRecordRaw = {
     { path: "trip/:tripId/budget", name: "budget", component: BudgetForm },
   ],
 };
+
+
 
 
 export default panelRoutes;

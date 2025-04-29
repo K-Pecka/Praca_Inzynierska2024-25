@@ -34,7 +34,6 @@ const footerData = computed(() => useStore.getFooterData());
       </v-col>
     </v-row>
   </v-container>
-  <!-- Footer component -->
 
   <Footer :footerData="footerData">
     <template #logo>

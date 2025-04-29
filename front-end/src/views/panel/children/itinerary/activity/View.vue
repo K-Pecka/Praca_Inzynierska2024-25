@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useActivityStore } from "@/stores/trip/useActivityStore";
-import ActivityList from "@/components/trip/module/activity/ActivityList.vue";
+import ActivityCard from "@/components/trip/module/activity/ActivityCard.vue";
 import ActivityForm from "@/components/trip/module/activity/ActivityForm.vue";
 import AppButton from "@/components/budget/AppButton.vue";
 import { Section } from "@/components";
@@ -16,6 +16,31 @@ const { data: activities, isSuccess } = useActivityStore().getActivity(
   id,
   planId
 );
+
+/*const activities = ref<Activity[]>([
+  {
+    id: 1,
+    type: "tour",
+    name: "Zwiedzanie muzeum",
+    date: "2025-03-28",
+    start_time: "10:00",
+    duration: "120",
+    location: "Muzeum Narodowe",
+    assignedTo: "",
+    description: "Zwiedzanie wystawy sztuki.",
+  },
+  {
+    id: 2,
+    type: "food",
+    name: "Lunch w restauracji",
+    date: "2025-03-28",
+    start_time: "13:00",
+    duration: "80",
+    location: "Restauracja Zielona",
+    assignedTo: "",
+    description: "Lunch w restauracji z widokiem.",
+  },
+]);*/
 
 const { getPlans } = useTripStore();
 const { data: plansData, isLoading, error } = getPlans(id);
@@ -110,7 +135,13 @@ const activity = computed(
             class="form-container"
           />
           <span v-if="!isSuccess">Ładuję...</span>
-          <ActivityList v-else :activities="activity?.[day] ?? []" />
+          <div class="activity-list" v-else>
+            <ActivityCard
+                v-for="activityItem in activity?.[day] ?? []"
+                :key="activityItem.id"
+                :activity="activityItem"
+            />
+          </div>
         </div>
       </template>
     </Section>
@@ -170,5 +201,11 @@ const activity = computed(
 
 .form-container {
   margin-bottom: 1rem;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 </style>

@@ -10,6 +10,10 @@ const SiteName = useStore.getSiteName();
 
 const logoText = ref(SiteName);
 
+const {getUserInitials} = useMockupStore();
+
+const userInitials = getUserInitials();
+
 const {isCurrentRouteNotInSet} = useUtilStore();
 const showNavigation = isCurrentRouteNotInSet([
   "roleSelection",
@@ -19,9 +23,6 @@ const showNavigation = isCurrentRouteNotInSet([
 ]);
 
 const sideNavOpen = ref(false);
-
-const {getUserInitials} = useMockupStore();
-const userInitials = getUserInitials();
 
 function toggleSideNav() {
   sideNavOpen.value = !sideNavOpen.value;
@@ -42,61 +43,57 @@ onUnmounted(() => {
   window.removeEventListener("resize", updateScreenSize);
   document.documentElement.style.overflowY = 'scroll';
 });
-
 </script>
 
 <template>
-  <div class="wrapper">
-    <v-container fluid class="full-width-container">
-      <v-row>
-        <v-col cols="12">
-          <PanelNavbar
-              :account-icon="userInitials"
-              :show-navigation="showNavigation"
-              @toggleMenu="toggleSideNav"
-          >
-            <template #logo>
-              <img
-                :src="images.logo.img"
-                :alt="images.logo.alt"
-              />
-            </template>
-          </PanelNavbar>
-        </v-col>
-      </v-row>
-      <v-row style="min-height: calc(100vh - 5rem); margin: 0">
-        <transition name="slide-nav">
-          <v-col
-              v-if="showNavigation && (!isMobile || sideNavOpen)"
-              cols="2"
-              class="side-nav-col"
-              :class="{ 'mobile-overlay': isMobile, open: sideNavOpen }"
-          >
-            <SideNav :mobile="isMobile" @close="toggleSideNav"/>
-          </v-col>
-        </transition>
-        <v-col
-            :cols="showNavigation ? (isMobile ? 12 : 10) : 12"
-            :md="showNavigation ? 10 : 12"
-            class="main-col"
-        >
-          <main>
-            <router-view/>
-          </main>
-        </v-col>
-        <div
-            v-if="sideNavOpen && isMobile"
-            class="overlay"
-            @click="toggleSideNav"
-        />
-      </v-row>
-    </v-container>
-  </div>
+  <v-row>
+    <v-col cols="12">
+      <PanelNavbar
+          :account-icon="userInitials"
+          :show-navigation="showNavigation"
+          @toggleMenu="toggleSideNav"
+      >
+        <template #logo>
+          <img
+            :src="images.logo.img"
+            :alt="images.logo.alt"
+          />
+        </template>
+      </PanelNavbar>
+    </v-col>
+  </v-row>
+  <v-row style="min-height: calc(100vh - 5rem); margin: 0">
+    <transition name="slide-nav">
+      <v-col
+          v-if="showNavigation && (!isMobile || sideNavOpen)"
+          cols="2"
+          class="side-nav-col"
+          :class="{ 'mobile-overlay': isMobile, open: sideNavOpen }"
+      >
+        <SideNav :mobile="isMobile" @close="toggleSideNav"/>
+      </v-col>
+    </transition>
+    <v-col
+        :cols="showNavigation ? (isMobile ? 12 : 10) : 12"
+        :md="showNavigation ? 10 : 12"
+        class="main-col"
+    >
+      <main>
+        <router-view/>
+      </main>
+    </v-col>
+    <div
+        v-if="sideNavOpen && isMobile"
+        class="overlay"
+        @click="toggleSideNav"
+    />
+  </v-row>
 </template>
 
 <style lang="scss" scoped>
+
 main {
-  background-color: rgb(var(--v-theme-background, #f8f9fa));
+  background-color: rgb(var(--v-theme-background));
   height: 100%;
   max-height: calc(100vh - 5rem);
   overflow-y: auto;

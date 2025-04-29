@@ -209,8 +209,8 @@ export interface Activity {
   type: string;
   name: string;
   date: string;
-  start_time: string;
-  duration: string;
+  start_time?: string;
+  duration?: string;
   location?: string;
   assignedTo?: string;
   description?: string;

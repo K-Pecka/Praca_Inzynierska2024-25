@@ -2,13 +2,14 @@ import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import homeRoutes from "./homeRoutes";
 import panelRoutes from "./panelTouristRoutes";
+import tripRoutes  from "@/router/tripRoutes";
 import panelGuideRoutes from "./panelGuideRoutes";
 import authRoutes from "./authRoutes";
 import { useAuthStore, useNotificationStore } from "@/stores";
 
 import {APP_MODE_DEV} from "@/config/envParams"
 
-const routes: RouteRecordRaw[] = [...authRoutes, ...homeRoutes, panelRoutes,panelGuideRoutes];
+const routes: RouteRecordRaw[] = [...authRoutes, ...homeRoutes, panelRoutes, panelGuideRoutes, tripRoutes];
 const router = createRouter({
   history: createWebHistory(),
   routes,

@@ -1,5 +1,5 @@
-@use "@/assets/styles/scroll.scss";
-@use "@/assets/styles/input.scss";
+@use "../styles/scroll.scss";
+@use "../styles/input.scss";
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 :root{
@@ -17,8 +17,6 @@
 }
 * {
   box-sizing: border-box;
-  padding: 0;
-  border: none;
   font-family: var(--v-fontFamily) !important;
 }
 
@@ -122,7 +120,7 @@ a{
   justify-content: space-between;
 }
 body {
-  background-color: rgb(var(--v-theme-background,#F8F9Fa));
+  background-color: rgb(var(--v-theme-background));
 }
 body .v-card-title{
   padding: 1rem 0;

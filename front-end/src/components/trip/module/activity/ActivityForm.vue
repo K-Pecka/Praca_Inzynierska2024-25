@@ -18,7 +18,15 @@ const form = ref({
 
 const timeMenu = ref(false);
 
+const nameRules = [(v: string) => !!v || "Nazwa aktywności jest wymagana"];
+
+const isFormValid = computed(() => form.value.name.trim() !== "");
+
 function submitActivity() {
+  if (!isFormValid.value) {
+    alert("Uzupełnij nazwę aktywności.");
+    return;
+  }
   console.log(form.value)
   emit("submitActivity", { ...form.value });
   form.value = {
@@ -58,6 +66,7 @@ const selected = ref<(typeof activityGroups)[0]>(activityGroups[0]);
         <v-col cols="12" sm="6">
           <v-text-field
             v-model="form.name"
+            :rules="nameRules"
             label="Nazwa aktywności"
             variant="outlined"
             required
@@ -85,8 +94,10 @@ const selected = ref<(typeof activityGroups)[0]>(activityGroups[0]);
               <v-time-picker
                 v-if="timeMenu"
                 v-model="form.start_time"
-                full-width
+                format="24hr"
+                scrollable
               />
+
             </v-menu>
           </v-text-field>
         </v-col>
@@ -136,7 +147,7 @@ const selected = ref<(typeof activityGroups)[0]>(activityGroups[0]);
       <AppButton variant="secondary" @click="$emit('cancelForm')">
         Anuluj
       </AppButton>
-      <AppButton variant="primary" @click="submitActivity"> Dodaj </AppButton>
+      <AppButton variant="primary" @click="submitActivity" :disabled="!isFormValid"> Dodaj </AppButton>
     </v-card-actions>
   </v-card>
 </template>

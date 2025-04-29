@@ -85,6 +85,7 @@ export const useAuthStore = defineStore(
             token.value = data;
         };
         const saveUser = (data: { first_name: string; last_name: string }) => {
+            refreshToken()
             user.value = data;
         };
 

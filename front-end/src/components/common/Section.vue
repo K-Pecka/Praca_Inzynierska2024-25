@@ -1,15 +1,18 @@
 <template>
-  <section class="section" style="width: 80%;margin: auto;">
-    <header class="section__header">
-      <slot name="title"></slot>
-    </header>
-    <div class="section__content" >
-      <slot name="content"></slot>
+  <v-container>
+    <div style="width: 80%;" class="mx-auto">
+      <header class="section__header">
+        <slot name="title"></slot>
+      </header>
+      <div class="section__content" >
+        <slot name="content"></slot>
+      </div>
+      <div class="section__footer">
+        <slot name="footer"></slot>
+      </div>
     </div>
-    <div class="section__footer">
-      <slot name="footer"></slot>
-    </div>
-  </section>
+
+  </v-container>
 </template>
 
 <style scoped lang="scss">
@@ -20,7 +23,6 @@
   align-items: center;
 }
 .section {
-  margin: 6rem 6rem 6rem 6rem;
   &__header {
     text-align: center;
     display: flex;
@@ -39,3 +41,5 @@
   }
 }
 </style>
+<script setup lang="ts">
+</script>
