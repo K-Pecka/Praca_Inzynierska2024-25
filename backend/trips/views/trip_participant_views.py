@@ -66,9 +66,10 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             )
 
     def handle_invite(self, trip, data):
+        user = CustomUser.objects.filter(email=data['email']).first()
         if trip.members.count() >= 5:
             raise ValidationError(_("Wycieczka może mieć maksymalnie 5 uczestników."))
-        if 'profile' not in data:
+        if not CustomUser.objects.filter(email=data['email']).exists():
             try:
                 user = CustomUser.create_guest_account(
                         data['name'],
@@ -76,9 +77,10 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
                 )
             except Exception as e:
                 raise ValidationError(_("Nie udało się utworzyć konta gościa. Sprawdź poprawność danych. {e}".format(e=e)))
+
             profile = user.get_default_profile()
         else:
-            profile = data['profile']
+            profile = user.get_default_profile()
 
         if trip.members.filter(id=profile.id).exists():
             raise ValidationError(_("Użytkownik już jest uczestnikiem wycieczki"))

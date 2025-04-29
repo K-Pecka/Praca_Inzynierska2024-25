@@ -162,6 +162,12 @@ def get_default_ticket_type():
 
 
 class Ticket(BaseModel):
+    name = models.CharField(
+        max_length=255,
+        verbose_name=_("Nazwa"),
+        help_text=_("Nazwa biletu"),
+        null=True
+    )
     file = models.FileField(
         upload_to="tickets/",
         verbose_name=_("Bilet"),
@@ -174,11 +180,17 @@ class Ticket(BaseModel):
         verbose_name=_("Typ"),
         help_text=_("Typ")
     )
-    valid_from = models.DateTimeField(
+    valid_from_date = models.DateField(
         null=True,
         blank=True,
-        verbose_name=_("Ważny od"),
-        help_text=_("Ważny od")
+        verbose_name=_("Ważny od daty"),
+        help_text=_("Ważny od daty")
+    )
+    valid_from_time = models.TimeField(
+        null=True,
+        blank=True,
+        verbose_name=_("Ważny od godziny"),
+        help_text=_("Ważny od godziny")
     )
     profile = models.ForeignKey(
         UserProfile,
@@ -270,7 +282,7 @@ class Expense(BaseModel):
     )
     date = models.DateField(
         verbose_name=_("Data"),
-        help_text=_("Data wydatku")
+        help_text=_("Data wydatku"),
     )
     note = models.TextField(
         blank=True,

@@ -20,7 +20,7 @@ class TicketTypeAdmin(admin.ModelAdmin):
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
     list_select_related = ('trip',)
-    list_display = ('profile', 'type', 'trip', 'file', 'valid_from')
+    list_display = ('profile', 'type', 'trip', 'file', 'valid_from_date', 'valid_from_time')
     search_fields = ('profile__user__username', 'trip__creator__user__username')
     list_filter = ('trip', 'type')
 
