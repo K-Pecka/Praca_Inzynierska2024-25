@@ -165,7 +165,8 @@ class Ticket(BaseModel):
     name = models.CharField(
         max_length=255,
         verbose_name=_("Nazwa"),
-        help_text=_("Nazwa biletu")
+        help_text=_("Nazwa biletu"),
+        null=True
     )
     file = models.FileField(
         upload_to="tickets/",
