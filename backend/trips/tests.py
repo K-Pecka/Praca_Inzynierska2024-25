@@ -123,7 +123,7 @@ class ExpenseAPITestCase(TestCase):
             'user': self.user_profile.id,
             'amount': 150.00,
             'currency':  "USD",
-            'date': "2025-06-06",
+            'date': "06.06.2025",
             'category': self.expense_category.id
         }
         view = ExpenseCreateAPIView.as_view()

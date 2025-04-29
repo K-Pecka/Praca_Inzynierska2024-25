@@ -282,7 +282,7 @@ class Expense(BaseModel):
     )
     date = models.DateField(
         verbose_name=_("Data"),
-        help_text=_("Data wydatku")
+        help_text=_("Data wydatku"),
     )
     note = models.TextField(
         blank=True,

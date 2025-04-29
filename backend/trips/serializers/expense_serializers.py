@@ -52,9 +52,19 @@ class ExpenseCreateSerializer(serializers.ModelSerializer):
     title = serializers.CharField()
     amount = serializers.DecimalField(max_digits=10, decimal_places=2)
     currency = serializers.CharField(max_length=3)
-    date = serializers.DateField(format="%d.%m.%Y")
+    date = serializers.DateField(format="%d.%m.%Y", input_formats=["%d.%m.%Y"])
     user = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
     category = serializers.PrimaryKeyRelatedField(queryset=ExpenseType.objects.all())
+
+    def validate_date(self, value):
+        view = self.context['view']
+        trip_pk = view.kwargs.get('trip_pk')
+        trip = Trip.objects.get(pk=trip_pk)
+        if not trip:
+            raise serializers.ValidationError("Nie znaleziono wycieczki o podanym id.")
+        if value < trip.start_date or value > trip.end_date:
+            raise serializers.ValidationError("Data wydatku musi być w zakresie daty wycieczki.")
+        return value
 
     def create(self, validated_data):
         view = self.context['view']
