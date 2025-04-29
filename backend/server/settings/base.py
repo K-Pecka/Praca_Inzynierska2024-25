@@ -12,7 +12,7 @@ TRIP_JOINING_PAGE = "https://plannder.com/trip/invite/"
 
 ASGI_APPLICATION = "server.asgi.application"
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 CHANNEL_LAYERS = {
     "default": {
