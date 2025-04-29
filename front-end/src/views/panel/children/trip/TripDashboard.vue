@@ -90,7 +90,6 @@ const loadPage = (page: any) => {
       <router-link to="/" class="ml-3" style="text-decoration: none;">
         <v-img class="ml-3" aspect-ratio="16/9" width="10%" min-width="120px" cover :src="images.logo.img" />
       </router-link>
-      <a href="https://api.plannder.com/media/tickets/XZD.jpeg" download> XDDDDDDDDDD</a>
       <template v-slot:append>
 
         <v-menu>
