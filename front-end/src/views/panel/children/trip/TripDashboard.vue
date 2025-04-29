@@ -141,7 +141,7 @@ const loadPage = (page: any) => {
           :key="subItem.title"
           :title="subItem.title"
           :active="currentPage === subItem.page"
-          @click="downloadTicket('https://api.plannder.com/media/tickets/XZD.jpeg')"
+          @click="loadPage(subItem.page)"
           slim
           class="pl-6"
         />
