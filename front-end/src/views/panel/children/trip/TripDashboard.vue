@@ -11,7 +11,7 @@ const { getDashboard,getExpenseItem } = useTripStore();
 const route = useRoute();
 const id = route.params.tripId as string;
 
-const { boxes, isLoading, error, tripName } = getDashboard(id);
+const { boxes, isLoading, error } = getDashboard(id);
 </script>
 
 <template>

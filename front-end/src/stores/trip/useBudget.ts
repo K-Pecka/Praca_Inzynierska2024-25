@@ -11,7 +11,7 @@ const queryClient = useQueryClient();
         mutationFn: saveBudget,
         onSuccess: () => {
             notifications.setSuccessCurrentMessage("Zapisano");
-            router.push({ name: "tripDashboard" });
+            router.push({ name: "Dashboard" });
         },
         onError: (err: any) => {
             notifications.setErrorCurrentMessage(err?.message || "Błąd");
