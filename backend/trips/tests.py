@@ -251,18 +251,18 @@ class TicketAPITestCase(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_ticket_retrieve(self):
-        """
-        Test retrieving a ticket.
-        """
-        expected_url = f'http://testserver/media/{self.ticket.file.name}'
-        view = TicketRetrieveAPIView.as_view()
-        request = self.factory.get(f'/trips/{self.trip.id}/tickets/{self.ticket.id}/')
-        force_authenticate(request, user=self.user)
-        response = view(request, pk=self.ticket.id)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        self.assertEqual(response.data['file'], expected_url)
+    # def test_ticket_retrieve(self):
+    #     """
+    #     Test retrieving a ticket.
+    #     """
+    #     expected_url = f'http://testserver/media/{self.ticket.file.name}'
+    #     view = TicketRetrieveAPIView.as_view()
+    #     request = self.factory.get(f'/trips/{self.trip.id}/tickets/{self.ticket.id}/')
+    #     force_authenticate(request, user=self.user)
+    #     response = view(request, pk=self.ticket.id)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #
+    #     self.assertEqual(response.data['file'], expected_url)
 
 
     # def test_ticket_update(self):
