@@ -37,11 +37,11 @@ class ItineraryActivityListSerializer(serializers.ModelSerializer):
 class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=100)
     type = serializers.PrimaryKeyRelatedField(queryset=ItineraryActivityType.objects.all())
-    description = serializers.CharField(max_length=5120)
-    location = serializers.CharField(max_length=100)
+    description = serializers.CharField(max_length=5120, required=False)
+    location = serializers.CharField(max_length=100, required=False)
     date = serializers.DateField()
-    start_time = serializers.TimeField()
-    duration = serializers.IntegerField()
+    start_time = serializers.TimeField(required=False)
+    duration = serializers.IntegerField(required=False)
 
     def create(self, validated_data):
         view = self.context['view']

@@ -49,24 +49,28 @@ class ItineraryActivity(BaseModel):
     description = models.TextField(
         max_length=5120,
         verbose_name=_("Opis"),
-        help_text=_("Opis")
+        help_text=_("Opis"),
+        null=True
     )
     location = models.CharField(
         max_length=255,
         verbose_name=_("Lokacja"),
-        help_text=_("Lokacja")
+        help_text=_("Lokacja"),
+        null=True,
     )
     date = models.DateField(
         verbose_name=_("data"),
-        help_text=_("data aktywności")
+        help_text=_("data aktywności"),
     )
     start_time = models.TimeField(
         verbose_name=_("Czas zakończenia"),
-        help_text=_("Czas rozpoczęcia")
+        help_text=_("Czas rozpoczęcia"),
+        null=True,
     )
     duration = models.IntegerField(
         verbose_name=_("Czas trwania"),
-        help_text=_("Czas trawania")
+        help_text=_("Czas trawania"),
+        null=True,
     )
     itinerary = models.ForeignKey(
         Itinerary,
