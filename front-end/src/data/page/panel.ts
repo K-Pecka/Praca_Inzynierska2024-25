@@ -12,7 +12,7 @@ export const getTouristNav = (tripId: string) => [
     label: "Panel",
     icon: images.icon.menu.dashboard,
     name: "panel",
-    route: { name: "tripDashboard", params: { tripId: tripId } },
+    route: { name: "Dashboard", params: { tripId: tripId } },
   },
   {
     label: "Plany",
@@ -78,7 +78,7 @@ export const getGudieNav = (tripId: string) => [
     label: "Panel",
     icon: images.icon.menu.dashboard,
     name: "panel",
-    route: { name: "tripDashboard", params: { tripId: tripId } },
+    route: { name: "Dashboard", params: { tripId: tripId } },
   },
   {
     label: "Plany",

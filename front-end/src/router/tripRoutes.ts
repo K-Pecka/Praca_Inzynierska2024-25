@@ -1,14 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createWebHistory } from 'vue-router';
+import Dashboard from "@/views/panel/children/trip/Dashboard.vue";
 
-import {
-  TripDashboard
-} from "@/views/panel";
 
 const tripRoutes = {
   path: "/dashboard/:tripId",
-  name: "tripDashboard",
+  name: "Dashboard",
   history: createWebHistory(import.meta.env.BASE_URL),
-  component: TripDashboard,
+  component: Dashboard,
   meta: {requiresAuth: true},
 };
 
