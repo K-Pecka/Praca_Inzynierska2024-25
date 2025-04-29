@@ -211,7 +211,7 @@ class Ticket(BaseModel):
     class Meta:
         db_table = "tickets"
         verbose_name = "Bilet"
-        verbose_name_plural = "Bilety"
+        verbose_name_plural = "Biletyy"
 
 
 class Budget(BaseModel):
