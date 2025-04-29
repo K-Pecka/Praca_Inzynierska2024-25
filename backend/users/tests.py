@@ -37,7 +37,6 @@ class UserAPITestCase(TestCase):
         view = UserCreateAPIView.as_view()
         request = self.factory.post('/user/', data)
         response = view(request)
-        print(response.__dict__)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_user_update_password(self):
