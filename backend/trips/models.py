@@ -1,5 +1,6 @@
 import secrets
 import pycountry
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 from rest_framework.response import Response
 
@@ -169,6 +170,7 @@ class Ticket(BaseModel):
         null=True
     )
     file = models.FileField(
+        storage=MediaCloudinaryStorage(),
         upload_to="tickets/",
         verbose_name=_("Bilet"),
         help_text=_("Bilet")
