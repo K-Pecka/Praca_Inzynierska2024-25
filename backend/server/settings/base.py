@@ -45,7 +45,7 @@ OWN_ADDITIONAL_APPS = [
     'trips',
     'user_auth',
     'itineraries',
-    'chats',
+    'chats.apps.ChatsConfig',
     'channels',
 ]
 
