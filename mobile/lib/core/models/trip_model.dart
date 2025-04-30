@@ -15,6 +15,9 @@ class TripModel {
     required this.endDate,
   });
 
+  @override
+  String toString() => name;
+
   factory TripModel.fromJson(Map<String, dynamic> json) {
     return TripModel(
       id: json['id'],

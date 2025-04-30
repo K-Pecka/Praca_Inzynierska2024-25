@@ -4,6 +4,7 @@ import '/core/models/itinerary_model.dart';
 import '/core/models/activity_model.dart';
 import '/core/theme/text_styles.dart';
 import '/core/theme/icons.dart';
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 
 class DaySelector extends StatefulWidget {
   final DateTime start;
@@ -36,7 +37,11 @@ class _DaySelectorState extends State<DaySelector> {
       a.year == b.year && a.month == b.month && a.day == b.day;
 
   bool _isInPlan(DateTime day) {
-    final start = DateTime(widget.start.year, widget.start.month, widget.start.day);
+    final start = DateTime(
+      widget.start.year,
+      widget.start.month,
+      widget.start.day,
+    );
     final end = DateTime(widget.end.year, widget.end.month, widget.end.day);
     final d = DateTime(day.year, day.month, day.day);
     return !d.isBefore(start) && !d.isAfter(end);
@@ -45,7 +50,11 @@ class _DaySelectorState extends State<DaySelector> {
   bool _isActive(DateTime day) {
     final d = DateTime(day.year, day.month, day.day);
     return widget.activeDays.any((it) {
-      final s = DateTime(it.startDate.year, it.startDate.month, it.startDate.day);
+      final s = DateTime(
+        it.startDate.year,
+        it.startDate.month,
+        it.startDate.day,
+      );
       final e = DateTime(it.endDate.year, it.endDate.month, it.endDate.day);
       return !d.isBefore(s) && !d.isAfter(e);
     });
@@ -85,11 +94,12 @@ class _DaySelectorState extends State<DaySelector> {
             final isInPlan = _isInPlan(date);
             final isActive = _isActive(date);
 
-            final bgColor = isSelected
-                ? const Color(0xBF2F27CE)
-                : isInPlan && isActive
-                ? const Color(0x90DEDCFF)
-                : const Color(0x40000000);
+            final bgColor =
+                isSelected
+                    ? const Color(0xBF2F27CE)
+                    : isInPlan && isActive
+                    ? const Color(0x90DEDCFF)
+                    : const Color(0x40000000);
 
             return GestureDetector(
               onTap: () => widget.onSelect(date),
@@ -153,13 +163,27 @@ class ActivitiesList extends StatelessWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(Icons.access_time, size: 16, color: Colors.black54),
+                  const Icon(
+                    Icons.access_time,
+                    size: 16,
+                    color: Colors.black54,
+                  ),
                   const SizedBox(width: 4),
-                  Text(a.startTime, style: const TextStyle(color: Colors.black54)),
+                  Text(
+                    a.startTime,
+                    style: const TextStyle(color: Colors.black54),
+                  ),
                   const SizedBox(width: 12),
-                  const Icon(Icons.access_time_filled, size: 16, color: Colors.black54),
+                  const Icon(
+                    Icons.access_time_filled,
+                    size: 16,
+                    color: Colors.black54,
+                  ),
                   const SizedBox(width: 4),
-                  Text('${a.duration} min', style: const TextStyle(color: Colors.black54)),
+                  Text(
+                    '${a.duration} min',
+                    style: const TextStyle(color: Colors.black54),
+                  ),
                 ],
               ),
             ],
@@ -184,81 +208,40 @@ class PlanDropdownCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0x80DEDCFF),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ColorFiltered(
-            colorFilter:
-            const ColorFilter.mode(Color(0xB32F27CE), BlendMode.srcIn),
-            child: SizedBox(width: 32, height: 32, child: AppIcons.map),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<ItineraryModel>(
-                isExpanded: true,
-                value: selectedPlan,
-                icon: const Icon(Icons.keyboard_arrow_down_rounded,
-                    color: Colors.black54),
-                dropdownColor: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-                itemHeight: 48,
-                elevation: 3,
-                selectedItemBuilder: (context) => plans.map((plan) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Obecny plan',
-                          style: TextStyles.cardTitleHeading),
-                      Text(
-                        plan.name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                          fontFamily: 'Quicksand',
-                        ),
-                      ),
-                    ],
-                  );
-                }).toList(),
-                items: plans.map((plan) {
-                  return DropdownMenuItem(
-                    value: plan,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Text(
-                        plan.name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (ItineraryModel? newPlan) {
-                  if (newPlan != null) onPlanSelected(newPlan);
-                },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Color(0xB32F27CE),
+                BlendMode.srcIn,
               ),
+              child: SizedBox(width: 36, height: 36, child: AppIcons.itinerary),
             ),
+            const SizedBox(width: 8),
+            const Text('Wybrany plan', style: TextStyles.cardTitleHeading),
+          ],
+        ),
+        const SizedBox(height: 8),
+        CustomDropdown<ItineraryModel>(
+          items: plans,
+          initialItem: selectedPlan,
+          hintText: 'Wybierz plan',
+          onChanged: (ItineraryModel? newPlan) {
+            if (newPlan != null) onPlanSelected(newPlan);
+          },
+          decoration: CustomDropdownDecoration(
+            closedFillColor: const Color(0xFFF0ECFC),
+            closedBorderRadius: BorderRadius.circular(16),
+            closedSuffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
+            headerStyle: TextStyles.cardTitleHeading,
+            hintStyle: TextStyles.subtitle,
+            listItemStyle: TextStyles.subtitle,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
-

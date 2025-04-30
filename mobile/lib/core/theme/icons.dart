@@ -16,4 +16,5 @@ class AppIcons{
   static final location = SvgPicture.asset('${_path}location.svg');
   static final map = SvgPicture.asset('${_path}map.svg');
   static final money = SvgPicture.asset('${_path}money_icon.svg');
+  static final itinerary = SvgPicture.asset('${_path}itinerary.svg');
 }
