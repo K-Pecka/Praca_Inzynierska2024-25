@@ -67,6 +67,20 @@ class ChatroomListSerializer(BaseChatroomSerializer):
     members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     settings = serializers.JSONField(read_only=True)
 
+    last_message = serializers.SerializerMethodField()  # ✅ dodane
+
+    class Meta(BaseChatroomSerializer.Meta):
+        fields = BaseChatroomSerializer.Meta.fields + ['last_message']
+
+    def get_last_message(self, obj):
+        last = obj.messages.order_by('-created_at').first()
+        if last:
+            return {
+                'content': last.content,
+                'created': last.created_at.isoformat(),
+            }
+        return None
+
 
 class ChatroomUpdateSerializer(BaseChatroomSerializer):
     id = serializers.IntegerField(read_only=True)
