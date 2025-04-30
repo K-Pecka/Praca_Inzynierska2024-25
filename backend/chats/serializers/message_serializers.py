@@ -40,6 +40,10 @@ class MessageRetrieveSerializer(BaseMessageSerializer):
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
     file = serializers.FileField(read_only=True)
     chatroom = serializers.PrimaryKeyRelatedField(read_only=True)
+    created = serializers.DateTimeField(source='created_at', read_only=True)
+
+    class Meta(BaseMessageSerializer.Meta):
+        fields = BaseMessageSerializer.Meta.fields + ['created']
 
 
 class MessageListSerializer(BaseMessageSerializer):
@@ -48,6 +52,10 @@ class MessageListSerializer(BaseMessageSerializer):
     profile = serializers.PrimaryKeyRelatedField(read_only=True)
     file = serializers.FileField(read_only=True)
     chatroom = serializers.PrimaryKeyRelatedField(read_only=True)
+    created = serializers.DateTimeField(source='created_at', read_only=True)
+
+    class Meta(BaseMessageSerializer.Meta):
+        fields = BaseMessageSerializer.Meta.fields + ['created']
 
 
 class MessageUpdateSerializer(BaseMessageSerializer):
