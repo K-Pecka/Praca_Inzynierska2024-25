@@ -4,14 +4,12 @@ import 'title_header.dart';
 
 class BaseScreen extends StatelessWidget {
   final TripModel trip;
-  final String token;
   final Widget child;
   final bool scrollable;
 
   const BaseScreen({
     super.key,
     required this.trip,
-    required this.token,
     required this.child,
     this.scrollable = true,
   });
@@ -21,7 +19,7 @@ class BaseScreen extends StatelessWidget {
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TripTitleHeader(title: trip.name, token: token),
+        TripTitleHeader(title: trip.name),
         const SizedBox(height: 16),
         child,
       ],

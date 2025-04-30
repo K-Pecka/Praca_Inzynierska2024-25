@@ -37,14 +37,12 @@ class ExpenseTile extends StatelessWidget {
 }
 
 class ExpenseForm extends StatefulWidget {
-  final String token;
   final int tripId;
   final int userProfileId;
   final VoidCallback onSaved;
 
   const ExpenseForm({
     super.key,
-    required this.token,
     required this.tripId,
     required this.userProfileId,
     required this.onSaved,
@@ -93,8 +91,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
     final String note = _noteController.text.trim();
 
     try {
-      await BudgetService().addExpense(
-        token: widget.token,
+      await BudgetService.addExpense(
         tripId: widget.tripId,
         userProfileId: widget.userProfileId,
         title: title,

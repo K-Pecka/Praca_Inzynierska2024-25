@@ -1,18 +1,42 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/trip_model.dart';
+import 'auth_service.dart';
 
 class TripService {
-  final String baseUrl = 'https://api.plannder.com';
+  static final String _baseUrl = 'https://api.plannder.com';
 
-  Future<List<TripModel>> fetchTrips(String token) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/trip/all/'),
+  static Future<http.Response> _authorizedGet(String endpoint) async {
+    final url = Uri.parse('$_baseUrl$endpoint');
+
+    var response = await http.get(
+      url,
       headers: {
+        'Authorization': 'Bearer ${AuthService.accessToken}',
+        'Content-Type': 'application/json',
         'accept': 'application/json',
-        'Authorization': 'Bearer $token',
       },
     );
+
+    if (response.statusCode == 401) {
+      final refreshed = await AuthService.refreshAccessToken();
+      if (refreshed) {
+        response = await http.get(
+          url,
+          headers: {
+            'Authorization': 'Bearer ${AuthService.accessToken}',
+            'Content-Type': 'application/json',
+            'accept': 'application/json',
+          },
+        );
+      }
+    }
+
+    return response;
+  }
+
+  static Future<List<TripModel>> getAllTrips() async {
+    final response = await _authorizedGet('/trip/all/');
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -22,8 +46,8 @@ class TripService {
     }
   }
 
-  Future<TripModel?> fetchTripById(String token, int tripId) async {
-    final trips = await fetchTrips(token);
+  static Future<TripModel?> getTripById(int tripId) async {
+    final trips = await getAllTrips();
     return trips.firstWhere(
           (trip) => trip.id == tripId,
       orElse: () => trips.isNotEmpty

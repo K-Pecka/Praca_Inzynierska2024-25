@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../features/auth/screens/start_screen.dart';
 import '../theme/text_styles.dart';
+import '../services/auth_service.dart';
 
 class TripTitleHeader extends StatefulWidget {
   final String title;
-  final String token;
 
   const TripTitleHeader({
     super.key,
     required this.title,
-    required this.token,
   });
 
   @override
@@ -26,7 +25,7 @@ class _TripTitleHeaderState extends State<TripTitleHeader> {
         Uri.parse('https://api.plannder.com/user_auth/logout/'),
         headers: {
           'accept': '*/*',
-          'Authorization': 'Bearer ${widget.token}',
+          'Authorization': 'Bearer ${AuthService.accessToken}',
         },
       );
 
@@ -36,6 +35,7 @@ class _TripTitleHeaderState extends State<TripTitleHeader> {
       if (!mounted) return;
 
       if ([200, 204, 205].contains(response.statusCode)) {
+        AuthService.logout(); // wyczyść tokeny
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const StartScreen()),
               (route) => false,

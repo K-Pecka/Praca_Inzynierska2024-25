@@ -1,32 +1,60 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/expense_model.dart';
+import 'auth_service.dart';
 
 class BudgetService {
-  final String baseUrl = 'https://api.plannder.com';
+  static final String _baseUrl = 'https://api.plannder.com';
 
-  Future<List<ExpenseModel>> fetchExpenses({
+  static Future<http.Response> _authorizedRequest(
+      Uri url, {
+        String method = 'GET',
+        Map<String, String>? headers,
+        dynamic body,
+      }) async {
+    headers ??= {};
+    headers['Authorization'] = 'Bearer ${AuthService.accessToken}';
+    headers['accept'] ??= 'application/json';
+    if (method == 'POST') headers['Content-Type'] = 'application/json';
+
+    late http.Response response;
+
+    if (method == 'GET') {
+      response = await http.get(url, headers: headers);
+    } else if (method == 'POST') {
+      response = await http.post(url, headers: headers, body: body);
+    }
+
+    if (response.statusCode == 401) {
+      final refreshed = await AuthService.refreshAccessToken();
+      if (refreshed) {
+        headers['Authorization'] = 'Bearer ${AuthService.accessToken}';
+        if (method == 'GET') {
+          response = await http.get(url, headers: headers);
+        } else if (method == 'POST') {
+          response = await http.post(url, headers: headers, body: body);
+        }
+      }
+    }
+
+    return response;
+  }
+
+  static Future<List<ExpenseModel>> fetchExpenses({
     required int tripId,
-    required String token,
   }) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/trip/$tripId/expense/all/'),
-      headers: {
-        'accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+    final url = Uri.parse('$_baseUrl/trip/$tripId/expense/all/');
+    final response = await _authorizedRequest(url);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
       return data.map((e) => ExpenseModel.fromJson(e)).toList();
     } else {
-      throw Exception('Błąd podczas pobierania wydatków');
+      throw Exception('Błąd podczas pobierania wydatków: ${response.body}');
     }
   }
 
-  Future<void> addExpense({
-    required String token,
+  static Future<void> addExpense({
     required int tripId,
     required int userProfileId,
     required String title,
@@ -34,14 +62,7 @@ class BudgetService {
     required String date,
     required String note,
   }) async {
-    final url = Uri.parse('$baseUrl/trip/$tripId/expense/create/');
-
-    final headers = {
-      'accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    };
-
+    final url = Uri.parse('$_baseUrl/trip/$tripId/expense/create/');
     final body = jsonEncode({
       'title': title,
       'amount': amount.toStringAsFixed(2),
@@ -53,26 +74,23 @@ class BudgetService {
       'category': 1,
     });
 
-    final response = await http.post(url, headers: headers, body: body);
+    final response = await _authorizedRequest(
+      url,
+      method: 'POST',
+      body: body,
+    );
 
     if (response.statusCode != 201) {
       throw Exception('Błąd podczas dodawania wydatku: ${response.body}');
     }
   }
 
-  Future<double> getExchangeRate({
+  static Future<double> getExchangeRate({
     required String from,
     required String to,
-    required String token,
   }) async {
-    final url = Uri.parse('$baseUrl/apis/currency/?from=$from&to=$to');
-    final response = await http.get(
-      url,
-      headers: {
-        'accept': '*/*',
-        'Authorization': 'Bearer $token',
-      },
-    );
+    final url = Uri.parse('$_baseUrl/apis/currency/?from=$from&to=$to');
+    final response = await _authorizedRequest(url);
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);

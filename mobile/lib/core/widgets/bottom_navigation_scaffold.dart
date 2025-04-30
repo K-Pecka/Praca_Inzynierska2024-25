@@ -6,13 +6,11 @@ import '../../features/budget/screens/tourist_budget_screen.dart';
 import '../../core/widgets/bottom_navigation.dart';
 
 class BottomNavScaffold extends StatefulWidget {
-  final String token;
   final int userProfileId;
   final TripModel trip;
 
   const BottomNavScaffold({
     super.key,
-    required this.token,
     required this.userProfileId,
     required this.trip,
   });
@@ -41,17 +39,14 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
   Widget build(BuildContext context) {
     final List<Widget> screens = [
       TouristDashboard(
-        token: widget.token,
         userProfileId: widget.userProfileId,
         trip: _currentTrip,
         onTripChange: _updateTrip,
       ),
       ItineraryScreen(
         trip: _currentTrip,
-        token: widget.token,
       ),
       TouristBudgetScreen(
-        token: widget.token,
         trip: _currentTrip,
         userProfileId: widget.userProfileId,
       ),

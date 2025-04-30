@@ -1,20 +1,16 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../../../core/services/trip_service.dart';
 import '../../../core/theme/text_styles.dart';
 import '/core/models/trip_model.dart';
 import '../widgets/dashboard_widgets.dart';
 
 class TouristDashboard extends StatefulWidget {
-  final String token;
   final int userProfileId;
-  final TripModel trip; // Received the trip model
+  final TripModel trip;
   final Function(TripModel) onTripChange;
 
   const TouristDashboard({
     super.key,
-    required this.token,
     required this.userProfileId,
     required this.trip,
     required this.onTripChange,
@@ -37,7 +33,7 @@ class _TouristDashboardState extends State<TouristDashboard> {
 
   Future<void> _fetchTrips() async {
     try {
-      final trips = await TripService().fetchTrips(widget.token);
+      final trips = await TripService.getAllTrips();
       setState(() {
         _trips = trips;
         _selectedTrip = trips.firstWhere(
@@ -87,10 +83,8 @@ class _TouristDashboardState extends State<TouristDashboard> {
                   trips: _trips,
                   selectedTrip: _selectedTrip!,
                   onTripSelected: (trip) {
-                    widget.onTripChange(trip); // Update trip on selection
-                    setState(() {
-                      _selectedTrip = trip;
-                    });
+                    widget.onTripChange(trip);
+                    setState(() => _selectedTrip = trip);
                   },
                 ),
               const SizedBox(height: 16),

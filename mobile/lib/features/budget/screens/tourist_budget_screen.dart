@@ -7,13 +7,11 @@ import '../widgets/budget_widgets.dart';
 import '../../../../core/widgets/base_screen.dart';
 
 class TouristBudgetScreen extends StatefulWidget {
-  final String token;
   final TripModel trip;
   final int userProfileId;
 
   const TouristBudgetScreen({
     super.key,
-    required this.token,
     required this.trip,
     required this.userProfileId,
   });
@@ -35,9 +33,8 @@ class _TouristBudgetScreenState extends State<TouristBudgetScreen> {
   }
 
   Future<void> _loadData() async {
-    final data = await BudgetService().fetchExpenses(
+    final data = await BudgetService.fetchExpenses(
       tripId: widget.trip.id,
-      token: widget.token,
     );
     final used = await _calculateUsedInPLN(data);
 
@@ -65,10 +62,9 @@ class _TouristBudgetScreenState extends State<TouristBudgetScreen> {
         total += e.amount;
       } else {
         if (!rateCache.containsKey(e.currency)) {
-          final rate = await BudgetService().getExchangeRate(
+          final rate = await BudgetService.getExchangeRate(
             from: e.currency,
             to: 'PLN',
-            token: widget.token,
           );
           rateCache[e.currency] = rate;
         }
@@ -81,7 +77,7 @@ class _TouristBudgetScreenState extends State<TouristBudgetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double totalBudget = 5000.0;
+    const double totalBudget = 5000.0;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -90,7 +86,6 @@ class _TouristBudgetScreenState extends State<TouristBudgetScreen> {
           ? const Center(child: CircularProgressIndicator())
           : BaseScreen(
         trip: widget.trip,
-        token: widget.token,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -103,7 +98,6 @@ class _TouristBudgetScreenState extends State<TouristBudgetScreen> {
             const SizedBox(height: 16),
             if (_showForm)
               ExpenseForm(
-                token: widget.token,
                 tripId: widget.trip.id,
                 userProfileId: widget.userProfileId,
                 onSaved: _loadData,

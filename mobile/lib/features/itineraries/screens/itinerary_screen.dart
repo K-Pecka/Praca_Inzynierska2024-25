@@ -6,17 +6,14 @@ import '/core/models/itinerary_model.dart';
 import '/core/models/activity_model.dart';
 import '/core/models/trip_model.dart';
 import '/core/services/itinerary_service.dart';
-import '/core/services/trip_service.dart';
 import '../widgets/itineraries_widgets.dart';
 
 class ItineraryScreen extends StatefulWidget {
   final TripModel trip;
-  final String token;
 
   const ItineraryScreen({
     super.key,
     required this.trip,
-    required this.token,
   });
 
   @override
@@ -34,19 +31,15 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
   @override
   void initState() {
     super.initState();
-    _futureItineraries = ItineraryService().fetchItineraries(
-      tripId: widget.trip.id,
-      token: widget.token,
-    );
+    _futureItineraries = ItineraryService.fetchItineraries(tripId: widget.trip.id);
   }
 
   Future<void> _loadActivitiesForPlan(ItineraryModel plan) async {
     setState(() => _loadingActivities = true);
 
-    final activities = await ItineraryService().fetchActivities(
+    final activities = await ItineraryService.fetchActivities(
       tripId: widget.trip.id,
       itineraryId: plan.id,
-      token: widget.token,
     );
 
     setState(() {
@@ -90,12 +83,10 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
           final filteredActivities = _activities.where((a) =>
           a.date.year == _selectedDate!.year &&
               a.date.month == _selectedDate!.month &&
-              a.date.day == _selectedDate!.day
-          ).toList();
+              a.date.day == _selectedDate!.day).toList();
 
           return BaseScreen(
             trip: widget.trip,
-            token: widget.token,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
