@@ -5,6 +5,7 @@ import '../../features/itineraries/screens/itinerary_screen.dart';
 import '../../features/budget/screens/tourist_budget_screen.dart';
 import '../../core/widgets/bottom_navigation.dart';
 import '../../features/tickets/screens/tourist_tickets_screen.dart';
+import '../../features/chat/screens/announcement_channel_screen.dart'; // ✅ import
 
 class BottomNavScaffold extends StatefulWidget {
   final int userProfileId;
@@ -56,7 +57,11 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
       TouristTicketsScreen(
         trip: _currentTrip,
       ),
-      const Placeholder(), // np. czat lub profil
+      AnnouncementChannelScreen(
+        userProfileId: widget.userProfileId,
+        profileType: widget.profileType,
+        trip: _currentTrip,
+      ),
     ];
 
     return Scaffold(
@@ -68,7 +73,5 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
     );
   }
 }
-
-
 
 
