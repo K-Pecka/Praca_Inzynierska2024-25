@@ -1,5 +1,5 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from users.models import UserProfile
@@ -26,7 +26,7 @@ class UserProfileListAPIView(ListAPIView):
 
 
 @extend_schema(tags=['profile'])
-class UserProfileUpdateAPIView(ListAPIView):
+class UserProfileUpdateAPIView(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserProfileUpdateSerializer
     queryset = UserProfile.objects.all()
