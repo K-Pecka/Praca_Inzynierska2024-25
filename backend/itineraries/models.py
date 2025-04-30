@@ -40,6 +40,11 @@ class ItineraryActivity(BaseModel):
         max_length=255,
         verbose_name=_("Nazwa"), help_text=_("Nazwa")
     )
+    ticket = models.FileField(
+        upload_to="itineraries/",
+        null=True,
+        blank=True
+    )
     type = models.ForeignKey(
         ItineraryActivityType,
         on_delete=models.CASCADE,
