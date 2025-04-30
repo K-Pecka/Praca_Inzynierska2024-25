@@ -6,6 +6,7 @@ from itineraries.models import Itinerary, ItineraryActivity, ItineraryActivityTy
 class ItineraryActivityRetrieveSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True, max_length=100)
+    ticket = serializers.FileField(read_only=True)
     type = serializers.PrimaryKeyRelatedField(read_only=True)
     description = serializers.CharField(read_only=True, max_length=5120)
     location = serializers.CharField(read_only=True, max_length=100)
@@ -16,12 +17,13 @@ class ItineraryActivityRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItineraryActivity
-        fields = ['id', 'name', 'type', 'description', 'location', 'date', 'start_time', 'duration', 'itinerary']
+        fields = ['id', 'name', 'ticket', 'type', 'description', 'location', 'date', 'start_time', 'duration', 'itinerary']
 
 
 class ItineraryActivityListSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True, max_length=100)
     type = serializers.PrimaryKeyRelatedField(read_only=True)
+    ticket = serializers.FileField(read_only=True)
     description = serializers.CharField(read_only=True, max_length=5120)
     location = serializers.CharField(read_only=True, max_length=100)
     date = serializers.DateField(read_only=True)
@@ -31,7 +33,7 @@ class ItineraryActivityListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItineraryActivity
-        fields = ['name', 'type', 'description', 'location', 'date', 'start_time', 'duration', 'itinerary']
+        fields = ['name', 'type', 'ticket', 'description', 'location', 'date', 'start_time', 'duration', 'itinerary']
 
 
 class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
@@ -55,17 +57,18 @@ class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
 
 
 class ItineraryActivityUpdateSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(write_only=True, max_length=100)
-    type = serializers.PrimaryKeyRelatedField(write_only=True, queryset=ItineraryActivityType.objects.all())
-    description = serializers.CharField(write_only=True, max_length=5120)
-    location = serializers.CharField(write_only=True, max_length=100)
-    date = serializers.DateField(write_only=True)
-    start_time = serializers.TimeField(write_only=True)
-    duration = serializers.IntegerField(write_only=True)
+    name = serializers.CharField(write_only=True, max_length=100, required=False)
+    type = serializers.PrimaryKeyRelatedField(write_only=True, queryset=ItineraryActivityType.objects.all(), required=False)
+    ticket = serializers.FileField(write_only=True, required=False)
+    description = serializers.CharField(write_only=True, max_length=5120, required=False)
+    location = serializers.CharField(write_only=True, max_length=100, required=False)
+    date = serializers.DateField(write_only=True, required=False)
+    start_time = serializers.TimeField(write_only=True, required=False)
+    duration = serializers.IntegerField(write_only=True, required=False)
 
     class Meta:
         model = ItineraryActivity
-        fields = ["name", "type", "description", "location", "date", "start_time", "duration"]
+        fields = ["name", "type", "ticket", "description", "location", "date", "start_time", "duration"]
 
 
 class ItineraryActivityDeleteSerializer(serializers.ModelSerializer):
