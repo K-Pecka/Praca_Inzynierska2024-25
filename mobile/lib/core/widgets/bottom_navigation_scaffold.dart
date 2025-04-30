@@ -8,11 +8,13 @@ import '../../features/tickets/screens/tourist_tickets_screen.dart';
 
 class BottomNavScaffold extends StatefulWidget {
   final int userProfileId;
+  final int profileType;
   final TripModel trip;
 
   const BottomNavScaffold({
     super.key,
     required this.userProfileId,
+    required this.profileType,
     required this.trip,
   });
 
@@ -40,8 +42,8 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
   Widget build(BuildContext context) {
     final List<Widget> screens = [
       TouristDashboard(
-        userProfileId: widget.userProfileId,
         trip: _currentTrip,
+        userProfileId: widget.userProfileId,
         onTripChange: _updateTrip,
       ),
       ItineraryScreen(
@@ -51,8 +53,10 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
         trip: _currentTrip,
         userProfileId: widget.userProfileId,
       ),
-      TouristTicketsScreen(trip: _currentTrip),
-      const Placeholder(),
+      TouristTicketsScreen(
+        trip: _currentTrip,
+      ),
+      const Placeholder(), // np. czat lub profil
     ];
 
     return Scaffold(

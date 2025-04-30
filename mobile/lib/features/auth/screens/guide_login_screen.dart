@@ -5,14 +5,14 @@ import '../widgets/auth_widgets.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/services/trip_service.dart';
 
-class TouristLoginScreen extends StatefulWidget {
-  const TouristLoginScreen({super.key});
+class GuideLoginScreen extends StatefulWidget {
+  const GuideLoginScreen({super.key});
 
   @override
-  State<TouristLoginScreen> createState() => _TouristLoginScreenState();
+  State<GuideLoginScreen> createState() => _GuideLoginScreenState();
 }
 
-class _TouristLoginScreenState extends State<TouristLoginScreen> {
+class _GuideLoginScreenState extends State<GuideLoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
@@ -26,11 +26,20 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
       );
 
       final profiles = response['profiles'] as List<dynamic>;
-      final profileId = profiles.isNotEmpty ? profiles[0]['id'] : null;
+      final guideProfile = profiles.firstWhere(
+            (p) => p['type'] == 2,
+        orElse: () => null,
+      );
+      final profileId = guideProfile?['id'];
 
       if (AuthService.accessToken == null || profileId == null) {
-        throw Exception("Brak tokena lub ID profilu");
+        throw Exception("Nie znaleziono profilu typu przewodnik.");
       }
+
+      await AuthService.setDefaultProfile(
+        profileId: profileId,
+        token: AuthService.accessToken!,
+      );
 
       final trips = await TripService.getAllTrips();
       if (trips.isEmpty) throw Exception("Brak wycieczek");
@@ -42,6 +51,7 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
         MaterialPageRoute(
           builder: (context) => BottomNavScaffold(
             userProfileId: profileId,
+            profileType: 2,
             trip: trip,
           ),
         ),
@@ -69,7 +79,7 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   buildLogo(),
-                  buildTitle("Logowanie: Turysta"),
+                  buildTitle("Logowanie: Przewodnik"),
                   const SizedBox(height: 24),
                   buildTouristLoginForm(
                     emailController: _emailController,

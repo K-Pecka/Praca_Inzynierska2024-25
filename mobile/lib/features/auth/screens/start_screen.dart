@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/auth_widgets.dart';
-import 'login_screen.dart';
+import 'guide_login_screen.dart';
+import 'tourist_login_screen.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -31,6 +32,12 @@ class StartScreen extends StatelessWidget {
                       );
                     },
                     onGuideTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const GuideLoginScreen(),
+                        ),
+                      );
                     },
                   ),
                 ],

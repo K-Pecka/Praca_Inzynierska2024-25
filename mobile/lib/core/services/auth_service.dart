@@ -7,6 +7,7 @@ class AuthService {
   static String? _refreshToken;
 
   static String? get accessToken => _accessToken;
+
   static String? get refreshToken => _refreshToken;
 
   static void logout() {
@@ -14,7 +15,6 @@ class AuthService {
     _refreshToken = null;
   }
 
-  /// Logowanie – zwraca dane użytkownika i zapisuje tokeny
   static Future<Map<String, dynamic>> login({
     required String email,
     required String password,
@@ -24,10 +24,7 @@ class AuthService {
       'accept': 'application/json',
       'Content-Type': 'application/json',
     };
-    final body = jsonEncode({
-      'email': email,
-      'password': password,
-    });
+    final body = jsonEncode({'email': email, 'password': password});
 
     final response = await http.post(url, headers: headers, body: body);
 
@@ -62,6 +59,28 @@ class AuthService {
     } else {
       logout();
       return false;
+    }
+  }
+
+  static Future<void> setDefaultProfile({
+    required int profileId,
+    required String token,
+  }) async {
+    final url = Uri.parse(
+      'https://api.plannder.com/user/profile/$profileId/update/',
+    );
+    final headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    final body = jsonEncode({'is_default': true});
+
+    final response = await http.patch(url, headers: headers, body: body);
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        'Nie udało się ustawić profilu jako domyślny: ${response.body}',
+      );
     }
   }
 }
