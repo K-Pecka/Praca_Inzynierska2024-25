@@ -4,6 +4,7 @@ import '../../features/dashboard/screens/tourist_dashboard_screen.dart';
 import '../../features/itineraries/screens/itinerary_screen.dart';
 import '../../features/budget/screens/tourist_budget_screen.dart';
 import '../../core/widgets/bottom_navigation.dart';
+import '../../features/tickets/screens/tourist_tickets_screen.dart';
 
 class BottomNavScaffold extends StatefulWidget {
   final int userProfileId;
@@ -50,7 +51,7 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
         trip: _currentTrip,
         userProfileId: widget.userProfileId,
       ),
-      const Placeholder(),
+      TouristTicketsScreen(trip: _currentTrip),
       const Placeholder(),
     ];
 

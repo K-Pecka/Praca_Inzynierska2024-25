@@ -32,14 +32,23 @@ class _DaySelectorState extends State<DaySelector> {
     return List.generate(5, (i) => widget.selected.add(Duration(days: i - 2)));
   }
 
+  bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
+
   bool _isInPlan(DateTime day) {
-    return !day.isBefore(widget.start) && !day.isAfter(widget.end);
+    final start = DateTime(widget.start.year, widget.start.month, widget.start.day);
+    final end = DateTime(widget.end.year, widget.end.month, widget.end.day);
+    final d = DateTime(day.year, day.month, day.day);
+    return !d.isBefore(start) && !d.isAfter(end);
   }
 
   bool _isActive(DateTime day) {
-    return widget.activeDays.any(
-          (it) => !day.isBefore(it.startDate) && !day.isAfter(it.endDate),
-    );
+    final d = DateTime(day.year, day.month, day.day);
+    return widget.activeDays.any((it) {
+      final s = DateTime(it.startDate.year, it.startDate.month, it.startDate.day);
+      final e = DateTime(it.endDate.year, it.endDate.month, it.endDate.day);
+      return !d.isBefore(s) && !d.isAfter(e);
+    });
   }
 
   @override
@@ -72,9 +81,7 @@ class _DaySelectorState extends State<DaySelector> {
           separatorBuilder: (_, __) => const SizedBox(width: 8),
           itemBuilder: (context, index) {
             final date = days[index];
-            final isSelected = date.day == widget.selected.day &&
-                date.month == widget.selected.month &&
-                date.year == widget.selected.year;
+            final isSelected = _isSameDay(date, widget.selected);
             final isInPlan = _isInPlan(date);
             final isActive = _isActive(date);
 

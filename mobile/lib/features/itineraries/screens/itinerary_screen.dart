@@ -27,11 +27,22 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
   ItineraryModel? _selectedPlan;
   DateTime? _selectedDate;
   bool _loadingActivities = false;
+  bool _hasLoadedActivitiesOnce = false;
 
   @override
   void initState() {
     super.initState();
-    _futureItineraries = ItineraryService.fetchItineraries(tripId: widget.trip.id);
+    _futureItineraries = ItineraryService.fetchItineraries(tripId: widget.trip.id)
+      ..then((plans) {
+        if (plans.isNotEmpty) {
+          setState(() {
+            _plans = plans;
+            _selectedPlan = plans.first;
+            _selectedDate = plans.first.startDate;
+          });
+          _loadActivitiesForPlan(plans.first);
+        }
+      });
   }
 
   Future<void> _loadActivitiesForPlan(ItineraryModel plan) async {
@@ -50,6 +61,7 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
           : plan.startDate;
       _activities = activities;
       _loadingActivities = false;
+      _hasLoadedActivitiesOnce = true;
     });
   }
 
@@ -71,14 +83,12 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
           _selectedPlan ??= _plans.first;
           _selectedDate ??= _selectedPlan!.startDate;
 
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (_activities.isEmpty && !_loadingActivities) {
-              _loadActivitiesForPlan(_selectedPlan!);
-            }
-          });
+          if (!_hasLoadedActivitiesOnce && !_loadingActivities) {
+            _loadActivitiesForPlan(_selectedPlan!);
+          }
 
-          final DateTime start = _plans.map((i) => i.startDate).reduce((a, b) => a.isBefore(b) ? a : b);
-          final DateTime end = _plans.map((i) => i.endDate).reduce((a, b) => a.isAfter(b) ? a : b);
+          final DateTime start = _selectedPlan!.startDate;
+          final DateTime end = _selectedPlan!.endDate;
 
           final filteredActivities = _activities.where((a) =>
           a.date.year == _selectedDate!.year &&
@@ -106,7 +116,7 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
                 DaySelector(
                   start: start,
                   end: end,
-                  activeDays: _plans,
+                  activeDays: [_selectedPlan!],
                   selected: _selectedDate!,
                   onSelect: (d) => setState(() => _selectedDate = d),
                 ),
@@ -122,6 +132,7 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
     );
   }
 }
+
 
 
 

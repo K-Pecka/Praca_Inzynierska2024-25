@@ -40,6 +40,7 @@ dependencies:
   jwt_decoder: ^2.0.1
   flutter_svg: ^2.0.7
   dropdown_button2: ^2.3.9
+  syncfusion_flutter_pdfviewer: ^20.4.54
 
 dev_dependencies:
   flutter_test:
