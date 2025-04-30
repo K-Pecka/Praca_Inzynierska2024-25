@@ -1,12 +1,12 @@
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from users.models import UserProfile
 from users.serializers.user_profile_serializers import UserProfileListSerializer, UserProfileUpdateSerializer
 
 
-@extend_schema(tags=['user'], parameters = [
+@extend_schema(tags=['profile'], parameters = [
     OpenApiParameter(
         name='email',
         description="Search users by email",
@@ -24,9 +24,16 @@ class UserProfileListAPIView(ListAPIView):
             return UserProfile.objects.all()
 
 
-@extend_schema(tags=['user'])
+@extend_schema(tags=['profile'])
 class UserProfileUpdateAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserProfileUpdateSerializer
     queryset = UserProfile.objects.all()
     lookup_field = 'pk'
+
+
+@extend_schema(tags=['profile'])
+class UserProfileCreateAPIView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserProfileUpdateSerializer
+
