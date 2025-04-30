@@ -36,33 +36,22 @@ class UserProfileListJWTSerializer(serializers.ModelSerializer):
 
 
 class UserProfileCreateSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(
-        write_only=True,
-        queryset=UserProfile.objects.all(),
-    )
     type = serializers.PrimaryKeyRelatedField(
         write_only=True,
         queryset=UserProfileType.objects.all()
     )
-    is_default = serializers.BooleanField(
-        read_only=True,
-    )
+    is_default = serializers.BooleanField(read_only=True)
 
     def create(self, validated_data):
-        kwargs = self.context.get('kwargs')
-        user = kwargs.get('user')
-        if not user:
-            raise serializers.ValidationError("Nie przekazano id użytkownika.")
-
-        user_profile = UserProfile.objects.create(
+        user = self.context['request'].user
+        return UserProfile.objects.create(
             user=user,
             type=validated_data['type'],
         )
-        return user_profile
 
     class Meta:
         model = UserProfile
-        fields = ['user', 'type', 'is_default']
+        fields = ['type', 'is_default']
 
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):

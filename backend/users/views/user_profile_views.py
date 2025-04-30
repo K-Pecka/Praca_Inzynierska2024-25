@@ -3,7 +3,8 @@ from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from users.models import UserProfile
-from users.serializers.user_profile_serializers import UserProfileListSerializer, UserProfileUpdateSerializer
+from users.serializers.user_profile_serializers import UserProfileListSerializer, UserProfileUpdateSerializer, \
+    UserProfileCreateSerializer
 
 
 @extend_schema(tags=['profile'], parameters = [
@@ -35,5 +36,11 @@ class UserProfileUpdateAPIView(ListAPIView):
 @extend_schema(tags=['profile'])
 class UserProfileCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = UserProfileUpdateSerializer
+    serializer_class = UserProfileCreateSerializer
+    queryset = UserProfile.objects.all()
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 

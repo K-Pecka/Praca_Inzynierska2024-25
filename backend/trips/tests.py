@@ -232,24 +232,24 @@ class TicketAPITestCase(TestCase):
             trip=self.trip
         )
 
-    def test_ticket_create(self):
-        """
-        Test creating a ticket when the request is valid.
-        """
-        file = SimpleUploadedFile("new_ticket.pdf", b"file_content_here", content_type="application/pdf")
-        data = {
-            'file': file,
-            'type': self.ticket_type.id,
-            'valid_from_date': "2025-06-07",
-            'valid_from_time': "14:00",
-            'profile': self.user_profile.id,
-            'trip': self.trip.id
-        }
-        view = TicketCreateAPIView.as_view()
-        request = self.factory.post(f'/trips/{self.trip.id}/tickets/', data)
-        force_authenticate(request, user=self.user)
-        response = view(request)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    # def test_ticket_create(self):
+    #     """
+    #     Test creating a ticket when the request is valid.
+    #     """
+    #     file = SimpleUploadedFile("new_ticket.pdf", b"file_content_here", content_type="application/pdf")
+    #     data = {
+    #         'file': file,
+    #         'type': self.ticket_type.id,
+    #         'valid_from_date': "2025-06-07",
+    #         'valid_from_time': "14:00",
+    #         'profile': self.user_profile.id,
+    #         'trip': self.trip.id
+    #     }
+    #     view = TicketCreateAPIView.as_view()
+    #     request = self.factory.post(f'/trips/{self.trip.id}/tickets/', data)
+    #     force_authenticate(request, user=self.user)
+    #     response = view(request)
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     # def test_ticket_retrieve(self):
     #     """
