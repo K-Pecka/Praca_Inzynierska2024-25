@@ -30,5 +30,4 @@ class ItineraryModel {
       tripId: json['trip'],
       activitiesCount: json['activities_count'].toString(),
     );
-  }
-}
+  }}
