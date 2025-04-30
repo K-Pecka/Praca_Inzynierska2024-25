@@ -5,7 +5,7 @@ class ChatroomModel {
   final int tripId;
   final int creatorId;
   final List<int> memberIds;
-  final String settings;
+  final Map<String, dynamic> settings;
 
   ChatroomModel({
     required this.id,

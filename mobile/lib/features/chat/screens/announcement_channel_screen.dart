@@ -36,12 +36,12 @@ class _AnnouncementChannelScreenState extends State<AnnouncementChannelScreen> {
 
   Future<void> _loadAnnouncementChannel() async {
     try {
-      final rooms = await ChatService.getUserChatrooms();
+      final rooms = await ChatService.getUserChatrooms(widget.trip.id); // ✅ przekazujemy tripId
       final room = rooms.firstWhere(
             (r) => r.type == 'group' && r.tripId == widget.trip.id,
         orElse: () => throw Exception("Brak kanału ogłoszeniowego dla tej wycieczki"),
       );
-      final messages = await ChatService.getMessages(room.id);
+      final messages = await ChatService.getMessages(widget.trip.id, room.id); // ✅
 
       setState(() {
         _announcementRoom = room;
@@ -58,7 +58,7 @@ class _AnnouncementChannelScreenState extends State<AnnouncementChannelScreen> {
 
   Future<void> _sendMessage(String content) async {
     if (_announcementRoom == null) return;
-    await ChatService.sendMessage(_announcementRoom!.id, content);
+    await ChatService.sendMessage(widget.trip.id, _announcementRoom!.id, content); // ✅
     _loadAnnouncementChannel();
   }
 
