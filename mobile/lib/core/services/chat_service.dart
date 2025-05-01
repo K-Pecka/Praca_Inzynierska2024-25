@@ -31,6 +31,8 @@ class ChatService {
       'accept': 'application/json',
     });
 
+    print("xd, ${response.body}");
+
     if (response.statusCode == 200) {
       final List data = jsonDecode(response.body);
       return data.map((e) => MessageModel.fromJson(e)).toList();
