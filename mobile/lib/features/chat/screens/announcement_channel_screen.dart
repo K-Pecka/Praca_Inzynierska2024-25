@@ -5,7 +5,7 @@ import '../../../core/models/trip_model.dart';
 import '../../../core/services/chat_service.dart';
 import 'message_bubble.dart';
 import 'chat_input_field.dart';
-
+import 'package:intl/intl.dart';
 class AnnouncementChannelScreen extends StatefulWidget {
   final int userProfileId;
   final int profileType;
@@ -77,17 +77,48 @@ class _AnnouncementChannelScreenState extends State<AnnouncementChannelScreen> {
           : Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
+            child: ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final msg = _messages[index];
-                return MessageBubble(
-                  message: msg,
-                  isMine: msg.senderId == widget.userProfileId,
+                final msgDate = DateTime.parse(msg.created).toLocal();
+                final formattedDate = DateFormat("d MMMM y", 'pl_PL').format(msgDate);
+
+                final isFirstMessage = index == 0;
+                final previousDate = isFirstMessage
+                    ? null
+                    : DateTime.parse(_messages[index - 1].created).toLocal();
+
+                final isNewDay = isFirstMessage ||
+                    previousDate!.day != msgDate.day ||
+                    previousDate.month != msgDate.month ||
+                    previousDate.year != msgDate.year;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (isNewDay)
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            formattedDate,
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    MessageBubble(
+                      message: msg,
+                      isMine: msg.senderId == widget.userProfileId,
+                    ),
+                  ],
                 );
               },
+              separatorBuilder: (_, __) => const SizedBox(height: 8),
             ),
           ),
           if (widget.profileType == 2)
