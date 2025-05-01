@@ -31,10 +31,11 @@ class MessageListAPIView(ListAPIView):
     serializer_class = MessageListSerializer
 
     def get_queryset(self):
-        return (Message.objects
-            .by_user_and_chatroom(self.request.user.get_default_profile(), self.kwargs['room_pk'])
+        return (
+            Message.objects
+            .filter(chatroom_id=self.kwargs['room_pk'])
             .select_related('profile', 'chatroom')
-            .prefetch_related('chatroom__members',)
+            .prefetch_related('chatroom__members')
         )
 
 
