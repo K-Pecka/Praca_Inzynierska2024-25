@@ -25,7 +25,7 @@ class ChatTile extends StatelessWidget {
             backgroundColor: const Color(0xFFDEDCFF).withOpacity(0.5),
             child: isAnnouncement
                 ? const Icon(Icons.info_outline, color: Color(0xFF6A5AE0))
-                : const Text("MW", style: TextStyle(color: Color(0xFF6A5AE0))), // statyczne inicjały
+                : const Text("MW", style: TextStyle(color: Color(0xFF6A5AE0))),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -42,7 +42,7 @@ class ChatTile extends StatelessWidget {
                   children: [
                     if (!isAnnouncement)
                       const Text(
-                        "Mateusz Wisniewski", // statyczne imię i nazwisko
+                        "Mateusz Wisniewski",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
