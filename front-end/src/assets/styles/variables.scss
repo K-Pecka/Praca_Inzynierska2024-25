@@ -1,1 +1,21 @@
-$header-size: 64px;
+$text-color: #030309;
+$primary-color: #2F27CE;
+$secondary-color: #DEDCFF;
+
+$button-background-secondary: rgba($secondary-color, 0.6);
+$button-background-primary: rgba($primary-color, 0.6);
+
+$choose-profile-button-bg: rgba($primary-color, 0.6);
+
+$panel-header-height: 64px;
+$panel-header-font-size: 2rem;
+$panel-header-border-bottom: 2px solid $primary-color;
+
+$main-header-border: 2px solid $primary-color;
+$main-header-border-radius: 36px;
+
+$footer-height: 200px;
+
+$navbar-width: 256px;
+
+$panel-content-width: 80%;

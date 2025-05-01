@@ -34,8 +34,8 @@ const { boxes, isLoading, error } = getDashboard(id);
               size: {
                 sm: { col: 12, row: 4 },
                 md: { col: 12, row: 4 },
-                lg: { col: 12, row: 4 },
-              },
+                lg: { col: 12, row: 4 }
+              }
             }"
           />
         </div>
@@ -71,7 +71,7 @@ const { boxes, isLoading, error } = getDashboard(id);
           <v-card-title class="text-h6 pt-0 font-weight-bold expense-card-title">
             {{getExpenseItem().sectionName}}
           </v-card-title>
-          <ExpenseList variant="view" :limit="4"/>
+          <ExpenseList variant="view" :limit="4" />
         </v-card>
       </template>
     </template>
@@ -79,9 +79,6 @@ const { boxes, isLoading, error } = getDashboard(id);
 </template>
 
 <style scoped lang="scss">
-.expense-card-title {
-  font-family: var(--v-fontFamily);
-}
 .grid-container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -104,3 +101,4 @@ h1 {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 </style>
+

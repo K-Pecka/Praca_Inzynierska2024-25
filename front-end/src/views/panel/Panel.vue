@@ -91,6 +91,7 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
+@use "@/assets/styles/variables" as *;
 
 main {
   background-color: rgb(var(--v-theme-background));

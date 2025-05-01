@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { Section } from "@/components";
 import { useTicketStore } from "@/stores/trip/useTicketStore";
@@ -12,10 +12,9 @@ const { combineDateAndTime } = useUtilStore();
 const route = useRoute();
 const tripId = route.params.tripId as string;
 
-const {createTicket} = useTicketStore();
+const { createTicket } = useTicketStore();
 const { data: tickets, isLoading } = useTripStore().getTickets();
 
-console.log("Tickets", tickets.value);
 const showForm = ref(false);
 
 async function handleAddTicket(newTicketData: {
@@ -31,7 +30,6 @@ async function handleAddTicket(newTicketData: {
   formData.append("trip", tripId);
   formData.append("valid_from", combineDateAndTime(newTicketData.date, newTicketData.time));
   formData.append("file", newTicketData.file);
-  console.log("FormData", formData);
   try {
     await createTicket(formData); 
     showForm.value = false;
@@ -86,9 +84,9 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
               >mdi-ticket-confirmation-outline</v-icon
             >
             <p class="empty-text">Brak dodanych biletów</p>
-            <a class="add-link" @click="showForm = true"
-              >Dodaj pierwszy bilet</a
-            >
+            <a class="add-link" @click="showForm = true">
+              Dodaj pierwszy bilet
+            </a>
           </div>
         </div>
 

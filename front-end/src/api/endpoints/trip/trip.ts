@@ -35,17 +35,18 @@ export const fetchTrip = async ({ queryKey }: QueryFunctionContext<[string,numbe
     }
     return trip;
   }
-    const { data, error } = await fetchData<Trip>(
-      setParam(apiEndpoints.trip.detail,{tripId:String(tripId)}),
-      {},
-      "GET"
-    );
-    if (error || !data) {
-      throw new Error(error);
-    }
+  const { data, error } = await fetchData<Trip>(
+    setParam(apiEndpoints.trip.detail,{tripId:String(tripId)}),
+    {},
+    "GET"
+  );
+  if (error || !data) {
+    console.log('Error: ', error)
+    throw new Error(error);
+  }
   
-    return data;
-  };
+  return data;
+};
 export const deleteTrip = async (param: Record<string, string>={}) => {
   if (APP_MODE_DEV) {
     const { deleteTrip } = useMockupStore();

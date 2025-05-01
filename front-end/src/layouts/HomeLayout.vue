@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed } from "vue";
-import { Navbar, Footer } from "@/components/home";
+import { HomeHeader, Footer } from "@/components/home";
 import { usePageHomeStore } from "@/stores";
 import { images } from "@/data";
 
@@ -11,29 +11,14 @@ const footerData = computed(() => useStore.getFooterData());
 </script>
 
 <template>
-  <v-container style="max-width: 100%; padding-left: 10%; padding-right: 10%">
-    <v-row class="sticky-top">
-      <v-col cols="12" sm="12" style="padding-top: 1%;">
-        <Navbar :links="navData">
-          <template #logo>
-              <img
-                :src="images.logo.img"
-                :alt="images.logo.alt"
-                style="width: 8.5vw; min-width: 6rem"
-              />
-          </template>
-        </Navbar>
-      </v-col>
-    </v-row>
 
-    <v-row class="d-flex justify-center">
-      <v-col cols="12" sm="12">
-        <main>
-          <router-view />
-        </main>
-      </v-col>
-    </v-row>
-  </v-container>
+  <HomeHeader :links="navData" />
+  <v-col cols="12" class="d-flex flex-column align-center">
+    <main class="d-flex flex-column align-center">
+      <router-view />
+    </main>
+  </v-col>
+
 
   <Footer :footerData="footerData">
     <template #logo>
@@ -46,6 +31,7 @@ const footerData = computed(() => useStore.getFooterData());
   </Footer>
 </template>
 <style lang="scss" scoped>
+
 .v-container {
   position: relative;
   z-index: 2;
@@ -55,7 +41,7 @@ const footerData = computed(() => useStore.getFooterData());
   overflow-x: hidden;
 }
 main {
-  min-height: 50vh;
+  width: 90%;
 }
 .wrapper::after {
   content: "";

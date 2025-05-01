@@ -37,10 +37,10 @@ const handleSubmit = (_formData: any, config: any) => {
 
     <template #content>
       <Form
-          :submitButtonLabel="'Zaplanuj budżet'"
-          :inputs="inputs"
-          :formValues="formValues"
-          @submitForm="handleSubmit"
+        :submitButtonLabel="'Zaplanuj budżet'"
+        :inputs="inputs"
+        :formValues="formValues"
+        @submitForm="handleSubmit"
       >
       </Form>
     </template>

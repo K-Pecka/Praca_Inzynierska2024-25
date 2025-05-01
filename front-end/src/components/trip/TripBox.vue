@@ -95,14 +95,12 @@ console.log(props);
 }
 .v-card-title {
   font-size: 1.25rem;
-  font-family: var(--v-fontFamily);
   color:rgba(var(--v-theme-text),100%);
   font-weight: bold;
   padding-bottom: 0.3rem;
 }
 .v-card-subtitle {
   color:rgba(var(--v-theme-text),100%);
-  font-family: var(--v-fontFamily);
   font-weight: bold;
   padding-bottom: 0.6rem;
 }

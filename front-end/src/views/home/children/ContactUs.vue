@@ -40,7 +40,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <Section class="py-10">
+  <Section class="pb-10">
     <template #title>
       <h1 class="contact-title text-h4 text-center text-primary font-weight-bold mb-6">Skontaktuj się z nami</h1>
       <p class="contact-subtitle">

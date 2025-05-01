@@ -7,7 +7,7 @@
 }
 
 .v-container{
-  max-width: calc(2560px);
+  max-width: 2560px;
   padding: 0;
 }
 .trip-title{
@@ -23,18 +23,15 @@
 h2{
   font-weight: 700;
   font-size: 2rem;
-  font-family: var(--v-fontFamily);
 }
 
 h3{
   font-weight: 700;
   font-size: 3rem;
-  font-family: var(--v-fontFamily);
 }
 
 h1{
   font-size: 2rem;
-  font-family: var(--v-fontFamily);
   color: rgb(var(--v-theme-primary));
 }
 
@@ -47,14 +44,12 @@ h1{
 @mixin font-large {
   font-size: 4rem;
   font-weight: bold;
-  font-family: var(--v-fontFamily);
   color: rgb(var(--v-theme-text));
 }
 
 @mixin font-regular {
   font-size: 1rem;
   font-weight: bold;
-  font-family: var(--v-fontFamily);
   color: rgb(var(--v-theme-text));
 }
 
@@ -75,16 +70,6 @@ h1{
 
 .col{
   padding: 0;
-}
-
-@mixin navbar-col($nr) {
-  width: calc(100vw / 12 * #{$nr});
-}
-
-@for $nr from 1 through 12 {
-  .navbar-col-#{$nr} {
-    @include navbar-col($nr);
-  }
 }
 
 .v-container {

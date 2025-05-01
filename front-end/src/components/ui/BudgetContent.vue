@@ -42,9 +42,6 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
   </div>
 </template>
 <style scoped lang="scss">
-  .text-h6 {
-      font-family: var(--v-fontFamily);
-  }
   .expenses-green {
     color: rgba(22, 163, 74, .75)
   }

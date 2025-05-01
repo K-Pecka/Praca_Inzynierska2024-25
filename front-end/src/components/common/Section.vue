@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div style="width: 80%;" class="mx-auto">
+    <div class="section mx-auto">
       <header class="section__header">
         <slot name="title"></slot>
       </header>
@@ -16,21 +16,25 @@
 </template>
 
 <style scoped lang="scss">
+@use "@/assets/styles/variables" as *;
 @use "@/assets/styles/style" as *;
+
 .section__content {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .section {
+  width: $panel-content-width;
+
   &__header {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    color: var(--v-theme-text, #333);
+    font-size: $panel-header-font-size;
+    color: $text-color;
   }
 
   &__content {

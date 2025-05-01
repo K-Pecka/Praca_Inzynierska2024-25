@@ -1,35 +1,64 @@
 import type { RouteRecordRaw } from "vue-router";
 
-import { 
-  Panel, RoleSelection, YourTrip, YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm, ActivityView,
-  PlanForm, TripForm, BudgetForm
+import {
+  YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm,
+  PlanForm, BudgetForm, TripDashboard, YourTrip
 } from "@/views/panel";
-import { AccountSettings } from "@/views/account";
+
+import Dashboard from "@/layouts/PanelLayout.vue";
 
 const panelRoutes: RouteRecordRaw = {
   path: "/panel",
-  name: "panel",
-  component: Panel,
+  component: Dashboard,
   meta: { title: "Panel", requiresAuth: true },
   children: [
-    { path: "", name: "roleSelection", component: RoleSelection },
-    { path: "account-settings", name: "AccountSettings", component: AccountSettings },
-
-    { path: "trips", name: "yourTrip", component: YourTrip },
-    { path: "trip/:tripId/plan", name: "yourPlan", component: YourPlan },
-    { path: "trip/:tripId/tickets-view", name: "TicketsView", component: TicketsView },
-    { path: "trip/:tripId/expense-tracker", name: "ExpenseTracker", component: ExpenseTracker },
-    { path: "trip/:tripId/participants-view", name: "ParticipantsView", component: ParticipantsView },
-    { path: "trip/:tripId/trip-edit", name: "TripEdit", component: TripEditForm },
-    { path: "trip/:tripId/plan/:planId/activity", name: "ActivityView", component: ActivityView },
-
-    { path: "trip/trip", name: "TripForm", component: TripForm },
-    { path: "trip/:tripId/plan-form", name: "PlanForm", component: PlanForm },
-    { path: "trip/:tripId/budget", name: "budget", component: BudgetForm },
-  ],
-};
-
-
+    {
+      path: "",
+      name: "tripDashboard",
+      component: TripDashboard
+    },
+    {
+      path: "plans",
+      name: "tripPlans",
+      component: YourPlan
+    },
+    {
+      path: "plans/create",
+      name: "createPlan",
+      component: PlanForm
+    },
+    {
+      path: "tickets",
+      name: "yourTickets",
+      component: TicketsView
+    },
+    {
+      path: "budgets",
+      name: "ExpenseTracker",
+      component: ExpenseTracker
+    },
+    {
+      path: "budgets/edit",
+      name: "editBudget",
+      component: BudgetForm
+    },
+    {
+      path: "participants",
+      name: "tripParticipants",
+      component: ParticipantsView
+    },
+    {
+      path: "edit",
+      name: "editTrip",
+      component: TripEditForm
+    },
+    {
+      path: "trip",
+      name: "yourTrip",
+      component: YourTrip
+    }
+  ]
+}
 
 
 export default panelRoutes;

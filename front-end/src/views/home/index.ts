@@ -1,2 +1,2 @@
-export { default as Home } from "./Home.vue";
+export { default as Home } from "../../layouts/HomeLayout.vue";
 export * from "./children";

@@ -3,7 +3,7 @@ import AppCard from "@/components/budget/AppCard.vue";
 import AppButton from "@/components/budget/AppButton.vue";
 import AppProgress from "@/components/budget/AppProgress.vue";
 import ExpenseList from "@/components/budget/ExpenseList.vue";
-import Section from "@/components/common/Section.vue";
+import Section from "../../../components/common/Section.vue";
 import { useUtilStore } from "@/stores";
 import { useRoute } from "vue-router";
 const route = useRoute();

@@ -1,5 +1,5 @@
 import { createWebHistory } from 'vue-router';
-import Dashboard from "@/views/panel/children/trip/Dashboard.vue";
+import Dashboard from "@/layouts/PanelLayout.vue";
 
 
 const tripRoutes = {

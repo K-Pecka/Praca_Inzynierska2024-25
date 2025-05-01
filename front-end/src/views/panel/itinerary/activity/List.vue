@@ -88,7 +88,7 @@ const formatDatePolish = (isoDate: string) => {
 </script>
 
 <template>
-  <div class="page-container py-10">
+  <div class="page-container pb-10">
     <Section>
       <template #title>
         <HeaderSection>

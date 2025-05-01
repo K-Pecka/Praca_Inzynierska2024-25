@@ -4,8 +4,8 @@ import {useTripStore} from "@/stores";
 
 const route = useRoute();
 const tripId = Number(route.params.tripId);
-const {getTripDetails} = useTripStore();
-const {data: tripData, isLoading, error} = getTripDetails(tripId);
+const { getTripDetails } = useTripStore();
+const { data: tripData, isLoading, error } = getTripDetails(tripId);
 </script>
 <template>
   <section class="section">
@@ -36,7 +36,6 @@ const {data: tripData, isLoading, error} = getTripDetails(tripId);
 }
 
 .trip-title {
-  font-family: var(--v-fontFamily);
   font-size: 2rem;
   width: 80%;
   font-weight: 700;

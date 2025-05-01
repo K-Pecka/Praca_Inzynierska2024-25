@@ -5,7 +5,7 @@ import { aboutTeam } from "@/data";
 </script>
 
 <template>
-  <Section class="py-10">
+  <Section class="pb-10">
     <template #title>
       <h1 class="text-h4 text-center text-primary font-weight-bold mb-6">
           {{ aboutTeam.mainTitle }}

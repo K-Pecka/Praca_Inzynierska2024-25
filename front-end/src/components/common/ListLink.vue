@@ -1,18 +1,19 @@
 <script lang="ts" setup>
-import { Link } from "@/types/interface";
-defineProps({
-  links: {
-    type: Array as () => Link[],
-    required: true
-  },
-})
+  import { Link } from "@/types/interface";
+
+  defineProps({
+    links: {
+      type: Array as () => Link[],
+      required: true
+    },
+  })
 </script>
 <template>
-    <div>
-        <div v-for="link in links" :key="link.label">
-        <router-link :to="link.href">{{ link.label }}</router-link>
+  <div>
+    <div v-for="link in links" :key="link.label">
+      <router-link :to="link.href">{{ link.label }}</router-link>
     </div>
-    </div>
+  </div>
     
 </template>
 <style lang="scss" scoped>

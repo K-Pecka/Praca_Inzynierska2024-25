@@ -1,9 +1,14 @@
 <script lang="ts" setup>
-import {Section,FAQ,Advantage} from "@/components";
-import { usePageHomeStore } from "@/stores/ui/usePageHomeStore";
-const useStore = usePageHomeStore();
-const faqList = useStore.getFAQData(10);
-const subSections = useStore.getAdvantagesData();
+  import { Section, FAQ, Advantage } from "@/components";
+  import { usePageHomeStore } from "@/stores/ui/usePageHomeStore";
+
+  import { useDisplay } from 'vuetify'
+
+  const { smAndDown } = useDisplay()
+
+  const useStore = usePageHomeStore();
+  const faqList = useStore.getFAQData(10);
+  const subSections = useStore.getAdvantagesData();
 </script>
 
 <template>
@@ -31,20 +36,17 @@ const subSections = useStore.getAdvantagesData();
       </Advantage>
     </template>
   </Section>
-  <Section>
-    <template #title>
-      <span style="font-size: 3vw; font-weight: 700;">FAQ</span>
-      <span style="font-size: 2vw;">Najczęściej zadawane pytania</span>
+  <div class="d-flex flex-column align-center" :class="{ 'text-center': smAndDown }" style="width: 73%;">
+    <span style="font-size: 50px; font-weight: 700;">FAQ</span>
+    <span style="font-size: 28px;">Najczęściej zadawane pytania</span>
+  </div>
+
+  <FAQ :faqList="faqList" class="mb-16">
+    <template #question="{ question }">
+      <strong>{{ question }}</strong>
     </template>
-    <template #content>
-      <FAQ :faqList="faqList">
-        <template #question="{ question }">
-          <strong>{{ question }}</strong>
-        </template>
-        <template #answer="{ answer }">
-          <p>{{ answer }}</p>
-        </template>
-      </FAQ>
+    <template #answer="{ answer }">
+      <p>{{ answer }}</p>
     </template>
-  </Section>
+  </FAQ>
 </template>

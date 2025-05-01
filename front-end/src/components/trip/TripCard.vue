@@ -82,9 +82,7 @@ console.log(props.plans.activities_count)
 .v-card-actions {
   margin-top: 3rem;
 }
-.v-card-title {
-  font-family: var(--v-FontFamily);
-}
+
 @media (max-width: 600px) {
 .v-card-actions {
   flex-direction: column;

@@ -112,13 +112,11 @@ import BudgetContent from "@/components/ui/BudgetContent.vue";
 .v-card-title {
   font-size: 20px;
   font-weight: bold;
-  font-family: var(--v-fontFamily);
   color: rgb(var(--v-theme-text), 75%);
   padding-bottom: 1.2rem;
 }
 .v-card-text {
   font-size: 20px;
-  font-family: var(--v-fontFamily);
 }
 .v-card:hover {
   transform: translateY(-3px);

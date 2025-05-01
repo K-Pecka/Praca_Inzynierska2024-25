@@ -60,10 +60,10 @@ const handleSubmit = (_formData: any, config: any) => {
 
     <template #content>
       <Form
-          :submitButtonLabel="'Stwórz plan podróży'"
-          :inputs="inputs"
-          :formValues="formValues"
-          @submitForm="handleSubmit"
+        :submitButtonLabel="'Stwórz plan podróży'"
+        :inputs="inputs"
+        :formValues="formValues"
+        @submitForm="handleSubmit"
       >
       </Form>
     </template>
