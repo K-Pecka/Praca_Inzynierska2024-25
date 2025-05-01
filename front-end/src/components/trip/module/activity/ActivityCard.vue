@@ -31,94 +31,110 @@ const formatDuration = (minutes: string | number | null) => {
   }
 };
 
+const formatTime = (timeString: string) => {
+  if (!timeString) return "";
+  return timeString.slice(0, 5);
+};
+
 </script>
 
 <template>
-  <v-card class="activity-card">
-    <div class="activity-header">
-      <div class="activity-info">
-        <div class="activity-title">{{ activity.name }}</div>
-        <div class="activity-description">{{ activity.description }}</div>
-        <div class="activity-meta">
-          <span class="activity-type">{{ getTypeLabel(activity.type) }}</span>
-          <template v-if="activity.start_time">
-            <span class="icon-text-pair">
-              <v-icon size="16">mdi-clock-outline</v-icon>
-              {{ activity.start_time }}
-            </span>
-          </template>
+<v-card class="activity-card">
 
-          <template v-if="activity.duration">
-            <span class="icon-text-pair">
-              <v-icon size="16">mdi-timer-outline</v-icon>
-              {{ formatDuration(activity.duration) }}
-            </span>
-          </template>
+  <div class="activity-header">
+    <div class="activity-info">
+      <div class="activity-title">{{ activity.name }}</div>
+      <div class="activity-description">{{ activity.description }}</div>
 
-          <template v-if="activity.location">
-            <span class="icon-text-pair">
-              <v-icon size="16">mdi-map-marker-outline</v-icon>
-              {{ activity.location }}
-            </span>
-          </template>
-        </div>
+      <div class="activity-meta">
+        <span class="activity-type">{{ getTypeLabel(activity.type) }}</span>
+
+        <template v-if="activity.start_time">
+          <span class="icon-text-pair">
+            <v-icon size="16">mdi-clock-outline</v-icon>
+            {{ formatTime(activity.start_time) }}
+          </span>
+        </template>
+
+        <template v-if="activity.duration">
+          <span class="icon-text-pair">
+            <v-icon size="16">mdi-timer-outline</v-icon>
+            {{ formatDuration(activity.duration) }}
+          </span>
+        </template>
+
+        <template v-if="activity.location">
+          <span class="icon-text-pair">
+            <v-icon size="16">mdi-map-marker-outline</v-icon>
+            {{ activity.location }}
+          </span>
+        </template>
       </div>
-      <v-btn icon color="#E44A3E" variant="text">
-        <v-icon size="32">mdi-trash-can-outline</v-icon>
-      </v-btn>
     </div>
-  </v-card>
+
+    <v-btn icon variant="text" color="#E44A3E" class="delete-btn">
+      <v-icon size="32">mdi-trash-can-outline</v-icon>
+    </v-btn>
+  </div>
+</v-card>
+
 </template>
 
 <style scoped lang="scss">
 .activity-card {
   background-color: rgb(var(--v-theme-background));
-  border-radius: 1rem;
-  padding: 1rem 1.25rem;
-  box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  box-sizing: border-box;
+  position: relative;
 
   .activity-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     gap: 1rem;
   }
 
   .activity-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+    flex: 1;
   }
 
   .activity-title {
     font-weight: 600;
-    font-size: 1rem;
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
     color: rgb(var(--v-theme-text));
   }
 
   .activity-description {
-    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 1.4vw, 1rem);
     color: rgba(var(--v-theme-text), 0.75);
-  }
-
-  .icon-text-pair {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
   }
 
   .activity-meta {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    font-size: 0.85rem;
+    gap: 10px;
+    font-size: clamp(0.75rem, 1.2vw, 0.9rem);
     color: rgb(var(--v-theme-text));
+
+    .v-icon {
+      color: rgba(3, 3, 9, 0.7);
+    }
+  }
+
+  .icon-text-pair {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    gap: 5px;
   }
 
   .activity-type {
     color: rgb(var(--v-theme-accent));
     font-weight: 500;
   }
+
 }
+
 </style>

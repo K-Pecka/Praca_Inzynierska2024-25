@@ -17,31 +17,6 @@ const { data: activities, isSuccess } = useActivityStore().getActivity(
   planId
 );
 
-/*const activities = ref<Activity[]>([
-  {
-    id: 1,
-    type: "tour",
-    name: "Zwiedzanie muzeum",
-    date: "2025-03-28",
-    start_time: "10:00",
-    duration: "120",
-    location: "Muzeum Narodowe",
-    assignedTo: "",
-    description: "Zwiedzanie wystawy sztuki.",
-  },
-  {
-    id: 2,
-    type: "food",
-    name: "Lunch w restauracji",
-    date: "2025-03-28",
-    start_time: "13:00",
-    duration: "80",
-    location: "Restauracja Zielona",
-    assignedTo: "",
-    description: "Lunch w restauracji z widokiem.",
-  },
-]);*/
-
 const { getPlans } = useTripStore();
 const { data: plansData, isLoading, error } = getPlans(id);
 function getDaysArray(start: Date, end: Date) {
@@ -101,6 +76,15 @@ const activity = computed(
       return acc;
     }, {} as Record<string, Activity[]>)
   )
+
+const formatDatePolish = (isoDate: string) => {
+  const date = new Date(isoDate);
+  return new Intl.DateTimeFormat("pl-PL", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+};
 </script>
 
 <template>
@@ -117,7 +101,7 @@ const activity = computed(
       <template #content>
         <div v-for="day in days" :key="day" class="day-card w-100">
           <div class="day-card-header">
-            <div class="day-date">{{ day }}</div>
+            <div class="day-date">{{ formatDatePolish(day) }}</div>
             <AppButton
               variant="primary"
               size="sm"
@@ -182,7 +166,7 @@ const activity = computed(
 .day-card {
   background-color: rgb(var(--v-theme-secondary), 0.5);
   border-radius: 1rem;
-  padding: 1.25rem 1.5rem;
+  padding: 25px;
   margin-bottom: 1.5rem;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);
 }
@@ -192,11 +176,22 @@ const activity = computed(
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: .5rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    button {
+      width: 100%;
+    }
+  }
 }
 
 .day-date {
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .form-container {

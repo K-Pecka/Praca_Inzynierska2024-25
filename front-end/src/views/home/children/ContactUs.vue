@@ -42,23 +42,23 @@ function handleSubmit() {
 <template>
   <Section class="py-10">
     <template #title>
-      <h1 class="text-h4 text-center text-primary font-weight-bold mb-6">Skontaktuj się z nami</h1>
+      <h1 class="contact-title text-h4 text-center text-primary font-weight-bold mb-6">Skontaktuj się z nami</h1>
       <p class="contact-subtitle">
         Masz pytania? Skontaktuj się z nami – chętnie pomożemy.
       </p>
     </template>
 
     <template #content>
-      <v-container class="contact-container mx-auto">
-        <v-row>
-          <v-col cols="12" md="5" class="mb-6 mb-md-0">
+      <v-container class="contact-container">
+        <v-row justify="center">
+          <v-col cols="12" md="4">
             <h3 class="contact-heading">Dane kontaktowe</h3>
-            <p><v-icon start size="20">mdi-email-outline</v-icon> info.plannder@gmail.com</p>
+            <p><v-icon start size="20">mdi-email-outline</v-icon> plannder@gmail.com</p>
             <p><v-icon start size="20">mdi-phone-outline</v-icon> +48&nbsp;123&nbsp;456&nbsp;789</p>
             <p><v-icon start size="20">mdi-map-marker-outline</v-icon> Gdańsk, ul.&nbsp;Gdańska&nbsp;1</p>
           </v-col>
 
-          <v-col cols="12" md="7">
+          <v-col cols="12" md="6">
             <v-form validate-on="blur lazy" @submit.prevent="handleSubmit" class="form-wrapper">
               <v-text-field
                   v-model="form.name"
@@ -101,12 +101,10 @@ function handleSubmit() {
 <style scoped lang="scss">
 .contact-title {
   color: rgb(var(--v-theme-primary));
-  font-size: 2.25rem;
-  font-weight: 700;
-  margin-bottom: .25rem;
+  margin-bottom: .1rem;
 }
+
 .contact-subtitle {
-  font-size: 2rem;
   margin-bottom: 1.5rem;
   color: rgb(var(--v-theme-text), .8);
 }
@@ -133,5 +131,15 @@ function handleSubmit() {
   .contact-subtitle {
     font-size: 1.5rem;
   }
+  .contact-heading {
+    font-size: 1.1rem;
+  }
+  .contact-container {
+    font-size: .8rem;
+  }
+  .form-wrapper {
+    gap: .5rem;
+  }
 }
+
 </style>

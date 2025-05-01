@@ -20,6 +20,7 @@ defineProps<{ variant?: "primary" | "secondary", size?: "sm" | "md" | "lg" }>();
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-transform: none;
 }
 
 .sm {
