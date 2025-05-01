@@ -67,7 +67,7 @@ class ChatroomListSerializer(BaseChatroomSerializer):
     members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     settings = serializers.JSONField(read_only=True)
 
-    last_message = serializers.SerializerMethodField()  # ✅ dodane
+    last_message = serializers.SerializerMethodField()
 
     class Meta(BaseChatroomSerializer.Meta):
         fields = BaseChatroomSerializer.Meta.fields + ['last_message']
