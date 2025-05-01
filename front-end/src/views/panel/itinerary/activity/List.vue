@@ -8,6 +8,7 @@ import { Section } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
 import { useRoute } from "vue-router";
 import { Activity } from "@/types/interface";
+
 const route = useRoute();
 const id = route.params.tripId as string;
 const planId = route.params.planId as string;

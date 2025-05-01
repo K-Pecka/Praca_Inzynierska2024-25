@@ -7,7 +7,7 @@ import { fetchActivity } from "@/api/endpoints/trip/activity";
 import { Activity } from "@/types/interface";
 
 interface ActivityType {
-  value: string;
+  value: number;
   label: string;
   icon: string;
 }
@@ -18,10 +18,10 @@ export const useActivityStore = defineStore("activity", () => {
   const { setErrorCurrentMessage, setSuccessCurrentMessage } =
     useNotificationStore();
   const activityTypes = ref<ActivityType[]>([
-    { value: "tour", label: "Zwiedzanie", icon: "mdi-binoculars" },
-    { value: "food", label: "Jedzenie", icon: "mdi-food" },
-    { value: "sport", label: "Sport", icon: "mdi-basketball" },
-    { value: "relax", label: "Relaks", icon: "mdi-beach" },
+    { value: 1, label: "Zwiedzanie", icon: "mdi-binoculars" },
+    { value: 2, label: "Jedzenie", icon: "mdi-food" },
+    { value: 3, label: "Sport", icon: "mdi-basketball" },
+    { value: 4, label: "Relaks", icon: "mdi-beach" },
   ]);
   //   const fetchActivity = async() => {
   //     return [

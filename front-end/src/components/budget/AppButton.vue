@@ -11,15 +11,9 @@ defineProps<{ variant?: "primary" | "secondary", size?: "sm" | "md" | "lg" }>();
 
 <style scoped lang="scss">
 .app-button {
-  padding: 8px 40px;
   border-radius: 5px;
   font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
   width: fit-content;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   text-transform: none;
 }
 
@@ -56,10 +50,5 @@ defineProps<{ variant?: "primary" | "secondary", size?: "sm" | "md" | "lg" }>();
 
 .secondary:hover {
   background-color: rgba(var(--v-theme-secondary), 0.8);
-}
-@media (max-width: 400px) {
-  .app-button {
-    padding: 8px 24px;
-  }
 }
 </style>

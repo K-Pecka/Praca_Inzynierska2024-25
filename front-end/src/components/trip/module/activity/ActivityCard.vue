@@ -11,7 +11,7 @@ const props = defineProps({
 const store = useActivityStore();
 
 const getTypeLabel = (type: string) => {
-  const found = store.activityTypes.find((t) => t.value === type);
+  const found = store.activityTypes.find((t) => t.label === type || String(t.value) === type);
   return found ? found.label : type;
 };
 
@@ -39,44 +39,47 @@ const formatTime = (timeString: string) => {
 </script>
 
 <template>
-<v-card class="activity-card">
+  <v-card class="activity-card">
+    <v-col cols="12">
+      <v-row class="activity-header justify-space-between flex-nowrap">
+        <div class="activity-info">
+          <div class="activity-title">{{ activity.name }}</div>
+          <div class="activity-description">{{ activity.description }}</div>
 
-  <div class="activity-header">
-    <div class="activity-info">
-      <div class="activity-title">{{ activity.name }}</div>
-      <div class="activity-description">{{ activity.description }}</div>
+          <v-row class="activity-meta">
+            <span class="activity-type">{{ getTypeLabel(activity.type) }}</span>
 
-      <div class="activity-meta">
-        <span class="activity-type">{{ getTypeLabel(activity.type) }}</span>
-
-        <template v-if="activity.start_time">
+            <template v-if="activity.start_time">
           <span class="icon-text-pair">
             <v-icon size="16">mdi-clock-outline</v-icon>
             {{ formatTime(activity.start_time) }}
           </span>
-        </template>
+            </template>
 
-        <template v-if="activity.duration">
+            <template v-if="activity.duration">
           <span class="icon-text-pair">
             <v-icon size="16">mdi-timer-outline</v-icon>
             {{ formatDuration(activity.duration) }}
           </span>
-        </template>
+            </template>
 
-        <template v-if="activity.location">
+            <template v-if="activity.location">
           <span class="icon-text-pair">
             <v-icon size="16">mdi-map-marker-outline</v-icon>
             {{ activity.location }}
           </span>
-        </template>
-      </div>
-    </div>
+            </template>
+          </v-row>
+        </div>
 
-    <v-btn icon variant="text" color="#E44A3E" class="delete-btn">
-      <v-icon size="32">mdi-trash-can-outline</v-icon>
-    </v-btn>
-  </div>
-</v-card>
+        <v-btn icon variant="text" color="#E44A3E" class="delete-btn">
+          <v-icon size="32">mdi-trash-can-outline</v-icon>
+        </v-btn>
+      </v-row>
+    </v-col>
+
+
+  </v-card>
 
 </template>
 
@@ -90,13 +93,8 @@ const formatTime = (timeString: string) => {
   position: relative;
 
   .activity-header {
-    display: flex;
     align-items: center;
     gap: 1rem;
-  }
-
-  .activity-info {
-    flex: 1;
   }
 
   .activity-title {
@@ -111,15 +109,12 @@ const formatTime = (timeString: string) => {
   }
 
   .activity-meta {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
     gap: 10px;
     font-size: clamp(0.75rem, 1.2vw, 0.9rem);
     color: rgb(var(--v-theme-text));
 
     .v-icon {
-      color: rgba(3, 3, 9, 0.7);
+      color: rgba(var(--v-theme-text), 0.7);
     }
   }
 
