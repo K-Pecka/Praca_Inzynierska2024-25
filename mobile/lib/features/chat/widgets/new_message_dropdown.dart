@@ -6,7 +6,7 @@ import 'dart:convert';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/models/user_model.dart';
-import '../screens/chat_screen.dart';
+import '../screens/chat_screen.dart'; // import ChatScreen
 
 class NewMessageDropdown extends StatelessWidget {
   final List<UserModel> participants;
@@ -59,7 +59,7 @@ class NewMessageDropdown extends StatelessWidget {
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           final data = jsonDecode(response.body);
-          print("✅ Chatroom utworzony: $data");
+          print("✅ Chatroom utworzony/pobrany: $data");
 
           final chatroom = ChatroomModel.fromJson(data);
 
@@ -78,6 +78,7 @@ class NewMessageDropdown extends StatelessWidget {
             ),
           );
         } else {
+          print("❌ Błąd odpowiedzi: ${response.statusCode}");
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("❌ Błąd tworzenia czatu: ${response.body}")),
           );
