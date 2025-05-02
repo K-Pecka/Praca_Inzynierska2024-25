@@ -58,12 +58,12 @@ class ChatroomDestroyAPIView(DestroyAPIView):
 
 
 @extend_schema(tags=['chat_room'])
-class ChatroomCreateOrGetAPIView(APIView):
+class ChatroomCreateOrGetAPIView(CreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = ChatroomRetrieveSerializer
 
-    @csrf_exempt
-    def post(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
         trip_id = request.data.get("trip_id")
         creator_id = request.data.get("creator_id")
         receiver_id = request.data.get("receiver_id")
@@ -91,7 +91,7 @@ class ChatroomCreateOrGetAPIView(APIView):
         ).filter(members=receiver).first()
 
         if chatroom:
-            serializer = ChatroomRetrieveSerializer(chatroom)
+            serializer = self.get_serializer(chatroom)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         chatroom = Chatroom.objects.create(
@@ -103,5 +103,5 @@ class ChatroomCreateOrGetAPIView(APIView):
         chatroom.members.add(creator, receiver)
         chatroom.save()
 
-        serializer = ChatroomRetrieveSerializer(chatroom)
+        serializer = self.get_serializer(chatroom)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
