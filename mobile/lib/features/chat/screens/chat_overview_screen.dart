@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
+import '../../../core/models/user_model.dart';
 import '../../../core/services/chat_service.dart';
+import '../widgets/new_message_dropdown.dart';
 import 'announcement_channel_screen.dart';
 
 class ChatOverviewScreen extends StatefulWidget {
@@ -48,6 +50,25 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
     }
   }
 
+  List<UserModel> get userParticipants {
+    return widget.trip.members.map((m) => UserModel(
+      id: m.id,
+      email: m.email,
+      firstName: '', // lub m.firstName jeśli masz
+      lastName: '',  // lub m.lastName jeśli masz
+    )).toList();
+  }
+
+  String getChatLabel(ChatroomModel room) {
+    final otherIds = room.memberIds.where((id) => id != widget.userProfileId);
+    try {
+      final other = widget.trip.members.firstWhere((m) => otherIds.contains(m.id));
+      return other.email;
+    } catch (_) {
+      return 'Nieznany użytkownik';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -72,6 +93,21 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          // 🔽 Dropdown na górze ekranu
+          NewMessageDropdown(
+            participants: userParticipants,
+            trip: widget.trip,
+            currentUserId: widget.userProfileId,
+            token: '', // ← TODO: dodaj token z autoryzacji
+            onChatroomCreated: (newRoom) {
+              setState(() {
+                chatrooms.insert(0, newRoom);
+              });
+            },
+          ),
+          const SizedBox(height: 16),
+
+          // 🔔 Kanał ogłoszeniowy
           if (announcement != null)
             ChatTile(
               label: 'Kanał ogłoszeniowy',
@@ -91,20 +127,21 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
               },
             ),
           const SizedBox(height: 8),
+
+          // 💬 Pozostałe czaty
           for (var room in otherRooms)
             ChatTile(
-              label: 'Mateusz Wisniewski',
+              label: getChatLabel(room),
               message: room.lastMessage?.content ?? 'Brak wiadomości',
               isAnnouncement: false,
               onTap: () {
-                // TODO: Navigator.push to ChatDetailScreen
+                // TODO: Navigator.push do ChatScreen(chatroom: room)
               },
             ),
         ],
       ),
     );
   }
-
 }
 
 class ChatTile extends StatelessWidget {
