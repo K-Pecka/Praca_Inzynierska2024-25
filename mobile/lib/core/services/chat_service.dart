@@ -7,7 +7,6 @@ import '../../core/services/auth_service.dart';
 class ChatService {
   static const String baseUrl = 'https://api.plannder.com';
 
-  /// Pobiera listę pokoi czatowych przypisanych do wycieczki
   static Future<List<ChatroomModel>> getUserChatrooms(int tripId) async {
     final url = Uri.parse('$baseUrl/trip/$tripId/chat/chatroom/all/');
     final response = await http.get(url, headers: {
@@ -23,7 +22,6 @@ class ChatService {
     }
   }
 
-  /// Pobiera wiadomości z konkretnego pokoju czatowego
   static Future<List<MessageModel>> getMessages(int tripId, int chatroomId) async {
     final url = Uri.parse('$baseUrl/trip/$tripId/chat/chatroom/$chatroomId/chat-message/all/');
     final response = await http.get(url, headers: {
@@ -41,7 +39,6 @@ class ChatService {
     }
   }
 
-  /// Wysyła nową wiadomość do danego pokoju czatowego
   static Future<void> sendMessage(int tripId, int chatroomId, String text) async {
     final url = Uri.parse('$baseUrl/trip/$tripId/chat/chatroom/$chatroomId/chat-message/create/');
     final response = await http.post(url,
