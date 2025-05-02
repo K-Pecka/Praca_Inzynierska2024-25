@@ -58,11 +58,11 @@ class ChatroomDestroyAPIView(DestroyAPIView):
 
 
 @extend_schema(tags=['chat_room'])
-@method_decorator(csrf_exempt, name='dispatch')
 class ChatroomCreateOrGetAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @csrf_exempt
     def post(self, request, *args, **kwargs):
         trip_id = request.data.get("trip_id")
         creator_id = request.data.get("creator_id")
