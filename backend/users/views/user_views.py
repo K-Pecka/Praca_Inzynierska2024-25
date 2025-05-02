@@ -1,23 +1,38 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
+from django.shortcuts import get_object_or_404
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from users.serializers.user_serializers import UserCreateSerializer, UserUpdateSerializer, UserUpdatePasswordSerializer, \
-    ConfirmEmailSerializer, CheckAccessSerializer
+    ConfirmEmailSerializer, CheckAccessSerializer, UserRetrieveSerializer
 
-from users.models import CustomUser, UserPermission
+from users.models import CustomUser, UserPermission, UserProfile
 
 
 class UserCreateAPIView(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = UserCreateSerializer
+
+
+class UserByProfileRetrieveAPIView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserRetrieveSerializer
+
+    def get_object(self):
+        profile_pk = self.kwargs['pk']
+        profile = get_object_or_404(UserProfile, pk=profile_pk)
+
+        user = profile.user
+        if not user:
+            raise ValueError("Nie znaleziono użytkownika.")
+        return user
 
 
 class UserUpdateAPIView(UpdateAPIView):
