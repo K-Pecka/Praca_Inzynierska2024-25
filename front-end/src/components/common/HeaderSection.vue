@@ -10,7 +10,7 @@ const { data: tripData, isLoading, error } = getTripDetails(tripId);
 <template>
   <section class="section">
     <header class="section__title">
-      <h1 class="trip-title mt-10" v-if="!isLoading && !error">{{ tripData?.name }}</h1>
+      <h1 class="trip-title" v-if="!isLoading && !error">{{ tripData?.name }}</h1>
       <h1 class="trip-title" v-else>...</h1>
     </header>
     <div class="section__subtitle">

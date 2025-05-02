@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {useTripStore} from "@/stores/trip/useTripStore";
 import {useRoute} from "vue-router";
+import AppButton from "@/components/budget/AppButton.vue";
 import {useUtilsStore} from "@/stores";
 import { images } from "@/data";
 
@@ -54,27 +55,30 @@ const {formatDatePolish} = useUtilsStore();
             </v-col>
 
             <!-- Trip Info -->
-            <v-col cols="12" sm="7" md="8" lg="6">
+            <v-col cols="auto">
               <v-row class="flex-column align-center">
                 <v-card-title class="font-weight-bold pt-0">{{ trip.name }}</v-card-title>
-                <v-card-subtitle class="font-weight-medium mb-2">
+                <v-card-subtitle class="font-weight-medium pb-6">
                   {{ formatDatePolish(trip.start_date) }} - {{ formatDatePolish(trip.end_date) }}
                 </v-card-subtitle>
 
-                <router-link :to="{ name: 'panel', params: { tripId: trip.id } }" class="w-100 mb-1">
-                  <v-btn variant="flat" class="preview-trip-button text-white" block>
-                    Zarządzaj wycieczką
-                  </v-btn>
-                </router-link>
+                <AppButton
+                    :to="{ name: 'panel', params: { tripId: trip.id } }"
+                    class="trip-button w-100 mb-1"
+                    variant="primary"
+                >
+                  Zarządzaj wycieczką
+                </AppButton>
 
-                <router-link to="" class="w-100">
-                  <v-btn variant="flat" class="delete-trip-button text-white" block>
-                    Usuń wycieczkę
-                  </v-btn>
-                </router-link>
+                <AppButton
+                    to=""
+                    class="trip-button w-100"
+                    variant="accent"
+                >
+                  Usuń wycieczkę
+                </AppButton>
               </v-row>
             </v-col>
-
           </v-row>
         </v-card>
       </v-col>
@@ -90,8 +94,8 @@ const {formatDatePolish} = useUtilsStore();
   color: $primary-color;
 }
 
-.create-trip-button {
-  border-color: $primary-color !important;
+.trip-button {
+  font-size: clamp(0.4em, 0.6vw + 0.45em, 1em);
 }
 
 .trip-box {

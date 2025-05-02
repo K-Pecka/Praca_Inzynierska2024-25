@@ -2,8 +2,7 @@
 import AppButton from "@/components/budget/AppButton.vue";
 import { PricingCard } from "@/types/interface";
 
-const props = defineProps<PricingCard>();
-console.log("PricingCard", props);
+defineProps<PricingCard>();
 </script>
 
 <template>
@@ -34,7 +33,7 @@ console.log("PricingCard", props);
       </v-list-item>
     </v-list>
 
-    <AppButton :variant="buttonVariant">Wybierz</AppButton>
+    <AppButton :variant="buttonVariant" width="150px">Wybierz</AppButton>
   </v-card>
 </template>
 

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted } from "vue";
-import { BudgetData, DashboardBox } from "@/types/interface";
+import { DashboardBox } from "@/types/interface";
 
 const props = defineProps<DashboardBox>();
 const screenWidth = ref(window.innerWidth);
@@ -55,7 +55,7 @@ const getGridRows = () => {
 
   return size[breakpoint]?.row || size.lg?.row || 1;
 };
-console.log(props);
+
 import BudgetContent from "@/components/ui/BudgetContent.vue";
 </script>
 
@@ -69,7 +69,7 @@ import BudgetContent from "@/components/ui/BudgetContent.vue";
       order: props.set.order,
     }"
   >
-    <v-card-title class="text-h6 d-flex align-center">
+    <v-card-title class="text-h6 font-weight-bold py-5 px-0 d-flex align-center">
       <v-icon class="mr-2" color="primary">{{ `${props.icon}` }}</v-icon>
       {{ props.title }}
     </v-card-title>
@@ -103,23 +103,17 @@ import BudgetContent from "@/components/ui/BudgetContent.vue";
 </template>
 
 <style scoped lang="scss">
+@use "@/assets/styles/variables" as *;
+
 .v-card {
   transition: transform 0.2s, box-shadow 0.2s;
-  background-color: rgb(var(--v-theme-secondary), 50%);
-  height: 100%;
-  border-radius: 1.5rem;
+  background-color: $background-secondary;
 }
 .v-card-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: rgb(var(--v-theme-text), 75%);
-  padding-bottom: 1.2rem;
+  color: $text-color;
 }
-.v-card-text {
-  font-size: 20px;
-}
+
 .v-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 </style>

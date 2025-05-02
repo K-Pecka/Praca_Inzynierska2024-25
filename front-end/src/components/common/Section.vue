@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div class="section mx-auto">
+    <div class="section mx-auto mt-10">
       <header class="section__header">
         <slot name="title"></slot>
       </header>

@@ -31,7 +31,7 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
       background-color="grey-lighten-3"
     ></v-progress-linear>
 
-    <v-row justify="space-between" class="mt-1">
+    <v-row justify="space-between" class="pa-3 mt-1">
       <span class="text-subtitle-1 expenses-green" style="font-weight: bold;">
         {{ props.content.convertedAmount.toFixed(2) }} {{ props.content.convertedCurrency }}
       </span>

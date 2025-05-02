@@ -77,7 +77,6 @@ const dateTo = ref<string | null>(null);
             <div class="d-flex">
               <AppButton
                 variant="primary"
-                size="md"
                 @click="showForm = !showForm"
               >
                 <v-icon v-if="$vuetify.display.smAndDown">mdi-plus</v-icon>
@@ -141,7 +140,6 @@ const dateTo = ref<string | null>(null);
 
                 <AppButton
                   variant="primary"
-                  size="md"
                   @click="showFilters = true"
                 >
                   <v-icon start>mdi-filter</v-icon>

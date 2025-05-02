@@ -50,7 +50,6 @@ function removeParticipantById(id: number) {
                     <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Zarządzaj uczestnikami</h2>
                  <AppButton
                     variant="primary"
-                    size="md"
                     @click="showForm = !showForm"
                   >
                     <v-icon v-if="$vuetify.display.smAndDown">mdi-plus</v-icon>

@@ -7,8 +7,6 @@ export const usePanelStore = defineStore("panel", () => {
         { title: 'Wybór roli', to: "home" },
     ]);
 
-    let currentPage = shallowRef();
-
     const handleClick = async (navigate: any) => {
         try {
             await navigate();
@@ -17,14 +15,8 @@ export const usePanelStore = defineStore("panel", () => {
         }
     };
 
-    const loadPage = (page: any) => {
-        currentPage.value = page;
-    };
-
     return {
         items,
-        currentPage,
-        loadPage,
         handleClick,
     };
 });

@@ -83,55 +83,48 @@ const activity = computed(
 </script>
 
 <template>
-  <div class="page-container pb-10">
-    <Section>
-      <template #title>
-        <HeaderSection>
-          <template #subtitle>
-            <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Zarządzaj aktywnościami</h2>
-          </template>
-        </HeaderSection>
-      </template>
+  <Section>
+    <template #title>
+      <HeaderSection>
+        <template #subtitle>
+          <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Zarządzaj aktywnościami</h2>
+        </template>
+      </HeaderSection>
+    </template>
 
-      <template #content>
-        <div v-for="day in days" :key="day" class="day-card w-100">
-          <div class="day-card-header">
-            <div class="day-date">{{ formatDatePolish(day) }}</div>
-            <AppButton
-              variant="primary"
-              size="sm"
-              @click="showFormForDay = day"
-              v-show="showFormForDay != day"
-            >
-              Dodaj aktywność
-            </AppButton>
-          </div>
-
-          <ActivityForm
-            v-if="showFormForDay === day"
-            @submitActivity="(data) => addActivity(day, data)"
-            @cancelForm="showFormForDay = null"
-            class="form-container"
-          />
-          <span v-if="!isSuccess">Ładuję...</span>
-          <div class="activity-list" v-else>
-            <ActivityCard
-                v-for="activityItem in activity?.[day] ?? []"
-                :key="activityItem.id"
-                :activity="activityItem"
-            />
-          </div>
+    <template #content>
+      <div v-for="day in days" :key="day" class="day-card w-100">
+        <div class="day-card-header">
+          <div class="day-date">{{ formatDatePolish(day) }}</div>
+          <AppButton
+            variant="primary"
+            @click="showFormForDay = day"
+            v-show="showFormForDay != day"
+          >
+            Dodaj aktywność
+          </AppButton>
         </div>
-      </template>
-    </Section>
-  </div>
+
+        <ActivityForm
+          v-if="showFormForDay === day"
+          @submitActivity="(data) => addActivity(day, data)"
+          @cancelForm="showFormForDay = null"
+          class="form-container"
+        />
+        <span v-if="!isSuccess">Ładuję...</span>
+        <div class="activity-list" v-else>
+          <ActivityCard
+              v-for="activityItem in activity?.[day] ?? []"
+              :key="activityItem.id"
+              :activity="activityItem"
+          />
+        </div>
+      </div>
+    </template>
+  </Section>
 </template>
 
 <style scoped lang="scss">
-.page-container {
-  max-width: 88rem;
-  margin: 0 auto;
-}
 
 .header-wrapper {
   display: flex;

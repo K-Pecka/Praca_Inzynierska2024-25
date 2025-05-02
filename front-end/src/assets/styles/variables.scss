@@ -1,7 +1,10 @@
-$text-color: #030309;
+$text-color: rgba(#030309, 0.75);
 $primary-color: #2F27CE;
 $secondary-color: #DEDCFF;
 $accent-color: #AC6ED9;
+$background-color: #F5F4FC;
+
+$font: 'Quicksand', sans-serif;
 
 $background-secondary: rgba($secondary-color, 0.6);
 $background-primary: rgba($primary-color, 0.6);

@@ -47,7 +47,6 @@ const props = defineProps({
   padding-top: 5%;
   margin-bottom: 20%;
   width: 70%;
-  @include font-large;
   &__text {
     font-weight: 700;
     text-transform: uppercase;
