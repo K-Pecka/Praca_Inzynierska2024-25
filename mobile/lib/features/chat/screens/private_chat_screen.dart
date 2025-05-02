@@ -48,20 +48,30 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
 
       final isCurrentUserCreator = room.creatorId == widget.userProfileId;
 
-      final other = isCurrentUserCreator
-          ? widget.trip.members.firstWhere(
-            (m) => room.memberIds.contains(m.id),
-        orElse: () => Member(id: 0, email: 'Nieznany użytkownik'),
-      )
-          : widget.trip.members.firstWhere(
-            (m) => m.id == room.creatorId,
-        orElse: () => Member(id: 0, email: 'Nieznany użytkownik'),
-      );
+      final otherId = isCurrentUserCreator
+          ? (room.memberIds.isNotEmpty ? room.memberIds.first : null)
+          : room.creatorId;
+
+      String fullName = 'Nieznany użytkownik';
+
+      if (otherId != null) {
+        final localMember = widget.trip.members.firstWhere(
+              (m) => m.id == otherId,
+          orElse: () => Member(id: otherId, email: ''),
+        );
+
+        if (localMember.firstName != null && localMember.firstName!.isNotEmpty) {
+          fullName = '${localMember.firstName} ${localMember.lastName}'.trim();
+        } else {
+          final fetched = await ChatService.getUserByProfileId(otherId);
+          fullName = '${fetched.firstName ?? ''} ${fetched.lastName ?? ''}'.trim();
+        }
+      }
 
       setState(() {
         _chatroom = room;
         _messages = messages;
-        _otherUserName = other.email;
+        _otherUserName = fullName.isNotEmpty ? fullName : 'Nieznany użytkownik';
         _isLoading = false;
       });
 

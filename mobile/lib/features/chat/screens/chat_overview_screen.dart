@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobile/features/chat/screens/private_chat_screen.dart';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
-import '../../../core/models/user_model.dart';
 import '../../../core/services/chat_service.dart';
-import '../widgets/new_message_dropdown.dart';
 import 'announcement_channel_screen.dart';
-import '../../../core/services/auth_service.dart';
 import 'chat_tile.dart';
 
 class ChatOverviewScreen extends StatefulWidget {
@@ -53,36 +50,49 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
     }
   }
 
-  List<UserModel> get userParticipants {
-    return widget.trip.members.map((m) => UserModel(
-      id: m.id,
-      email: m.email,
-      firstName: '', // lub m.firstName jeśli masz
-      lastName: '',  // lub m.lastName jeśli masz
-    )).toList();
+  Future<String> getChatLabel(ChatroomModel room) async {
+    final otherId = room.memberIds.firstWhere(
+          (id) => id != widget.userProfileId,
+      orElse: () => room.creatorId,
+    );
+
+    final local = widget.trip.members.firstWhere(
+          (m) => m.id == otherId,
+      orElse: () => Member(id: otherId, email: ''),
+    );
+
+    if ((local.firstName ?? '').isNotEmpty) {
+      return '${local.firstName} ${local.lastName}'.trim();
+    }
+
+    final fetched = await ChatService.getUserByProfileId(otherId);
+    return '${fetched.firstName ?? ''} ${fetched.lastName ?? ''}'.trim();
   }
 
-  String getChatLabel(ChatroomModel room) {
-    final otherIds = room.memberIds.where((id) => id != widget.userProfileId);
-    try {
-      final other = widget.trip.members.firstWhere((m) => otherIds.contains(m.id));
-      final fullName = '${other.firstName} ${other.lastName}'.trim();
-      return fullName.isNotEmpty ? fullName : other.email;
-    } catch (_) {
-      return 'Nieznany użytkownik';
-    }
-  }
+  Future<String> getInitialsForRoom(ChatroomModel room) async {
+    final otherId = room.memberIds.firstWhere(
+          (id) => id != widget.userProfileId,
+      orElse: () => room.creatorId,
+    );
 
-  String getInitialsForRoom(ChatroomModel room) {
-    final otherIds = room.memberIds.where((id) => id != widget.userProfileId);
-    try {
-      final other = widget.trip.members.firstWhere((m) => otherIds.contains(m.id));
-      final first = (other.firstName ?? '').isNotEmpty ? other.firstName![0] : '';
-      final last = (other.lastName ?? '').isNotEmpty ? other.lastName![0] : '';
-      return (first + last).toUpperCase();
-    } catch (_) {
-      return '??';
+    final local = widget.trip.members.firstWhere(
+          (m) => m.id == otherId,
+      orElse: () => Member(id: otherId, email: ''),
+    );
+
+    String first = '';
+    String last = '';
+
+    if ((local.firstName ?? '').isNotEmpty) {
+      first = local.firstName![0];
+      last = (local.lastName?.isNotEmpty ?? false) ? local.lastName![0] : '';
+    } else {
+      final fetched = await ChatService.getUserByProfileId(otherId);
+      first = fetched.firstName?.isNotEmpty == true ? fetched.firstName![0] : '';
+      last = fetched.lastName?.isNotEmpty == true ? fetched.lastName![0] : '';
     }
+
+    return (first + last).toUpperCase();
   }
 
   @override
@@ -109,18 +119,6 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // 🔽 Dropdown na górze ekranu
-          // NewMessageDropdown(
-          //   participants: userParticipants,
-          //   trip: widget.trip,
-          //   currentUserId: widget.userProfileId,
-          //   token: AuthService.accessToken ?? '', // ✅ TO MUSI BYĆ TUTAJ
-          //   onChatroomCreated: (newRoom) {
-          //     setState(() {
-          //       chatrooms.insert(0, newRoom);
-          //     });
-          //   },
-          // ),
           const SizedBox(height: 16),
 
           if (announcement != null)
@@ -144,21 +142,34 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
           const SizedBox(height: 8),
 
           for (var room in otherRooms)
-            ChatTile(
-              label: getChatLabel(room),
-              message: room.lastMessage?.content ?? 'Brak wiadomości',
-              isAnnouncement: false,
-              initials: getInitialsForRoom(room),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PrivateChatScreen(
-                      userProfileId: widget.userProfileId,
-                      trip: widget.trip,
-                      chatroomId: room.id,
-                    ),
-                  ),
+            FutureBuilder(
+              future: Future.wait([
+                getChatLabel(room),
+                getInitialsForRoom(room),
+              ]),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const SizedBox(height: 60);
+                }
+                final label = snapshot.data![0];
+                final initials = snapshot.data![1];
+                return ChatTile(
+                  label: label,
+                  initials: initials,
+                  message: room.lastMessage?.content ?? 'Brak wiadomości',
+                  isAnnouncement: false,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PrivateChatScreen(
+                          userProfileId: widget.userProfileId,
+                          trip: widget.trip,
+                          chatroomId: room.id,
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),
@@ -167,66 +178,3 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
     );
   }
 }
-
-// class ChatTile extends StatelessWidget {
-//   final String label;
-//   final String message;
-//   final VoidCallback onTap;
-//   final bool isAnnouncement;
-//
-//   const ChatTile({
-//     super.key,
-//     required this.label,
-//     required this.message,
-//     required this.onTap,
-//     this.isAnnouncement = false, required String initials,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 6),
-//       child: Row(
-//         children: [
-//           CircleAvatar(
-//             radius: 20,
-//             backgroundColor: const Color(0xFFDEDCFF).withOpacity(0.5),
-//             child: isAnnouncement
-//                 ? const Icon(Icons.info_outline, color: Color(0xFF6A5AE0))
-//                 : const Text("MW", style: TextStyle(color: Color(0xFF6A5AE0))),
-//           ),
-//           const SizedBox(width: 12),
-//           Expanded(
-//             child: GestureDetector(
-//               onTap: onTap,
-//               child: Container(
-//                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-//                 decoration: BoxDecoration(
-//                   color: const Color(0xFFDEDCFF).withOpacity(0.2),
-//                   borderRadius: BorderRadius.circular(16),
-//                 ),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       label,
-//                       style: const TextStyle(
-//                         fontWeight: FontWeight.bold,
-//                         fontSize: 14,
-//                       ),
-//                     ),
-//                     Text(
-//                       message,
-//                       overflow: TextOverflow.ellipsis,
-//                       style: const TextStyle(fontSize: 15),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

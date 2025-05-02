@@ -42,6 +42,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   animated_custom_dropdown: ^3.1.1
   collection: ^1.17.2
+  web_socket_channel: ^2.4.0
 
 dev_dependencies:
   flutter_test:
