@@ -20,7 +20,7 @@ url = urlparse.urlparse(redis_url)
 import os
 import ssl
 
-ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+ssl_context = ssl.create_default_context()
 ssl_context.check_hostname = False
 ssl_context.verify_mode = ssl.CERT_NONE
 
@@ -28,7 +28,10 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [os.environ.get("REDIS_URL")],
+            "hosts": [{
+                "address": os.environ.get("REDIS_URL"),
+                "ssl": ssl_context,
+            }],
         },
     },
 }
