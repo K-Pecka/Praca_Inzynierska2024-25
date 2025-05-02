@@ -53,6 +53,12 @@ export const images = {
       },
     },
   },
+  emptyState: {
+    trip: {
+      img: '/src/assets/images/emptyState/empty-state-trip.svg',
+      alt: 'empty trip',
+    },
+  },
   icon: {
     menu: {
       back: 'mdi-arrow-left',

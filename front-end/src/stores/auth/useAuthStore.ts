@@ -160,10 +160,10 @@ export const useAuthStore = defineStore(
                 setErrorCurrentMessage(err?.message || unexpectedError()),
         });
         const getUserInitials = () => {
-            if (!user.value) return "UK";
+            if (!user.value) return " ";
             const firstInitial = user.value.first_name ? user.value.first_name[0] : "";
             const lastInitial = user.value.last_name ? user.value.last_name[0] : "";
-            return (firstInitial + lastInitial).toUpperCase() || "UK";
+            return (firstInitial + lastInitial).toUpperCase() || " ";
         };
 
         return {
