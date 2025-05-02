@@ -23,8 +23,8 @@ class TripModel {
       id: json['id'],
       name: json['name'],
       creatorId: json['creator'],
-      members: (json['members'] as List<dynamic>)
-          .map((m) => Member.fromJson(m))
+      members: (json['members'] as List)
+          .map((id) => Member(id: id, email: ''))
           .toList(),
       startDate: DateTime.parse(json['start_date']),
       endDate: DateTime.parse(json['end_date']),
@@ -35,16 +35,35 @@ class TripModel {
 class Member {
   final int id;
   final String email;
+  final String? firstName;
+  final String? lastName;
 
   Member({
     required this.id,
     required this.email,
+    this.firstName,
+    this.lastName,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
     return Member(
       id: json['id'],
       email: json['email'],
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+    );
+  }
+
+  Member copyWith({
+    String? email,
+    String? firstName,
+    String? lastName,
+  }) {
+    return Member(
+      id: id,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
     );
   }
 }

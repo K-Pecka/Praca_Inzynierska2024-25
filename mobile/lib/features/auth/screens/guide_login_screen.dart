@@ -4,6 +4,7 @@ import '../../../core/widgets/bottom_navigation_scaffold.dart';
 import '../widgets/auth_widgets.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/services/trip_service.dart';
+import '../../../core/models/auth_response_model.dart';
 
 class GuideLoginScreen extends StatefulWidget {
   const GuideLoginScreen({super.key});
@@ -20,25 +21,19 @@ class _GuideLoginScreenState extends State<GuideLoginScreen> {
   Future<void> _handleLogin() async {
     setState(() => _isLoading = true);
     try {
-      final response = await AuthService.login(
+      final AuthResponseModel response = await AuthService.login(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
 
-      final profiles = response['profiles'] as List<dynamic>;
-      final guideProfile = profiles.firstWhere(
-            (p) => p['type'] == 2,
-        orElse: () => null,
+      final guideProfile = response.profiles.firstWhere(
+            (p) => p.type == 2,
+        orElse: () => throw Exception("Nie znaleziono profilu typu przewodnik."),
       );
-      final profileId = guideProfile?['id'];
-
-      if (AuthService.accessToken == null || profileId == null) {
-        throw Exception("Nie znaleziono profilu typu przewodnik.");
-      }
 
       await AuthService.setDefaultProfile(
-        profileId: profileId,
-        token: AuthService.accessToken!,
+        profileId: guideProfile.id,
+        token: response.access,
       );
 
       final trips = await TripService.getAllTrips();
@@ -50,7 +45,7 @@ class _GuideLoginScreenState extends State<GuideLoginScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => BottomNavScaffold(
-            userProfileId: profileId,
+            userProfileId: guideProfile.id,
             profileType: 2,
             trip: trip,
           ),

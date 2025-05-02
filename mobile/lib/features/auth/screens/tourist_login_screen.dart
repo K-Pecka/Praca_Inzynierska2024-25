@@ -4,6 +4,7 @@ import '../../../core/widgets/bottom_navigation_scaffold.dart';
 import '../widgets/auth_widgets.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/services/trip_service.dart';
+import '../../../core/models/auth_response_model.dart'; // Upewnij się, że ścieżka jest poprawna
 
 class TouristLoginScreen extends StatefulWidget {
   const TouristLoginScreen({super.key});
@@ -20,29 +21,21 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
   Future<void> _handleLogin() async {
     setState(() => _isLoading = true);
     try {
-      final response = await AuthService.login(
+      final AuthResponseModel response = await AuthService.login(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
 
-      final profiles = response['profiles'] as List<dynamic>;
-      final touristProfile = profiles.firstWhere(
-            (p) => p['type'] == 1,
-        orElse: () => null,
+      final touristProfile = response.profiles.firstWhere(
+            (p) => p.type == 1,
+        orElse: () => throw Exception("Nie znaleziono profilu typu turysta."),
       );
-      final profileId = touristProfile?['id'];
 
-      if (AuthService.accessToken == null || profileId == null) {
-        throw Exception("Nie znaleziono profilu typu turysta.");
-      }
-
-      // Ustawienie profilu jako domyślny
       await AuthService.setDefaultProfile(
-        profileId: profileId,
-        token: AuthService.accessToken!,
+        profileId: touristProfile.id,
+        token: response.access,
       );
 
-      // Pobranie wycieczek
       final trips = await TripService.getAllTrips();
       if (trips.isEmpty) throw Exception("Brak wycieczek");
 
@@ -52,7 +45,7 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => BottomNavScaffold(
-            userProfileId: profileId,
+            userProfileId: touristProfile.id,
             profileType: 1,
             trip: trip,
           ),

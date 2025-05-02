@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../models/auth_response_model.dart'; // Upewnij się, że ścieżka jest poprawna
 
 class AuthService {
   static final String _baseUrl = 'https://api.plannder.com';
@@ -7,7 +8,6 @@ class AuthService {
   static String? _refreshToken;
 
   static String? get accessToken => _accessToken;
-
   static String? get refreshToken => _refreshToken;
 
   static void logout() {
@@ -15,7 +15,7 @@ class AuthService {
     _refreshToken = null;
   }
 
-  static Future<Map<String, dynamic>> login({
+  static Future<AuthResponseModel> login({
     required String email,
     required String password,
   }) async {
@@ -34,7 +34,7 @@ class AuthService {
       _accessToken = data['access'];
       _refreshToken = data['refresh'];
 
-      return data;
+      return AuthResponseModel.fromJson(data);
     } else {
       throw Exception('Błąd logowania: ${response.statusCode}');
     }
@@ -66,9 +66,7 @@ class AuthService {
     required int profileId,
     required String token,
   }) async {
-    final url = Uri.parse(
-      'https://api.plannder.com/user/profile/$profileId/update/',
-    );
+    final url = Uri.parse('$_baseUrl/user/profile/$profileId/update/');
     final headers = {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
