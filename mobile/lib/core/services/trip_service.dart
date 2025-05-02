@@ -40,7 +40,26 @@ class TripService {
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return data.map((e) => TripModel.fromJson(e)).toList();
+      final trips = data.map((e) => TripModel.fromJson(e)).toList();
+
+      // 🔁 Uzupełnianie imienia i nazwiska członków
+      for (final trip in trips) {
+        for (int i = 0; i < trip.members.length; i++) {
+          final member = trip.members[i];
+          try {
+            final enriched = await _fetchUserInfoByProfileId(member.id);
+            trip.members[i] = member.copyWith(
+              email: enriched.email,
+              firstName: enriched.firstName,
+              lastName: enriched.lastName,
+            );
+          } catch (e) {
+            print('Nie udało się pobrać danych użytkownika ${member.id}: $e');
+          }
+        }
+      }
+
+      return trips;
     } else {
       throw Exception('Błąd podczas pobierania wycieczek');
     }
@@ -61,5 +80,25 @@ class TripService {
         endDate: DateTime.now(),
       ),
     );
+  }
+
+  static Future<Member> _fetchUserInfoByProfileId(int profileId) async {
+    final url = Uri.parse('$_baseUrl/user/user/by-profile/$profileId/');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${AuthService.accessToken}',
+      'accept': 'application/json',
+    });
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return Member(
+        id: profileId,
+        email: data['email'],
+        firstName: data['first_name'],
+        lastName: data['last_name'],
+      );
+    } else {
+      throw Exception('Błąd pobierania użytkownika $profileId');
+    }
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ChatTile extends StatelessWidget {
   final String label;
   final String message;
+  final String? initials;
   final VoidCallback onTap;
   final bool isAnnouncement;
 
@@ -11,6 +12,7 @@ class ChatTile extends StatelessWidget {
     required this.label,
     required this.message,
     required this.onTap,
+    this.initials,
     this.isAnnouncement = false,
   });
 
@@ -25,7 +27,10 @@ class ChatTile extends StatelessWidget {
             backgroundColor: const Color(0xFFDEDCFF).withOpacity(0.5),
             child: isAnnouncement
                 ? const Icon(Icons.info_outline, color: Color(0xFF6A5AE0))
-                : const Text("MW", style: TextStyle(color: Color(0xFF6A5AE0))),
+                : Text(
+              initials ?? '',
+              style: const TextStyle(color: Color(0xFF6A5AE0)),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -40,23 +45,13 @@ class ChatTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (!isAnnouncement)
-                      const Text(
-                        "Mateusz Wisniewski",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      )
-                    else
-                      const Text(
-                        "Kanał ogłoszeniowy",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: Color(0xFF6A5AE0),
-                        ),
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
                       ),
+                    ),
                     Text(
                       message,
                       overflow: TextOverflow.ellipsis,

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import '../models/chat_message_model.dart';
 import '../models/chatroom_model.dart';
@@ -23,7 +24,9 @@ class ChatService {
   }
 
   static Future<List<MessageModel>> getMessages(int tripId, int chatroomId) async {
-    final url = Uri.parse('$baseUrl/trip/$tripId/chat/chatroom/$chatroomId/chat-message/all/');
+    final url = Uri.parse('$baseUrl/trip/$tripId/chat/$chatroomId/chat-message/all/');
+    debugPrint('➡️ GET $url');
+
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${AuthService.accessToken}',
       'accept': 'application/json',
@@ -33,7 +36,10 @@ class ChatService {
       final List data = jsonDecode(response.body);
       return data.map((e) => MessageModel.fromJson(e)).toList();
     } else {
-      throw Exception("Błąd ładowania wiadomości: ${response.body}");
+      debugPrint('❌ Błąd ładowania wiadomości: ${response.statusCode}');
+      debugPrint('➡️ URL: $url');
+      debugPrint('➡️ Body: ${response.body}');
+      throw Exception("Błąd ładowania wiadomości: ${response.statusCode}");
     }
   }
 

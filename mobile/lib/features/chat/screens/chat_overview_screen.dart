@@ -7,6 +7,7 @@ import '../../../core/services/chat_service.dart';
 import '../widgets/new_message_dropdown.dart';
 import 'announcement_channel_screen.dart';
 import '../../../core/services/auth_service.dart';
+import 'chat_tile.dart';
 
 class ChatOverviewScreen extends StatefulWidget {
   final TripModel trip;
@@ -65,9 +66,22 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
     final otherIds = room.memberIds.where((id) => id != widget.userProfileId);
     try {
       final other = widget.trip.members.firstWhere((m) => otherIds.contains(m.id));
-      return other.email;
+      final fullName = '${other.firstName} ${other.lastName}'.trim();
+      return fullName.isNotEmpty ? fullName : other.email;
     } catch (_) {
       return 'Nieznany użytkownik';
+    }
+  }
+
+  String getInitialsForRoom(ChatroomModel room) {
+    final otherIds = room.memberIds.where((id) => id != widget.userProfileId);
+    try {
+      final other = widget.trip.members.firstWhere((m) => otherIds.contains(m.id));
+      final first = (other.firstName ?? '').isNotEmpty ? other.firstName![0] : '';
+      final last = (other.lastName ?? '').isNotEmpty ? other.lastName![0] : '';
+      return (first + last).toUpperCase();
+    } catch (_) {
+      return '??';
     }
   }
 
@@ -134,6 +148,7 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
               label: getChatLabel(room),
               message: room.lastMessage?.content ?? 'Brak wiadomości',
               isAnnouncement: false,
+              initials: getInitialsForRoom(room),
               onTap: () {
                 Navigator.push(
                   context,
@@ -153,65 +168,65 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
   }
 }
 
-class ChatTile extends StatelessWidget {
-  final String label;
-  final String message;
-  final VoidCallback onTap;
-  final bool isAnnouncement;
-
-  const ChatTile({
-    super.key,
-    required this.label,
-    required this.message,
-    required this.onTap,
-    this.isAnnouncement = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: const Color(0xFFDEDCFF).withOpacity(0.5),
-            child: isAnnouncement
-                ? const Icon(Icons.info_outline, color: Color(0xFF6A5AE0))
-                : const Text("MW", style: TextStyle(color: Color(0xFF6A5AE0))),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: GestureDetector(
-              onTap: onTap,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFDEDCFF).withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      message,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+// class ChatTile extends StatelessWidget {
+//   final String label;
+//   final String message;
+//   final VoidCallback onTap;
+//   final bool isAnnouncement;
+//
+//   const ChatTile({
+//     super.key,
+//     required this.label,
+//     required this.message,
+//     required this.onTap,
+//     this.isAnnouncement = false, required String initials,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 6),
+//       child: Row(
+//         children: [
+//           CircleAvatar(
+//             radius: 20,
+//             backgroundColor: const Color(0xFFDEDCFF).withOpacity(0.5),
+//             child: isAnnouncement
+//                 ? const Icon(Icons.info_outline, color: Color(0xFF6A5AE0))
+//                 : const Text("MW", style: TextStyle(color: Color(0xFF6A5AE0))),
+//           ),
+//           const SizedBox(width: 12),
+//           Expanded(
+//             child: GestureDetector(
+//               onTap: onTap,
+//               child: Container(
+//                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+//                 decoration: BoxDecoration(
+//                   color: const Color(0xFFDEDCFF).withOpacity(0.2),
+//                   borderRadius: BorderRadius.circular(16),
+//                 ),
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       label,
+//                       style: const TextStyle(
+//                         fontWeight: FontWeight.bold,
+//                         fontSize: 14,
+//                       ),
+//                     ),
+//                     Text(
+//                       message,
+//                       overflow: TextOverflow.ellipsis,
+//                       style: const TextStyle(fontSize: 15),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
