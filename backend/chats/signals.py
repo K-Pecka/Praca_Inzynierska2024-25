@@ -29,12 +29,11 @@ def sync_chatroom_members_on_trip_members_update(sender, instance, action, pk_se
 
 @receiver(post_save, sender=Trip)
 def create_private_chatrooms_for_trip_members(sender, instance, created, **kwargs):
-    """Tworzymy prywatne pokoje czatowe pomiędzy przewodnikiem a każdym uczestnikiem wycieczki"""
     if created:
         members = instance.members.all()
 
         for member in members:
-            if member != instance.creator:  # Ignorujemy czat pomiędzy przewodnikiem a samym sobą
+            if member != instance.creator:
                 chatroom = Chatroom.objects.create(
                     name=f"Czat: {instance.creator.user.first_name} & {member.user.first_name}",
                     type=ChatroomType.PRIVATE,
@@ -55,14 +54,14 @@ def sync_chatroom_members_on_trip_members_update(sender, instance, action, pk_se
 
             if member != instance.creator:
                 chatroom = Chatroom.objects.create(
-                    name=f"Czat: {instance.creator.user.first_name} & {member.user.first_name}",
+                    name=f"Czat:{member.user.first_name} {member.user.last_name}",
                     type=ChatroomType.PRIVATE,
                     trip=instance,
                     creator=instance.creator,
                 )
-                chatroom.members.add(instance.creator, member)
+                chatroom.members.add(member)
 
-    elif action == 'post_remove':  # Usunięcie członka
+    elif action == 'post_remove':
         for member_id in pk_set:
             try:
                 member = instance.members.get(id=member_id)
@@ -73,6 +72,6 @@ def sync_chatroom_members_on_trip_members_update(sender, instance, action, pk_se
                     Q(members=instance.creator) & Q(members=member)
                 ).first()
                 if chatroom:
-                    chatroom.delete()  # Usuwamy czat
+                    chatroom.delete()
             except instance.members.model.DoesNotExist:
                 continue
