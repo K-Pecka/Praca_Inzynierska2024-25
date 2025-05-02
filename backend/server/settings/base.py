@@ -17,8 +17,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 url = urlparse.urlparse(redis_url)
 
-import os
 import ssl
+
+ssl_context = ssl.SSLContext()
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.VerifyMode(ssl.CERT_NONE)
 
 CHANNEL_LAYERS = {
     "default": {
@@ -26,7 +29,7 @@ CHANNEL_LAYERS = {
         "CONFIG": {
             "hosts": [{
                 "address": os.environ.get("REDIS_URL", "redis://127.0.0.1:6379"),
-                "ssl_cert_reqs": ssl.CERT_NONE,
+                "ssl": ssl_context,
             }],
         },
     },
