@@ -44,11 +44,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
   }
 
   void _connectWebSocket() {
-    final uri = Uri(
-      scheme: 'wss',
-      host: 'api.plannder.com',
-      path: '/ws/chat/${widget.chatroomId}/',
-    );
+    final uri = Uri.parse('wss://api.plannder.com/ws/chat/${widget.chatroomId}/');
     _channel = WebSocketChannel.connect(uri);
 
     print('🔌 Połączono z WebSocket: $uri');
