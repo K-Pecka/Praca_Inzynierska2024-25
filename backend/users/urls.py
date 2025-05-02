@@ -2,7 +2,7 @@ from django.urls import path
 
 from users.views.user_profile_views import UserProfileListAPIView, UserProfileUpdateAPIView, UserProfileCreateAPIView
 from users.views.user_views import UserUpdateAPIView, UserUpdatePasswordAPIView, UserCreateAPIView, ConfirmEmailView, \
-    CheckAccessView, CheckAccountTypeAPIView
+    CheckAccessView, CheckAccountTypeAPIView, UserByProfileRetrieveAPIView
 
 urlpatterns = [
     # User management
@@ -19,4 +19,6 @@ urlpatterns = [
     # User profile management
     path('profile/create/', UserProfileCreateAPIView.as_view(), name='user-profile-create'),
     path('profile/<int:pk>/update/', UserProfileUpdateAPIView.as_view(), name='user-profile-update'),
+
+    path('user/by-profile/<str:pk>/', UserByProfileRetrieveAPIView.as_view(), name='user-by-profile'),
 ]
