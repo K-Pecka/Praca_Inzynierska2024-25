@@ -4,6 +4,7 @@ from .models import Message
 from users.models import UserProfile
 from asgiref.sync import sync_to_async
 
+
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_group_name = "chat_room"
@@ -47,4 +48,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @sync_to_async
     def save_message(self, user_profile, message):
         Message.objects.create(profile=user_profile, content=message)
-

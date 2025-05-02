@@ -3,7 +3,7 @@ from django.urls import path
 from chats.views.message_views import MessageCreateAPIView, MessageRetrieveAPIView, MessageListAPIView, \
     MessageUpdateAPIView, MessageDestroyAPIView
 from chats.views.chatroom_views import ChatroomCreateAPIView, ChatroomRetrieveAPIView, ChatroomListAPIView, \
-    ChatroomUpdateAPIView, ChatroomDestroyAPIView
+    ChatroomUpdateAPIView, ChatroomDestroyAPIView, ChatroomCreateOrGetAPIView
 
 urlpatterns = [
     path('chatroom/create/', ChatroomCreateAPIView.as_view(), name='chatroom-create'),
@@ -21,4 +21,5 @@ urlpatterns = [
          name='chat-message-update'),
     path('chatroom/<int:room_pk>/chat-message/<int:pk>/delete/', MessageDestroyAPIView.as_view(),
          name='chat-message-delete'),
+    path("chatroom/create_or_get/", ChatroomCreateOrGetAPIView.as_view(), name="chatroom-create-or-get"),
 ]
