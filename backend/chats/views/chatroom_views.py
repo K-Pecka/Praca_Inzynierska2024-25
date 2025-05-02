@@ -1,6 +1,8 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from chats.choices import ChatroomType
 from chats.serializers.chatroom_serializers import ChatroomCreateSerializer, ChatroomRetrieveSerializer, \
     ChatroomListSerializer, ChatroomUpdateSerializer
 from chats.models import Chatroom
@@ -10,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from users.models import UserProfile
 from trips.models import Trip
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 @extend_schema(tags=['chat_room'])
@@ -53,9 +56,9 @@ class ChatroomDestroyAPIView(DestroyAPIView):
 
 
 @extend_schema(tags=['chat_room'])
-class ChatroomCreateOrGetAPIView(CreateAPIView):
+class ChatroomCreateOrGetAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = ChatroomRetrieveSerializer  # używamy tylko do odpowiedzi
 
     def post(self, request, *args, **kwargs):
         trip_id = request.data.get("trip_id")
@@ -79,23 +82,23 @@ class ChatroomCreateOrGetAPIView(CreateAPIView):
             )
 
         chatroom = Chatroom.objects.filter(
-            type="PRIVATE",
+            type=ChatroomType.PRIVATE,
             trip=trip,
             members=creator,
         ).filter(members=receiver).first()
 
         if chatroom:
-            serializer = self.get_serializer(chatroom)
+            serializer = ChatroomRetrieveSerializer(chatroom)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         chatroom = Chatroom.objects.create(
             name=f"Czat: {creator.user.first_name} & {receiver.user.first_name}",
-            type="PRIVATE",
+            type=ChatroomType.PRIVATE,
             trip=trip,
             creator=creator,
         )
         chatroom.members.add(creator, receiver)
         chatroom.save()
 
-        serializer = self.get_serializer(chatroom)
+        serializer = ChatroomRetrieveSerializer(chatroom)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
