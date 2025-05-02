@@ -2,8 +2,8 @@
 import ExpenseItem from "./ExpenseItem.vue";
 
 import { useTripStore } from "@/stores/trip/useTripStore";
-import { useUtilStore } from "@/stores";
-const {getTripId} = useUtilStore();
+import { useUtilsStore } from "@/stores";
+const {getTripId} = useUtilsStore();
 const {data:expenses,isLoading} = useTripStore().getExpensesQuery(getTripId() as unknown as number);
 const { variant, limit,config } = defineProps<{
   variant?: "manage" | "view";

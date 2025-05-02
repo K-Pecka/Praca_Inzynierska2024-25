@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {ref, onMounted, onUnmounted} from "vue";
 import {PanelNavbar, SideNav} from "@/components";
-import {usePageHomeStore, useUtilStore, useAuthStore} from "@/stores";
+import {usePageHomeStore, useUtilsStore, useAuthStore} from "@/stores";
 import { images } from "@/data";
 
 const useStore = usePageHomeStore();
@@ -13,7 +13,7 @@ const authStore = useAuthStore();
 
 const userInitials = authStore.getUserInitials();
 
-const {isCurrentRouteNotInSet} = useUtilStore();
+const {isCurrentRouteNotInSet} = useUtilsStore();
 const showNavigation = isCurrentRouteNotInSet([
   "roleSelection",
   "yourTrip",

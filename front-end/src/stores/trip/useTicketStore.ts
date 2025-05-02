@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { useUtilStore } from "@/stores/utils/useUtilStore";
+import { useUtilsStore } from "@/stores/utils/useUtilsStore";
 import { getTicketsQuery,createTicketMutation } from "@/api/services/ticketQuery";
 import { TicketData } from "@/types";
 interface Ticket {

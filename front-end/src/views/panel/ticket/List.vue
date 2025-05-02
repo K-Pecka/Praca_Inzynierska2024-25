@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRoute } from "vue-router";
-import { Section } from "@/components";
-import { useTicketStore } from "@/stores/trip/useTicketStore";
-import { useTripStore } from "@/stores/trip/useTripStore";
-import TicketList from "@/components/trip/module/ticket/TicketList.vue";
+import {ref} from "vue";
+import {useRoute} from "vue-router";
+import {Section} from "@/components";
+import {useTicketStore} from "@/stores/trip/useTicketStore";
+import {useTripStore} from "@/stores/trip/useTripStore";
 import TicketForm from "@/components/trip/module/ticket/TicketForm.vue";
+import TicketCard from "@/components/trip/module/ticket/TicketCard.vue";
 import AppButton from "@/components/budget/AppButton.vue";
-import { useUtilStore } from "@/stores";
-const { combineDateAndTime } = useUtilStore();
+import {useUtilsStore} from "@/stores";
+import HeaderSection from "@/components/common/HeaderSection.vue";
+
+const {combineDateAndTime} = useUtilsStore();
 const route = useRoute();
 const tripId = route.params.tripId as string;
 
-const { createTicket } = useTicketStore();
-const { data: tickets, isLoading } = useTripStore().getTickets();
+const {createTicket} = useTicketStore();
+const {data: tickets, isLoading} = useTripStore().getTickets();
 
 const showForm = ref(false);
 
@@ -31,13 +33,18 @@ async function handleAddTicket(newTicketData: {
   formData.append("valid_from", combineDateAndTime(newTicketData.date, newTicketData.time));
   formData.append("file", newTicketData.file);
   try {
-    await createTicket(formData); 
+    await createTicket(formData);
     showForm.value = false;
   } catch (error) {
     console.error("Błąd podczas tworzenia biletu:", error);
   }
 }
-import HeaderSection from "@/components/common/HeaderSection.vue";
+
+const filteredTickets = () => {
+  return (
+      tickets.value?.filter((ticket) => ticket.trip === Number(tripId)) ?? []
+  );
+};
 </script>
 
 <template>
@@ -47,17 +54,17 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
         <template #subtitle>
           <div class="title-container pb-1 w-100">
             <h2
-              class="trip-title mb-10"
-              style="font-size: 30px; font-weight: 600; width: 80%"
+                class="trip-title mb-10"
+                style="font-size: 30px; font-weight: 600; width: 80%"
             >
               Bilety
             </h2>
             <AppButton
-              variant="primary"
-              size="md"
-              class="add-button"
-              v-if="!showForm"
-              @click="showForm = !showForm"
+                variant="primary"
+                size="md"
+                class="add-button"
+                v-if="!showForm"
+                @click="showForm = !showForm"
             >
               Dodaj Bilet
             </AppButton>
@@ -69,19 +76,20 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
     <template #content>
       <div class="w-100">
         <TicketForm
-          v-if="showForm"
-          @submitTicket="handleAddTicket"
-          @cancelForm="showForm = false"
-          class="form-container"
+            v-if="showForm"
+            @submitTicket="handleAddTicket"
+            @cancelForm="showForm = false"
+            class="form-container"
         />
 
         <div
-          v-if="isLoading && tickets && tickets.length === 0 && !showForm"
-          class="empty-tickets"
+            v-if="isLoading && tickets && tickets.length === 0 && !showForm"
+            class="empty-tickets"
         >
           <div class="empty-state">
             <v-icon size="48" color="black"
-              >mdi-ticket-confirmation-outline</v-icon
+            >mdi-ticket-confirmation-outline
+            </v-icon
             >
             <p class="empty-text">Brak dodanych biletów</p>
             <a class="add-link" @click="showForm = true">
@@ -90,10 +98,16 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
           </div>
         </div>
 
-        <TicketList
-          v-else-if="tickets && tickets.length > 0"
-          :tickets="tickets"
-        />
+        <div
+            v-else-if="tickets && tickets.length > 0"
+            class="ticket-list"
+        >
+          <TicketCard
+              v-for="ticket in filteredTickets().reverse()"
+              :key="ticket.id"
+              :ticket="ticket"
+          />
+        </div>
       </div>
     </template>
   </Section>
@@ -140,5 +154,11 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
 
 .form-container {
   margin-bottom: 1rem;
+}
+
+.ticket-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 </style>

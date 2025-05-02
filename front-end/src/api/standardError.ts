@@ -1,4 +1,4 @@
-import { useAuthStore,useUtilStore } from "@/stores" 
+import { useAuthStore,useUtilsStore } from "@/stores"
 const unauthorized = async () =>{
     const {getToken,refreshToken} = useAuthStore();
     const token = getToken()?.access;
@@ -9,11 +9,11 @@ const unauthorized = async () =>{
     }
 }
 const serverError = async () =>{
-    const {useRouter} = useUtilStore();
+    const {useRouter} = useUtilsStore();
     //useRouter().push({name:"error_500"})
 }
 const noFoundError = async () =>{
-    const {useRouter} = useUtilStore();
+    const {useRouter} = useUtilsStore();
     //useRouter().push({ name: "error_404", query: { message: "Podane żądanie nie istnieje.", code: "Błąd w żądaniu" } });
 }
 export const statusType: { [key: number]: () => void } = {

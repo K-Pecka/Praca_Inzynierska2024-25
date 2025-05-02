@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import {useTripStore} from "@/stores/trip/useTripStore";
 import {useRoute} from "vue-router";
+import {useUtilsStore} from "@/stores";
+import { images } from "@/data";
 
 useTripStore().initialize(useRoute().name as string);
 
 const {yourTrips} = useTripStore();
 const {data: trips} = yourTrips.trips()
+const {formatDatePolish} = useUtilsStore();
 
 </script>
 
@@ -42,7 +45,8 @@ const {data: trips} = yourTrips.trips()
             <!-- Image -->
             <v-col cols="12" sm="4" class="text-center pr-5">
               <v-img
-                  src="/images/backgrounds/trip-background.svg"
+                  :src="images.backgrounds.trip.img"
+                  :alt="images.backgrounds.trip.alt"
                   class="trip-image"
                   aspect-ratio="1"
                   cover
@@ -54,7 +58,7 @@ const {data: trips} = yourTrips.trips()
               <v-row class="flex-column align-center">
                 <v-card-title class="font-weight-bold pt-0">{{ trip.name }}</v-card-title>
                 <v-card-subtitle class="font-weight-medium mb-2">
-                  {{ trip.start_date }} - {{ trip.end_date }}
+                  {{ formatDatePolish(trip.start_date) }} - {{ formatDatePolish(trip.end_date) }}
                 </v-card-subtitle>
 
                 <router-link :to="{ name: 'panel', params: { tripId: trip.id } }" class="w-100 mb-1">

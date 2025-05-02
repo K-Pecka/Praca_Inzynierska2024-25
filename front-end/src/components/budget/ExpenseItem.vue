@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Expense } from "@/types";
 import AppCard from "./AppCard.vue";
-import { useUtilStore } from "@/stores";
-const { mapCategoryBudget} = useUtilStore();
+import { useUtilsStore } from "@/stores";
+const { mapCategoryBudget} = useUtilsStore();
 const props=defineProps<{
   expense: Expense;
   variant?: "manage" | "view";

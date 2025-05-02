@@ -8,7 +8,9 @@ import { Section } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
 import { useRoute } from "vue-router";
 import { Activity } from "@/types/interface";
+import {useUtilsStore} from "@/stores/utils/useUtilsStore";
 
+const { formatDatePolish } = useUtilsStore();
 const route = useRoute();
 const id = route.params.tripId as string;
 const planId = route.params.planId as string;
@@ -78,14 +80,6 @@ const activity = computed(
     }, {} as Record<string, Activity[]>)
   )
 
-const formatDatePolish = (isoDate: string) => {
-  const date = new Date(isoDate);
-  return new Intl.DateTimeFormat("pl-PL", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(date);
-};
 </script>
 
 <template>

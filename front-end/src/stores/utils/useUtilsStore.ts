@@ -3,7 +3,7 @@ import { useRoute } from "vue-router";
 import router from "@/router";
 import { computed } from "vue";
 import { budget } from "@/data/category/budget"; // Adjust the import to match the correct export
-export const useUtilStore = defineStore("utils", () => {
+export const useUtilsStore = defineStore("utils", () => {
   const route = useRoute();
   const useRouter = () => router;
   const getTripId = () => {
@@ -19,14 +19,19 @@ export const useUtilStore = defineStore("utils", () => {
     computed(() => {
       return !RouteSet.includes(route.name as string);
     });
-  const formatDate = (date: Date) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    };
-    return new Intl.DateTimeFormat("pl-PL", options).format(date);
-  };
+  function formatDatePolish(date: string | Date): string {
+    const parsed = typeof date === 'string' ? new Date(date) : date;
+
+    if (isNaN(parsed.getTime())) {
+      return 'Nieprawidłowa data';
+    }
+
+    return parsed.toLocaleDateString('pl-PL', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+  }
   const mapCategoryBudget = (categoryId: number) => {
     const category = budget.find((cat: any) => cat.id === categoryId);
     if (category) {
@@ -53,5 +58,5 @@ export const useUtilStore = defineStore("utils", () => {
     return dateTime.toISOString();
   }
   
-  return {combineDateAndTime,mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, getCurrentPath,formatDate };
+  return {combineDateAndTime,mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, getCurrentPath, formatDatePolish };
 });

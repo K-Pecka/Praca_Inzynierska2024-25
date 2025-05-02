@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { useUtilStore } from "./utils/useUtilStore";
+import { useUtilsStore } from "./utils/useUtilsStore";
 export const useTicketStore = defineStore("ticket", () => {
-    const {getTripId} = useUtilStore();
+    const {getTripId} = useUtilsStore();
    const createTicket = (file:File,data:Record<string, string>) =>{
    }
     return {createTicket}
