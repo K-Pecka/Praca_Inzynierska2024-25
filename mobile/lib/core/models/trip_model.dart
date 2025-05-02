@@ -24,7 +24,7 @@ class TripModel {
       name: json['name'],
       creatorId: json['creator'],
       members: (json['members'] as List<dynamic>)
-          .map((id) => Member(id: id, email: ''))
+          .map((m) => Member.fromJson(m))
           .toList(),
       startDate: DateTime.parse(json['start_date']),
       endDate: DateTime.parse(json['end_date']),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/features/chat/screens/private_chat_screen.dart';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/models/user_model.dart';
@@ -95,20 +96,19 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           // 🔽 Dropdown na górze ekranu
-          NewMessageDropdown(
-            participants: userParticipants,
-            trip: widget.trip,
-            currentUserId: widget.userProfileId,
-            token: AuthService.accessToken ?? '', // ✅ TO MUSI BYĆ TUTAJ
-            onChatroomCreated: (newRoom) {
-              setState(() {
-                chatrooms.insert(0, newRoom);
-              });
-            },
-          ),
+          // NewMessageDropdown(
+          //   participants: userParticipants,
+          //   trip: widget.trip,
+          //   currentUserId: widget.userProfileId,
+          //   token: AuthService.accessToken ?? '', // ✅ TO MUSI BYĆ TUTAJ
+          //   onChatroomCreated: (newRoom) {
+          //     setState(() {
+          //       chatrooms.insert(0, newRoom);
+          //     });
+          //   },
+          // ),
           const SizedBox(height: 16),
 
-          // 🔔 Kanał ogłoszeniowy
           if (announcement != null)
             ChatTile(
               label: 'Kanał ogłoszeniowy',
@@ -129,14 +129,22 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
             ),
           const SizedBox(height: 8),
 
-          // 💬 Pozostałe czaty
           for (var room in otherRooms)
             ChatTile(
               label: getChatLabel(room),
               message: room.lastMessage?.content ?? 'Brak wiadomości',
               isAnnouncement: false,
               onTap: () {
-                // TODO: Navigator.push do ChatScreen(chatroom: room)
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PrivateChatScreen(
+                      userProfileId: widget.userProfileId,
+                      trip: widget.trip,
+                      chatroomId: room.id,
+                    ),
+                  ),
+                );
               },
             ),
         ],

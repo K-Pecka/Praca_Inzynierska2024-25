@@ -7,38 +7,61 @@ import '../../../core/services/chat_service.dart';
 import 'chat_input_field.dart';
 import 'message_bubble.dart';
 
-class ChatScreen extends StatefulWidget {
-  final TripModel trip;
-  final ChatroomModel chatroom;
+class PrivateChatScreen extends StatefulWidget {
   final int userProfileId;
+  final TripModel trip;
+  final int chatroomId;
 
-  const ChatScreen({
+  const PrivateChatScreen({
     super.key,
-    required this.trip,
-    required this.chatroom,
     required this.userProfileId,
+    required this.trip,
+    required this.chatroomId,
   });
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<PrivateChatScreen> createState() => _PrivateChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _PrivateChatScreenState extends State<PrivateChatScreen> {
   List<MessageModel> _messages = [];
   bool _isLoading = true;
   final ScrollController _scrollController = ScrollController();
+  ChatroomModel? _chatroom;
+  String? _otherUserName;
 
   @override
   void initState() {
     super.initState();
-    _loadMessages();
+    _loadChat();
   }
 
-  Future<void> _loadMessages() async {
+  Future<void> _loadChat() async {
     try {
-      final messages = await ChatService.getMessages(widget.trip.id, widget.chatroom.id);
+      final chatrooms = await ChatService.getUserChatrooms(widget.trip.id);
+      final room = chatrooms.firstWhere(
+            (r) => r.id == widget.chatroomId && r.type == 'private',
+        orElse: () => throw Exception("Nie znaleziono czatu prywatnego."),
+      );
+
+      final messages = (await ChatService.getMessages(widget.trip.id, room.id)).reversed.toList();
+
+      final isCurrentUserCreator = room.creatorId == widget.userProfileId;
+
+      final other = isCurrentUserCreator
+          ? widget.trip.members.firstWhere(
+            (m) => room.memberIds.contains(m.id),
+        orElse: () => Member(id: 0, email: 'Nieznany użytkownik'),
+      )
+          : widget.trip.members.firstWhere(
+            (m) => m.id == room.creatorId,
+        orElse: () => Member(id: 0, email: 'Nieznany użytkownik'),
+      );
+
       setState(() {
-        _messages = messages.reversed.toList();
+        _chatroom = room;
+        _messages = messages;
+        _otherUserName = other.email;
         _isLoading = false;
       });
 
@@ -56,22 +79,25 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _sendMessage(String content) async {
-    await ChatService.sendMessage(widget.trip.id, widget.chatroom.id, content);
-    _loadMessages();
+    if (_chatroom == null) return;
+    await ChatService.sendMessage(widget.trip.id, _chatroom!.id, content);
+    _loadChat();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.chatroom.name)),
+      appBar: AppBar(
+        title: Text(_otherUserName ?? 'Czat prywatny'),
+      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(
         children: [
           Expanded(
             child: ListView.separated(
-              padding: const EdgeInsets.all(16),
               controller: _scrollController,
+              padding: const EdgeInsets.all(16),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final msg = _messages[index];
