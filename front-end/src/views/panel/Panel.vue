@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import {ref, onMounted, onUnmounted} from "vue";
 import {PanelNavbar, SideNav} from "@/components";
-import {usePageHomeStore, useUtilStore} from "@/stores";
-import {useMockupStore} from "@/mockup/useMockupStore";
+import {usePageHomeStore, useUtilStore, useAuthStore} from "@/stores";
 import { images } from "@/data";
 
 const useStore = usePageHomeStore();
@@ -10,9 +9,9 @@ const SiteName = useStore.getSiteName();
 
 const logoText = ref(SiteName);
 
-const {getUserInitials} = useMockupStore();
+const authStore = useAuthStore();
 
-const userInitials = getUserInitials();
+const userInitials = authStore.getUserInitials();
 
 const {isCurrentRouteNotInSet} = useUtilStore();
 const showNavigation = isCurrentRouteNotInSet([

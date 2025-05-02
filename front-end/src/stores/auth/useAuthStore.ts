@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
 import {useMutation} from "@tanstack/vue-query";
-import {useNotificationStore} from "../ui/useNotificationStore";
+import {useNotificationStore} from "@/stores/ui/useNotificationStore";
 import router from "@/router";
 import {TOKEN} from "@/types";
 import {usePermissionStore} from "@/stores";
@@ -13,7 +13,6 @@ import {
     fetchLogOut,
     fetchPermission,
 } from "@/api/endpoints/auth";
-import { useMockupStore } from '@/mockup/useMockupStore';
 
 export const useAuthStore = defineStore(
     "auth",
@@ -36,7 +35,7 @@ export const useAuthStore = defineStore(
             name: string | undefined,
             type: "nav" | "path" = "nav"
         ) => {
-            const userPermission = (await getPermission.mutateAsync()) || [];
+            const userPermission = (await getPermission.mutateAsync()) as number[] || [];
             return hasPermission(userPermission, name, type);
         };
         const validToken = async (): Promise<boolean> => {
@@ -140,16 +139,16 @@ export const useAuthStore = defineStore(
             },
         });
 
-        const { updateProfileMockUp } = useMockupStore();
-
         const updateProfileMutation = useMutation({
             mutationFn: async (dto: {
                 first_name?: string; last_name?: string;
                 current_password?: string; new_password?: string;
             }) => {
-                const res = updateProfileMockUp(dto);
-                if ((res as any).error) throw new Error((res as any).message);
-                return res;
+
+                return {
+                    first_name: dto.first_name || user.value?.first_name || '',
+                    last_name: dto.last_name || user.value?.last_name || ''
+                };
             },
             onSuccess: ({first_name, last_name}) => {
                 if (first_name && last_name) {
@@ -160,8 +159,16 @@ export const useAuthStore = defineStore(
             onError: (err: any) =>
                 setErrorCurrentMessage(err?.message || unexpectedError()),
         });
+        const getUserInitials = () => {
+            if (!user.value) return "UK";
+            const firstInitial = user.value.first_name ? user.value.first_name[0] : "";
+            const lastInitial = user.value.last_name ? user.value.last_name[0] : "";
+            return (firstInitial + lastInitial).toUpperCase() || "UK";
+        };
+
         return {
             token,
+            user,
             loginMutation,
             registerMutation,
             saveToken,
@@ -172,6 +179,7 @@ export const useAuthStore = defineStore(
             refreshToken,
             checkPermission,
             updateProfileMutation,
+            getUserInitials,
         };
     },
     {

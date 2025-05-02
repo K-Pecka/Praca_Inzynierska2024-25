@@ -1,12 +1,12 @@
 <script setup lang="ts">
   import { images } from "@/data";
-  import { useMockupStore } from "@/mockup/useMockupStore";
   import { usePanelStore} from "@/stores/panel/usePanelStore";
+  import { useAuthStore } from "@/stores";
 
   const panelStore = usePanelStore();
+  const authStore = useAuthStore();
 
-  const { getUserInitials } = useMockupStore();
-  const userInitials = getUserInitials();
+  const userInitials = authStore.getUserInitials();
 
 </script>
 
