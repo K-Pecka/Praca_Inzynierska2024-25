@@ -8,6 +8,7 @@ import 'package:web_socket_channel/status.dart' as status;
 import '../../../core/models/chat_message_model.dart';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
+import '../../../core/services/auth_service.dart';
 import '../../../core/services/chat_service.dart';
 import 'chat_input_field.dart';
 import 'message_bubble.dart';
@@ -44,7 +45,8 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
   }
 
   void _connectWebSocket() {
-    final uri = Uri.parse('wss://api.plannder.com/ws/chat/${widget.chatroomId}/');
+    final token = AuthService.accessToken;
+    final uri = Uri.parse('wss://api.plannder.com/ws/chat/${widget.chatroomId}/?token=$token');
     _channel = WebSocketChannel.connect(uri);
 
     print('🔌 Połączono z WebSocket: $uri');
