@@ -94,14 +94,19 @@ class Message(BaseModel):
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_id = self.scope['url_route']['kwargs']['room_id']
-        self.room_group_name = f"chat_{self.room_id}"
+        print("[WS CONNECT] START")
+        print("SCOPE USER:", self.scope.get("user"))
+
+        self.room_name = self.scope["url_route"]["kwargs"]["room_id"]
+        self.room_group_name = f"chat_{self.room_name}"
 
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
         await self.accept()
+
+        print("[WS CONNECT] ACCEPTED")
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
