@@ -26,7 +26,6 @@ CHANNEL_LAYERS = {
         "CONFIG": {
             "hosts": [{
                 "address": os.environ.get("REDIS_URL", "redis://127.0.0.1:6379"),
-                "ssl": True,
                 "ssl_cert_reqs": ssl.CERT_NONE,
             }],
         },
