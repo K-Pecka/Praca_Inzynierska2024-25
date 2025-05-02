@@ -37,14 +37,18 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+@use "@/assets/styles/variables" as *;
+
 .bg-app {
   background-color: rgb(var(--v-theme-background));
 }
 .application--wrap{
-  
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.text-primary {
+ color: $primary-color
 }
 </style>

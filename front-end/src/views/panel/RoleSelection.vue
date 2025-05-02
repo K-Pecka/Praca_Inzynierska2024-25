@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <v-col cols="12" md="8" xl="8" class="role-selection">
+  <v-col cols="12" md="8" xl="8" class="role-selection mx-auto">
     <v-row class="flex-column">
       <span class="text-center font-weight-bold pb-4 text-h4">{{ getRoleSelection.title }}</span>
       <span class="text-center text-h5">{{ getRoleSelection.subtitle }}</span>
@@ -53,7 +53,7 @@
 }
 
 .choose-profile-button {
-  background-color: $button-background-secondary;
+  background-color: $background-secondary;
 }
 
 .role-title {

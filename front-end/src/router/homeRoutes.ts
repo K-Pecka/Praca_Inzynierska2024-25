@@ -1,5 +1,7 @@
 import type { RouteRecordRaw } from "vue-router";
 import { Home, Landing, PricingSection, ContactUs } from "@/views/home";
+import { AccountSettings } from "@/views/account";
+import { TripForm } from "@/views/panel";
 import { Error_500,Error_404 } from "@/views/unexpected";
 import {LogIn, Register, RoleSelection as roleSelection} from "@/views";
 
@@ -26,11 +28,6 @@ const homeRoutes: RouteRecordRaw[] = [
         component: () => import("@/views/home/children/AboutUs.vue"),
       },
       {
-        path: "/role-selection",
-        name: "roleSelection",
-        component: roleSelection
-      },
-      {
         path: "/contact-us",
         name: "contactUs",
         component: ContactUs,
@@ -46,6 +43,16 @@ const homeRoutes: RouteRecordRaw[] = [
         name: "register",
         component: Register,
         meta: { goBack: true, title: "Rejestracja" },
+      },
+      {
+        path: "trip/create",
+        name: "createTrip",
+        component: TripForm
+      },
+      {
+        path: "settings",
+        name: "AccountSettings",
+        component: AccountSettings
       }
     ]
   },

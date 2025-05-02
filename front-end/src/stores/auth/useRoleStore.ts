@@ -7,7 +7,6 @@ export const useRoleStore = defineStore('roleStore', () => {
 
   const setRole = (newRole: string) => {
     let roleValue:Role = Role.UNKNOWN;
-    console.warn("setRole",newRole);
     if (newRole.toLowerCase().includes(Role.GUIDE.toLowerCase())){
         roleValue = Role.GUIDE;
     }

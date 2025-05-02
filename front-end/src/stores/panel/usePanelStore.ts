@@ -4,7 +4,7 @@ import { ref, shallowRef } from "vue";
 export const usePanelStore = defineStore("panel", () => {
     const items = ref([
         { title: 'Ustawienia konta', to: "AccountSettings" },
-        { title: 'Wybór roli', to: "panel" },
+        { title: 'Wybór roli', to: "home" },
     ]);
 
     let currentPage = shallowRef();

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { usePanelStore } from "@/stores/panel/usePanelStore";
+  import { useRouter } from "vue-router";
   import {
     BudgetForm,
     ExpenseTracker,
@@ -13,36 +14,38 @@
 
   import { shallowRef } from "vue";
 
+  const router = useRouter();
+
   const side_nav_items = shallowRef([
     {
       title: 'Panel',
-      page: TripDashboard,
+      page: { name: 'tripDashboard'},
       icon: 'mdi-home-outline'
     },
     {
       title: 'Plany',
       icon: 'mdi-note-text-outline',
       children: [
-        { title: 'Utworzone', page: YourPlan },
-        { title: 'Dodaj', page: PlanForm },
+        { title: 'Utworzone', page: { name: 'tripPlans'} },
+        { title: 'Dodaj', page: { name: 'createPlan'} },
       ]
     },
     {
       title: 'Bilety',
-      page: TicketsView,
+      page: { name: 'yourTickets'},
       icon: 'mdi-ticket-confirmation-outline'
     },
     {
       title: 'Budżet',
       icon: 'mdi-currency-usd',
       children: [
-        { title: 'Pokaż', page: ExpenseTracker },
-        { title: 'Zmień budżet', page: BudgetForm },
+        { title: 'Pokaż', page: { name: 'ExpenseTracker'} },
+        { title: 'Zmień budżet', page: { name: 'editBudget'} },
       ]
     },
     {
       title: 'Uczestnicy',
-      page: ParticipantsView,
+      page: { name: 'tripParticipants'},
       icon: 'mdi-account-multiple-outline'
     },
     {
@@ -51,7 +54,7 @@
       children: [
         {
           title: 'Edycja wycieczki',
-          page: TripEditForm,
+          page: { name: 'editTrip'},
         }
       ]
     },
@@ -86,7 +89,7 @@
             :key="subItem.title"
             :title="subItem.title"
             :active="panelStore.currentPage === subItem.page"
-            @click="panelStore.loadPage(subItem.page)"
+            @click="router.push(subItem.page)"
             slim
             class="pl-6"
           />
@@ -98,7 +101,7 @@
           :title="item.title"
           :prepend-icon="item.icon"
           :active="panelStore.currentPage === item.page"
-          @click="panelStore.loadPage(item.page)"
+          @click="router.push(item.page)"
           slim
           class="pl-3"
         />

@@ -11,43 +11,45 @@
 </script>
 
 <template>
-  <v-app-bar class="header" flat>
+  <v-container min-height="150px">
+    <v-app-bar class="header" flat>
 
-    <!-- Logo -->
-    <router-link to="/" class="ml-3">
-      <v-img class="ml-3" aspect-ratio="16/9" width="10%" min-width="120px" cover :src="images.logo.img" />
-    </router-link>
+      <!-- Logo -->
+      <router-link to="/" class="ml-3">
+        <v-img class="ml-3" aspect-ratio="16/9" width="10%" min-width="120px" cover :src="images.logo.img" />
+      </router-link>
 
-    <!-- Nav -->
-    <template v-slot:append>
-      <v-menu>
-        <template v-slot:activator="{ props }">
-          <div v-bind="props" class="account-menu-trigger">
-            <v-avatar color="red">
-              <span class="text-h5">{{ userInitials }}</span>
-            </v-avatar>
-            <span class="ml-2 account-text">Moje Konto</span>
-            <v-icon class="ml-1">mdi-chevron-down</v-icon>
-          </div>
-        </template>
+      <!-- Nav -->
+      <template v-slot:append>
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <div v-bind="props" class="account-menu-trigger">
+              <v-avatar color="red">
+                <span class="text-h5">{{ userInitials }}</span>
+              </v-avatar>
+              <span class="ml-2 account-text">Moje Konto</span>
+              <v-icon class="ml-1">mdi-chevron-down</v-icon>
+            </div>
+          </template>
 
-        <!-- Dropdown Menu -->
-        <v-list>
-          <router-link
-            v-for="(item, i) in panelStore.items"
-            :key="i"
-            :to="{ name: item.to}"
-            custom
-            v-slot="{ navigate }"
-          >
-            <v-list-item @click="panelStore.handleClick(navigate)">
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
-          </router-link>
-        </v-list>
-      </v-menu>
-    </template>
-  </v-app-bar>
+          <!-- Dropdown Menu -->
+          <v-list>
+            <router-link
+              v-for="(item, i) in panelStore.items"
+              :key="i"
+              :to="{ name: item.to}"
+              custom
+              v-slot="{ navigate }"
+            >
+              <v-list-item @click="panelStore.handleClick(navigate)">
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </router-link>
+          </v-list>
+        </v-menu>
+      </template>
+    </v-app-bar>
+  </v-container>
 </template>
 
 <style scoped lang="scss">

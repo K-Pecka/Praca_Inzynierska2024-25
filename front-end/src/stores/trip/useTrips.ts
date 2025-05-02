@@ -39,7 +39,7 @@ export const useTrips = () => {
     const yourTrips = computed(() => ({
         btn: getBtn({
           filter: (el: Btn) => el.type == TypeOfButton.TRIP,
-          btnPath: getRole() === Role.TURIST ? "Dashboard" : "tripDashboardGuide",
+          btnPath: getRole() === Role.TURIST ? "tripDashboard" : "tripDashboardGuide",
           handleDeleteTrip: (id: string) => deleteTripMutation.mutateAsync({ tripId: id }).catch(() => {}),
         }),
         trips: getTrips,

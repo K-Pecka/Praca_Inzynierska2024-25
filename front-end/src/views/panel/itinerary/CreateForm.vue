@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue";
-import {Section,Form} from "@/components";
+import { Section, Form } from "@/components";
 import { useFormStore,useTripStore } from "@/stores";
 import { FormType } from "@/types/enum";
 import { useRoute } from "vue-router";
@@ -26,7 +26,6 @@ watch(trip,() => {
         max: trip.value?.end_date
       };
     }
-    console.log(tripDatesInput)
   }
 });
 

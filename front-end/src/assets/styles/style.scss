@@ -10,35 +10,16 @@
   max-width: 2560px;
   padding: 0;
 }
+
 .trip-title{
   font-size: 30px; 
   font-weight: 600; 
   width: 80%;
 }
+
 * {
   box-sizing: border-box;
   font-family: var(--v-fontFamily) !important;
-}
-
-h2{
-  font-weight: 700;
-  font-size: 2rem;
-}
-
-h3{
-  font-weight: 700;
-  font-size: 3rem;
-}
-
-h1{
-  font-size: 2rem;
-  color: rgb(var(--v-theme-primary));
-}
-
-@media (max-width: 600px) {
-  h1{
-    font-size: 2rem;
-  }
 }
 
 @mixin font-large {
@@ -101,16 +82,9 @@ input{
 a{
   text-decoration: none;
 }
-.v-application__wrap{
-  justify-content: space-between;
-}
 body {
   background-color: rgb(var(--v-theme-background));
 }
 body .v-card-title{
   padding: 1rem 0;
-}
-
-.text-black-70 {
-  color: rgba(0, 0, 0, 0.7);
 }

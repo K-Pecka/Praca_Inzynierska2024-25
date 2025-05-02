@@ -53,11 +53,11 @@
 }
 
 .middle-card-color {
-  background-color: $button-background-primary;
+  background-color: $background-primary;
   color: white;
 }
 
 .default-card-color {
-  background-color: $button-background-secondary;
+  background-color: $background-secondary;
 }
 </style>

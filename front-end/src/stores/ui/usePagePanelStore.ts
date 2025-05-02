@@ -15,7 +15,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
                 title: "Turysta",
                 description: "Planowanie indywidualnych podróży dla siebie i rodziny",
                 image: images.role.tourist,
-                path:{name:"yourTrip"}
+                path:{name:"Dashboard"}
             },
             {
                 title: "Przewodnik",

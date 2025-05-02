@@ -2,15 +2,17 @@ import type { RouteRecordRaw } from "vue-router";
 
 import {
   YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm,
-  PlanForm, BudgetForm, TripDashboard, YourTrip
+  PlanForm, BudgetForm, TripDashboard, YourTrip, ActivityView
 } from "@/views/panel";
 
-import Dashboard from "@/layouts/PanelLayout.vue";
+import PanelLayout from "@/layouts/PanelLayout.vue";
 
 const panelRoutes: RouteRecordRaw = {
-  path: "/panel",
-  component: Dashboard,
+  path: "/panel/:tripId",
+  component: PanelLayout,
+  name: "panel",
   meta: { title: "Panel", requiresAuth: true },
+  props: true,
   children: [
     {
       path: "",
@@ -56,7 +58,12 @@ const panelRoutes: RouteRecordRaw = {
       path: "trip",
       name: "yourTrip",
       component: YourTrip
-    }
+    },
+    {
+      path: "trip/:tripId/plan/:planId/activity",
+      name: "ActivityView",
+      component: ActivityView
+    },
   ]
 }
 

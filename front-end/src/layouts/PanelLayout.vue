@@ -17,7 +17,7 @@ const panelStore = usePanelStore();
 
   <!-- Main Content -->
   <v-col cols="12">
-    <component :is="panelStore.currentPage" class="component-section" />
+    <router-view class="component-section" />
   </v-col>
 </template>
 
