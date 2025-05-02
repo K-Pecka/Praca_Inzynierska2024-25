@@ -3,9 +3,8 @@ from pathlib import Path
 import os
 
 from dotenv import load_dotenv
-
+import urllib.parse as urlparse
 from datetime import timedelta
-
 
 load_dotenv()
 
@@ -15,11 +14,15 @@ ASGI_APPLICATION = "server.asgi.application"
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+url = urlparse.urlparse(redis_url)
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("redis://localhost:6379/0")],
+            "hosts": [(url.hostname, url.port)],
+            "password": url.password,
         },
     },
 }
@@ -50,13 +53,13 @@ OWN_ADDITIONAL_APPS = [
 ]
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-] + INSTALLED_ADDITIONAL_APPS + OWN_ADDITIONAL_APPS
+                     'django.contrib.admin',
+                     'django.contrib.auth',
+                     'django.contrib.contenttypes',
+                     'django.contrib.sessions',
+                     'django.contrib.messages',
+                     'django.contrib.staticfiles',
+                 ] + INSTALLED_ADDITIONAL_APPS + OWN_ADDITIONAL_APPS
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -210,7 +213,6 @@ STATICFILES_DIRS = [
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-
 # Media settings
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -220,5 +222,3 @@ CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://plannder.
 CSRF_TRUSTED_ORIGINS = [
     "https://api.plannder.com"
 ]
-
-
