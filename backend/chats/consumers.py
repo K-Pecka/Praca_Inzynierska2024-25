@@ -1,4 +1,6 @@
 import json
+import traceback
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 from .models import Message, Chatroom
 from asgiref.sync import sync_to_async
@@ -10,7 +12,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_group_name = f"chat_{self.room_name}"
 
         user = self.scope.get("user")
-        if user is None or user.is_anonymous:
+        if not user or user.is_anonymous:
+            print("❌ Użytkownik nieautoryzowany – rozłączam.")
             await self.close()
             return
 
@@ -19,41 +22,60 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
+        print(f"✅ WebSocket połączony z room_id={self.room_name}, user_id={user.id}")
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
+        print(f"🔌 WebSocket rozłączony (code {close_code})")
 
     async def receive(self, text_data):
-        data = json.loads(text_data)
-        message = data["content"]
-        user = self.scope["user"]
+        try:
+            data = json.loads(text_data)
+            message = data.get("content")
+            user = self.scope["user"]
 
-        if user.is_anonymous:
+            if user.is_anonymous:
+                print("❌ Odebrano wiadomość od anonimowego użytkownika.")
+                await self.close()
+                return
+
+            if not message:
+                print("⚠️ Odebrano pustą wiadomość – pomijam.")
+                return
+
+            msg = await self.save_message(user.profile, int(self.room_name), message)
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "chat_message",
+                    "id": msg.id,
+                    "message": msg.content,
+                    "sender_id": msg.profile.id,
+                    "created": msg.created.isoformat(),
+                }
+            )
+            print(f"📤 Wiadomość zapisana i wysłana: {msg.content}")
+
+        except Exception as e:
+            print("❌ Błąd w receive():", str(e))
+            traceback.print_exc()
             await self.close()
-            return
-
-        # Zapisz wiadomość
-        await self.save_message(user.profile, int(self.room_name), message)
-
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                "type": "chat_message",
-                "message": message,
-                "sender_id": user.profile.id,
-                "created": self.get_now(),
-            }
-        )
 
     async def chat_message(self, event):
-        await self.send(text_data=json.dumps({
-            "content": event["message"],
-            "sender_id": event["sender_id"],
-            "created": event["created"],
-        }))
+        try:
+            await self.send(text_data=json.dumps({
+                "id": event["id"],
+                "content": event["message"],
+                "sender_id": event["sender_id"],
+                "created": event["created"],
+            }))
+        except Exception as e:
+            print("❌ Błąd w chat_message():", str(e))
+            traceback.print_exc()
 
     @sync_to_async
     def save_message(self, profile, room_id, content):
@@ -63,7 +85,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
             chatroom=room,
             content=content
         )
-
-    def get_now(self):
-        from django.utils.timezone import now
-        return now().isoformat()
