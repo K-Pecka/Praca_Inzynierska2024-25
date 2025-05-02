@@ -46,10 +46,15 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
 
   void _connectWebSocket() {
     final token = AuthService.accessToken;
-    final uri = Uri.parse('wss://api.plannder.com/ws/chat/${widget.chatroomId}/?token=$token');
-    _channel = WebSocketChannel.connect(uri);
+    if (token == null) {
+      print('❌ Brak tokena – nie łączę z WebSocketem.');
+      return;
+    }
 
-    print('🔌 Połączono z WebSocket: $uri');
+    final uri = Uri.parse('wss://api.plannder.com/ws/chat/${widget.chatroomId}/?token=$token');
+    print('🔌 URI WebSocket: $uri');
+
+    _channel = WebSocketChannel.connect(uri); // <- najpierw połącz
 
     _channel!.stream.listen(
           (data) {
