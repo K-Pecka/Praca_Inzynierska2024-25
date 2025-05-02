@@ -54,7 +54,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
     final uri = Uri.parse('wss://api.plannder.com/ws/chat/${widget.chatroomId}/?token=$token');
     print('🔌 URI WebSocket: $uri');
 
-    _channel = WebSocketChannel.connect(uri); // <- najpierw połącz
+    _channel = WebSocketChannel.connect(uri);
 
     _channel!.stream.listen(
           (data) {
