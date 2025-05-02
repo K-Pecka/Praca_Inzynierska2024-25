@@ -5,6 +5,7 @@ import '../../../core/models/user_model.dart';
 import '../../../core/services/chat_service.dart';
 import '../widgets/new_message_dropdown.dart';
 import 'announcement_channel_screen.dart';
+import '../../../core/services/auth_service.dart';
 
 class ChatOverviewScreen extends StatefulWidget {
   final TripModel trip;
@@ -98,7 +99,7 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
             participants: userParticipants,
             trip: widget.trip,
             currentUserId: widget.userProfileId,
-            token: '', // ← TODO: dodaj token z autoryzacji
+            token: AuthService.accessToken ?? '', // ✅ TO MUSI BYĆ TUTAJ
             onChatroomCreated: (newRoom) {
               setState(() {
                 chatrooms.insert(0, newRoom);

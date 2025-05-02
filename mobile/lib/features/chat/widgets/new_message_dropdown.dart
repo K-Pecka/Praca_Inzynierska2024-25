@@ -6,7 +6,7 @@ import 'dart:convert';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/models/user_model.dart';
-import '../screens/chat_screen.dart'; // ✅ import ChatScreen
+import '../screens/chat_screen.dart';
 
 class NewMessageDropdown extends StatelessWidget {
   final List<UserModel> participants;
@@ -35,21 +35,32 @@ class NewMessageDropdown extends StatelessWidget {
         if (selectedUser == null) return;
 
         final url = Uri.parse('https://api.plannder.com/chatroom/create_or_get/');
+        final payload = {
+          "trip_id": trip.id,
+          "creator_id": currentUserId,
+          "receiver_id": selectedUser.id,
+        };
+
+        print("➡️ Tworzenie czatu z payloadem:");
+        print(payload);
+        print("➡️ Token: $token");
+
         final response = await http.post(
           url,
           headers: {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
           },
-          body: jsonEncode({
-            "trip_id": trip.id,
-            "creator_id": currentUserId,
-            "receiver_id": selectedUser.id,
-          }),
+          body: jsonEncode(payload),
         );
+
+        print("⬅️ Response status: ${response.statusCode}");
+        print("⬅️ Response body: ${response.body}");
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           final data = jsonDecode(response.body);
+          print("✅ Chatroom utworzony: $data");
+
           final chatroom = ChatroomModel.fromJson(data);
 
           if (onChatroomCreated != null) {
@@ -68,7 +79,7 @@ class NewMessageDropdown extends StatelessWidget {
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Nie udało się utworzyć czatu")),
+            SnackBar(content: Text("❌ Błąd tworzenia czatu: ${response.body}")),
           );
         }
       },
