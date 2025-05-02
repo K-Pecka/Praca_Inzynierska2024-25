@@ -48,7 +48,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     "id": msg.id,
                     "message": msg.content,
                     "sender_id": profile.id,
-                    "created": msg.created.isoformat(),
+                    "created": msg.created_at.isoformat(),
                 }
             )
         except Exception as e:
