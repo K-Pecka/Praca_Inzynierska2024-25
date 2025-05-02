@@ -13,6 +13,8 @@ from rest_framework import status
 from users.models import UserProfile
 from trips.models import Trip
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 @extend_schema(tags=['chat_room'])
@@ -56,6 +58,7 @@ class ChatroomDestroyAPIView(DestroyAPIView):
 
 
 @extend_schema(tags=['chat_room'])
+@method_decorator(csrf_exempt, name='dispatch')
 class ChatroomCreateOrGetAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
