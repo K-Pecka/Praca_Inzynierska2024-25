@@ -22,6 +22,18 @@ class TicketRetrieveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant, IsTicketOwner]
     serializer_class = TicketRetrieveSerializer
 
+@extend_schema(tags=['ticket'])
+class TicketListByTripAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated, IsTripParticipant]
+    serializer_class = TicketListSerializer
+
+    def get_queryset(self):
+        trip_id = self.kwargs['trip_id']
+        return (Ticket.objects
+            .by_trip_and_profile(trip_id)
+            .select_related('profile', 'trip')
+        )
+
 
 @extend_schema(tags=['ticket'])
 class TicketListAPIView(ListAPIView):
