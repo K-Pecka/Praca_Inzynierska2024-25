@@ -23,8 +23,9 @@ CHANNEL_LAYERS = {
         "CONFIG": {
             "hosts": [{
                 "host": url.hostname,
-                "port": url.port or 6379,
+                "port": url.port,
                 "password": url.password,
+                "ssl": True,
             }],
         },
     },
