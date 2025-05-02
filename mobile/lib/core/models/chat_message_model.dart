@@ -14,8 +14,8 @@ class MessageModel {
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
       id: json['id'],
-      content: json['content'],
-      senderId: json['profile'],
+      content: json['message'] ?? json['content'],
+      senderId: json['sender_id'] ?? json['profile'],
       created: json['created'],
     );
   }
