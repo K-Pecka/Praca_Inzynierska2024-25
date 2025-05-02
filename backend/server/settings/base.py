@@ -17,14 +17,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 url = urlparse.urlparse(redis_url)
 
-from redis.asyncio.connection import SSLConnection
+import os
+import ssl
 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [os.environ.get("REDIS_URL", "redis://127.0.0.1:6379")],
-            "ssl_cert_reqs": None,
+            "hosts": [{
+                "address": os.environ.get("REDIS_URL", "redis://127.0.0.1:6379"),
+                "ssl": True,
+                "ssl_cert_reqs": ssl.CERT_NONE,
+            }],
         },
     },
 }
