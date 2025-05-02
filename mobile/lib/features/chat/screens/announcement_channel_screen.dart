@@ -6,6 +6,19 @@ import '../../../core/services/chat_service.dart';
 import 'message_bubble.dart';
 import 'chat_input_field.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
+
+import '../../../core/models/chat_message_model.dart';
+import '../../../core/models/chatroom_model.dart';
+import '../../../core/models/trip_model.dart';
+import '../../../core/services/chat_service.dart';
+import 'chat_input_field.dart';
+import 'message_bubble.dart';
+
 class AnnouncementChannelScreen extends StatefulWidget {
   final int userProfileId;
   final int profileType;
@@ -27,11 +40,25 @@ class _AnnouncementChannelScreenState extends State<AnnouncementChannelScreen> {
   List<MessageModel> _messages = [];
   bool _isLoading = true;
   final ScrollController _scrollController = ScrollController();
+  WebSocketChannel? _channel;
 
   @override
   void initState() {
     super.initState();
     _loadAnnouncementChannel();
+  }
+
+  void _connectWebSocket(int roomId) {
+    final uri = Uri.parse('wss://api.plannder.com/ws/chat/$roomId/');
+    _channel = WebSocketChannel.connect(uri);
+
+    _channel!.stream.listen((data) {
+      final msg = MessageModel.fromJson(jsonDecode(data));
+      setState(() {
+        _messages.add(msg);
+      });
+      _scrollToBottom();
+    });
   }
 
   Future<void> _loadAnnouncementChannel() async {
@@ -49,11 +76,9 @@ class _AnnouncementChannelScreenState extends State<AnnouncementChannelScreen> {
         _isLoading = false;
       });
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scrollController.hasClients) {
-          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-        }
-      });
+      _connectWebSocket(room.id);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
     } catch (e) {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -62,10 +87,22 @@ class _AnnouncementChannelScreenState extends State<AnnouncementChannelScreen> {
     }
   }
 
-  Future<void> _sendMessage(String content) async {
-    if (_announcementRoom == null) return;
-    await ChatService.sendMessage(widget.trip.id, _announcementRoom!.id, content);
-    _loadAnnouncementChannel();
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
+  }
+
+  void _sendMessage(String content) {
+    if (_channel != null) {
+      _channel!.sink.add(jsonEncode({'content': content}));
+    }
+  }
+
+  @override
+  void dispose() {
+    _channel?.sink.close(status.goingAway);
+    super.dispose();
   }
 
   @override
@@ -78,6 +115,7 @@ class _AnnouncementChannelScreenState extends State<AnnouncementChannelScreen> {
         children: [
           Expanded(
             child: ListView.separated(
+              controller: _scrollController,
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length,
               itemBuilder: (context, index) {

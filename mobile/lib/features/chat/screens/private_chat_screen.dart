@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
+
 import '../../../core/models/chat_message_model.dart';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
@@ -29,11 +34,41 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
   final ScrollController _scrollController = ScrollController();
   ChatroomModel? _chatroom;
   String? _otherUserName;
+  WebSocketChannel? _channel;
 
   @override
   void initState() {
     super.initState();
     _loadChat();
+    _connectWebSocket();
+  }
+
+  void _connectWebSocket() {
+    final uri = Uri(
+      scheme: 'wss',
+      host: 'api.plannder.com',
+      path: '/ws/chat/${widget.chatroomId}/',
+    );
+    _channel = WebSocketChannel.connect(uri);
+
+    print('🔌 Połączono z WebSocket: $uri');
+
+    _channel!.stream.listen(
+          (data) {
+        print('📥 Odebrano wiadomość: $data');
+        final msg = MessageModel.fromJson(jsonDecode(data));
+        setState(() {
+          _messages.add(msg);
+        });
+        _scrollToBottom();
+      },
+      onError: (error) {
+        print('❌ Błąd WebSocket: $error');
+      },
+      onDone: () {
+        print('🔌 WebSocket zamknięty.');
+      },
+    );
   }
 
   Future<void> _loadChat() async {
@@ -47,7 +82,6 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
       final messages = (await ChatService.getMessages(widget.trip.id, room.id)).reversed.toList();
 
       final isCurrentUserCreator = room.creatorId == widget.userProfileId;
-
       final otherId = isCurrentUserCreator
           ? (room.memberIds.isNotEmpty ? room.memberIds.first : null)
           : room.creatorId;
@@ -75,11 +109,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
         _isLoading = false;
       });
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scrollController.hasClients) {
-          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-        }
-      });
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
     } catch (e) {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -88,10 +118,26 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
     }
   }
 
-  Future<void> _sendMessage(String content) async {
-    if (_chatroom == null) return;
-    await ChatService.sendMessage(widget.trip.id, _chatroom!.id, content);
-    _loadChat();
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
+  }
+
+  void _sendMessage(String content) {
+    if (_channel != null) {
+      final message = jsonEncode({'content': content});
+      print('📤 Wysyłam wiadomość: $message');
+      _channel!.sink.add(message);
+    } else {
+      print('⚠️ WebSocket channel jest null!');
+    }
+  }
+
+  @override
+  void dispose() {
+    _channel?.sink.close(status.goingAway);
+    super.dispose();
   }
 
   @override

@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:web_socket_channel/web_socket_channel.dart';
+
 import '../models/chat_message_model.dart';
 import '../models/chatroom_model.dart';
-import '../../core/services/auth_service.dart';
-
-import 'package:flutter/foundation.dart';
 import '../models/trip_model.dart';
+import 'auth_service.dart';
 
 class ChatService {
   static const String baseUrl = 'https://api.plannder.com';
+  static const String wsBaseUrl = 'wss://api.plannder.com/ws/chat';
+
+  static WebSocketChannel? _channel;
 
   static Future<List<ChatroomModel>> getUserChatrooms(int tripId) async {
     final url = Uri.parse('$baseUrl/trip/$tripId/chat/chatroom/all/');
@@ -43,18 +46,27 @@ class ChatService {
     }
   }
 
-  static Future<void> sendMessage(int tripId, int chatroomId, String text) async {
-    final url = Uri.parse('$baseUrl/trip/$tripId/chat/$chatroomId/chat-message/create/');
-    final response = await http.post(url,
-      headers: {
-        'Authorization': 'Bearer ${AuthService.accessToken}',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({'content': text}),
-    );
+  static void connectToWebSocket(int chatroomId, Function(String) onMessageReceived) {
+    final uri = Uri.parse('$wsBaseUrl/$chatroomId/');
+    _channel = WebSocketChannel.connect(uri);
 
-    if (response.statusCode != 201) {
-      throw Exception("Nie udało się wysłać wiadomości: ${response.body}");
+    _channel!.stream.listen(
+          (message) => onMessageReceived(message),
+      onError: (error) => debugPrint('❌ WebSocket error: $error'),
+      onDone: () => debugPrint('🛑 WebSocket connection closed.'),
+    );
+  }
+
+  static void disconnectWebSocket() {
+    _channel?.sink.close();
+    _channel = null;
+  }
+
+  static void sendWebSocketMessage(String content) {
+    if (_channel != null) {
+      _channel!.sink.add(jsonEncode({"content": content}));
+    } else {
+      debugPrint('⚠️ WebSocket channel is not connected.');
     }
   }
 
