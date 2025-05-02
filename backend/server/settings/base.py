@@ -17,13 +17,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
 url = urlparse.urlparse(redis_url)
 
-import os
-import ssl
-
-ssl_context = ssl.create_default_context()
-ssl_context.check_hostname = False
-ssl_context.verify_mode = ssl.CERT_NONE
-
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
