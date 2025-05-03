@@ -3,9 +3,10 @@ class TicketModel {
   final String name;
   final String file;
   final int type;
-  final int profile;
-  final String validFromDate;
-  final String validFromTime;
+  final int owner;
+  final List<int> profiles;
+  final String? validFromDate;
+  final String? validFromTime;
   final int trip;
 
   TicketModel({
@@ -13,9 +14,10 @@ class TicketModel {
     required this.name,
     required this.file,
     required this.type,
-    required this.profile,
-    required this.validFromDate,
-    required this.validFromTime,
+    required this.owner,
+    required this.profiles,
+    this.validFromDate,
+    this.validFromTime,
     required this.trip,
   });
 
@@ -25,7 +27,8 @@ class TicketModel {
       name: json['name'],
       file: json['file'],
       type: json['type'],
-      profile: json['profile'],
+      owner: json['owner'],
+      profiles: List<int>.from(json['profiles'] ?? []),
       validFromDate: json['valid_from_date'],
       validFromTime: json['valid_from_time'],
       trip: json['trip'],

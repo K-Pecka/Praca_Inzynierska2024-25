@@ -7,7 +7,7 @@ class TicketService {
   static final String _baseUrl = 'https://api.plannder.com';
 
   static Future<List<TicketModel>> getTicketsByTrip(int tripId) async {
-    final url = Uri.parse('$_baseUrl/trip/ticket/all/by-trip/$tripId/');
+    final url = Uri.parse('$_baseUrl/trip/$tripId/ticket/all/');
 
     final response = await http.get(
       url,
