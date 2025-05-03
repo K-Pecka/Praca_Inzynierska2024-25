@@ -10,6 +10,7 @@ import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/services/chat_service.dart';
+import '../../../core/theme/text_styles.dart';
 import 'chat_input_field.dart';
 import 'message_bubble.dart';
 
@@ -146,7 +147,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_otherUserName ?? 'Czat prywatny'),
+        title: Text(_otherUserName ?? 'Czat prywatny', style: TextStyles.sectionHeading),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -181,10 +182,7 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Text(
                             formattedDate,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyles.subtitle,
                           ),
                         ),
                       ),

@@ -8,6 +8,7 @@ import '../../../core/models/chat_message_model.dart';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/services/chat_service.dart';
+import '../../../core/theme/text_styles.dart';
 import 'message_bubble.dart';
 import 'chat_input_field.dart';
 
@@ -94,7 +95,7 @@ class _AnnouncementChannelScreenState extends State<AnnouncementChannelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Kanał: ${widget.trip.name}")),
+      appBar: AppBar(title: Text("Kanał Ogłoszeniowy", style: TextStyles.sectionHeading)),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(

@@ -63,8 +63,9 @@ class _TripTitleHeaderState extends State<TripTitleHeader> {
   Widget build(BuildContext context) {
     final initials = _getInitials();
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 32, left: 24, right: 24, bottom: 12),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(top: 32, left: 0, right: 0, bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
