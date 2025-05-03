@@ -49,13 +49,13 @@ class ChatTile extends StatelessWidget {
                       label,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: 18,
                       ),
                     ),
                     Text(
                       message,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 15),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ],
                 ),

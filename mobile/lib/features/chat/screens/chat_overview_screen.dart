@@ -3,6 +3,7 @@ import 'package:mobile/features/chat/screens/private_chat_screen.dart';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/services/chat_service.dart';
+import '../../../core/widgets/base_screen.dart';
 import 'announcement_channel_screen.dart';
 import 'chat_tile.dart';
 
@@ -112,15 +113,11 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
 
     final otherRooms = chatrooms.where((r) => r.type != 'group').toList();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.trip.name),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+    return BaseScreen(
+      trip: widget.trip,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
-
           if (announcement != null)
             ChatTile(
               label: 'Kanał ogłoszeniowy',
