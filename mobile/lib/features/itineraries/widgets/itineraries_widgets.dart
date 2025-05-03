@@ -131,7 +131,7 @@ class ActivitiesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (activities.isEmpty) {
-      return const Center(child: Text('Brak aktywności na ten dzień'));
+      return const Center(child: Text('Brak aktywności na ten dzień', style: TextStyles.subtitle));
     }
 
     return ListView.builder(

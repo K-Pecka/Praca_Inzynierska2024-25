@@ -67,7 +67,8 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return BaseScreen(
+      trip: widget.trip,
       child: FutureBuilder<List<ItineraryModel>>(
         future: _futureItineraries,
         builder: (context, snapshot) {
@@ -76,7 +77,7 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Błąd: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Brak planów'));
+            return const Center(child: Text('Brak planów', style: TextStyles.subtitle));
           }
 
           _plans = snapshot.data!;
@@ -95,37 +96,34 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
               a.date.month == _selectedDate!.month &&
               a.date.day == _selectedDate!.day).toList();
 
-          return BaseScreen(
-            trip: widget.trip,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PlanDropdownCard(
-                  plans: _plans,
-                  selectedPlan: _selectedPlan!,
-                  onPlanSelected: (plan) => _loadActivitiesForPlan(plan),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PlanDropdownCard(
+                plans: _plans,
+                selectedPlan: _selectedPlan!,
+                onPlanSelected: (plan) => _loadActivitiesForPlan(plan),
+              ),
+              const SizedBox(height: 24),
+              Center(
+                child: Text(
+                  toBeginningOfSentenceCase(DateFormat('LLLL', 'pl').format(_selectedDate!))!,
+                  style: TextStyles.sectionHeading,
                 ),
-                const SizedBox(height: 24),
-                Center(
-                  child: Text(
-                    toBeginningOfSentenceCase(DateFormat('LLLL', 'pl').format(_selectedDate!))!,
-                    style: TextStyles.sectionHeading,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                DaySelector(
-                  start: start,
-                  end: end,
-                  activeDays: [_selectedPlan!],
-                  selected: _selectedDate!,
-                  onSelect: (d) => setState(() => _selectedDate = d),
-                ),
-                const SizedBox(height: 16),
-                _loadingActivities
-                    ? const Center(child: CircularProgressIndicator())
-                    : ActivitiesList(activities: filteredActivities),
-              ],
-            ),
+              ),
+              const SizedBox(height: 16),
+              DaySelector(
+                start: start,
+                end: end,
+                activeDays: [_selectedPlan!],
+                selected: _selectedDate!,
+                onSelect: (d) => setState(() => _selectedDate = d),
+              ),
+              const SizedBox(height: 16),
+              _loadingActivities
+                  ? const Center(child: CircularProgressIndicator())
+                  : ActivitiesList(activities: filteredActivities),
+            ],
           );
         },
       ),
