@@ -28,7 +28,7 @@ class TicketListByTripAPIView(ListAPIView):
     serializer_class = TicketListSerializer
 
     def get_queryset(self):
-        trip_id = self.kwargs['trip_id']
+        trip_id = self.kwargs['trip_pk']
         return (Ticket.objects
             .by_trip_and_profile(trip_id)
             .select_related('profile', 'trip')
