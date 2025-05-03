@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
-import '../../../core/models/chat_message_model.dart';
-import '../../../core/models/chatroom_model.dart';
-import '../../../core/models/trip_model.dart';
-import '../../../core/services/chat_service.dart';
-import 'message_bubble.dart';
-import 'chat_input_field.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../core/models/chat_message_model.dart';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/services/chat_service.dart';
-import 'chat_input_field.dart';
 import 'message_bubble.dart';
+import 'chat_input_field.dart';
 
 class AnnouncementChannelScreen extends StatefulWidget {
   final int userProfileId;
@@ -48,19 +40,6 @@ class _AnnouncementChannelScreenState extends State<AnnouncementChannelScreen> {
     _loadAnnouncementChannel();
   }
 
-  void _connectWebSocket(int roomId) {
-    final uri = Uri.parse('wss://api.plannder.com/ws/chat/$roomId/');
-    _channel = WebSocketChannel.connect(uri);
-
-    _channel!.stream.listen((data) {
-      final msg = MessageModel.fromJson(jsonDecode(data));
-      setState(() {
-        _messages.add(msg);
-      });
-      _scrollToBottom();
-    });
-  }
-
   Future<void> _loadAnnouncementChannel() async {
     try {
       final rooms = await ChatService.getUserChatrooms(widget.trip.id);
@@ -76,7 +55,14 @@ class _AnnouncementChannelScreenState extends State<AnnouncementChannelScreen> {
         _isLoading = false;
       });
 
-      _connectWebSocket(room.id);
+      _channel = ChatService.connectToWebSocket(room.id);
+      _channel?.stream.listen((data) {
+        final msg = MessageModel.fromJson(jsonDecode(data));
+        setState(() {
+          _messages.add(msg);
+        });
+        _scrollToBottom();
+      });
 
       WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
     } catch (e) {

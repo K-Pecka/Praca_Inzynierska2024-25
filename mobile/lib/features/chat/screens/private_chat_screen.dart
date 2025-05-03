@@ -47,18 +47,15 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
   void _connectWebSocket() {
     final token = AuthService.accessToken;
     if (token == null) {
-      print('❌ Brak tokena – nie łączę z WebSocketem.');
       return;
     }
 
     final uri = Uri.parse('wss://api.plannder.com/ws/chat/${widget.chatroomId}/?token=$token');
-    print('🔌 URI WebSocket: $uri');
 
     _channel = WebSocketChannel.connect(uri);
 
     _channel!.stream.listen(
           (data) {
-        print('📥 Odebrano wiadomość: $data');
         final msg = MessageModel.fromJson(jsonDecode(data));
         setState(() {
           _messages.add(msg);
@@ -66,10 +63,8 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
         _scrollToBottom();
       },
       onError: (error) {
-        print('❌ Błąd WebSocket: $error');
       },
       onDone: () {
-        print('🔌 WebSocket zamknięty.');
       },
     );
   }
@@ -136,10 +131,8 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
   void _sendMessage(String content) {
     if (_channel != null) {
       final message = jsonEncode({'content': content});
-      print('📤 Wysyłam wiadomość: $message');
       _channel!.sink.add(message);
     } else {
-      print('⚠️ WebSocket channel jest null!');
     }
   }
 

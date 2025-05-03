@@ -42,7 +42,6 @@ class TripService {
       final List<dynamic> data = jsonDecode(response.body);
       final trips = data.map((e) => TripModel.fromJson(e)).toList();
 
-      // 🔁 Uzupełnianie imienia i nazwiska członków
       for (final trip in trips) {
         for (int i = 0; i < trip.members.length; i++) {
           final member = trip.members[i];
@@ -54,7 +53,6 @@ class TripService {
               lastName: enriched.lastName,
             );
           } catch (e) {
-            print('Nie udało się pobrać danych użytkownika ${member.id}: $e');
           }
         }
       }

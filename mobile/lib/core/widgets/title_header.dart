@@ -51,14 +51,11 @@ class _TripTitleHeaderState extends State<TripTitleHeader> {
   }
 
   String _getInitials() {
-    print('🔍 firstName: ${AuthService.firstName}');
-    print('🔍 lastName: ${AuthService.lastName}');
 
     final f = AuthService.firstName?.isNotEmpty == true ? AuthService.firstName![0] : '';
     final l = AuthService.lastName?.isNotEmpty == true ? AuthService.lastName![0] : '';
     final initials = (f + l).toUpperCase();
 
-    print('🧩 Inicjały do pokazania: $initials');
     return initials;
   }
 

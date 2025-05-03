@@ -54,7 +54,6 @@ class _TouristDashboardState extends State<TouristDashboard> {
       });
     } catch (e) {
       setState(() => _isLoading = false);
-      debugPrint('Błąd pobierania wycieczek: $e');
     }
   }
 

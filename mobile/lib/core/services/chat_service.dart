@@ -31,7 +31,6 @@ class ChatService {
 
   static Future<List<MessageModel>> getMessages(int tripId, int chatroomId) async {
     final url = Uri.parse('$baseUrl/trip/$tripId/chat/$chatroomId/chat-message/all/');
-    debugPrint('➡️ GET $url');
 
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${AuthService.accessToken}',
@@ -46,28 +45,9 @@ class ChatService {
     }
   }
 
-  static void connectToWebSocket(int chatroomId, Function(String) onMessageReceived) {
-    final uri = Uri.parse('$wsBaseUrl/$chatroomId/');
-    _channel = WebSocketChannel.connect(uri);
-
-    _channel!.stream.listen(
-          (message) => onMessageReceived(message),
-      onError: (error) => debugPrint('❌ WebSocket error: $error'),
-      onDone: () => debugPrint('🛑 WebSocket connection closed.'),
-    );
-  }
-
   static void disconnectWebSocket() {
     _channel?.sink.close();
     _channel = null;
-  }
-
-  static void sendWebSocketMessage(String content) {
-    if (_channel != null) {
-      _channel!.sink.add(jsonEncode({"content": content}));
-    } else {
-      debugPrint('⚠️ WebSocket channel is not connected.');
-    }
   }
 
   static Future<Member> getUserByProfileId(int profileId) async {
@@ -88,5 +68,16 @@ class ChatService {
     } else {
       throw Exception("Błąd ładowania danych użytkownika: ${response.body}");
     }
+  }
+
+  static WebSocketChannel? connectToWebSocket(int chatroomId) {
+    final token = AuthService.accessToken;
+    if (token == null) {
+      return null;
+    }
+
+    final uri = Uri.parse('wss://api.plannder.com/ws/chat/$chatroomId/?token=$token');
+
+    return WebSocketChannel.connect(uri);
   }
 }
