@@ -2,11 +2,14 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
-
+from django.core.files.storage import FileSystemStorage
+from django.test.utils import override_settings
+from django.db.models.fields.files import FileField
 from trips.views.budget_views import BudgetUpdateAPIView, BudgetDestroyAPIView
 from trips.views.expense_views import ExpenseCreateAPIView, ExpenseRetrieveAPIView, ExpenseUpdateAPIView, \
     ExpenseDestroyAPIView
-from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketDestroyAPIView
+from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketDestroyAPIView, \
+    TicketUpdateAPIView
 from users.models import CustomUser, UserProfile, UserProfileType
 from trips.models import Trip, Budget, Expense, Ticket, TicketType, ExpenseType
 
@@ -122,7 +125,7 @@ class ExpenseAPITestCase(TestCase):
             'title': "obiad smażalnia ryb",
             'user': self.user_profile.id,
             'amount': 150.00,
-            'currency':  "USD",
+            'currency': "USD",
             'date': "06.06.2025",
             'category': self.expense_category.id
         }
@@ -194,121 +197,114 @@ class ExpenseAPITestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
+@override_settings(
+    DEFAULT_FILE_STORAGE="django.core.files.storage.FileSystemStorage"
+)
 class TicketAPITestCase(TestCase):
     def setUp(self):
-        """
-        Set up the test data, including a user, their profile, a trip, and a ticket type.
-        """
         self.factory = APIRequestFactory()
-        self.default_user_profile = UserProfileType.objects.create(
+
+        # Typ profilu
+        self.default_user_profile_type, _ = UserProfileType.objects.get_or_create(
             code="tourist",
-            name="Tourist",
+            defaults={"name": "Tourist"}
         )
+
+        # Użytkownik
         self.user = CustomUser.objects.create_user(
             email="testuser@example.com",
             password="TestPassword123",
             first_name="Test",
             last_name="User",
         )
-        self.user_profile, created = UserProfile.objects.get_or_create(user=self.user)
 
+        self.user_profile, _ = UserProfile.objects.get_or_create(
+            user=self.user,
+            defaults={"type": self.default_user_profile_type}
+        )
+
+        # Wycieczka
         self.trip = Trip.objects.create(
             creator=self.user_profile,
             settings={"currency": "USD"},
             start_date="2025-06-01",
             end_date="2025-06-15"
         )
-
         self.trip.members.add(self.user_profile)
 
+        # Typ biletu
         self.ticket_type = TicketType.objects.create(name="Standard")
+        Ticket._meta.get_field('file').storage = FileSystemStorage()
 
         self.ticket = Ticket.objects.create(
-            file="tickets/sample.pdf",
+            file=SimpleUploadedFile("sample.pdf", b"test content", content_type="application/pdf"),
             type=self.ticket_type,
             valid_from_date="2025-06-05",
             valid_from_time="12:00",
-            profile=self.user_profile,
+            owner=self.user_profile,
             trip=self.trip
         )
+        self.ticket.profiles.add(self.user_profile)
 
-    # def test_ticket_create(self):
-    #     """
-    #     Test creating a ticket when the request is valid.
-    #     """
-    #     file = SimpleUploadedFile("new_ticket.pdf", b"file_content_here", content_type="application/pdf")
-    #     data = {
-    #         'file': file,
-    #         'type': self.ticket_type.id,
-    #         'valid_from_date': "2025-06-07",
-    #         'valid_from_time': "14:00",
-    #         'profile': self.user_profile.id,
-    #         'trip': self.trip.id
-    #     }
-    #     view = TicketCreateAPIView.as_view()
-    #     request = self.factory.post(f'/trips/{self.trip.id}/tickets/', data)
-    #     force_authenticate(request, user=self.user)
-    #     response = view(request)
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_ticket_create(self):
+        file = SimpleUploadedFile("ticket.pdf", b"filecontent", content_type="application/pdf")
+        data = {
+            "file": file,
+            "type": self.ticket_type.id,
+            "valid_from_date": "2025-06-07",
+            "valid_from_time": "14:00",
+            "trip": self.trip.id,
+        }
+        view = TicketCreateAPIView.as_view()
+        request = self.factory.post('/trip/ticket/create/', data, format='multipart')
+        force_authenticate(request, user=self.user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    # def test_ticket_retrieve(self):
-    #     """
-    #     Test retrieving a ticket.
-    #     """
-    #     expected_url = f'http://testserver/media/{self.ticket.file.name}'
-    #     view = TicketRetrieveAPIView.as_view()
-    #     request = self.factory.get(f'/trips/{self.trip.id}/tickets/{self.ticket.id}/')
-    #     force_authenticate(request, user=self.user)
-    #     response = view(request, pk=self.ticket.id)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #
-    #     self.assertEqual(response.data['file'], expected_url)
+    def test_ticket_retrieve(self):
+        view = TicketRetrieveAPIView.as_view()
+        request = self.factory.get(f'/trip/ticket/{self.ticket.id}/')
+        force_authenticate(request, user=self.user)
+        response = view(request, pk=self.ticket.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['trip'], self.trip.id)
 
-
-    # def test_ticket_update(self):
-    #     """
-    #     Test updating a ticket when the user is authenticated.
-    #     """
-    #     file = SimpleUploadedFile("new_ticket.pdf", b"file_content_here", content_type="application/pdf")
-    #     data = {
-    #         'file': file,
-    #         'valid_from': "2025-06-08T10:00:00Z"
-    #     }
-    #     view = TicketUpdateAPIView.as_view()
-    #     request = self.factory.patch(f'/trips/{self.trip.id}/tickets/{self.ticket.id}/update/', data)
-    #     force_authenticate(request, user=self.user)
-    #     response = view(request, pk=self.ticket.id)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #
-    #     self.ticket.refresh_from_db()
-    #
-    #     self.assertEqual(self.ticket.file.name.startswith("tickets/new_ticket"), 'xd')
+    def test_ticket_update(self):
+        file = SimpleUploadedFile("updated.pdf", b"new content", content_type="application/pdf")
+        data = {
+            "file": file,
+            "type": self.ticket_type.id,
+            "valid_from_date": "2025-06-08",
+            "valid_from_time": "16:00"
+        }
+        view = TicketUpdateAPIView.as_view()
+        request = self.factory.patch(f'/trip/ticket/{self.ticket.id}/update/', data, format='multipart')
+        force_authenticate(request, user=self.user)
+        response = view(request, pk=self.ticket.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_ticket_destroy(self):
-        """
-        Test deleting a ticket.
-        """
         view = TicketDestroyAPIView.as_view()
-        request = self.factory.delete(f'/trips/{self.trip.id}/tickets/{self.ticket.id}/delete/')
+        request = self.factory.delete(f'/trip/ticket/{self.ticket.id}/delete/')
         force_authenticate(request, user=self.user)
         response = view(request, pk=self.ticket.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Ticket.objects.filter(id=self.ticket.id).exists())
 
     def test_ticket_create_unauthenticated(self):
-        """
-        Test creating a ticket without authentication.
-        """
+        file = SimpleUploadedFile("unauth.pdf", b"unauth", content_type="application/pdf")
         data = {
-            'file': "tickets/no_auth_ticket.pdf",
-            'type': self.ticket_type.id,
-            'valid_from_date': "2025-06-09",
-            'valid_from_time': "15:00",
-            'profile': self.user_profile.id,
-            'trip': self.trip.id
+            "file": file,
+            "type": self.ticket_type.id,
+            "valid_from_date": "2025-06-09",
+            "valid_from_time": "15:00",
+            "trip": self.trip.id,
         }
         view = TicketCreateAPIView.as_view()
-        request = self.factory.post(f'/trips/{self.trip.id}/tickets/', data)
+        request = self.factory.post('/trip/ticket/create/', data, format='multipart')
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def tearDown(self):
+        # Czyści lokalne pliki po testach
+        self.ticket.file.delete(save=False)

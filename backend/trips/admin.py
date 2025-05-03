@@ -19,10 +19,11 @@ class TicketTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
-    list_select_related = ('trip',)
-    list_display = ('profile', 'type', 'trip', 'file', 'valid_from_date', 'valid_from_time')
-    search_fields = ('profile__user__username', 'trip__creator__user__username')
+    list_select_related = ('trip', 'owner', 'type')
+    list_display = ('id', 'owner', 'trip', 'type', 'valid_from_date', 'valid_from_time')
+    search_fields = ('owner__user__email', 'trip__name', 'trip__creator__user__email')
     list_filter = ('trip', 'type')
+    filter_horizontal = ('profiles',)
 
 
 @admin.register(ExpenseType)
