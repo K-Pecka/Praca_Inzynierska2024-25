@@ -8,9 +8,6 @@ import { ticketCategory } from "@/data/category/ticket";
 
 const emit = defineEmits(["submitTicket", "cancelForm"]);
 
-const store = useTicketStore();
-
-
 const form = ref({
   type: ticketCategory[0].text,
   name: "",

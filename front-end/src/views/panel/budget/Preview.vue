@@ -68,12 +68,9 @@ const dateTo = ref<string | null>(null);
       <HeaderSection>
         <template #subtitle>
           <div class="title-container pb-4 w-100">
-            <h2
-              class="trip-title mb-10"
-              style="font-size: 30px; font-weight: 600; width: 80%"
-            >
+            <span class="trip-title">
               Wydatki
-            </h2>
+            </span>
             <div class="d-flex">
               <AppButton
                 variant="primary"
@@ -163,12 +160,12 @@ const dateTo = ref<string | null>(null);
         <v-row>
           <v-col>
             <AppCard class="chart-card ml-0">
-              <h2 class="section-title">Wydatki - Kategorie</h2>
+              <span class="section-title">Wydatki - Kategorie</span>
             </AppCard>
           </v-col>
           <v-col>
             <AppCard class="chart-card mr-0">
-              <h2 class="section-title">Wydatki - Uczestnicy</h2>
+              <span class="section-title">Wydatki - Uczestnicy</span>
             </AppCard>
           </v-col>
         </v-row>

@@ -56,7 +56,7 @@ const {formatDatePolish} = useUtilsStore();
 
             <!-- Trip Info -->
             <v-col cols="auto">
-              <v-row class="flex-column align-center">
+              <v-row class="flex-column align-center pa-2">
                 <v-card-title class="font-weight-bold pt-0">{{ trip.name }}</v-card-title>
                 <v-card-subtitle class="font-weight-medium pb-6">
                   {{ formatDatePolish(trip.start_date) }} - {{ formatDatePolish(trip.end_date) }}

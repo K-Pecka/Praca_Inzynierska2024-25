@@ -1,11 +1,6 @@
 <script lang="ts" setup>
 import Header from "@/components/panel/Header.vue";
-import Navbar from "../components/panel/Navbar.vue";
-
-import { usePanelStore } from "@/stores/panel/usePanelStore";
-
-const panelStore = usePanelStore();
-
+import Navbar from "@/components/panel/Navbar.vue";
 </script>
 
 <template>

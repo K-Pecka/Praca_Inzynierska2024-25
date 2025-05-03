@@ -16,7 +16,7 @@ const props = defineProps({
   <router-link :to="role.path" style="display: flex; justify-content: center;">
     <button class="role-button">
       <img :src="role.image.img" :alt="role.image.alt" class="role-icon" />
-      <h2 class="role-title">{{ role.title }}</h2>
+      <span class="role-title">{{ role.title }}</span>
       <p class="role-description">{{ role.description }}</p>
     </button>
   </router-link>

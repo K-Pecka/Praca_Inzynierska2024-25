@@ -17,9 +17,9 @@ const { data: trip_data } = getTripDetails(Number(id));
     <template #title>
       <HeaderSection>
         <template #subtitle>
-          <h2 class="trip-title">
+          <span class="trip-title">
             Plany podróży
-          </h2>
+          </span>
         </template>
       </HeaderSection>
     </template>

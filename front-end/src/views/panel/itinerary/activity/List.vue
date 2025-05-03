@@ -87,7 +87,7 @@ const activity = computed(
     <template #title>
       <HeaderSection>
         <template #subtitle>
-          <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Zarządzaj aktywnościami</h2>
+          <span class="trip-title">Zarządzaj aktywnościami</span>
         </template>
       </HeaderSection>
     </template>

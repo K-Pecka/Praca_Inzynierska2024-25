@@ -38,6 +38,7 @@ function inviteParticipant(participant: { name: string; email: string }) {
 function removeParticipantById(id: number) {
   removeParticipant(Number(tripId), id);
 }
+console.log('participants', participants.value);
 </script>
 
 <template>
@@ -47,7 +48,7 @@ function removeParticipantById(id: number) {
             <HeaderSection>
               <template #subtitle>
                   <div class="title-container pb-4 w-100">
-                    <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Zarządzaj uczestnikami</h2>
+                    <span class="trip-title">Zarządzaj uczestnikami</span>
                  <AppButton
                     variant="primary"
                     @click="showForm = !showForm"

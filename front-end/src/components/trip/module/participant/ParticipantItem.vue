@@ -8,6 +8,8 @@ const emit = defineEmits(["remove"]);
 function handleRemoveClick() {
   emit("remove", props.id);
 }
+
+console.log(props)
 </script>
 
 <template>

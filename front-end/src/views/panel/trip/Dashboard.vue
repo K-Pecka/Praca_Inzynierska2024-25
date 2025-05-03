@@ -19,7 +19,7 @@ const { boxes, isLoading, error } = getDashboard(id);
     <template #title>
       <HeaderSection>
         <template #subtitle>
-          <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Panel</h2>
+          <span class="trip-title">Panel</span>
         </template>
       </HeaderSection>
     </template>

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div class="section mx-auto mt-10">
+    <v-col cols="12" class="section mx-auto mt-5">
       <header class="section__header">
         <slot name="title"></slot>
       </header>
@@ -10,7 +10,7 @@
       <div class="section__footer">
         <slot name="footer"></slot>
       </div>
-    </div>
+    </v-col>
 
   </v-container>
 </template>
@@ -38,9 +38,9 @@
   }
 
   &__content {
-    font-size: 1rem;
+    font-size: 2rem;
     line-height: 1.5;
-    color: var(--v-theme-text, #666);
+    color: $text-color;
     width: 100%;
   }
 }
