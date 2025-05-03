@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import '../../features/auth/screens/start_screen.dart';
 import '../theme/text_styles.dart';
 import '../services/auth_service.dart';
 import 'menu_screen.dart';

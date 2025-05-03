@@ -5,7 +5,7 @@ import '../../../core/models/trip_model.dart';
 import '../../../core/services/chat_service.dart';
 import '../../../core/widgets/base_screen.dart';
 import 'announcement_channel_screen.dart';
-import 'chat_tile.dart';
+import '../widgets/chat_tile.dart';
 
 class ChatOverviewScreen extends StatefulWidget {
   final TripModel trip;

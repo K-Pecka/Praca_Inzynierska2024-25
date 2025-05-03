@@ -9,8 +9,8 @@ import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/services/chat_service.dart';
 import '../../../core/theme/text_styles.dart';
-import 'message_bubble.dart';
-import 'chat_input_field.dart';
+import '../widgets/message_bubble.dart';
+import '../widgets/chat_input_field.dart';
 
 class AnnouncementChannelScreen extends StatefulWidget {
   final int userProfileId;
