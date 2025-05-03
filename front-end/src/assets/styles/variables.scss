@@ -1,10 +1,12 @@
 $text-color: rgba(#030309, 0.70);
 $primary-color: #2F27CE;
-$secondary-color: #DEDCFF;
-$accent-color: #AC6ED9;
-$background-color: #F5F4FC;
+$secondary-color: var(--v-theme-secondary);
+$accent-color: var(--v-theme-accent);
+$background-color: var(--v-theme-background);
 
-$font: 'Quicksand', sans-serif;
+$header-section-title-font-size: 2rem;
+
+$default-font: 'Quicksand', sans-serif;
 
 $background-secondary: rgba($secondary-color, 0.6);
 $background-primary: rgba($primary-color, 0.6);
@@ -12,7 +14,7 @@ $background-primary: rgba($primary-color, 0.6);
 $choose-profile-button-bg: rgba($primary-color, 0.6);
 
 $panel-header-height: 64px;
-$panel-header-font-size: 2rem;
+$panel-font-size: 1rem;
 $panel-header-border-bottom: 2px solid $primary-color;
 
 $main-header-border: 2px solid $primary-color;

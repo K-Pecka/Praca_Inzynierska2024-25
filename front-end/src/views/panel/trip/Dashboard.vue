@@ -17,11 +17,7 @@ const { boxes, isLoading, error } = getDashboard(id);
 <template>
   <Section>
     <template #title>
-      <HeaderSection>
-        <template #subtitle>
-          <span class="trip-title">Panel</span>
-        </template>
-      </HeaderSection>
+      <HeaderSection subtitle="Panel" />
     </template>
     <template #content>
       <template v-if="isLoading">

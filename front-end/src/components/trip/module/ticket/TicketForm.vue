@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import {ref, computed} from "vue";
-import {useTicketStore} from "@/stores/trip/useTicketStore";
+import { ref, computed } from "vue";
 import AppButton from "@/components/budget/AppButton.vue";
-import {VTimePicker} from 'vuetify/labs/VTimePicker'
-import {VDateInput} from "vuetify/labs/components";
+import { VTimePicker } from 'vuetify/labs/VTimePicker'
+import { VDateInput } from "vuetify/labs/components";
 import { ticketCategory } from "@/data/category/ticket";
 
 const emit = defineEmits(["submitTicket", "cancelForm"]);
@@ -154,24 +153,28 @@ const timeMenu = ref(false);
     </v-card-text>
 
     <v-card-actions class="form-actions">
-      <AppButton variant="secondary"
-                 @click="$emit('cancelForm')">
-        Anuluj
-      </AppButton>
-      <AppButton variant="primary" @click="submitTicket">
-        Dodaj
-      </AppButton>
+      <AppButton
+          variant="secondary"
+          text="Anuluj"
+          @click="$emit('cancelForm')"
+      />
+      <AppButton
+          variant="primary"
+          text="Dodaj"
+          @click="submitTicket"
+      />
     </v-card-actions>
   </v-card>
 </template>
 
 
 <style scoped lang="scss">
+@use "@/assets/styles/variables" as *;
+
 .ticket-form {
-  background-color: rgb(var(--v-theme-secondary), 0.5);
+  background-color: $background-color;
   border-radius: 1rem;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  margin: 0 auto;
 
   @media (max-width: 600px) {
     padding: 0.5rem !important;

@@ -1,58 +1,60 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import {useTripStore} from "@/stores";
+import AppButton from "@/components/budget/AppButton.vue";
 
 const route = useRoute();
 const tripId = Number(route.params.tripId);
-const { getTripDetails } = useTripStore();
-const { data: tripData, isLoading, error } = getTripDetails(tripId);
+const {getTripDetails} = useTripStore();
+const {data: tripData, isLoading, error} = getTripDetails(tripId);
+
+defineProps<{
+  subtitle?: string;
+  noSubTitle?: boolean;
+  button?: boolean;
+  buttonText?: string;
+  buttonAction?: () => void;
+}>();
 </script>
+
 <template>
-  <v-col cols="12" class="px-0">
-    <v-row class="section__title">
-      <h1 class="trip-title" v-if="!isLoading && !error">{{ tripData?.name }}</h1>
-      <h1 class="trip-title" v-else>...</h1>
-    </v-row>
-    <v-row class="section__subtitle">
-      <slot name="subtitle"></slot>
+  <v-col cols="12">
+    <v-row class="flex-column">
+      <v-col cols="12" class="title font-weight-bold color-text">
+        <span v-if="!isLoading && !error">
+          {{ tripData?.name }}
+        </span>
+        <span v-else>
+          ...
+        </span>
+      </v-col>
+      <v-col cols="12 justify-space-between">
+        <v-row class="justify-space-between" no-gutters>
+          <span class="text-h5" v-if="!noSubTitle && subtitle">
+            {{ subtitle }}
+          </span>
+          <span v-else>
+            ...
+          </span>
+          <AppButton
+              v-if="!noSubTitle && button"
+              variant="primary"
+              @click="buttonAction"
+              dense
+              height-auto
+              font-auto
+              :text="buttonText"
+          />
+        </v-row>
+      </v-col>
     </v-row>
   </v-col>
 </template>
+
 <style scoped lang="scss">
-* {
-  width: 100%;
-  text-align: start;
+@use "@/assets/styles/variables" as *;
+
+.title {
+  font-size: $header-section-title-font-size;
 }
-
-.section__title {
-  margin: 0 0 2rem 0;
-  display: flex;
-}
-
-.section__subtitle {
-  margin: 2rem 0 2rem 0;
-  color: rgb(var(--v-theme-text), 0.75);
-  display: flex;
-}
-
-.trip-title {
-  font-size: 2rem;
-  width: 80%;
-  font-weight: 700;
-  color: rgb(var(--v-theme-text), 0.75);
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.title-container {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-
 </style>

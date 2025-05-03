@@ -4,16 +4,19 @@ import AppButton from "@/components/budget/AppButton.vue";
 import AppProgress from "@/components/budget/AppProgress.vue";
 import ExpenseList from "@/components/budget/ExpenseList.vue";
 import Section from "../../../components/common/Section.vue";
-import { useUtilsStore } from "@/stores";
-import { useRoute } from "vue-router";
+import {useUtilsStore} from "@/stores";
+import {useRoute} from "vue-router";
+
 const route = useRoute();
-const { mapCategoryBudget } = useUtilsStore();
+const {mapCategoryBudget} = useUtilsStore();
 const id = route.params.tripId as string;
-import { useTripStore } from "@/stores/trip/useTripStore";
-const { getTripDetails, getExpensesQuery } = useTripStore();
-import { computed, ref } from "vue";
-const { data: tripRaw, isLoading, error } = getTripDetails(Number(id));
-const { data: expenses } = getExpensesQuery(Number(id));
+import {useTripStore} from "@/stores/trip/useTripStore";
+
+const {getTripDetails, getExpensesQuery} = useTripStore();
+import {computed, ref} from "vue";
+
+const {data: tripRaw, isLoading, error} = getTripDetails(Number(id));
+const {data: expenses} = getExpensesQuery(Number(id));
 
 const budget = computed(() => Number(tripRaw.value?.budget?.amount) ?? 0);
 const budgetCurrency = computed(() => tripRaw.value?.budget?.currency ?? "PLN");
@@ -27,10 +30,10 @@ const members = computed(() => {
 const spent = computed(() => {
   console.log("expenses", expenses.value);
   return (
-    expenses.value?.reduce(
-      (acc, expense) => Number(acc) + Number(expense.amount),
-      0
-    ) ?? 0
+      expenses.value?.reduce(
+          (acc, expense) => Number(acc) + Number(expense.amount),
+          0
+      ) ?? 0
   );
 });
 
@@ -48,6 +51,10 @@ const categories = computed(() => {
     };
   });
 });
+const toggleForm = () => {
+  showForm.value = !showForm.value;
+};
+
 const participants = ref(["Jan", "Kasia", "Tomek"]);
 import HeaderSection from "@/components/common/HeaderSection.vue";
 import ExpenseForm from "@/components/trip/module/expnese/ExpenseForm.vue";
@@ -63,26 +70,17 @@ const dateTo = ref<string | null>(null);
 </script>
 
 <template>
+  <!-- Budget preview -->
   <Section>
+    <!-- Header -->
     <template #title>
-      <HeaderSection>
-        <template #subtitle>
-          <div class="title-container pb-4 w-100">
-            <span class="trip-title">
-              Wydatki
-            </span>
-            <div class="d-flex">
-              <AppButton
-                variant="primary"
-                @click="showForm = !showForm"
-              >
-                <v-icon v-if="$vuetify.display.smAndDown">mdi-plus</v-icon>
-                <span v-else>Dodaj</span>
-              </AppButton>
-            </div>
-          </div>
-        </template>
-      </HeaderSection>
+      <HeaderSection
+          class
+          subtitle="Wydatki"
+          button
+          button-text="Dodaj"
+          :button-action="toggleForm"
+      />
     </template>
 
     <template #content>
@@ -98,7 +96,7 @@ const dateTo = ref<string | null>(null);
             <AppCard class="summary-card">
               <h3>Wydano</h3>
               <BudgetContent
-                :content="{
+                  :content="{
                   amount: budget,
                   currency: budgetCurrency,
                   convertedAmount: budget / 4.6,
@@ -123,30 +121,33 @@ const dateTo = ref<string | null>(null);
         <v-row>
           <v-col col="12">
             <ExpenseForm
-              v-if="showForm"
-              @cancelForm="showForm = false"
-              class="form-container"
+                v-if="showForm"
+                @cancelForm="showForm = false"
+                class="form-container"
             />
           </v-col>
         </v-row>
         <v-row>
           <v-col>
             <AppCard class="expenses">
-              <div class="title-container pb-4">
-                <h3 class="mb-2">Wydatki</h3>
+              <v-container class="title-container">
+                <span class="mb-2">Wydatki</span>
 
                 <AppButton
-                  variant="primary"
-                  @click="showFilters = true"
+                    variant="primary"
+                    @click="showFilters = true"
+                    height-auto
+                    font-auto
+                    dense
+                    text="Filtruj"
                 >
                   <v-icon start>mdi-filter</v-icon>
-                  Filtruj
                 </AppButton>
-              </div>
+              </v-container>
 
               <ExpenseList
-                variant="manage"
-                :config="{
+                  variant="manage"
+                  :config="{
                   categories: selectedCategory,
                   participants: selectedParticipant,
                   dateFrom: dateFrom,
@@ -179,39 +180,39 @@ const dateTo = ref<string | null>(null);
               <v-row dense>
                 <v-col cols="12">
                   <v-select
-                    v-model="selectedCategory"
-                    :items="categories"
-                    label="Kategoria"
-                    variant="outlined"
-                    bg-color="background"
+                      v-model="selectedCategory"
+                      :items="categories"
+                      label="Kategoria"
+                      variant="outlined"
+                      bg-color="background"
                   />
                 </v-col>
                 <v-col cols="12">
                   <v-select
-                    v-model="selectedParticipant"
-                    :items="participants"
-                    :disabled="members.length === 0"
-                    label="Uczestnik"
-                    variant="outlined"
-                    bg-color="background"
+                      v-model="selectedParticipant"
+                      :items="participants"
+                      :disabled="members.length === 0"
+                      label="Uczestnik"
+                      variant="outlined"
+                      bg-color="background"
                   />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field
-                    v-model="dateFrom"
-                    label="Data od"
-                    type="date"
-                    variant="outlined"
-                    bg-color="background"
+                      v-model="dateFrom"
+                      label="Data od"
+                      type="date"
+                      variant="outlined"
+                      bg-color="background"
                   />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field
-                    v-model="dateTo"
-                    label="Data do"
-                    type="date"
-                    variant="outlined"
-                    bg-color="background"
+                      v-model="dateTo"
+                      label="Data do"
+                      type="date"
+                      variant="outlined"
+                      bg-color="background"
                   />
                 </v-col>
               </v-row>
@@ -229,62 +230,29 @@ const dateTo = ref<string | null>(null);
 
 <style scoped lang="scss">
 .title-container {
-  display: flex;
-  flex-direction: row;
   justify-content: space-between;
-  align-items: center;
 }
-h3 {
-  font-size: 1.5rem;
-}
-.amount,
-.remaining {
-  font-size: 2.2rem;
-  font-weight: bold;
-}
+
 .spent {
   font-size: 1.125rem;
   color: #4a90e2;
   font-weight: bold;
 }
+
 .remaining {
   color: #2e7d32;
 }
+
 .section-title {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
 }
+
 .expenses {
   padding: 20px;
   margin-top: 2rem;
   border-radius: 12px;
 }
-.summary-card {
-  width: 95%;
-  margin: auto;
-}
-.chart-card {
-  width: 97%;
-  margin: auto;
-}
-.v-col {
-  margin: 0.5rem 0;
-}
-@media (min-width: 600px) {
-  h3 {
-    font-size: 1.2rem;
-  }
-  .spent {
-    font-size: 1rem;
-  }
-  .amount,
-  .remaining {
-    font-size: 1.7rem;
-  }
-  .v-field__input,
-  input {
-    font-size: 1rem;
-  }
-}
+
 </style>

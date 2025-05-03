@@ -33,7 +33,11 @@ defineProps<PricingCard>();
       </v-list-item>
     </v-list>
 
-    <AppButton :variant="buttonVariant" width="150px">Wybierz</AppButton>
+    <AppButton
+        :variant="buttonVariant"
+        max-width="150px"
+        text="Wybierz"
+    />
   </v-card>
 </template>
 

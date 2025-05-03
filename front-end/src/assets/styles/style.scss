@@ -3,17 +3,24 @@
 @use "../styles/variables.scss" as *;
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
-:root{
-  font-size: 16px;
-}
-
 .v-container{
   max-width: 2560px;
-  padding: 0;
+}
+
+.color-text {
+    color: $text-color;
+}
+
+.color-primary {
+    color: $primary-color;
+}
+
+.background-secondary {
+    background-color: $background-secondary;
 }
 
 * {
-  font-family: $font !important;
+  font-family: $default-font !important;
 }
 
 @mixin gradient-text {

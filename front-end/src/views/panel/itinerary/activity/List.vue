@@ -85,11 +85,7 @@ const activity = computed(
 <template>
   <Section>
     <template #title>
-      <HeaderSection>
-        <template #subtitle>
-          <span class="trip-title">Zarządzaj aktywnościami</span>
-        </template>
-      </HeaderSection>
+      <HeaderSection subtitle="Zarządzaj aktywnościami" />
     </template>
 
     <template #content>
@@ -100,9 +96,8 @@ const activity = computed(
             variant="primary"
             @click="showFormForDay = day"
             v-show="showFormForDay != day"
-          >
-            Dodaj aktywność
-          </AppButton>
+            text="Dodaj aktywność"
+          />
         </div>
 
         <ActivityForm

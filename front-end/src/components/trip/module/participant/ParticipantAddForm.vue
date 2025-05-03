@@ -38,8 +38,16 @@ function handleCancel() {
     </div>
 
     <div class="form-buttons pt-3">
-      <AppButton variant="secondary" @click="handleCancel">Anuluj</AppButton>
-      <AppButton variant="primary" @click="handleSubmit">Dodaj</AppButton>
+      <AppButton
+          variant="secondary"
+          text="Anuluj"
+          @click="handleCancel"
+      />
+      <AppButton
+          variant="primary"
+          text="Dodaj"
+          @click="handleSubmit"
+      />
     </div>
   </div>
   </div>

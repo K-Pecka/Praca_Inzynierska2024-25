@@ -92,12 +92,11 @@ function handleSubmit() {
               <AppButton
                   variant="primary"
                   type="submit"
-                  width="120px"
+                  max-width="120px"
                   class="mt-4 font-weight-bold"
                   :disabled="!isFormValid"
-              >
-                Wyślij
-              </AppButton>
+                  text="Wyślij"
+              />
             </v-form>
           </v-col>
         </v-row>

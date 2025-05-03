@@ -14,72 +14,75 @@ const {formatDatePolish} = useUtilsStore();
 </script>
 
 <template>
-  <v-col cols="12">
-    <v-row class="trip-wrapper mx-auto w-100" dense>
+  <v-col cols="10">
 
-      <!-- Header with button -->
-      <v-col v-if="trips && trips.length" cols="12" class="mb-4">
-        <v-row class="align-center">
-          <v-col cols="12" md="8" class="d-flex justify-center text-center text-md-start justify-md-start">
-            <span class="text-h4 font-weight-bold">
-              Zarządzaj wycieczkami
-            </span>
-          </v-col>
-          <v-col cols="12" md="4" class="text-md-right text-start d-flex justify-center justify-md-end">
-            <router-link :to="{ name: 'createTrip' }">
-              <v-btn
-                  text="Dodaj wycieczkę"
-                  variant="outlined"
-                  rounded="lg"
-                  class="create-trip-button text-none"
-              />
-            </router-link>
-          </v-col>
-        </v-row>
-      </v-col>
+    <!-- Header with button -->
+    <v-row
+        v-if="trips && trips.length"
+        no-gutters
+        class="justify-space-between align-center mb-10"
+    >
+        <span class="text-h4 pb-4 font-weight-bold">
+          Zarządzaj wycieczkami
+        </span>
+      <router-link :to="{ name: 'createTrip' }">
+        <v-btn
+            text="Dodaj wycieczkę"
+            variant="outlined"
+            rounded="lg"
+            class="create-trip-button text-none"
+        />
+      </router-link>
+    </v-row>
 
-      <!-- Trip cards -->
-      <v-col v-if="trips && trips.length" cols="12" md="6" v-for="trip in trips" :key="trip.id" class="pa-4">
-        <v-card rounded="xl" elevation="4" class="trip-box">
-          <v-row class="pa-4" align="center" justify="space-around" no-gutters>
+    <!-- Trip cards -->
+    <v-row no-gutters class="ga-4">
+      <v-col
+          v-if="trips && trips.length"
+          v-for="trip in trips" :key="trip.id"
+      >
+        <v-card class="rounded-xl background-secondary">
+          <v-card-text>
+            <v-row no-gutters justify="space-around" align="center">
 
-            <!-- Image -->
-            <v-col cols="12" sm="4" class="text-center pr-5">
+              <!-- Card image -->
               <v-img
                   :src="images.backgrounds.trip.img"
                   :alt="images.backgrounds.trip.alt"
-                  class="trip-image"
                   aspect-ratio="1"
-                  cover
+                  width="auto"
+                  max-width="230px"
               />
-            </v-col>
 
-            <!-- Trip Info -->
-            <v-col cols="auto">
-              <v-row class="flex-column align-center pa-2">
-                <v-card-title class="font-weight-bold pt-0">{{ trip.name }}</v-card-title>
+              <!-- Trip Info -->
+              <v-card-actions class="flex-column">
+                <v-card-title class="font-weight-bold">{{ trip.name }}</v-card-title>
                 <v-card-subtitle class="font-weight-medium pb-6">
                   {{ formatDatePolish(trip.start_date) }} - {{ formatDatePolish(trip.end_date) }}
                 </v-card-subtitle>
 
+                <!-- Buttons -->
                 <AppButton
                     :to="{ name: 'panel', params: { tripId: trip.id } }"
-                    class="trip-button w-100 mb-1"
                     variant="primary"
-                >
-                  Zarządzaj wycieczką
-                </AppButton>
+                    font-auto
+                    height-auto
+                    stretch
+                    text="Zarządzaj wycieczką"
+                />
 
                 <AppButton
                     to=""
-                    class="trip-button w-100"
                     variant="accent"
-                >
-                  Usuń wycieczkę
-                </AppButton>
-              </v-row>
-            </v-col>
-          </v-row>
+                    font-auto
+                    height-auto
+                    stretch
+                    text="Usuń wycieczkę"
+                />
+
+              </v-card-actions>
+            </v-row>
+          </v-card-text>
         </v-card>
       </v-col>
 
@@ -100,10 +103,8 @@ const {formatDatePolish} = useUtilsStore();
             <AppButton
                 variant="secondary"
                 class="trip-button"
-                width="300px"
-            >
-              Dodaj wycieczkę
-            </AppButton>
+                text="Dodaj wycieczkę"
+            />
           </router-link>
         </v-row>
       </v-col>
@@ -121,22 +122,6 @@ const {formatDatePolish} = useUtilsStore();
 
 .trip-button {
   font-size: clamp(0.4em, 0.6vw + 0.45em, 1em);
-}
-
-.trip-box {
-  background-color: $background-secondary;
-}
-
-.preview-trip-button {
-  background-color: $primary-color;
-}
-
-.delete-trip-button {
-  background-color: $accent-color;
-}
-
-.trip-wrapper {
-  max-width: 80%;
 }
 
 .empty-header {

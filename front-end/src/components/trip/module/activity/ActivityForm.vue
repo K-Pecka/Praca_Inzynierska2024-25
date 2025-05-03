@@ -144,10 +144,17 @@ const selected = ref<(typeof activityGroups)[0]>(activityGroups[0]);
 
     <v-card-actions>
       <v-spacer />
-      <AppButton variant="secondary" @click="$emit('cancelForm')">
-        Anuluj
-      </AppButton>
-      <AppButton variant="primary" @click="submitActivity" :disabled="!isFormValid"> Dodaj </AppButton>
+      <AppButton
+          variant="secondary"
+          text="Anuluj"
+          @click="$emit('cancelForm')"
+      />
+      <AppButton
+          variant="primary"
+          text="Dodaj"
+          @click="submitActivity"
+          :disabled="!isFormValid"
+      />
     </v-card-actions>
   </v-card>
 </template>
