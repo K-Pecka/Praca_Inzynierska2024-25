@@ -6,8 +6,8 @@ import 'auth_service.dart';
 class TicketService {
   static final String _baseUrl = 'https://api.plannder.com';
 
-  static Future<List<TicketModel>> getAllTickets() async {
-    final url = Uri.parse('$_baseUrl/trip/ticket/all/');
+  static Future<List<TicketModel>> getTicketsByTrip(int tripId) async {
+    final url = Uri.parse('$_baseUrl/trip/ticket/all/by-trip/$tripId/');
 
     final response = await http.get(
       url,
@@ -20,7 +20,7 @@ class TicketService {
     if (response.statusCode == 401) {
       final refreshed = await AuthService.refreshAccessToken();
       if (refreshed) {
-        return getAllTickets(); // retry
+        return getTicketsByTrip(tripId); // retry
       } else {
         throw Exception("Nieautoryzowany – token nie działa");
       }
