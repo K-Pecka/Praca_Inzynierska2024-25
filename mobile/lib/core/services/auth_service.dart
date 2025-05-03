@@ -1,18 +1,24 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/auth_response_model.dart'; // Upewnij się, że ścieżka jest poprawna
+import '../models/auth_response_model.dart';
 
 class AuthService {
   static final String _baseUrl = 'https://api.plannder.com';
   static String? _accessToken;
   static String? _refreshToken;
+  static String? _firstName;
+  static String? _lastName;
 
   static String? get accessToken => _accessToken;
   static String? get refreshToken => _refreshToken;
+  static String? get firstName => _firstName;
+  static String? get lastName => _lastName;
 
   static void logout() {
     _accessToken = null;
     _refreshToken = null;
+    _firstName = null;
+    _lastName = null;
   }
 
   static Future<AuthResponseModel> login({
@@ -33,6 +39,8 @@ class AuthService {
 
       _accessToken = data['access'];
       _refreshToken = data['refresh'];
+      _firstName = data['first_name'];
+      _lastName = data['last_name'];
 
       return AuthResponseModel.fromJson(data);
     } else {

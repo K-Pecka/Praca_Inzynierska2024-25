@@ -29,13 +29,10 @@ class _TripTitleHeaderState extends State<TripTitleHeader> {
         },
       );
 
-      debugPrint('Logout status: ${response.statusCode}');
-      debugPrint('Logout body: ${response.body}');
-
       if (!mounted) return;
 
       if ([200, 204, 205].contains(response.statusCode)) {
-        AuthService.logout(); // wyczyść tokeny
+        AuthService.logout();
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const StartScreen()),
               (route) => false,
@@ -45,17 +42,30 @@ class _TripTitleHeaderState extends State<TripTitleHeader> {
           SnackBar(content: Text('Błąd podczas wylogowywania: ${response.statusCode}')),
         );
       }
-    } catch (e) {
+    } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Błąd połączenia')),
       );
-      debugPrint('Logout error: $e');
     }
+  }
+
+  String _getInitials() {
+    print('🔍 firstName: ${AuthService.firstName}');
+    print('🔍 lastName: ${AuthService.lastName}');
+
+    final f = AuthService.firstName?.isNotEmpty == true ? AuthService.firstName![0] : '';
+    final l = AuthService.lastName?.isNotEmpty == true ? AuthService.lastName![0] : '';
+    final initials = (f + l).toUpperCase();
+
+    print('🧩 Inicjały do pokazania: $initials');
+    return initials;
   }
 
   @override
   Widget build(BuildContext context) {
+    final initials = _getInitials();
+
     return Padding(
       padding: const EdgeInsets.only(top: 32, left: 24, right: 24, bottom: 12),
       child: Column(
@@ -70,13 +80,14 @@ class _TripTitleHeaderState extends State<TripTitleHeader> {
               ),
               GestureDetector(
                 onTap: () => setState(() => _showLogout = !_showLogout),
-                child: const CircleAvatar(
-                  radius: 18,
-                  backgroundColor: Color(0x80DEDCFF),
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: const Color(0x80DEDCFF),
                   child: Text(
-                    'MW',
-                    style: TextStyle(
+                    initials,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
+                      fontSize: 18,
                       color: Color(0xBF2F27CE),
                     ),
                   ),

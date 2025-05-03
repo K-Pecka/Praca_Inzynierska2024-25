@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/services/auth_service.dart';
 import '../../../core/services/trip_service.dart';
 import '../../../core/theme/text_styles.dart';
 import '/core/models/trip_model.dart';
@@ -62,6 +63,12 @@ class _TouristDashboardState extends State<TouristDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final firstName = AuthService.firstName ?? '';
+    final lastName = AuthService.lastName ?? '';
+    final initials = ((firstName.isNotEmpty ? firstName[0] : '') +
+        (lastName.isNotEmpty ? lastName[0] : ''))
+        .toUpperCase();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -73,9 +80,26 @@ class _TouristDashboardState extends State<TouristDashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 32),
-              const Text(
-                'Witaj! Mateusz',
-                style: TextStyles.sectionHeading,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Witaj $firstName!',
+                    style: TextStyles.sectionHeading,
+                  ),
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundColor: const Color(0x80DEDCFF),
+                    child: Text(
+                      initials,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xBF2F27CE),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
               if (_selectedTrip != null)
