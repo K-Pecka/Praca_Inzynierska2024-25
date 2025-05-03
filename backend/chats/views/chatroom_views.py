@@ -28,9 +28,11 @@ class ChatroomListAPIView(ListAPIView):
     serializer_class = ChatroomListSerializer
 
     def get_queryset(self):
+        trip_id = self.kwargs.get("trip_pk")
         return (
             Chatroom.objects
             .by_user(self.request.user.get_default_profile())
+            .filter(trip_id=trip_id)
             .select_related('creator')
             .prefetch_related('members')
         )
