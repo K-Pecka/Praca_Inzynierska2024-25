@@ -1,20 +1,23 @@
 <script setup lang="ts">
-import { Section, TripCard } from "@/components";
-import { useTripStore } from "@/stores/trip/useTripStore";
+import {Section, TripCard} from "@/components";
+import {useTripStore} from "@/stores/trip/useTripStore";
 import HeaderSection from "@/components/common/HeaderSection.vue";
+import AppButton from "@/components/budget/AppButton.vue";
+import {images} from "@/data";
 
-const { yourPlans, getTripDetails } = useTripStore();
-import { useRoute } from "vue-router";
+const {yourPlans, getTripDetails} = useTripStore();
+import {useRoute} from "vue-router";
 
 const route = useRoute();
 const id = route.params.tripId as string;
-const { data: rawPlans, isLoading, error } = yourPlans.plans(id);
-const { data: trip_data } = getTripDetails(Number(id));
+const {data: rawPlans, isLoading, error} = yourPlans.plans(id);
+const {data: trip_data} = getTripDetails(Number(id));
 </script>
 
 <template>
+
   <Section>
-    <template #title>
+    <template #title v-if="trip_data && rawPlans && rawPlans.length">
       <HeaderSection>
         <template #subtitle>
           <span class="trip-title">
@@ -26,10 +29,53 @@ const { data: trip_data } = getTripDetails(Number(id));
     <template #content>
       <p v-if="isLoading">Ładowanie...</p>
       <p v-else-if="error">Błąd: {{ error.message }}</p>
-      <template v-else-if="trip_data">
-        <TripCard :plans="rawPlans" :btn="yourPlans.btn ?? []" />
+      <template v-else-if="trip_data && rawPlans && rawPlans.length">
+        <TripCard :plans="rawPlans" :btn="yourPlans.btn ?? []"/>
+      </template>
+
+      <!-- Empty state -->
+      <template v-else>
+        <v-col cols="12" class="text-center py-10">
+          <v-row class="flex-column">
+        <span class="empty-header font-weight-bold mb-8">
+            Nie masz jeszcze żadnych planów podróży
+        </span>
+            <v-img
+                :src="images.emptyState.plan.img"
+                :alt="images.emptyState.plan.alt"
+                class="empty-plan-image mx-auto"
+                aspect-ratio="1"
+                contain
+            />
+            <router-link :to="{ name: 'createPlan', params: { tripId: id } }">
+              <AppButton
+                  variant="secondary"
+                  class="plan-button"
+                  width="300px"
+                  height="height-auto"
+                  fontSize="font-auto"
+              >
+                Dodaj plan podróży
+              </AppButton>
+            </router-link>
+          </v-row>
+        </v-col>
       </template>
     </template>
   </Section>
 </template>
 
+<style lang="scss" scoped>
+@use "@/assets/styles/variables" as *;
+
+.empty-header {
+  font-size: clamp(0.3em, 1.5vw + 0.5em, 1.5em);
+  color: $primary-color;
+}
+
+.empty-plan-image {
+  width: clamp(15em, 15vw + 10em, 25em);
+  height: auto;
+}
+
+</style>

@@ -58,6 +58,10 @@ export const images = {
       img: '/src/assets/images/emptyState/empty-state-trip.svg',
       alt: 'empty trip',
     },
+    plan: {
+      img: '/src/assets/images/emptyState/empty-state-plan.svg',
+      alt: 'empty plan',
+    },
   },
   icon: {
     menu: {

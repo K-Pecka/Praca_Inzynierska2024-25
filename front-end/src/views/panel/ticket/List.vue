@@ -96,7 +96,7 @@ const filteredTickets = () => {
 
         <!-- Empty state when no tickets are present -->
         <v-row
-            v-if="isLoading && tickets && tickets.length === 0"
+            v-if="tickets && tickets.length === 0"
             class="empty-tickets pa-5"
         >
           <v-icon size="48" color="black"

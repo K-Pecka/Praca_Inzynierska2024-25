@@ -100,6 +100,7 @@ const {formatDatePolish} = useUtilsStore();
             <AppButton
                 variant="secondary"
                 class="trip-button"
+                width="300px"
             >
               Dodaj wycieczkę
             </AppButton>
