@@ -194,19 +194,26 @@ class Ticket(BaseModel):
         verbose_name=_("Ważny od godziny"),
         help_text=_("Ważny od godziny")
     )
-    profile = models.ForeignKey(
-        UserProfile,
-        on_delete=models.CASCADE,
-        related_name="tickets",
-        verbose_name=_("Profil"),
-        help_text=_("Profil")
-    )
     trip = models.ForeignKey(
         Trip,
         on_delete=models.CASCADE,
         related_name="tickets",
         verbose_name=_("Wycieczka"),
         help_text=_("Wycieczka")
+    )
+    owner = models.ForeignKey(
+        UserProfile,
+        on_delete=models.CASCADE,
+        related_name="owned_tickets",
+        verbose_name=_("Właściciel"),
+        help_text=_("Użytkownik, który dodał ten bilet")
+    )
+    profiles = models.ManyToManyField(
+        UserProfile,
+        related_name="shared_tickets",
+        verbose_name=_("Udostępnione profile"),
+        help_text=_("Profile, które mają dostęp do biletu"),
+        blank=True
     )
 
     objects = TicketManager()

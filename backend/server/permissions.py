@@ -163,6 +163,7 @@ class IsTripParticipant(BasePermission):
             return obj.itinerary.trip
         return None
 
+
 class IsTripCreator(BasePermission):
     """
     Custom permission to check if the user is the creator of the trip.
@@ -239,23 +240,12 @@ class IsTripCreator(BasePermission):
 
 class IsTicketOwner(BasePermission):
     """
-    Custom permission to check if the user is the creator for the ticket.
+    Custom permission to check if the user is the creator or shared profile for the ticket.
     """
-    message = "Tylko stwórca biletu może wykonać tę akcje."
+    message = "Tylko właściciel lub współdzielony profil ma dostęp do tego biletu."
 
-    def has_permission(self, request, view):
-        try:
-            obj = view.get_object()
-        except Ticket.DoesNotExist:
-            raise NotFound(detail="Bilet o podanym ID nie istnieje.")
-        except Exception:
-            return False
-
+    def has_object_permission(self, request, view, obj):
         profile = request.user.get_default_profile()
         if not profile:
             return False
-
-        if isinstance(obj, Ticket):
-            return obj.profile == profile
-
-        return False
+        return obj.owner == profile or profile in obj.profiles.all()

@@ -26,10 +26,16 @@ class TicketManager(models.Manager):
             raise NotFound(detail="Nie znaleziono biletu o podanym ID")
 
     def by_user(self, profile):
-        return self.filter(profile=profile).distinct()
+        return self.filter(
+            models.Q(owner=profile) | models.Q(profiles=profile)
+        ).distinct()
 
-    def by_trip_and_profile(self, trip_id):
-        return self.filter(trip_id=trip_id).distinct()
+    def by_trip_and_profile(self, trip_id, profile):
+        return self.filter(
+            trip_id=trip_id
+        ).filter(
+            models.Q(owner=profile) | models.Q(profiles=profile)
+        ).distinct()
 
 
 class TripAccessTokenManager(models.Manager):
