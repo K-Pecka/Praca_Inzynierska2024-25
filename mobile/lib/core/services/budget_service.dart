@@ -60,13 +60,13 @@ class BudgetService {
     required String title,
     required double amount,
     required String date,
-    required String note,
+    required String note, required String currency,
   }) async {
     final url = Uri.parse('$_baseUrl/trip/$tripId/expense/create/');
     final body = jsonEncode({
       'title': title,
       'amount': amount.toStringAsFixed(2),
-      'currency': "USD",
+      'currency': currency,
       'date': date,
       'note': note,
       'trip': tripId,

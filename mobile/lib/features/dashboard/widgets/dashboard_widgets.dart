@@ -51,7 +51,7 @@ class TripDropdownCard extends StatelessWidget {
             }
           },
           decoration: CustomDropdownDecoration(
-            closedFillColor: const Color(0xFFF0ECFC), // ten sam biały styl co w planie
+            closedFillColor: const Color(0xFFF0ECFC),
             closedBorderRadius: BorderRadius.circular(16),
             closedSuffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
             headerStyle: TextStyles.cardTitleHeading,

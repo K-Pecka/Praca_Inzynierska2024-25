@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/services/trip_service.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/menu_screen.dart';
 import '/core/models/trip_model.dart';
 import '../widgets/dashboard_widgets.dart';
 
@@ -86,15 +87,23 @@ class _TouristDashboardState extends State<TouristDashboard> {
                     'Witaj $firstName!',
                     style: TextStyles.sectionHeading,
                   ),
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: const Color(0x80DEDCFF),
-                    child: Text(
-                      initials,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xBF2F27CE),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const ProfileMenuScreen()),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: const Color(0x80DEDCFF),
+                      child: Text(
+                        initials,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Color(0xBF2F27CE),
+                        ),
                       ),
                     ),
                   ),

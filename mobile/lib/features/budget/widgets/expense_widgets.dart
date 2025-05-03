@@ -1,3 +1,4 @@
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/models/expense_model.dart';
@@ -19,10 +20,7 @@ class ExpenseTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       child: ListTile(
         leading: const Icon(Icons.restaurant, color: Colors.black87, size: 36),
-        title: Text(
-          expense.title,
-          style: TextStyles.cardTitleHeading,
-        ),
+        title: Text(expense.title, style: TextStyles.cardTitleHeading),
         subtitle: Text(
           DateFormat('dd.MM.yyyy').format(expense.date),
           style: TextStyles.subtitle,
@@ -56,9 +54,11 @@ class _ExpenseFormState extends State<ExpenseForm> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
-  final _noteController = TextEditingController();
   final _dateController = TextEditingController();
   DateTime? _selectedDate;
+  String? _selectedCurrency = 'PLN';
+
+  final List<String> _currencies = ['PLN', 'USD', 'EUR', 'GBP'];
 
   final border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(16),
@@ -83,12 +83,15 @@ class _ExpenseFormState extends State<ExpenseForm> {
   }
 
   Future<void> _submitForm() async {
-    if (!_formKey.currentState!.validate() || _selectedDate == null) return;
+    if (!_formKey.currentState!.validate() ||
+        _selectedDate == null ||
+        _selectedCurrency == null)
+      return;
 
     final String title = _titleController.text.trim();
     final double amount = double.parse(_amountController.text);
-    final String date = DateFormat('yyyy-MM-dd').format(_selectedDate!);
-    final String note = _noteController.text.trim();
+    final String date = DateFormat('dd.MM.yyyy').format(_selectedDate!);
+    final String currency = _selectedCurrency!;
 
     try {
       await BudgetService.addExpense(
@@ -96,8 +99,9 @@ class _ExpenseFormState extends State<ExpenseForm> {
         userProfileId: widget.userProfileId,
         title: title,
         amount: amount,
+        currency: currency,
         date: date,
-        note: note,
+        note: '',
       );
 
       widget.onSaved();
@@ -108,13 +112,15 @@ class _ExpenseFormState extends State<ExpenseForm> {
       _formKey.currentState!.reset();
       _titleController.clear();
       _amountController.clear();
-      _noteController.clear();
       _dateController.clear();
-      setState(() => _selectedDate = null);
+      setState(() {
+        _selectedDate = null;
+        _selectedCurrency = 'PLN';
+      });
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Błąd dodawania: \$e')));
+      ).showSnackBar(SnackBar(content: Text('Błąd dodawania: $e')));
     }
   }
 
@@ -132,11 +138,9 @@ class _ExpenseFormState extends State<ExpenseForm> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                const Text(
-                  'Dodaj wydatek',
-                  style: TextStyles.subtitle,
-                ),
+                const Text('Dodaj wydatek', style: TextStyles.subtitle),
                 const SizedBox(height: 16),
+
                 buildInputField(
                   controller: _titleController,
                   label: 'Tytuł',
@@ -148,6 +152,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                           val == null || val.isEmpty ? 'Podaj tytuł' : null,
                 ),
                 const SizedBox(height: 12),
+
                 buildInputField(
                   controller: _amountController,
                   label: 'Kwota',
@@ -163,6 +168,34 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   },
                 ),
                 const SizedBox(height: 12),
+
+                CustomDropdown<String>(
+                  items: _currencies,
+                  initialItem: _selectedCurrency,
+                  hintText: 'Wybierz walutę',
+                  onChanged: (String? newCurrency) {
+                    if (newCurrency != null) {
+                      setState(() => _selectedCurrency = newCurrency);
+                    }
+                  },
+                  decoration: CustomDropdownDecoration(
+                    closedFillColor: const Color(0xFFF4F2FF),
+                    closedBorder: Border.all(
+                      color: Colors.black38,
+                      width: 1.2,
+                    ),
+                    closedBorderRadius: BorderRadius.circular(16),
+                    closedSuffixIcon: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                    ),
+                    headerStyle: TextStyles.cardTitleHeading,
+                    hintStyle: TextStyles.subtitle,
+                    listItemStyle: TextStyles.subtitle,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
                 buildInputField(
                   controller: _dateController,
                   label: 'Data',
@@ -174,16 +207,9 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   validator:
                       (_) => _selectedDate == null ? 'Wybierz datę' : null,
                 ),
-                const SizedBox(height: 12),
-                buildInputField(
-                  controller: _noteController,
-                  label: 'Notatka (opcjonalnie)',
-                  keyboardType: TextInputType.text,
-                  maxLines: 2,
-                  style: TextStyles.cardTitleHeading,
-                  border: border,
-                ),
+
                 const SizedBox(height: 16),
+
                 Align(
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
