@@ -80,4 +80,27 @@ class ChatService {
 
     return WebSocketChannel.connect(uri);
   }
+
+  static void listenToMessages({
+    required WebSocketChannel channel,
+    required Function(MessageModel message) onMessage,
+  }) {
+    channel.stream.listen(
+          (data) {
+        final msg = MessageModel.fromJson(jsonDecode(data));
+        onMessage(msg);
+      },
+      onError: (error) {
+        print('WebSocket error: $error');
+      },
+      onDone: () {
+        print('WebSocket closed');
+      },
+    );
+  }
+
+  static void sendMessage(WebSocketChannel channel, String content) {
+    final message = jsonEncode({'content': content});
+    channel.sink.add(message);
+  }
 }
