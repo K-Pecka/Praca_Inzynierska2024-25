@@ -28,6 +28,9 @@ class TicketManager(models.Manager):
     def by_user(self, profile):
         return self.filter(profile=profile).distinct()
 
+    def by_trip_and_profile(self, trip_id):
+        return self.filter(trip_id=trip_id).distinct()
+
 
 class TripAccessTokenManager(models.Manager):
     def by_id(self, pk):
