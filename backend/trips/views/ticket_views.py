@@ -29,9 +29,11 @@ class TicketListByTripAPIView(ListAPIView):
 
     def get_queryset(self):
         trip_id = self.kwargs['trip_pk']
-        return (Ticket.objects
-            .by_trip_and_profile(trip_id)
-            .select_related('profile', 'trip')
+        profile = self.request.user.get_default_profile()
+        return (
+            Ticket.objects
+            .by_trip_and_profile(trip_id, profile)
+            .select_related('owner', 'trip')
         )
 
 
