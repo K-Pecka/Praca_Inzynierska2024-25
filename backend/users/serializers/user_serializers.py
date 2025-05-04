@@ -50,7 +50,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         except ValidationError:
             raise serializers.ValidationError("Enter a valid email address.")
 
-        if CustomUser.objects.filter(email=value).exists():
+        existing_user = CustomUser.objects.filter(email=value).first()
+        if existing_user and not existing_user.is_guest:
             raise serializers.ValidationError("Użytkownik o podanym adresie email już istnieje.")
 
         return value
@@ -65,6 +66,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
                 defaults=validated_data
             )
 
+            if user and user.is_guest:
+                return user.register_guest_account(validated_data)
+
+
             uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
 
@@ -76,12 +81,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             except Exception as e:
                 raise serializers.ValidationError({"error": f"Błąd przy tworzeniu użytkownika {e}"})
 
-            if user.is_guest:
-                return user.register_guest_account(validated_data)
-
             return user
-
-
 
     def send_confirmation_email(self, user, confirmation_link):
         subject = 'Potwierdź swój adres email.'
@@ -90,6 +90,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             'confirmation_link': confirmation_link,
         })
         send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
+
 
     class Meta:
         model = CustomUser
