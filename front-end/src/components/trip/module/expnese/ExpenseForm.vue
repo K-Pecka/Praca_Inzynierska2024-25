@@ -1,26 +1,58 @@
 <script setup lang="ts">
-import {ref, computed} from "vue";
+import {ref, computed, watchEffect} from "vue";
 import AppButton from "@/components/budget/AppButton.vue";
 import {VDateInput} from "vuetify/labs/components";
 import { budget } from "@/data/category/budget";
-
+import {fetchUserById} from "@/api"
 const categoryBudget = budget;
 import {useTripStore} from "@/stores/trip/useTripStore";
 const {getTripDetails, createExpense} = useTripStore();
 import {useRoute} from "vue-router";
 const tripId = useRoute().params.tripId as string;
 const {data: tripData} = getTripDetails(Number(tripId));
+const getUserById =async (id:number)=>{
+  const user = await fetchUserById(id);
+  //console.log(user)
+  return {
+    name: `${user.first_name} ${user.last_name}`,
+    userId: id
+  };
+}
+const members = ref<{ name: string; userId: number }[]>([]);
 
-const members = computed(() => {
-  if (!tripData.value) return [];
-  return [...(tripData.value?.members || []), ...(tripData.value?.pending_members || [])];
+watchEffect(async () => {
+  const membersRaw = tripData.value?.members ?? [];
+  const pendingRaw = tripData.value?.pending_members ?? [];
+
+  const confirmed = await Promise.all(
+    membersRaw.map(async (entry) => {
+      const id =  entry;
+      const user = await getUserById(id);
+      return { ...user, is_guest: false };
+    })
+  );
+
+  const pending = await Promise.all(
+    pendingRaw.map(async (entry) => {
+      const id = typeof entry === 'object' && entry !== null ? entry.id : entry;
+      const user = await getUserById(id);
+      return { ...user, is_guest: true };
+    })
+  );
+  const userMap = new Map<number, typeof confirmed[0]>();
+  
+  for (const user of [...pending, ...confirmed]) {
+    userMap.set(user.userId, user);
+  }
+
+  members.value = Array.from(userMap.values());
 });
 const form = ref({
   title:"",
   amount: 0,
   currency: "PLN",
   date: "",
-  user: 0,
+  user: "",
   category: 1,
   note: "",
 });
@@ -31,8 +63,8 @@ const submitTicket = () =>{
     title: form.value.title,
     amount: form.value.amount,
     currency: form.value.currency,
-    date: new Date (form.value.date).toISOString().split("T")[0],
-    user: form.value.user != 0 ? form.value.user : 2,
+    date: new Intl.DateTimeFormat('pl-PL').format(new Date(form.value.date)),
+    user: form.value.user !== "" ? Number(form.value.user) : members.value[0].userId,
     category: form.value.category,
     note: form.value.note,
   });
@@ -50,7 +82,7 @@ const submitTicket = () =>{
               v-model="form.user"
               :items="members"
               item-title="name"
-              item-value="id"
+              item-value="userId"
               label="Podaj uczestnika"
               variant="outlined"
               bg-color="background"

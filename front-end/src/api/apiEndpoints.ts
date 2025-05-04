@@ -42,7 +42,8 @@ export const fetchData = async <T = unknown>(
     }, 3000);
     if (!response.ok) {
       errorStatus(response.status);
-      //console.error("Error response:", result);
+      console.error("data:", options.body);
+      console.error("Error response:", result);
       throw new Error(result?.message || `Błąd HTTP: ${response.status}`);
     }
     

@@ -21,11 +21,11 @@ const getUserById =async (id:number)=>{
   const user = await fetchUserById(id);
   //console.log(user)
   return {
-    title: `${user.first_name} ${user.last_name}`,
-    value: id
+    name: `${user.first_name} ${user.last_name}`,
+    userId: id
   };
 }
-const members = ref<{ title: string; value: number }[]>([]);
+const members = ref<{ name: string; userId: number }[]>([]);
 
 watchEffect(async () => {
   const membersRaw = tripData.value?.members ?? [];
@@ -46,8 +46,13 @@ watchEffect(async () => {
       return { ...user, is_guest: true };
     })
   );
+  const userMap = new Map<number, typeof confirmed[0]>();
+  
+  for (const user of [...pending, ...confirmed]) {
+    userMap.set(user.userId, user);
+  }
 
-  members.value = [...confirmed, ...pending];
+  members.value = Array.from(userMap.values());
 });
 const showForm = ref(false);
 async function handleAddTicket(newTicketData: {
@@ -156,6 +161,8 @@ const toggleForm = () => {
                   label="Przypisz do osoby (Opcjonalnie)"
                   variant="outlined"
                   multiple
+                  item-title="name"
+                  item-value="userId"
                   density="compact"
                   bg-color="background"
                   max-width="600px"

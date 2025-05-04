@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineProps } from "vue";
 import { DashboardBox } from "@/types/interface";
-
+import BudgetContent from "@/components/ui/BudgetContent.vue";
 const props = defineProps<DashboardBox>();
 </script>
 
@@ -29,7 +29,10 @@ const props = defineProps<DashboardBox>();
         </v-list>
       </template>
 
-      <BudgetContent v-if="typeof props.content === 'object'" :content="props.content" />
+      <BudgetContent 
+        v-if="typeof props.content === 'object' && 'amount' in props.content" 
+        v-bind="{ content: props.content, showCurrency: undefined }"
+      />
 
       <template v-else>
         {{ props.content }}

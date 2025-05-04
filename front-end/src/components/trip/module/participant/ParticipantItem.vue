@@ -76,7 +76,6 @@ const tags = [
   align-items: center;
   background-color: rgb(var(--v-theme-background));
   border-radius: 12px;
-  padding: 1rem 1.5rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 

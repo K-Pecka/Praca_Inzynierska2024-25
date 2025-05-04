@@ -47,8 +47,13 @@ watchEffect(async () => {
       return { ...user, is_guest: true };
     })
   );
+  const userMap = new Map<number, typeof confirmed[0]>();
+  
+  for (const user of [...pending, ...confirmed]) {
+    userMap.set(user.userId, user);
+  }
 
-  members.value = [...confirmed, ...pending];
+  members.value = Array.from(userMap.values());
 });
 
 

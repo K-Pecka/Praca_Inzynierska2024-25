@@ -45,7 +45,7 @@ function submitTicket() {
 const timeMenu = ref(false);
 
 defineProps<{
-  members: {title:string,value:number}[];
+  members: {name:string,userId:number}[];
 }>();
 </script>
 
@@ -131,6 +131,8 @@ defineProps<{
               variant="outlined"
               :disabled="members.length === 0"
               :items="members"
+              item-title="name"
+              item-value="userId"
               chips
               clearable
               multiple

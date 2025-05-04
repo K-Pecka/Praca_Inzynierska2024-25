@@ -1,40 +1,43 @@
 <script setup lang="ts">
 import ExpenseItem from "./ExpenseItem.vue";
+import { computed } from "vue";
 
-import { useTripStore } from "@/stores/trip/useTripStore";
-import { useUtilsStore } from "@/stores";
-const {getTripId} = useUtilsStore();
-const {data:expenses,isLoading} = useTripStore().getExpensesQuery(getTripId() as unknown as number);
-const { variant, limit,config } = defineProps<{
+const { expenses, variant, config, limit } = defineProps<{
+  expenses?: any[];
   variant?: "manage" | "view";
   config?: Record<string, any>;
   limit?: number;
 }>();
-import { computed, ref} from "vue";
-function convertToDate(dateStr : string): number {
-  const [day, month, year] = dateStr.split('.');
-  return new Date(`${year}-${month}-${day}`).getTime();
+
+function convertToDate(dateStr: string): number {
+  return new Date(dateStr).getTime();
 }
+
 const visibleExpenses = computed(() => {
-  if (!expenses.value) return [];
-  const expense = ref([...expenses.value]);
-  expense.value = expense.value.sort((b, a) => 
+  if (!expenses) return [];
+
+  let filtered = [...expenses].sort((b, a) =>
     convertToDate(a.date) - convertToDate(b.date)
   );
+
   if (config?.category) {
-    expense.value = expense.value.filter((expense) => expense.category === config.category);
+    filtered = filtered.filter((e) => e.category === config.category);
   }
-  if (config?.user) {
-    expense.value = expense.value.filter((expense) => expense.user === config.user);
+  if (config?.participants) {
+    filtered = filtered.filter((e) => e.user === config.participants);
   }
   if (config?.dateFrom) {
-    expense.value = expense.value.filter((expense) => convertToDate(expense.date) >= convertToDate(config.dateFrom));
+    filtered = filtered.filter(
+      (e) => convertToDate(e.date) >= convertToDate(config.dateFrom)
+    );
   }
   if (config?.dateTo) {
-    expense.value = expense.value.filter((expense) => convertToDate(expense.date) <= convertToDate(config.dateTo));
+    filtered = filtered.filter(
+      (e) => convertToDate(e.date) <= convertToDate(config.dateTo)
+    );
   }
-  //console.log("expense", expense.value);
-  return limit ? expense.value.slice(0, limit) : expense.value;
+
+  return limit ? filtered.slice(0, limit) : filtered;
 });
 </script>
 
@@ -45,12 +48,7 @@ const visibleExpenses = computed(() => {
       :key="index"
       :expense="expense"
       :variant="variant"
-      v-if="!isLoading"
-    >
-    </ExpenseItem>
-    <div v-else>
-      Ładowanie...
-    </div>
+    />
   </div>
 </template>
 
