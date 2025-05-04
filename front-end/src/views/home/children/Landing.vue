@@ -13,7 +13,6 @@ const { getHeroBannerText } = usePageHomeStore();
         :src="images.hero.img"
         :alt="images.hero.alt"
         class="hero-image"
-        transition="scale-transition"
       />
     </template>
   </Hero>

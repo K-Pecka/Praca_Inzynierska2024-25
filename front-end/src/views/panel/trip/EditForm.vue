@@ -70,11 +70,11 @@ function handleSubmit(_formData: any, config: any) {
       <p v-else-if="error">Błąd: {{ error.message }}</p>
 
       <Form
-          v-else
-          :submitButtonLabel="'Zapisz zmiany'"
-          :inputs="inputs"
-          :formValues="formValues"
-          @submitForm="handleSubmit"
+        v-else
+        :submitButtonLabel="'Zapisz zmiany'"
+        :inputs="inputs"
+        :formValues="formValues"
+        @submitForm="handleSubmit"
       />
     </template>
   </Section>

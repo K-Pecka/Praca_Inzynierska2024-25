@@ -17,9 +17,9 @@ const { data: trip_data } = getTripDetails(Number(id));
     <template #title>
       <HeaderSection>
         <template #subtitle>
-          <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">
+          <span class="trip-title">
             Plany podróży
-          </h2>
+          </span>
         </template>
       </HeaderSection>
     </template>
@@ -33,9 +33,3 @@ const { data: trip_data } = getTripDetails(Number(id));
   </Section>
 </template>
 
-<style lang="scss" scoped>
-h1 {
-  font-size: 2.25rem;
-  text-align: left;
-}
-</style>

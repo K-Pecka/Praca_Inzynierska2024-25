@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "../auth/useAuthStore";
-import { onMounted, ref, watch } from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {
   defaultNavLinks,
   loggedInNavLinks,
@@ -28,10 +28,18 @@ export const usePageHomeStore = defineStore("pagHome", () => {
     ];
   });
   const getSiteName = () => import.meta.env.VITE_APP_SITE_NAME || "Plannder";
-
   const getFooterData = () => ({
     links: defaultNavLinks,
     ...footerData(),
+  });
+  const isLoggedIn = ref(false);
+
+  onMounted(async () => {
+    isLoggedIn.value = await validToken();
+  });
+
+  watch(validToken, async () => {
+    isLoggedIn.value = await validToken();
   });
 
   const getHeroBannerText = () => heroTextAnimation;
@@ -50,6 +58,7 @@ export const usePageHomeStore = defineStore("pagHome", () => {
   return {
     getSiteName,
     navigationLinks,
+    isLoggedIn,
     getFooterData,
     getHeroBannerText,
     getFAQData,

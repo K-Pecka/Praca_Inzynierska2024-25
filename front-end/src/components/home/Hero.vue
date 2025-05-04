@@ -12,9 +12,9 @@ const props = defineProps({
 
 <template>
   <header class="hero">
-    <v-container fluid class="full-width-container" style="width: 75%">
+    <v-container fluid>
       <v-row>
-        <v-col :cols="$vuetify.display.smAndDown ? 12 : 7" 
+        <v-col :cols="$vuetify.display.smAndDown ? 12 : 7"
         class="hero__text" ref="heroText"
         :class="{ 'justify-center align-center text-center': $vuetify.display.smAndDown }"
         >
@@ -44,9 +44,9 @@ const props = defineProps({
   fill: rgb(var(--v-theme-hero-bg));
 }
 .hero {
-  padding: 6% 0;
-  margin-bottom: 25vh;
-  @include font-large;
+  padding-top: 5%;
+  margin-bottom: 20%;
+  width: 70%;
   &__text {
     font-weight: 700;
     text-transform: uppercase;

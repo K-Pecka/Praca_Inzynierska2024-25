@@ -1,172 +1,69 @@
-<script lang="ts" setup>
-import { FooterData} from "@/types/interface";
-import lastModified from "@/assets/last-modified.txt?raw";
-import { useUtilStore } from "@/stores";
- defineProps({
-  footerData: {
-    type: Object as () => FooterData,
-    required: true,
-  },
-});
-const {formatDate} = useUtilStore();
-const lastModifiedDate = formatDate(new Date(lastModified));
+<script setup>
+  import { useDisplay } from 'vuetify'
+  import { images } from "@/data/index.ts";
+
+  const { smAndDown } = useDisplay()
+
+  const links = [
+    'Oferta',
+    'O nas',
+    'Kontakt',
+  ]
 </script>
 
 <template>
-  <footer class="footer-bg">
-    <v-container class="footer">
-      <v-row class="d-flex justify-center">
-        <v-col class="footer__top px-0" cols="12" sm="12" md="10">
-          <div class="footer__top__logo">
-            <slot name="logo"> </slot>
-          </div>
+  <v-footer class="d-flex align-center justify-center ga-2 flex-wrap flex-grow-1 py-3 footer">
+    <v-col
+        cols="8"
+        class="d-flex flex-column"
+    >
+      <!-- Top section -->
+      <v-row
+          class="pb-5"
+          :class="{ 'justify-center': smAndDown, 'justify-space-between': !smAndDown }"
+          align="end"
 
-          <div
-            class="footer__top__links "
-            v-if="footerData.links && footerData.links.length > 0"
-          >
-            <ul>
-              <li v-for="(link, index) in footerData.links" :key="index">
-                <router-link :to="link.href">{{ link.label }}</router-link>
-              </li>
-            </ul>
-          </div>
-        </v-col>
+      >
+        <!-- Logo -->
+        <v-img
+            class="pb-3"
+            aspect-ratio="16/9"
+            :src="images.logo.img"
+            :min-width="100"
+            :max-width="150"
+            v-if="!smAndDown"
+        />
+
+        <!-- Buttons -->
+        <div>
+          <v-btn
+            v-for="link in links"
+            :key="link"
+            :text="link"
+            variant="plain"
+            :ripple="false"
+            rounded
+            class="pr-0 pl-8"
+          />
+        </div>
       </v-row>
 
+      <!-- Bottom section -->
       <v-row>
-        <v-col
-          class="footer__bottom"
-          cols="12"
-          md="10"
-          offset-md="1"
-          v-if="footerData.footerText"
-        >
-          <hr />
-          <p v-if="footerData.footerText">{{ footerData.footerText }}</p>
-          <p v-if="lastModifiedDate">{{ `${footerData.lastUpdated} ${lastModifiedDate}` }}</p>
-        </v-col>
+        <v-divider class="pb-5" thickness="2" />
+        <div class="flex-1-0-100 text-center mt-2">
+          {{ new Date().getFullYear() }} — <strong>Plannder</strong>
+        </div>
       </v-row>
-    </v-container>
-  </footer>
+    </v-col>
+  </v-footer>
 </template>
 
 <style scoped lang="scss">
-@use "@/assets/styles/style.scss" as *;
-.footer-bg{
-  background-color: rgb(var(--v-theme-secondary));
-  display: flex;
-  justify-content: center;
-}
-.v-row + .v-row {
-  margin-top: 0.25rem;
-}
-* {
-  color: rgb(var(--v-theme-text));
-  font-family: var(--v-fontFamily);
-}
-
-.v-container {
-  margin: 0;
-  max-width: 72%;
-}
+@use "@/assets/styles/variables" as *;
 
 .footer {
-  @include section-width;
-  padding: 3rem 1rem 1rem 1rem;
-  background-color: rgb(var(--v-theme-secondary));
-  font-family: var(--v-fontFamily);
-
-
-  &__top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    &__logo {
-      @include font-large;
-      @include gradient-text;
-      font-size: 2rem;
-      display: flex;
-      align-items: center;
-      @media (max-width: 600px) {
-        font-size: 1rem;
-      }
-      img {
-        width: 50px;
-        height: 50px;
-        margin-right: 10px;
-      }
-    }
-
-    &__name {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-
-    &__links {
-      ul {
-        display: flex;
-        list-style: none;
-        gap: 2rem;
-        padding: 0.5rem;
-        margin: 0;
-      }
-      @media (max-width: 600px) {
-        ul {
-          flex-direction: column;
-          gap: 0.5rem;
-          padding: 0;
-          margin: 0;
-        }
-      }
-      li {
-        margin: 5px 0;
-        @include font-regular;
-        @media (max-width: 600px) {
-        font-size: 0.75rem;
-      }
-      }
-
-      a {
-        text-decoration: none;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-  }
-  &__bottom {
-    line-height: 3rem;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    flex-wrap: wrap;
-    text-align: center;
-    border-top: 1px solid #0000001c;
-    @media (max-width: 600px) {
-      font-size: 0.75rem;
-    }
-    @media screen and (min-width: 768px) {
-      flex-direction: column;
-      &::after {
-        content: "";
-        margin: 0.5rem 0;
-      }
-      display: flex;
-      justify-content: center;
-      flex-direction: row;
-      p {
-        &:not(:last-child)::after {
-          content: " | ";
-          margin: 0 0.5rem;
-        }
-        margin: 0;
-        font-size: 1rem;
-      }
-    }
-  }
+  background-color: $secondary-color;
+  min-height: $footer-height;
 }
-
 </style>

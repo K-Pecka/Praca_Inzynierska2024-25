@@ -1,14 +1,15 @@
 import type { RouteRecordRaw } from "vue-router";
 
 import { 
-  Panel, TripDashboard, YourTrip, YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm, ActivityView,
+  TripDashboard, YourTrip, YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm, ActivityView,
   PlanForm, TripForm, BudgetForm
 } from "@/views/panel";
+import PanelLayout from "@/layouts/PanelLayout.vue";
 
 const panelGuideRoutes: RouteRecordRaw = {
   path: "/guide",
   name: "panelGuide",
-  component: Panel,
+  component: PanelLayout,
   meta: { title: "Panel", requiresAuth: true },
   children: [
 

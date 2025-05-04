@@ -3,11 +3,11 @@ import AppCard from "@/components/budget/AppCard.vue";
 import AppButton from "@/components/budget/AppButton.vue";
 import AppProgress from "@/components/budget/AppProgress.vue";
 import ExpenseList from "@/components/budget/ExpenseList.vue";
-import Section from "@/components/common/Section.vue";
-import { useUtilStore } from "@/stores";
+import Section from "../../../components/common/Section.vue";
+import { useUtilsStore } from "@/stores";
 import { useRoute } from "vue-router";
 const route = useRoute();
-const { mapCategoryBudget } = useUtilStore();
+const { mapCategoryBudget } = useUtilsStore();
 const id = route.params.tripId as string;
 import { useTripStore } from "@/stores/trip/useTripStore";
 const { getTripDetails, getExpensesQuery } = useTripStore();
@@ -68,16 +68,12 @@ const dateTo = ref<string | null>(null);
       <HeaderSection>
         <template #subtitle>
           <div class="title-container pb-4 w-100">
-            <h2
-              class="trip-title mb-10"
-              style="font-size: 30px; font-weight: 600; width: 80%"
-            >
+            <span class="trip-title">
               Wydatki
-            </h2>
+            </span>
             <div class="d-flex">
               <AppButton
                 variant="primary"
-                size="md"
                 @click="showForm = !showForm"
               >
                 <v-icon v-if="$vuetify.display.smAndDown">mdi-plus</v-icon>
@@ -141,7 +137,6 @@ const dateTo = ref<string | null>(null);
 
                 <AppButton
                   variant="primary"
-                  size="md"
                   @click="showFilters = true"
                 >
                   <v-icon start>mdi-filter</v-icon>
@@ -165,12 +160,12 @@ const dateTo = ref<string | null>(null);
         <v-row>
           <v-col>
             <AppCard class="chart-card ml-0">
-              <h2 class="section-title">Wydatki - Kategorie</h2>
+              <span class="section-title">Wydatki - Kategorie</span>
             </AppCard>
           </v-col>
           <v-col>
             <AppCard class="chart-card mr-0">
-              <h2 class="section-title">Wydatki - Uczestnicy</h2>
+              <span class="section-title">Wydatki - Uczestnicy</span>
             </AppCard>
           </v-col>
         </v-row>

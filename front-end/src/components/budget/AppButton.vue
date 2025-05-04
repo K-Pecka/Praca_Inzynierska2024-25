@@ -1,64 +1,48 @@
 <script setup lang="ts">
+defineProps<{
+  variant?: "primary" | "secondary" | "accent";
+  width?: string;
+  height?: string;
+  fontSize?: string;
+}>();
 
-defineProps<{ variant?: "primary" | "secondary", size?: "sm" | "md" | "lg" }>();
 </script>
 
 <template>
-  <v-btn class="app-button" :class="variant, size">
+  <v-btn
+      class="border-none font-weight-bold text-none w-100"
+      v-bind="$attrs"
+      :style="{ maxWidth: width }"
+      :class="[variant, height, fontSize]"
+  >
     <slot/>
   </v-btn>
 </template>
 
 <style scoped lang="scss">
-.app-button {
-  padding: 8px 40px;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-  width: fit-content;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sm {
-  padding: 6px 20px;
-  font-size: 0.8rem;
-}
-
-.md {
-  padding: 8px 32px;
-  font-size: 1rem;
-}
-
-.lg {
-  padding: 12px 48px;
-  font-size: 1.2rem;
-}
+@use "@/assets/styles/variables" as *;
 
 .primary {
-  background-color: rgb(var(--v-theme-primary));
+  background-color: $primary-color;
   color: white;
-  border: none;
-}
-
-.primary:hover {
-  background-color: rgba(var(--v-theme-primary),1);
 }
 
 .secondary {
-  background-color: rgb(var(--v-theme-secondary));
-  color: rgba(var(--v-theme-text), 0.8);
-  border: none;
+  background-color: $secondary-color;
+  color: $text-color;
 }
 
-.secondary:hover {
-  background-color: rgba(var(--v-theme-secondary), 0.8);
+.accent {
+  background-color: $accent-color;
+  color: white;
 }
-@media (max-width: 400px) {
-  .app-button {
-    padding: 8px 24px;
-  }
+
+.height-auto {
+  height: 2.5em;
 }
+
+.font-auto {
+  font-size: clamp(0.4em, 0.4vw + 0.4rem, 1em);
+}
+
 </style>

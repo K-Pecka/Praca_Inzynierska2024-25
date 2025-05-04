@@ -22,6 +22,7 @@ const props = defineProps<{
         :model-value="(props.current / props.max) * 100"
         color="primary"
         height="12"
+        rounded
     />
   </div>
 </template>

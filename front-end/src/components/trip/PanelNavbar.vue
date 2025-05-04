@@ -81,7 +81,6 @@ function onHamburgerClick() {
 }
 
 .panel-navbar__logo {
-  @include font-large;
   @include gradient-text;
   font-size: 2rem;
   padding: 0.5rem;

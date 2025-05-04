@@ -4,7 +4,7 @@ import {useDashboard} from "./useDashboard";
 import {usePlans} from "./usePlans";
 import {useTrips} from "./useTrips";
 import { useBudget } from "./useBudget";
-import { useTicketStore } from "./useTicketStore";
+import { useTicketStore } from "@/stores";
 export const useTripStore = defineStore("trip", () => {
 
   const { getDashboard, getExpenseItem } = useDashboard();

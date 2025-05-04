@@ -32,15 +32,15 @@ const handleSubmit = (_formData: any, config: any) => {
 <template>
   <Section>
     <template #title>
-      <h1>Zaplanuj budżet na wycieczkę</h1>
+      <h1 class="pb-5">Zaplanuj budżet na wycieczkę</h1>
     </template>
 
     <template #content>
       <Form
-          :submitButtonLabel="'Zaplanuj budżet'"
-          :inputs="inputs"
-          :formValues="formValues"
-          @submitForm="handleSubmit"
+        :submitButtonLabel="'Zaplanuj budżet'"
+        :inputs="inputs"
+        :formValues="formValues"
+        @submitForm="handleSubmit"
       >
       </Form>
     </template>

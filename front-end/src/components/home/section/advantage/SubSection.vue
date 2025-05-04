@@ -19,7 +19,7 @@ defineProps({
         v-for="(item, index) in items"
         :key="index"
       >
-        <div class="subSection__imageContainer">
+        <div class="subSection__imageContainer py-10">
           <div class="subSection__imageContainer-colorBox">
             <img :src="item.image.img" :alt="item.image.alt" />
           </div>
@@ -38,13 +38,13 @@ img {
   height: 100%;
 }
 .subSection {
-  margin: 5rem 0;
+  margin-bottom: 20%;
   width: 100%;
 
   &__title {
-    font-size: 3vw;
     margin-bottom: clamp(0.5rem, 5vw, 1.5rem);
     text-align: center;
+    font-size: clamp(2rem, 4vw, 30rem);
   }
 
   &__content {
@@ -71,11 +71,10 @@ img {
     }
   }
   &__caption {
-    font-size: 1.2vw;
     color: rgb(var(--v-theme-text));
     letter-spacing: 2px;
     font-weight: 700;
-    font-family: var(--v-fontFamily);
+    font-size: clamp(1.5rem, 1.5vw, 30rem);
   }
 }
 </style>

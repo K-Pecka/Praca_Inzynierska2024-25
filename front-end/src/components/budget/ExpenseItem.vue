@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Expense } from "@/types";
 import AppCard from "./AppCard.vue";
-import { useUtilStore } from "@/stores";
-const { mapCategoryBudget} = useUtilStore();
+import { useUtilsStore } from "@/stores";
+const { mapCategoryBudget} = useUtilsStore();
 const props=defineProps<{
   expense: Expense;
   variant?: "manage" | "view";
@@ -11,13 +11,13 @@ const {icon, name:categoryName} = mapCategoryBudget(props.expense.category);
 </script>
 
 <template>
-  <AppCard class="expense-item backgroud-card" :elevation="0">
+  <AppCard class="expense-item background-card" :elevation="0">
     <div class="d-flex align-center">
       <v-icon size="48" class="mr-4">{{icon}}</v-icon>
       <div class="info">
         <h4>{{ expense.title }}</h4>
         <p>
-          {{ expense.date }} <span class="category font-regular">{{categoryName}}</span>
+          {{ expense.date }} <span class="category">{{categoryName}}</span>
           <span class="notes"> {{ expense?.note ?? '' }}</span>
         </p>
       </div>
@@ -34,7 +34,9 @@ const {icon, name:categoryName} = mapCategoryBudget(props.expense.category);
   </AppCard>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/assets/styles/variables" as *;
+
 .expense-item {
   display: flex;
   justify-content: space-between;
@@ -42,7 +44,7 @@ const {icon, name:categoryName} = mapCategoryBudget(props.expense.category);
 }
 
 .category {
-  color: rgba(var(--v-theme-primary));
+  color: $primary-color;
   font-weight: 400;
 }
 

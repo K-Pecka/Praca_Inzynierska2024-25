@@ -1,5 +1,4 @@
 import { useAuthStore } from "@/stores";
-import router from "@/router";
 export const hostName = "https://api.plannder.com";
 export const backendNotification = false;
 import {errorStatus} from "@/api/standardError";

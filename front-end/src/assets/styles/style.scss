@@ -1,5 +1,6 @@
 @use "../styles/scroll.scss";
 @use "../styles/input.scss";
+@use "../styles/variables.scss" as *;
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 :root{
@@ -7,59 +8,12 @@
 }
 
 .v-container{
-  max-width: calc(2560px);
+  max-width: 2560px;
   padding: 0;
 }
-.trip-title{
-  font-size: 30px; 
-  font-weight: 600; 
-  width: 80%;
-}
+
 * {
-  box-sizing: border-box;
-  font-family: var(--v-fontFamily) !important;
-}
-
-h2{
-  font-weight: 700;
-  font-size: 2rem;
-  font-family: var(--v-fontFamily);
-}
-
-h3{
-  font-weight: 700;
-  font-size: 3rem;
-  font-family: var(--v-fontFamily);
-}
-
-h1{
-  font-size: 2rem;
-  font-family: var(--v-fontFamily);
-  color: rgb(var(--v-theme-primary));
-}
-
-@media (max-width: 600px) {
-  h1{
-    font-size: 2rem;
-  }
-}
-
-@mixin font-large {
-  font-size: 4rem;
-  font-weight: bold;
-  font-family: var(--v-fontFamily);
-  color: rgb(var(--v-theme-text));
-}
-
-@mixin font-regular {
-  font-size: 1rem;
-  font-weight: bold;
-  font-family: var(--v-fontFamily);
-  color: rgb(var(--v-theme-text));
-}
-
-@mixin section-width {
-  margin: auto;
+  font-family: $font !important;
 }
 
 @mixin gradient-text {
@@ -73,59 +27,14 @@ h1{
   @include gradient-text;
 }
 
-.col{
-  padding: 0;
-}
-
-@mixin navbar-col($nr) {
-  width: calc(100vw / 12 * #{$nr});
-}
-
-@for $nr from 1 through 12 {
-  .navbar-col-#{$nr} {
-    @include navbar-col($nr);
-  }
-}
-
-.v-container {
-  width: 100%;
-  padding: 0;
-}
-
-.v-row{
-  margin: 0;
-}
-
-.sticky-top {
-  position: sticky;
-  z-index: 10;
-}
-
-.fixed-center {
-  top: 0;
-}
-
-.v-col{
-  padding: 0;
-}
-
-input{
-  background-color: rgb(var(--v-theme-background));
-}
-
-a{
+a {
   text-decoration: none;
 }
-.v-application__wrap{
-  justify-content: space-between;
-}
-body {
-  background-color: rgb(var(--v-theme-background));
-}
-body .v-card-title{
-  padding: 1rem 0;
+
+input {
+  background-color: $background-color;
 }
 
-.text-black-70 {
-  color: rgba(0, 0, 0, 0.7);
+body {
+  background-color: $background-color;
 }

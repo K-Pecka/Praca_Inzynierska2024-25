@@ -170,10 +170,12 @@ export interface Ticket{
 }
 export interface TicketData{
   id: number;
+  name: string;
   file: string;
   type: string;
   profile: number;
-  valid_from: string;
+  valid_from_date: string;
+  valid_from_time: string;
   trip: number;
   type_display?: string;
 }

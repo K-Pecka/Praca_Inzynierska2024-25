@@ -5,7 +5,7 @@ import { aboutTeam } from "@/data";
 </script>
 
 <template>
-  <Section class="py-10">
+  <Section class="pb-10">
     <template #title>
       <h1 class="text-h4 text-center text-primary font-weight-bold mb-6">
           {{ aboutTeam.mainTitle }}
@@ -20,9 +20,9 @@ import { aboutTeam } from "@/data";
                 v-for="(paragraph, index) in aboutTeam.paragraphs"
                 :key="index"
               >
-                <h2 class="text-h5 my-4 text-black-70 font-weight-bold">
+                <span class="text-h5 my-4 text-black-70 font-weight-bold">
                   {{ paragraph.title }}
-                </h2>
+                </span>
                 <p class="text-justify">{{ paragraph.paragraph }}</p>
                 <template v-if="index == 0">
                   <v-divider

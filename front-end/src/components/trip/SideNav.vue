@@ -3,14 +3,14 @@ import {ref, onMounted} from "vue";
 import {SideNavItem} from "@/types/interface";
 import {usePermissionStore, useAuthStore} from "@/stores";
 import {useRoute} from "vue-router";
-import {usePagePanelStore, useUtilStore} from "@/stores";
+import {usePagePanelStore, useUtilsStore} from "@/stores";
 import {Role} from "@/types/enum";
 
 const {getSideNavItems} = usePagePanelStore();
 const route = useRoute();
 usePagePanelStore().initialize(route.name as string);
 const items: SideNavItem[] = getSideNavItems(
-    useUtilStore().getTripId().value as string
+    useUtilsStore().getTripId().value as string
 );
 const {checkPermission} = useAuthStore();
 const {goTo} = usePermissionStore();

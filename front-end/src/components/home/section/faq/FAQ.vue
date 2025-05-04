@@ -18,11 +18,10 @@ const toggle = (index: number) => {
 <template>
   <div class="faq">
     <div class="faq__items"
-    v-for="(item, index) in faqList"
-         :key="index"
+      v-for="(item, index) in faqList"
+      :key="index"
     >
       <div
-        
         class="faq__item"
         :class="{ open: openIndex === index }"
         @click="toggle(index)"
@@ -34,32 +33,20 @@ const toggle = (index: number) => {
               toggle__icon: true,
               'toggle__icon--open': openIndex === index,
             }"
-            >+</span
-          >
+          >+</span>
         </div>
         <div v-show="openIndex === index" class="faq__answer">
           {{ item.answer }}
         </div>
       </div>
     </div>
-    <!-- <v-expansion-panels>
-      <v-expansion-panel
-        v-for="(item, index) in faqList"
-        bg-color="secondary"
-        :key="index"
-        :title="item.question"
-        :text="item.answer"
-      >
-      </v-expansion-panel>
-    </v-expansion-panels> -->
   </div>
 </template>
 
 <style scoped lang="scss">
 .faq {
   position: relative;
-  padding: 2rem 0 5rem;
-  width: 75%;
+  width: 73%;
   .faq__items {
     .faq__item {
       transition: all 0.3s;
@@ -74,7 +61,7 @@ const toggle = (index: number) => {
         color: rgb(var(--v-theme-primary));
         display: flex;
         justify-content: space-between;
-        font-size: 0.8vw;
+        font-size: 15px;
         align-items: center;
         font-weight: bold;
         cursor: pointer;
@@ -82,7 +69,7 @@ const toggle = (index: number) => {
 
       .faq__answer {
         margin-top: 0.5rem;
-        font-size: 0.6vw;
+        font-size: 10px;
         color: rgb(var(--v-theme-primary));
       }
 

@@ -1,9 +1,20 @@
-import { useMockupStore } from "@/mockup/useMockupStore";
-import { APP_MODE_DEV } from "@/config/envParams";
+import { apiEndpoints, fetchData } from "@/api/apiEndpoints";
+
 export const fetchPermission = async () => {
-  if (APP_MODE_DEV) {
-    const { getUserProfile } = useMockupStore();
-    const permission = getUserProfile();
-    return permission.length==0?[1,2,3]: permission ;
+  try {
+    const { data, error } = await fetchData(
+      apiEndpoints.auth.profile,
+      {},
+      "GET"
+    );
+
+    if (error) {
+      throw new Error(error);
+    }
+
+    return data || [1, 2, 3];
+  } catch (error) {
+    console.error("Error fetching permissions:", error);
+    return [1, 2, 3];
   }
 };

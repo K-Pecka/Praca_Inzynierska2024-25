@@ -4,19 +4,19 @@ import {useTripStore} from "@/stores";
 
 const route = useRoute();
 const tripId = Number(route.params.tripId);
-const {getTripDetails} = useTripStore();
-const {data: tripData, isLoading, error} = getTripDetails(tripId);
+const { getTripDetails } = useTripStore();
+const { data: tripData, isLoading, error } = getTripDetails(tripId);
 </script>
 <template>
-  <section class="section">
-    <header class="section__title">
-      <h1 class="trip-title mt-10" v-if="!isLoading && !error">{{ tripData?.name }}</h1>
+  <v-col cols="12" class="px-0">
+    <v-row class="section__title">
+      <h1 class="trip-title" v-if="!isLoading && !error">{{ tripData?.name }}</h1>
       <h1 class="trip-title" v-else>...</h1>
-    </header>
-    <div class="section__subtitle">
+    </v-row>
+    <v-row class="section__subtitle">
       <slot name="subtitle"></slot>
-    </div>
-  </section>
+    </v-row>
+  </v-col>
 </template>
 <style scoped lang="scss">
 * {
@@ -36,7 +36,6 @@ const {data: tripData, isLoading, error} = getTripDetails(tripId);
 }
 
 .trip-title {
-  font-family: var(--v-fontFamily);
   font-size: 2rem;
   width: 80%;
   font-weight: 700;

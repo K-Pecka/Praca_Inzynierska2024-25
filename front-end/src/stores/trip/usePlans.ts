@@ -63,5 +63,5 @@ export const usePlans = () => {
         plans: getPlans,
     }));
 
-    return { planMutationAdd, getPlans, yourPlans };
+    return { planMutationAdd, getPlans, yourPlans, handleDeleteItinerary };
 };

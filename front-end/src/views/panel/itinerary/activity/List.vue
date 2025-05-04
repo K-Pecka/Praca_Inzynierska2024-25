@@ -8,6 +8,9 @@ import { Section } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
 import { useRoute } from "vue-router";
 import { Activity } from "@/types/interface";
+import {useUtilsStore} from "@/stores/utils/useUtilsStore";
+
+const { formatDatePolish } = useUtilsStore();
 const route = useRoute();
 const id = route.params.tripId as string;
 const planId = route.params.planId as string;
@@ -16,31 +19,6 @@ const { data: activities, isSuccess } = useActivityStore().getActivity(
   id,
   planId
 );
-
-/*const activities = ref<Activity[]>([
-  {
-    id: 1,
-    type: "tour",
-    name: "Zwiedzanie muzeum",
-    date: "2025-03-28",
-    start_time: "10:00",
-    duration: "120",
-    location: "Muzeum Narodowe",
-    assignedTo: "",
-    description: "Zwiedzanie wystawy sztuki.",
-  },
-  {
-    id: 2,
-    type: "food",
-    name: "Lunch w restauracji",
-    date: "2025-03-28",
-    start_time: "13:00",
-    duration: "80",
-    location: "Restauracja Zielona",
-    assignedTo: "",
-    description: "Lunch w restauracji z widokiem.",
-  },
-]);*/
 
 const { getPlans } = useTripStore();
 const { data: plansData, isLoading, error } = getPlans(id);
@@ -101,58 +79,52 @@ const activity = computed(
       return acc;
     }, {} as Record<string, Activity[]>)
   )
+
 </script>
 
 <template>
-  <div class="page-container py-10">
-    <Section>
-      <template #title>
-        <HeaderSection>
-          <template #subtitle>
-            <h2 class="trip-title mb-10" style="font-size: 30px; font-weight: 600; width: 80%;">Zarządzaj aktywnościami</h2>
-          </template>
-        </HeaderSection>
-      </template>
+  <Section>
+    <template #title>
+      <HeaderSection>
+        <template #subtitle>
+          <span class="trip-title">Zarządzaj aktywnościami</span>
+        </template>
+      </HeaderSection>
+    </template>
 
-      <template #content>
-        <div v-for="day in days" :key="day" class="day-card w-100">
-          <div class="day-card-header">
-            <div class="day-date">{{ day }}</div>
-            <AppButton
-              variant="primary"
-              size="sm"
-              @click="showFormForDay = day"
-              v-show="showFormForDay != day"
-            >
-              Dodaj aktywność
-            </AppButton>
-          </div>
-
-          <ActivityForm
-            v-if="showFormForDay === day"
-            @submitActivity="(data) => addActivity(day, data)"
-            @cancelForm="showFormForDay = null"
-            class="form-container"
-          />
-          <span v-if="!isSuccess">Ładuję...</span>
-          <div class="activity-list" v-else>
-            <ActivityCard
-                v-for="activityItem in activity?.[day] ?? []"
-                :key="activityItem.id"
-                :activity="activityItem"
-            />
-          </div>
+    <template #content>
+      <div v-for="day in days" :key="day" class="day-card w-100">
+        <div class="day-card-header">
+          <div class="day-date">{{ formatDatePolish(day) }}</div>
+          <AppButton
+            variant="primary"
+            @click="showFormForDay = day"
+            v-show="showFormForDay != day"
+          >
+            Dodaj aktywność
+          </AppButton>
         </div>
-      </template>
-    </Section>
-  </div>
+
+        <ActivityForm
+          v-if="showFormForDay === day"
+          @submitActivity="(data) => addActivity(day, data)"
+          @cancelForm="showFormForDay = null"
+          class="form-container"
+        />
+        <span v-if="!isSuccess">Ładuję...</span>
+        <div class="activity-list" v-else>
+          <ActivityCard
+              v-for="activityItem in activity?.[day] ?? []"
+              :key="activityItem.id"
+              :activity="activityItem"
+          />
+        </div>
+      </div>
+    </template>
+  </Section>
 </template>
 
 <style scoped lang="scss">
-.page-container {
-  max-width: 88rem;
-  margin: 0 auto;
-}
 
 .header-wrapper {
   display: flex;
@@ -182,7 +154,7 @@ const activity = computed(
 .day-card {
   background-color: rgb(var(--v-theme-secondary), 0.5);
   border-radius: 1rem;
-  padding: 1.25rem 1.5rem;
+  padding: 25px;
   margin-bottom: 1.5rem;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);
 }
@@ -192,11 +164,22 @@ const activity = computed(
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: .5rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    button {
+      width: 100%;
+    }
+  }
 }
 
 .day-date {
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .form-container {
