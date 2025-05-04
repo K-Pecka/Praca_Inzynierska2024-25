@@ -66,6 +66,9 @@ export const setParam = (
 };
 
 export const apiEndpoints = {
+  user:{
+    getUserById: `${hostName}/user/user/by-profile/:userId/`,
+  },
   auth: {
     login: `${hostName}/user_auth/login/`,
     register: `${hostName}/user/create/`,
@@ -102,7 +105,7 @@ export const apiEndpoints = {
   },
   ticket: {
     create: `${hostName}/trip/ticket/create/`,
-    all: `${hostName}/trip/ticket/all/`,
+    all: `${hostName}/trip/:tripId/ticket/all/`,
   },
   budget: {
     update: `${hostName}/trip/:tripId/budget/update/`,

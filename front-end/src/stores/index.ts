@@ -1,4 +1,5 @@
 export { useAuthStore } from "./auth/useAuthStore";
+export { useUserStore } from "./auth/useUserStore";
 export { usePermissionStore } from "./auth/usePermissionStore"
 export { useNotificationStore } from "./ui/useNotificationStore";
 export { usePageHomeStore } from './ui/usePageHomeStore';

@@ -8,32 +8,32 @@ export interface TOKEN {
 }
 interface Config {
   required?: boolean;
-  multiple?:boolean;
-  min?:Date | string;
-  max?:Date | string;
-  edit?:boolean;
+  multiple?: boolean;
+  min?: Date | string;
+  max?: Date | string;
+  edit?: boolean;
 }
 
 export interface Input {
-    name: string;
-    label: string;
-    related?:string[],
-    type: string;
-    placeholder: string;
-    validation: Validator | any; //TODO: naprawić użycie any<tymczasowo>
-    config?:Config,
-    error: string[];
-  }
-export interface Register{
-    email: String,
-    first_name: String,
-    last_name: String,
-    date_of_birth: String,
-    password: String
-  }
+  name: string;
+  label: string;
+  related?: string[];
+  type: string;
+  placeholder: string;
+  validation: Validator | any; //TODO: naprawić użycie any<tymczasowo>
+  config?: Config;
+  error: string[];
+}
+export interface Register {
+  email: String;
+  first_name: String;
+  last_name: String;
+  date_of_birth: String;
+  password: String;
+}
 export interface DashboardBox {
   title: string;
-  icon?:string,
+  icon?: string;
   content: string | string[] | BudgetData;
   set: {
     size: {
@@ -44,7 +44,7 @@ export interface DashboardBox {
     };
     order: number;
   };
-  className?:string[];
+  className?: string[];
 }
 
 export interface Button {
@@ -53,7 +53,7 @@ export interface Button {
   class: String[];
   onclick: (id: string) => Promise<void> | void;
 }
-export interface Expense{
+export interface Expense {
   trip?: number;
   title: string;
   amount: number;
@@ -70,9 +70,14 @@ export interface Trip {
   end_date: string;
   country?: string;
   city?: string;
-  members?: Participant[];
-  budget?:Budget;
-  pending_members?: Participant[];
+  members?: number[];
+  budget?: Budget;
+  pending_members?: Memebers[];
+}
+export interface Memebers {
+  id: number;
+  type: number;
+  email: string;
 }
 export interface Budget {
   amount: string;
@@ -80,10 +85,10 @@ export interface Budget {
   trip: number;
 }
 export interface Btn {
-    type: TypeOfButton;
-    title: string;
-    class: String[];
-    onclick: (id: string) => Promise<void> | void;
+  type: TypeOfButton;
+  title: string;
+  class: String[];
+  onclick: (id: string) => Promise<void> | void;
 }
 
 export interface Phrase {
@@ -107,7 +112,7 @@ export interface FooterData {
 export interface SubSectionData {
   title: string;
   items: {
-    image: Image
+    image: Image;
     caption: string;
   }[];
 }
@@ -120,31 +125,31 @@ export interface SideNavItem {
   label: string;
   icon?: string;
   iconActive?: string;
-  route?: string | {name:string,params?:Record<string,string>};
+  route?: string | { name: string; params?: Record<string, string> };
   children?: SideNavItem[];
   permission?: number[];
-  name?:string;
+  name?: string;
 }
 
 export interface FAQItem {
   question: string;
   answer: string;
 }
-export interface Image {  
+export interface Image {
   img: string;
   alt: string;
   caption?: string;
 }
-export interface Role{
-  title: String,
-  description: String,
-  image: Image,
+export interface Role {
+  title: String;
+  description: String;
+  image: Image;
   path: string | { name: string; params?: Record<string, string> };
 }
-export interface RoleSelection{
-  title: String,
-  subtitle: String,
-  roles: Role[]
+export interface RoleSelection {
+  title: String;
+  subtitle: String;
+  roles: Role[];
 }
 
 export interface NewTrip {
@@ -160,7 +165,7 @@ export interface Plan {
   start_date: string;
   end_date: string;
 }
-export interface Ticket{
+export interface Ticket {
   id: string;
   type: string;
   name: string;
@@ -168,7 +173,7 @@ export interface Ticket{
   assignedTo?: string | string[];
   file?: File;
 }
-export interface TicketData{
+export interface TicketData {
   id: number;
   name: string;
   file: string;
@@ -180,13 +185,6 @@ export interface TicketData{
   type_display?: string;
 }
 
-export interface Participant {
-  id: number;
-  name?: string;
-  email: string;
-  is_guest?: boolean;
-}
-
 export interface PricingCard {
   name: string;
   price: string;
@@ -194,9 +192,9 @@ export interface PricingCard {
   buttonVariant?: "primary" | "secondary";
   contentVariant?: "primary" | "secondary";
 }
-export interface InvateUser{
-  id:string,
-  email:string,
+export interface InvateUser {
+  id: string;
+  email: string;
 }
 
 export interface BudgetData {
@@ -216,4 +214,12 @@ export interface Activity {
   location?: string;
   assignedTo?: string;
   description?: string;
+}
+export interface User {
+  userId: number;
+  first_name?: string;
+  last_name?: string;
+  email: string;
+  name?: string;
+  is_guest?: boolean;
 }

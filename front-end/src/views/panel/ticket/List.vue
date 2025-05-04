@@ -1,23 +1,54 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref, watchEffect} from "vue";
 import {useRoute} from "vue-router";
 import {Section} from "@/components";
-import {useTicketStore} from "@/stores/trip/useTicketStore";
+
 import {useTripStore} from "@/stores/trip/useTripStore";
-import { useDisplay } from 'vuetify'
+
 
 import TicketForm from "@/components/trip/module/ticket/TicketForm.vue";
 import AppButton from "@/components/budget/AppButton.vue";
 import {useUtilsStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
-
+import {createTicket,fetchUserById} from "@/api"
+import axios from "axios";
 const {combineDateAndTime} = useUtilsStore();
 const route = useRoute();
 const tripId = route.params.tripId as string;
+const {data: tripData} = useTripStore().getTripDetails(Number(tripId));
+const {data: tickets, isLoading} = useTripStore().getTickets(tripId);
+const getUserById =async (id:number)=>{
+  const user = await fetchUserById(id);
+  console.log(user)
+  return {
+    title: `${user.first_name} ${user.last_name}`,
+    value: id
+  };
+}
+const members = ref<{ title: string; value: number }[]>([]);
 
-const {createTicket} = useTicketStore();
-const {data: tickets, isLoading} = useTripStore().getTickets();
+watchEffect(async () => {
+  const membersRaw = tripData.value?.members ?? [];
+  const pendingRaw = tripData.value?.pending_members ?? [];
 
+  const confirmed = await Promise.all(
+    membersRaw.map(async (entry) => {
+      const id =  entry;
+      const user = await getUserById(id);
+      return { ...user, is_guest: false };
+    })
+  );
+
+  const pending = await Promise.all(
+    pendingRaw.map(async (entry) => {
+      const id = typeof entry === 'object' && entry !== null ? entry.id : entry;
+      const user = await getUserById(id);
+      return { ...user, is_guest: true };
+    })
+  );
+
+  members.value = [...confirmed, ...pending];
+});
 const showForm = ref(false);
 async function handleAddTicket(newTicketData: {
   type: string;
@@ -33,19 +64,23 @@ async function handleAddTicket(newTicketData: {
   formData.append("valid_from", combineDateAndTime(newTicketData.date, newTicketData.time));
   formData.append("file", newTicketData.file);
   try {
-    await createTicket(formData);
+    await createTicket(formData,{ tripId:tripId });
     showForm.value = false;
   } catch (error) {
     console.error("Błąd podczas tworzenia biletu:", error);
   }
 }
 
-const downloadFile = (ticket: string) => {
-  const link = document.createElement('a');
-  link.href = ticket;
-  link.download = 'bilet.pdf';
-  link.click();
-}
+const downloadItem = async ( url: string )=> {
+  console.log(url)
+      const response = await axios.get(url, { responseType: "blob" });
+      const blob = new Blob([response.data], { type: "application/jpeg" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "Prosze pobierz się.jpeg";
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
 
 const filteredTickets = () => {
   return (
@@ -68,6 +103,7 @@ const toggleForm = () => {
     <template #content>
       <v-col cols="12">
         <TicketForm
+            :members="members"
             v-if="showForm"
             @submitTicket="handleAddTicket"
             @cancelForm="showForm = false"
@@ -93,7 +129,7 @@ const toggleForm = () => {
         </v-row>
         <!-- Loaded tickets -->
         <v-card
-            class="background-secondary rounded-xl"
+            class="background-secondary rounded-xl my-5"
             v-else-if="tickets && tickets.length > 0"
             v-for="ticket in filteredTickets().reverse()"
             :key="ticket.id"
@@ -115,7 +151,8 @@ const toggleForm = () => {
             <!-- Ticket card body -->
             <v-card-actions class="justify-space-between flex-wrap">
               <v-select
-                  :items="['Jan', 'Anna', 'Piotr']"
+                  :items="members"
+                  :disabled="members.length === 0"
                   label="Przypisz do osoby (Opcjonalnie)"
                   variant="outlined"
                   multiple
@@ -129,10 +166,11 @@ const toggleForm = () => {
               <!-- Button to download the ticket -->
               <AppButton
                   variant="primary"
-                  @click="() => downloadFile(ticket.file)"
+                  @click="() => downloadItem(ticket.file)"
                   height-auto
                   font-auto
                   text="Pobierz bilet"
+                  stretch
               >
                 <v-icon>mdi-download</v-icon>
               </AppButton>

@@ -1,10 +1,10 @@
-import { apiEndpoints, fetchData, standardHeaders } from "../../apiEndpoints";
+import { apiEndpoints, fetchData, setParam, standardHeaders } from "../../apiEndpoints";
 import { Ticket, TicketData } from "@/types/interface";
 
-export const fetchTicket = async () => {
+export const fetchTicket = async (params: { [key: string]: string }) => {
   
   const { data, error } = await fetchData<TicketData[]>(
-    apiEndpoints.ticket.all,
+    setParam(apiEndpoints.ticket.all,params),
     {},
     "GET"
   );
@@ -16,12 +16,12 @@ export const fetchTicket = async () => {
 };
 
 export const createTicket = async (
-  formData: FormData,
+  formData: FormData,params: Record<string, string>
 ): Promise<any> => {
   formData.forEach((value, key) => {
     console.log(`${key}: ${value}`);
   });
-  const response = await fetch(apiEndpoints.ticket.create, {
+  const response = await fetch(setParam(apiEndpoints.ticket.create,params), {
     method: 'POST',
     headers: {
       ...standardHeaders(),

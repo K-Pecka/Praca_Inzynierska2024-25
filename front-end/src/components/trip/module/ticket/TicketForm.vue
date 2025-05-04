@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 import AppButton from "@/components/budget/AppButton.vue";
 import { VTimePicker } from 'vuetify/labs/VTimePicker'
 import { VDateInput } from "vuetify/labs/components";
 import { ticketCategory } from "@/data/category/ticket";
-
+import { User } from "@/types";
 const emit = defineEmits(["submitTicket", "cancelForm"]);
 
 const form = ref({
@@ -44,6 +44,9 @@ function submitTicket() {
 
 const timeMenu = ref(false);
 
+defineProps<{
+  members: {title:string,value:number}[];
+}>();
 </script>
 
 <template>
@@ -126,7 +129,8 @@ const timeMenu = ref(false);
               v-model="form.assignedTo"
               label="Przypisz do osoby (Opcjonalnie)"
               variant="outlined"
-              :items="['Jan', 'Anna', 'Piotr']"
+              :disabled="members.length === 0"
+              :items="members"
               chips
               clearable
               multiple

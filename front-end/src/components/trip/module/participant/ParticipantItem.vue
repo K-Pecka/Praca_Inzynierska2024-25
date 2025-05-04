@@ -1,27 +1,29 @@
 <script setup lang="ts">
-import { Participant} from "@/types";
+import { User } from "@/types";
 
-const props = defineProps<Participant>();
+const props = defineProps<{
+  user: User;
+}>();
 
 const emit = defineEmits(["remove"]);
 
 function handleRemoveClick() {
-  emit("remove", props.id);
+  emit("remove", props.user.userId);
 }
 
 console.log(props)
 </script>
 
 <template>
-  <div class="participant-item" :class="{ 'participant-item--noactive': props.is_guest }">
+  <div class="participant-item" :class="{ 'participant-item--noactive': user.is_guest }">
     <div class="participant-left">
       <v-icon size="48">mdi-account-outline</v-icon>
 
       <div class="participant-texts">
-        <strong class="participant-name">{{ props.name }}</strong>
+        <strong class="participant-name">{{ user.name }}</strong>
         <div class="email-row">
           <v-icon size="18" color="#555">mdi-email-outline</v-icon>
-          <span class="participant-email">{{ props.email }}</span>
+          <span class="participant-email">{{ user.email }}</span>
         </div>
       </div>
     </div>
@@ -40,6 +42,7 @@ console.log(props)
   max-width: 10rem;
 }
 .participant-item--noactive{
+  border-color:red;
   background-color: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.1);
 }

@@ -1,36 +1,62 @@
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {ref, watchEffect} from "vue";
 import {useRoute} from "vue-router";
 import {Section} from "@/components";
-import AppButton from "@/components/budget/AppButton.vue";
 import ParticipantList from "@/components/trip/module/participant/ParticipantList.vue";
 import ParticipantsCounter from "@/components/trip/module/participant/ParticipantsCounter.vue";
 import ParticipantAddForm from "@/components/trip/module/participant/ParticipantAddForm.vue";
-import {Participant} from "@/types";
+import {fetchUserById} from "@/api"
 import {useTripStore, useNotificationStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
-
+import {User} from "@/types";
 const {setErrorCurrentMessage} = useNotificationStore();
 const route = useRoute();
 const tripId = Number(route.params.tripId);
 
 const {getTripDetails, removeParticipant, addParticipant} = useTripStore();
 const {data: tripData, isLoading, error} = getTripDetails(tripId);
-const participants = computed<Participant[]>(() => {
-  if (!tripData.value) return [];
 
-  return [
-    ...tripData.value?.members ?? [],
-    ...tripData.value?.pending_members ?? []
-  ];
+const members = ref<User[]>([]);
+const getUserById =async (id:number)=>{
+  console.log("id user:",id)
+  const user = await fetchUserById(id);
+  console.log(user)
+  return {
+    name: `${user.first_name} ${user.last_name}`,
+    email: user.email,
+    userId:id
+  };
+}
+watchEffect(async () => {
+  const membersRaw = tripData.value?.members ?? [];
+  const pendingRaw = tripData.value?.pending_members ?? [];
+
+  const confirmed = await Promise.all(
+    membersRaw.map(async (entry) => {
+      const id =  entry;
+      const user = await getUserById(id);
+      return { ...user, is_guest: false };
+    })
+  );
+
+  const pending = await Promise.all(
+    pendingRaw.map(async (entry) => {
+      const id = typeof entry === 'object' && entry !== null ? entry.id : entry;
+      const user = await getUserById(id);
+      return { ...user, is_guest: true };
+    })
+  );
+
+  members.value = [...confirmed, ...pending];
 });
+
 
 const maxParticipants = 5;
 
 const showForm = ref(false);
 
 function inviteParticipant(participant: { name: string; email: string }) {
-  if (participants.value.length == maxParticipants) {
+  if (members.value.length == maxParticipants) {
     setErrorCurrentMessage("Osiągnięto limit");
     return;
   }
@@ -63,7 +89,7 @@ const toggleForm = () => {
           <v-row>
             <v-col>
               <ParticipantsCounter
-                  :current="participants.length"
+                  :current="members.length"
                   :max="maxParticipants"
                   title="Uczestnicy"
               />
@@ -85,7 +111,7 @@ const toggleForm = () => {
                 <h3 class="card-title">Dodani uczestnicy</h3>
 
                 <ParticipantList
-                    :participants="participants"
+                    :participants="members"
                     @remove="removeParticipantById"
                 />
               </div>

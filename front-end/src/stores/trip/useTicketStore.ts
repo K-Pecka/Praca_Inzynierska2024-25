@@ -16,7 +16,7 @@ export const useTicketStore = defineStore("ticket", () => {
     const tickets = ref<Ticket[]>([]);
 
     const createTicket = createTicketMutation;
-    const getTickets = () => getTicketsQuery();
+    const getTickets = (tripId:string) => getTicketsQuery(tripId);
 
     return {
         tickets,

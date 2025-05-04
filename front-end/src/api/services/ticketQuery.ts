@@ -2,21 +2,23 @@ import { useMutation, useQuery } from "@tanstack/vue-query"
 import type { TicketData } from "@/types";
 import { fetchTicket as originalFetchTicket,createTicket } from "@/api";
 
-const fetchTicket = async (): Promise<TicketData[]> => {
-    const result = await originalFetchTicket();
+const fetchTicket = async (tripId: string): Promise<TicketData[]> => {
+    const result = await originalFetchTicket({ tripId: tripId });
     return result ?? [];
 };
 
-export const getTicketsQuery = () => {
+export const getTicketsQuery = (tripId: string) => {
     return useQuery<TicketData[], Error>({
-        queryKey: ["ticket"],
-        queryFn: fetchTicket,
-    })
-}
-export const createTicketMutation = (formData: FormData) => useMutation({
+        queryKey: ["ticket", tripId],
+        queryFn: ({ queryKey }) => {
+            const [, tripId] = queryKey as [string, string];
+            return fetchTicket(tripId);
+        },
+    });
+};
+export const createTicketMutation = (formData: FormData,params:Record<string, string>) => useMutation({
     mutationFn: async (formData: FormData) => {
-      // Wysyłamy plik na serwer za pomocą fetch
-      return await createTicket(formData);
+      return await createTicket(formData, params);
     },
     onSuccess: (data) => {
       console.log('Bilet został pomyślnie utworzony:', data);
