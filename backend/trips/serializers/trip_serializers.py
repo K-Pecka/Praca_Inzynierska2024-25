@@ -87,10 +87,21 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
 
 class TripListSerializer(TripRetrieveSerializer):
     id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
     members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
+    start_date = serializers.DateField(read_only=True)
+    end_date = serializers.DateField(read_only=True)
+    is_creator = serializers.SerializerMethodField()
+
+    def get_is_creator(self, obj):
+        request = self.context['request']
+        user_profile = request.user.get_default_profile()
+        return obj.creator == user_profile
+
     class Meta:
         model = Trip
-        fields = ['id', 'name', 'creator', 'members',  'start_date', 'end_date']
+        fields = ['id', 'name', 'creator', 'members',  'start_date', 'end_date', 'is_creator']
 
 
 class TripUpdateSerializer(serializers.ModelSerializer):
