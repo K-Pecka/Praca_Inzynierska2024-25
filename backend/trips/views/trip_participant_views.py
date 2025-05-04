@@ -7,6 +7,7 @@ from django.utils.html import strip_tags
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.db import transaction
 
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from rest_framework import status
@@ -67,8 +68,10 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
 
     def handle_invite(self, trip, data):
         user = CustomUser.objects.filter(email=data['email']).first()
+
         if trip.members.count() >= 5:
             raise ValidationError(_("Wycieczka może mieć maksymalnie 5 uczestników."))
+
         if not CustomUser.objects.filter(email=data['email']).exists():
             try:
                 user = CustomUser.create_guest_account(
@@ -81,6 +84,9 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             profile = user.get_default_profile()
         else:
             profile = user.get_default_profile()
+
+            if profile.type.code == 'guide':
+                raise ValidationError(_("Nie można dodać przewodnika do wycieczki."))
 
         if trip.members.filter(id=profile.id).exists():
             raise ValidationError(_("Użytkownik już jest uczestnikiem wycieczki"))
@@ -109,10 +115,15 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             if not user:
                 raise ValidationError(_("Użytkownik o podanym e-mailu nie istnieje."))
 
+
             profile = user.get_default_profile()
 
+
             if profile.type.code == 'guest':
-                user.delete()
+                with transaction.atomic():
+                    user.delete()
+                    self.delete_access_token(trip, profile)
+
                 return Response({
                     "message": _("Użytkownik został usunięty z wycieczki."),
                 })
@@ -121,7 +132,9 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             if not trip.members.filter(id=profile.id).exists():
                 raise ValidationError(_("Użytkownik nie jest uczestnikiem tej wycieczki."))
 
-            trip.members.remove(profile)
+            with transaction.atomic():
+                trip.members.remove(profile)
+                self.delete_access_token(trip, profile)
 
             return Response({
                 "message": _("Użytkownik został usunięty z wycieczki."),
@@ -130,6 +143,14 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         return Response({
             "message": _("Użytkownik nie był przypisany do tej wycieczki lub już został usunięty."),
         })
+
+
+    def delete_access_token(self, trip, profile):
+        token = TripAccessToken.objects.filter(trip=trip, user_profile=profile).first()
+
+        if token:
+            token.delete()
+
 
     def create_invitation_link(self, trip, user):
         token = TripAccessToken.generate_token()
