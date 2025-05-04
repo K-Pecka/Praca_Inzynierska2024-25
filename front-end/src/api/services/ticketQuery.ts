@@ -21,9 +21,9 @@ export const createTicketMutation = (formData: FormData,params:Record<string, st
       return await createTicket(formData, params);
     },
     onSuccess: (data) => {
-      console.log('Bilet został pomyślnie utworzony:', data);
+      //console.log('Bilet został pomyślnie utworzony:', data);
     },
     onError: (error) => {
-      console.error('Błąd podczas tworzenia biletu:', error);
+      //console.error('Błąd podczas tworzenia biletu:', error);
     },
   });

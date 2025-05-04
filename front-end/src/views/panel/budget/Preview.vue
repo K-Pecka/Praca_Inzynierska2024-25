@@ -28,7 +28,7 @@ const members = computed(() => {
   ];
 });
 const spent = computed(() => {
-  console.log("expenses", expenses.value);
+  //console.log("expenses", expenses.value);
   return (
       expenses.value?.reduce(
           (acc, expense) => Number(acc) + Number(expense.amount),

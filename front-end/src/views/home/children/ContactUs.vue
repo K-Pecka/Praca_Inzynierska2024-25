@@ -35,7 +35,7 @@ function handleSubmit() {
     return;
   }
   setSuccessCurrentMessage('Dziękujemy za wiadomość! Odpiszemy najszybciej jak to możliwe.');
-  console.log(form.value);
+  //console.log(form.value);
 }
 </script>
 

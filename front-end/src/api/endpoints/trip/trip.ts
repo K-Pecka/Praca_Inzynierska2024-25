@@ -23,7 +23,7 @@ export const fetchTrip = async ({ queryKey }: QueryFunctionContext<[string,numbe
     "GET"
   );
   if (error || !data) {
-    console.log('Error: ', error)
+    //console.log('Error: ', error)
     throw new Error(error);
   }
 

@@ -19,7 +19,7 @@ export const createTicket = async (
   formData: FormData,params: Record<string, string>
 ): Promise<any> => {
   formData.forEach((value, key) => {
-    console.log(`${key}: ${value}`);
+    //console.log(`${key}: ${value}`);
   });
   const response = await fetch(setParam(apiEndpoints.ticket.create,params), {
     method: 'POST',
@@ -29,16 +29,16 @@ export const createTicket = async (
     },
     body: formData,
   });
-  console.log('Response:', {
+  /*console.log('Response:', {
     method: 'POST',
     headers: {
       ...standardHeaders(),
       'Content-Type': 'multipart/form-data',
     },
     body: formData,
-  });
+  });*/
   if (!response.ok) {
-    console.error('Error response:', response.json());
+    //console.error('Error response:', response.json());
     throw new Error('Błąd podczas tworzenia biletu');
   }
 

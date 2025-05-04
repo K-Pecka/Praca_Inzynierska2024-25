@@ -49,7 +49,7 @@ const activityStore = useActivityStore();
 const showFormForDay = ref<string | null>(null);
 
 function addActivity(day: string, activityData: any) {
-  console.warn("send")
+  //console.warn("send")
    activityStore.addActivity(
     {
       ...activityData,
@@ -75,7 +75,7 @@ const activity = computed(
         acc[activity.date] = [];
       }
       acc[activity.date].push(activity);
-      console.log(acc)
+      //console.log(acc)
       return acc;
     }, {} as Record<string, Activity[]>)
   )

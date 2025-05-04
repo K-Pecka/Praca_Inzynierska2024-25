@@ -18,9 +18,9 @@ const {data: tripData, isLoading, error} = getTripDetails(tripId);
 
 const members = ref<User[]>([]);
 const getUserById =async (id:number)=>{
-  console.log("id user:",id)
+  //console.log("id user:",id)
   const user = await fetchUserById(id);
-  console.log(user)
+  //console.log(user)
   return {
     name: `${user.first_name} ${user.last_name}`,
     email: user.email,
@@ -41,6 +41,7 @@ watchEffect(async () => {
 
   const pending = await Promise.all(
     pendingRaw.map(async (entry) => {
+      console.log("pending entry:",entry)
       const id = typeof entry === 'object' && entry !== null ? entry.id : entry;
       const user = await getUserById(id);
       return { ...user, is_guest: true };
@@ -111,6 +112,7 @@ const toggleForm = () => {
                 <h3 class="card-title">Dodani uczestnicy</h3>
 
                 <ParticipantList
+                    v-if="members.length > 0"
                     :participants="members"
                     @remove="removeParticipantById"
                 />

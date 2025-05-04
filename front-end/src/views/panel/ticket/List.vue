@@ -19,7 +19,7 @@ const {data: tripData} = useTripStore().getTripDetails(Number(tripId));
 const {data: tickets, isLoading} = useTripStore().getTickets(tripId);
 const getUserById =async (id:number)=>{
   const user = await fetchUserById(id);
-  console.log(user)
+  //console.log(user)
   return {
     title: `${user.first_name} ${user.last_name}`,
     value: id
@@ -67,12 +67,12 @@ async function handleAddTicket(newTicketData: {
     await createTicket(formData,{ tripId:tripId });
     showForm.value = false;
   } catch (error) {
-    console.error("Błąd podczas tworzenia biletu:", error);
+    //console.error("Błąd podczas tworzenia biletu:", error);
   }
 }
 
 const downloadItem = async ( url: string )=> {
-  console.log(url)
+  //console.log(url)
       const response = await axios.get(url, { responseType: "blob" });
       const blob = new Blob([response.data], { type: "application/jpeg" });
       const link = document.createElement("a");

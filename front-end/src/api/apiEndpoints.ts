@@ -33,7 +33,7 @@ export const fetchData = async <T = unknown>(
       ...options,
       body: options.body ? options.body : undefined,
     });
-    console.log(url, method, options.body, response.status);
+    //console.log(url, method, options.body, response.status);
     clearTimeout(timeoutId);
     const result = await response.json().catch(() => null);
 
@@ -42,7 +42,7 @@ export const fetchData = async <T = unknown>(
     }, 3000);
     if (!response.ok) {
       errorStatus(response.status);
-      console.error("Error response:", result);
+      //console.error("Error response:", result);
       throw new Error(result?.message || `Błąd HTTP: ${response.status}`);
     }
     
@@ -59,7 +59,7 @@ export const setParam = (
     if (acc.includes(`:${key}`)) {
       return acc.replace(`:${key}`, encodeURIComponent(params[key]));
     } else {
-      console.warn(`Missing parameter: ${key}`);
+      //console.warn(`Missing parameter: ${key}`);
       return acc;
     }
   }, url);

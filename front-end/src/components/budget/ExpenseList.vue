@@ -33,7 +33,7 @@ const visibleExpenses = computed(() => {
   if (config?.dateTo) {
     expense.value = expense.value.filter((expense) => convertToDate(expense.date) <= convertToDate(config.dateTo));
   }
-  console.log("expense", expense.value);
+  //console.log("expense", expense.value);
   return limit ? expense.value.slice(0, limit) : expense.value;
 });
 </script>
