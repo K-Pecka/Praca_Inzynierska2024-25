@@ -66,7 +66,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
                 defaults=validated_data
             )
 
-            if user and user.is_guest:
+            if not created and user.is_guest:
                 return user.register_guest_account(validated_data)
 
 
@@ -95,7 +95,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['email', 'first_name', 'last_name', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'email': {'validators': []},
+        }
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):

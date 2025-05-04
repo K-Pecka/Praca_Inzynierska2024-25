@@ -2,6 +2,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
+from server.permissions import IsTripParticipant
 from trips.models import Expense
 from trips.serializers.expense_serializers import ExpenseCreateSerializer, ExpenseRetrieveSerializer, \
     ExpenseListSerializer, ExpenseUpdateSerializer, ExpenseDeleteSerializer
@@ -9,7 +10,7 @@ from trips.serializers.expense_serializers import ExpenseCreateSerializer, Expen
 
 @extend_schema(tags=['expense'])
 class ExpenseCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = ExpenseCreateSerializer
 
 
