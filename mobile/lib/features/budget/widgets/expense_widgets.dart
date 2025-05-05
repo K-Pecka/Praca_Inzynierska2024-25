@@ -8,12 +8,14 @@ import '../../../core/theme/text_styles.dart';
 
 class ExpenseTile extends StatelessWidget {
   final ExpenseModel expense;
+  final int tripId;
   final VoidCallback onDeleted;
   final BuildContext scaffoldContext;
 
   const ExpenseTile({
     super.key,
     required this.expense,
+    required this.tripId,
     required this.onDeleted,
     required this.scaffoldContext,
   });
@@ -61,10 +63,13 @@ class ExpenseTile extends StatelessWidget {
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () async {
-                    Navigator.of(modalContext).pop(); // Zamknij modal
+                    Navigator.of(modalContext).pop();
 
                     try {
-                      await BudgetService.deleteExpense(expense.id);
+                      await BudgetService.deleteExpense(
+                        tripId: tripId,
+                        expenseId: expense.id,
+                      );
                       onDeleted();
                     } catch (e) {
                       debugPrint('Błąd usuwania: $e');

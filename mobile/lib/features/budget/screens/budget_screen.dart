@@ -115,11 +115,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   builder: (scaffoldContext) {
                     return ExpenseTile(
                       expense: _expenses[index],
+                      tripId: widget.trip.id,
                       scaffoldContext: scaffoldContext,
                       onDeleted: () {
-                        ScaffoldMessenger.of(scaffoldContext).showSnackBar(
-                          const SnackBar(content: Text('Wydatek usunięty')),
-                        );
                         _loadData();
                       },
                     );

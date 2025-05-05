@@ -101,8 +101,11 @@ class BudgetService {
     }
   }
 
-  static Future<void> deleteExpense(int expenseId) async {
-    final url = Uri.parse('$_baseUrl/trip/expense/$expenseId/delete/');
+  static Future<void> deleteExpense({
+    required int tripId,
+    required int expenseId,
+  }) async {
+    final url = Uri.parse('$_baseUrl/trip/$tripId/expense/$expenseId/delete/');
     final headers = {
       'Authorization': 'Bearer ${AuthService.accessToken}',
       'accept': 'application/json',
