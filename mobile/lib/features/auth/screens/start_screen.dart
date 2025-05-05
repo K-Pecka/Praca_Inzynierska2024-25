@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/auth_widgets.dart';
-import 'guide_login_screen.dart';
-import 'tourist_login_screen.dart';
+import 'login_screen.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -27,7 +26,11 @@ class StartScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const TouristLoginScreen(),
+                          builder: (_) => const LoginScreen(
+                            profileType: 1,
+                            title: 'Logowanie: Turysta',
+                            borderColor: Color(0xFFBFDFFF),
+                          ),
                         ),
                       );
                     },
@@ -35,11 +38,15 @@ class StartScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const GuideLoginScreen(),
+                          builder: (_) => const LoginScreen(
+                            profileType: 2,
+                            title: 'Logowanie: Przewodnik',
+                            borderColor: Color(0xFFA8E6B5),
+                          ),
                         ),
                       );
                     },
-                  ),
+                  )
                 ],
               ),
             ),

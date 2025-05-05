@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -89,12 +88,6 @@ class ChatService {
           (data) {
         final msg = MessageModel.fromJson(jsonDecode(data));
         onMessage(msg);
-      },
-      onError: (error) {
-        print('WebSocket error: $error');
-      },
-      onDone: () {
-        print('WebSocket closed');
       },
     );
   }

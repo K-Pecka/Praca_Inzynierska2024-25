@@ -4,16 +4,25 @@ import '../../../core/widgets/bottom_navigation_scaffold.dart';
 import '../widgets/auth_widgets.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/services/trip_service.dart';
-import '../../../core/models/auth_response_model.dart'; // Upewnij się, że ścieżka jest poprawna
+import '../../../core/models/auth_response_model.dart';
 
-class TouristLoginScreen extends StatefulWidget {
-  const TouristLoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  final int profileType;
+  final String title;
+  final Color borderColor;
+
+  const LoginScreen({
+    super.key,
+    required this.profileType,
+    required this.title,
+    required this.borderColor,
+  });
 
   @override
-  State<TouristLoginScreen> createState() => _TouristLoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _TouristLoginScreenState extends State<TouristLoginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
@@ -26,13 +35,13 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
         password: _passwordController.text,
       );
 
-      final touristProfile = response.profiles.firstWhere(
-            (p) => p.type == 1,
-        orElse: () => throw Exception("Nie znaleziono profilu typu turysta."),
+      final profile = response.profiles.firstWhere(
+            (p) => p.type == widget.profileType,
+        orElse: () => throw Exception("Nie znaleziono profilu."),
       );
 
       await AuthService.setDefaultProfile(
-        profileId: touristProfile.id,
+        profileId: profile.id,
         token: response.access,
       );
 
@@ -45,8 +54,8 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => BottomNavScaffold(
-            userProfileId: touristProfile.id,
-            profileType: 1,
+            userProfileId: profile.id,
+            profileType: widget.profileType,
             trip: trip,
           ),
         ),
@@ -58,6 +67,13 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
     } finally {
       setState(() => _isLoading = false);
     }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -74,13 +90,14 @@ class _TouristLoginScreenState extends State<TouristLoginScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   buildLogo(),
-                  buildTitle("Logowanie: Turysta"),
+                  buildTitle(widget.title),
                   const SizedBox(height: 24),
-                  buildTouristLoginForm(
+                  buildLoginForm(
                     emailController: _emailController,
                     passwordController: _passwordController,
                     isLoading: _isLoading,
                     onLogin: _handleLogin,
+                    borderColor: widget.borderColor,
                   ),
                   const SizedBox(height: 16),
                   TextButton(
