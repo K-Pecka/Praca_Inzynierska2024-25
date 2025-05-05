@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/models/expense_model.dart';
 import '../../../core/services/budget_service.dart';
+import '../../../core/services/user_service.dart';
 import '../../../core/widgets/custom_expense_input_field.dart';
 import '../../../core/theme/text_styles.dart';
 
-class ExpenseTile extends StatelessWidget {
+class ExpenseTile extends StatefulWidget {
   final ExpenseModel expense;
   final int tripId;
   final VoidCallback onDeleted;
@@ -20,12 +21,33 @@ class ExpenseTile extends StatelessWidget {
     required this.scaffoldContext,
   });
 
-  void showExpenseDetails(
-      BuildContext modalContext,
-      BuildContext scaffoldContext,
-      ExpenseModel expense, {
-        required VoidCallback onDeleted,
-      }) {
+  @override
+  State<ExpenseTile> createState() => _ExpenseTileState();
+}
+
+class _ExpenseTileState extends State<ExpenseTile> {
+  String? userName;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    if (widget.expense.user != null) {
+      try {
+        final user = await UserService().fetchUserInfoByProfileId(int.parse(widget.expense.user!));
+        setState(() {
+          userName = '${user.firstName} ${user.lastName}';
+        });
+      } catch (e) {
+        debugPrint("Błąd pobierania użytkownika: $e");
+      }
+    }
+  }
+
+  void _showExpenseDetails(BuildContext modalContext) {
     showModalBottomSheet(
       context: modalContext,
       shape: const RoundedRectangleBorder(
@@ -50,32 +72,30 @@ class ExpenseTile extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              Text("Tytuł: ${expense.title}", style: TextStyles.cardTitleHeading),
+              Text("Tytuł: ${widget.expense.title}", style: TextStyles.cardTitleHeading),
               const SizedBox(height: 8),
-              Text("Kwota: ${expense.amount.toStringAsFixed(2)} ${expense.currency}", style: TextStyles.subtitle),
+              Text("Kwota: ${widget.expense.amount.toStringAsFixed(2)} ${widget.expense.currency}", style: TextStyles.subtitle),
               const SizedBox(height: 8),
-              Text("Data: ${DateFormat('dd.MM.yyyy').format(expense.date)}", style: TextStyles.subtitle),
+              Text("Data: ${DateFormat('dd.MM.yyyy').format(widget.expense.date)}", style: TextStyles.subtitle),
               const SizedBox(height: 8),
-              Text("Kategoria: ${expense.category}", style: TextStyles.subtitle),
+              Text("Kategoria: ${widget.expense.category}", style: TextStyles.subtitle),
               const SizedBox(height: 8),
-              Text("Wydający: ${expense.user ?? 'Nieznany'}", style: TextStyles.subtitle),
+              Text("Wydający: ${userName ?? 'Ładowanie...'}", style: TextStyles.subtitle),
               const SizedBox(height: 24),
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () async {
                     Navigator.of(modalContext).pop();
-
                     try {
                       await BudgetService.deleteExpense(
-                        tripId: tripId,
-                        expenseId: expense.id,
+                        tripId: widget.tripId,
+                        expenseId: widget.expense.id,
                       );
-                      onDeleted();
+                      widget.onDeleted();
                     } catch (e) {
                       debugPrint('Błąd usuwania: $e');
                     }
                   },
-
                   icon: const Icon(Icons.delete, color: Colors.white),
                   label: const Text("Usuń wydatek", style: TextStyles.whiteSubtitle),
                   style: ElevatedButton.styleFrom(
@@ -100,21 +120,16 @@ class ExpenseTile extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       margin: const EdgeInsets.only(bottom: 16),
       child: InkWell(
-        onTap: () => showExpenseDetails(
-          context,
-          scaffoldContext,
-          expense,
-          onDeleted: onDeleted,
-        ),
+        onTap: () => _showExpenseDetails(context),
         child: ListTile(
           leading: const Icon(Icons.restaurant, color: Colors.black87, size: 36),
-          title: Text(expense.title, style: TextStyles.cardTitleHeading),
+          title: Text(widget.expense.title, style: TextStyles.cardTitleHeading),
           subtitle: Text(
-            DateFormat('dd.MM.yyyy').format(expense.date),
+            DateFormat('dd.MM.yyyy').format(widget.expense.date),
             style: TextStyles.subtitle,
           ),
           trailing: Text(
-            '${expense.amount.toStringAsFixed(0)} ${expense.currency}',
+            '${widget.expense.amount.toStringAsFixed(0)} ${widget.expense.currency}',
             style: TextStyles.subtitle,
           ),
         ),

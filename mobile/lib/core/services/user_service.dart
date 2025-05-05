@@ -9,8 +9,8 @@ class UserService{
   Future<Member> fetchUserInfoByProfileId(int profileId) async {
     final url = Uri.parse('https://api.plannder.com/user/user/by-profile/$profileId/');
     final response = await http.get(url, headers: {
-      'accept': 'application/json',
       'Authorization': 'Bearer ${AuthService.accessToken}',
+      'accept': 'application/json',
     });
 
     if (response.statusCode == 200) {
@@ -22,7 +22,8 @@ class UserService{
         lastName: data['last_name'],
       );
     } else {
-      throw Exception("Nie udało się pobrać danych użytkownika $profileId");
+      throw Exception("Błąd ładowania danych użytkownika: ${response.body}");
     }
   }
+
 }
