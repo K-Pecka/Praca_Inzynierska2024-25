@@ -34,7 +34,6 @@ class TicketCreateSerializer(serializers.ModelSerializer):
             'null': 'Czas nie może być pusty'
         }
     )
-    trip = serializers.PrimaryKeyRelatedField(queryset=Trip.objects.all())
 
     def create(self, validated_data):
         view = self.context['view']
@@ -52,7 +51,7 @@ class TicketCreateSerializer(serializers.ModelSerializer):
         model = Ticket
         fields = [
             'id', 'name', 'file', 'type', 'type_display',
-            'owner', 'profiles', 'valid_from_date', 'valid_from_time', 'trip'
+            'owner', 'profiles', 'valid_from_date', 'valid_from_time'
         ]
 
 

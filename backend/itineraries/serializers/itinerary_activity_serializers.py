@@ -22,6 +22,7 @@ class ItineraryActivityRetrieveSerializer(serializers.ModelSerializer):
 
 
 class ItineraryActivityListSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True, max_length=100)
     type = serializers.PrimaryKeyRelatedField(read_only=True)
     ticket = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -34,7 +35,7 @@ class ItineraryActivityListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ItineraryActivity
-        fields = ['name', 'type', 'ticket', 'description', 'location', 'date', 'start_time', 'duration', 'itinerary']
+        fields = ['id', 'name', 'type', 'ticket', 'description', 'location', 'date', 'start_time', 'duration', 'itinerary']
 
 
 class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
