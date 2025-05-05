@@ -8,8 +8,84 @@ import '../../../core/theme/text_styles.dart';
 
 class ExpenseTile extends StatelessWidget {
   final ExpenseModel expense;
+  final VoidCallback onDeleted;
+  final BuildContext scaffoldContext;
 
-  const ExpenseTile({super.key, required this.expense});
+  const ExpenseTile({
+    super.key,
+    required this.expense,
+    required this.onDeleted,
+    required this.scaffoldContext,
+  });
+
+  void showExpenseDetails(
+      BuildContext modalContext,
+      BuildContext scaffoldContext,
+      ExpenseModel expense, {
+        required VoidCallback onDeleted,
+      }) {
+    showModalBottomSheet(
+      context: modalContext,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      isScrollControlled: true,
+      builder: (modalCtx) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text("Tytuł: ${expense.title}", style: TextStyles.cardTitleHeading),
+              const SizedBox(height: 8),
+              Text("Kwota: ${expense.amount.toStringAsFixed(2)} ${expense.currency}", style: TextStyles.subtitle),
+              const SizedBox(height: 8),
+              Text("Data: ${DateFormat('dd.MM.yyyy').format(expense.date)}", style: TextStyles.subtitle),
+              const SizedBox(height: 8),
+              Text("Kategoria: ${expense.category}", style: TextStyles.subtitle),
+              const SizedBox(height: 8),
+              Text("Wydający: ${expense.user ?? 'Nieznany'}", style: TextStyles.subtitle),
+              const SizedBox(height: 24),
+              Center(
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    Navigator.of(modalContext).pop(); // Zamknij modal
+
+                    try {
+                      await BudgetService.deleteExpense(expense.id);
+                      onDeleted();
+                    } catch (e) {
+                      debugPrint('Błąd usuwania: $e');
+                    }
+                  },
+
+                  icon: const Icon(Icons.delete, color: Colors.white),
+                  label: const Text("Usuń wydatek", style: TextStyles.whiteSubtitle),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,16 +94,24 @@ class ExpenseTile extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       margin: const EdgeInsets.only(bottom: 16),
-      child: ListTile(
-        leading: const Icon(Icons.restaurant, color: Colors.black87, size: 36),
-        title: Text(expense.title, style: TextStyles.cardTitleHeading),
-        subtitle: Text(
-          DateFormat('dd.MM.yyyy').format(expense.date),
-          style: TextStyles.subtitle,
+      child: InkWell(
+        onTap: () => showExpenseDetails(
+          context,
+          scaffoldContext,
+          expense,
+          onDeleted: onDeleted,
         ),
-        trailing: Text(
-          '${expense.amount.toStringAsFixed(0)} ${expense.currency}',
-          style: TextStyles.subtitle,
+        child: ListTile(
+          leading: const Icon(Icons.restaurant, color: Colors.black87, size: 36),
+          title: Text(expense.title, style: TextStyles.cardTitleHeading),
+          subtitle: Text(
+            DateFormat('dd.MM.yyyy').format(expense.date),
+            style: TextStyles.subtitle,
+          ),
+          trailing: Text(
+            '${expense.amount.toStringAsFixed(0)} ${expense.currency}',
+            style: TextStyles.subtitle,
+          ),
         ),
       ),
     );
@@ -38,12 +122,14 @@ class ExpenseForm extends StatefulWidget {
   final int tripId;
   final int userProfileId;
   final VoidCallback onSaved;
+  final VoidCallback onAdded;
 
   const ExpenseForm({
     super.key,
     required this.tripId,
     required this.userProfileId,
     required this.onSaved,
+    required this.onAdded,
   });
 
   @override
@@ -104,6 +190,8 @@ class _ExpenseFormState extends State<ExpenseForm> {
         date: date,
         note: '',
       );
+
+      widget.onAdded();
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Wydatek dodany')),

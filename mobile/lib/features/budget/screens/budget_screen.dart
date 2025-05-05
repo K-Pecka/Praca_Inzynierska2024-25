@@ -100,10 +100,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
               ExpenseForm(
                 tripId: widget.trip.id,
                 userProfileId: widget.userProfileId,
-                onSaved: () async {
-                  await _loadData();
+                onSaved: () {
                   setState(() => _showForm = false);
                 },
+                onAdded: _loadData,
               ),
             const SizedBox(height: 24),
             ListView.builder(
@@ -111,7 +111,20 @@ class _BudgetScreenState extends State<BudgetScreen> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: _expenses.length,
               itemBuilder: (context, index) {
-                return ExpenseTile(expense: _expenses[index]);
+                return Builder(
+                  builder: (scaffoldContext) {
+                    return ExpenseTile(
+                      expense: _expenses[index],
+                      scaffoldContext: scaffoldContext,
+                      onDeleted: () {
+                        ScaffoldMessenger.of(scaffoldContext).showSnackBar(
+                          const SnackBar(content: Text('Wydatek usunięty')),
+                        );
+                        _loadData();
+                      },
+                    );
+                  },
+                );
               },
             ),
           ],
