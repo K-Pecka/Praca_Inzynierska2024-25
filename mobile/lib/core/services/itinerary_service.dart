@@ -42,7 +42,7 @@ class ItineraryService {
     final response = await _authorizedGet('/trip/$tripId/itinerary/all/');
 
     if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
+      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
       return data.map((json) => ItineraryModel.fromJson(json)).toList();
     } else {
       throw Exception('Nie udało się pobrać planów');
@@ -58,7 +58,7 @@ class ItineraryService {
     );
 
     if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
+      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
       return data.map((json) => ActivityModel.fromJson(json)).toList();
     } else {
       throw Exception('Nie udało się pobrać aktywności');

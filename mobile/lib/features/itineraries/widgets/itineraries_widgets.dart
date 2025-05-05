@@ -7,6 +7,7 @@ import '/core/models/activity_model.dart';
 import '/core/theme/text_styles.dart';
 import '/core/theme/icons.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DaySelector extends StatefulWidget {
   final DateTime start;
@@ -163,11 +164,11 @@ class ActivitiesList extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.event, color: Colors.black87),
+                    const Icon(Icons.event, color: Colors.black87, size: 24),
                     const SizedBox(width: 8),
                     Text(
                       a.name,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+                      style: TextStyles.cardTitleHeading,
                     ),
                   ],
                 ),
@@ -176,24 +177,24 @@ class ActivitiesList extends StatelessWidget {
                   children: [
                     const Icon(
                       Icons.access_time,
-                      size: 16,
+                      size: 18,
                       color: Colors.black54,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       a.startTime,
-                      style: const TextStyle(color: Colors.black54),
+                      style: TextStyles.subtitle,
                     ),
                     const SizedBox(width: 12),
                     const Icon(
                       Icons.access_time_filled,
-                      size: 16,
+                      size: 18,
                       color: Colors.black54,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       '${a.duration} min',
-                      style: const TextStyle(color: Colors.black54),
+                      style: TextStyles.subtitle,
                     ),
                   ],
                 ),
@@ -338,6 +339,29 @@ void showActivityDetailsModal(BuildContext context, ActivityModel activity, int 
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 8),
+              if (activity.location.isNotEmpty)
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      final encoded = Uri.encodeComponent(activity.location);
+                      final uri = Uri.parse('https://www.google.com/maps/dir/?api=1&destination=$encoded');
+
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      } else {
+                        debugPrint('Nie można otworzyć Google Maps');
+                      }
+                    },
+                    icon: const Icon(Icons.location_on, color: Colors.white),
+                    label: const Text("Lokalizacja", style: TextStyles.whiteSubtitle),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6C55ED),
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                   ),
                 ),

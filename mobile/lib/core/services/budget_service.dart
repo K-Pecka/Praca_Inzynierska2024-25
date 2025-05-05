@@ -117,6 +117,5 @@ class BudgetService {
       throw Exception('Nie udało się usunąć wydatku: ${response.body}');
     }
   }
-
 }
 
