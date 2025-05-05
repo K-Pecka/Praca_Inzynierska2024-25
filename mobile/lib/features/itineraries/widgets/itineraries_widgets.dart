@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../core/services/ticket_service.dart';
+import '../../tickets/screens/ticket_preview_screen.dart';
 import '/core/models/itinerary_model.dart';
 import '/core/models/activity_model.dart';
 import '/core/theme/text_styles.dart';
@@ -125,13 +127,20 @@ class _DaySelectorState extends State<DaySelector> {
 
 class ActivitiesList extends StatelessWidget {
   final List<ActivityModel> activities;
+  final int tripId;
 
-  const ActivitiesList({super.key, required this.activities});
+  const ActivitiesList({
+    super.key,
+    required this.activities,
+    required this.tripId,
+  });
 
   @override
   Widget build(BuildContext context) {
     if (activities.isEmpty) {
-      return const Center(child: Text('Brak aktywności na ten dzień', style: TextStyles.subtitle));
+      return const Center(
+        child: Text('Brak aktywności na ten dzień', style: TextStyles.subtitle),
+      );
     }
 
     return ListView.builder(
@@ -140,53 +149,56 @@ class ActivitiesList extends StatelessWidget {
       itemCount: activities.length,
       itemBuilder: (context, index) {
         final a = activities[index];
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF4F2FF),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.event, color: Colors.black87),
-                  const SizedBox(width: 8),
-                  Text(
-                    a.name,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.access_time,
-                    size: 16,
-                    color: Colors.black54,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    a.startTime,
-                    style: const TextStyle(color: Colors.black54),
-                  ),
-                  const SizedBox(width: 12),
-                  const Icon(
-                    Icons.access_time_filled,
-                    size: 16,
-                    color: Colors.black54,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${a.duration} min',
-                    style: const TextStyle(color: Colors.black54),
-                  ),
-                ],
-              ),
-            ],
+        return InkWell(
+          onTap: () => showActivityDetailsModal(context, a, tripId),
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF4F2FF),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.event, color: Colors.black87),
+                    const SizedBox(width: 8),
+                    Text(
+                      a.name,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.access_time,
+                      size: 16,
+                      color: Colors.black54,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      a.startTime,
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                    const SizedBox(width: 12),
+                    const Icon(
+                      Icons.access_time_filled,
+                      size: 16,
+                      color: Colors.black54,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${a.duration} min',
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -244,4 +256,93 @@ class PlanDropdownCard extends StatelessWidget {
       ],
     );
   }
+}
+
+void showActivityDetailsModal(BuildContext context, ActivityModel activity, int tripId) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder:
+        (_) => Padding(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                "Tytuł: ${activity.name}",
+                style: TextStyles.cardTitleHeading,
+              ),
+              const SizedBox(height: 8),
+              Text("Opis: ${activity.description}", style: TextStyles.subtitle),
+              const SizedBox(height: 8),
+              Text("Data: ${activity.date}", style: TextStyles.subtitle),
+              const SizedBox(height: 8),
+              Text(
+                "Godzina: ${activity.startTime}",
+                style: TextStyles.subtitle,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Lokalizacja: ${activity.location}",
+                style: TextStyles.subtitle,
+              ),
+              const SizedBox(height: 24),
+              if (activity.ticket != null)
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      try {
+                        final tickets = await TicketService.getTicketsByTrip(tripId);
+                        final ticket = tickets.firstWhere(
+                          (t) => t.id == activity.ticket,
+                        );
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) =>
+                                    TicketPreviewScreen(imageUrl: ticket.file),
+                          ),
+                        );
+                      } catch (e) {
+                        debugPrint('Nie udało się pobrać biletu: $e');
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.airplane_ticket,
+                      color: Colors.white,
+                    ),
+                    label: const Text("Bilet", style: TextStyles.whiteSubtitle),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6C55ED),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+  );
 }
