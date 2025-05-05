@@ -3,7 +3,7 @@ from django.db import models
 from dicts.models import BaseModel
 from django.utils.translation import gettext_lazy as _
 
-from trips.models import Trip
+from trips.models import Trip, Ticket
 from itineraries.managers import ItineraryManager, ItineraryActivityManager
 
 
@@ -40,8 +40,9 @@ class ItineraryActivity(BaseModel):
         max_length=255,
         verbose_name=_("Nazwa"), help_text=_("Nazwa")
     )
-    ticket = models.FileField(
-        upload_to="itineraries/",
+    ticket = models.ForeignKey(
+        Ticket,
+        on_delete=models.PROTECT,
         null=True,
         blank=True
     )

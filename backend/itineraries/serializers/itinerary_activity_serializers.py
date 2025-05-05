@@ -1,12 +1,13 @@
 from rest_framework import serializers
 
 from itineraries.models import Itinerary, ItineraryActivity, ItineraryActivityType
+from trips.models import Ticket
 
 
 class ItineraryActivityRetrieveSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True, max_length=100)
-    ticket = serializers.FileField(read_only=True)
+    ticket = serializers.PrimaryKeyRelatedField(read_only=True)
     type = serializers.PrimaryKeyRelatedField(read_only=True)
     description = serializers.CharField(read_only=True, max_length=5120)
     location = serializers.CharField(read_only=True, max_length=100)
@@ -23,7 +24,7 @@ class ItineraryActivityRetrieveSerializer(serializers.ModelSerializer):
 class ItineraryActivityListSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True, max_length=100)
     type = serializers.PrimaryKeyRelatedField(read_only=True)
-    ticket = serializers.FileField(read_only=True)
+    ticket = serializers.PrimaryKeyRelatedField(read_only=True)
     description = serializers.CharField(read_only=True, max_length=5120)
     location = serializers.CharField(read_only=True, max_length=100)
     date = serializers.DateField(read_only=True)
@@ -59,7 +60,7 @@ class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
 class ItineraryActivityUpdateSerializer(serializers.ModelSerializer):
     name = serializers.CharField(write_only=True, max_length=100, required=False)
     type = serializers.PrimaryKeyRelatedField(write_only=True, queryset=ItineraryActivityType.objects.all(), required=False)
-    ticket = serializers.FileField(write_only=True, required=False)
+    ticket = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Ticket.objects.all(), required=False)
     description = serializers.CharField(write_only=True, max_length=5120, required=False)
     location = serializers.CharField(write_only=True, max_length=100, required=False)
     date = serializers.DateField(write_only=True, required=False)
