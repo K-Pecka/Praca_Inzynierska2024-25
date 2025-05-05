@@ -30,9 +30,9 @@ class ExpenseListAPIView(ListAPIView):
 
     def get_queryset(self):
         return (Expense.objects
-            .filter(trip=self.kwargs['trip_pk'])
-            .select_related('trip', 'user', 'category')
-        )
+                .filter(trip=self.kwargs['trip_pk'])
+                .select_related('trip', 'user', 'category')
+                )
 
 
 @extend_schema(tags=['expense'])
@@ -40,6 +40,7 @@ class ExpenseUpdateAPIView(UpdateAPIView):
     queryset = Expense.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = ExpenseUpdateSerializer
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 @extend_schema(tags=['expense'])
