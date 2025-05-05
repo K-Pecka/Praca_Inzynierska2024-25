@@ -6,21 +6,21 @@ import '../widgets/expense_widgets.dart';
 import '../widgets/budget_widgets.dart';
 import '../../../../core/widgets/base_screen.dart';
 
-class TouristBudgetScreen extends StatefulWidget {
+class BudgetScreen extends StatefulWidget {
   final TripModel trip;
   final int userProfileId;
 
-  const TouristBudgetScreen({
+  const BudgetScreen({
     super.key,
     required this.trip,
     required this.userProfileId,
   });
 
   @override
-  State<TouristBudgetScreen> createState() => _TouristBudgetScreenState();
+  State<BudgetScreen> createState() => _BudgetScreenState();
 }
 
-class _TouristBudgetScreenState extends State<TouristBudgetScreen> {
+class _BudgetScreenState extends State<BudgetScreen> {
   List<ExpenseModel> _expenses = [];
   double _used = 0.0;
   bool _loading = true;
@@ -100,7 +100,10 @@ class _TouristBudgetScreenState extends State<TouristBudgetScreen> {
               ExpenseForm(
                 tripId: widget.trip.id,
                 userProfileId: widget.userProfileId,
-                onSaved: _loadData,
+                onSaved: () async {
+                  await _loadData();
+                  setState(() => _showForm = false);
+                },
               ),
             const SizedBox(height: 24),
             ListView.builder(

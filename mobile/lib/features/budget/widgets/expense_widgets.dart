@@ -85,13 +85,14 @@ class _ExpenseFormState extends State<ExpenseForm> {
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate() ||
         _selectedDate == null ||
-        _selectedCurrency == null)
-      return;
+        _selectedCurrency == null) return;
 
     final String title = _titleController.text.trim();
     final double amount = double.parse(_amountController.text);
     final String date = DateFormat('dd.MM.yyyy').format(_selectedDate!);
     final String currency = _selectedCurrency!;
+
+    widget.onSaved();
 
     try {
       await BudgetService.addExpense(
@@ -104,24 +105,23 @@ class _ExpenseFormState extends State<ExpenseForm> {
         note: '',
       );
 
-      widget.onSaved();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Wydatek dodany')));
-
-      _formKey.currentState!.reset();
-      _titleController.clear();
-      _amountController.clear();
-      _dateController.clear();
-      setState(() {
-        _selectedDate = null;
-        _selectedCurrency = 'PLN';
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Wydatek dodany')),
+      );
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Błąd dodawania: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Błąd dodawania: $e')),
+      );
     }
+
+    _formKey.currentState!.reset();
+    _titleController.clear();
+    _amountController.clear();
+    _dateController.clear();
+    setState(() {
+      _selectedDate = null;
+      _selectedCurrency = 'PLN';
+    });
   }
 
   @override
