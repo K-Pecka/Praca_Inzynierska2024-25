@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -39,7 +41,7 @@ class ExpenseUpdateAPIView(UpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ExpenseUpdateSerializer
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 @extend_schema(tags=['expense'])
 class ExpenseDestroyAPIView(DestroyAPIView):
     queryset = Expense.objects.all()
