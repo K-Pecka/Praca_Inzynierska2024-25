@@ -84,11 +84,12 @@ class _DaySelectorState extends State<DaySelector> {
 
     return SizedBox(
       height: 64,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Align(
+        alignment: Alignment.center,
         child: ListView.separated(
           controller: _scrollController,
           scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
           itemCount: days.length,
           separatorBuilder: (_, __) => const SizedBox(width: 8),
           itemBuilder: (context, index) {
@@ -97,12 +98,11 @@ class _DaySelectorState extends State<DaySelector> {
             final isInPlan = _isInPlan(date);
             final isActive = _isActive(date);
 
-            final bgColor =
-                isSelected
-                    ? const Color(0xBF2F27CE)
-                    : isInPlan && isActive
-                    ? const Color(0x90DEDCFF)
-                    : const Color(0x40000000);
+            final bgColor = isSelected
+                ? const Color(0xBF2F27CE)
+                : isInPlan && isActive
+                ? const Color(0x90DEDCFF)
+                : const Color(0x40000000);
 
             return GestureDetector(
               onTap: () => widget.onSelect(date),

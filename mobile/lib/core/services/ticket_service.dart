@@ -20,7 +20,7 @@ class TicketService {
     if (response.statusCode == 401) {
       final refreshed = await AuthService.refreshAccessToken();
       if (refreshed) {
-        return getTicketsByTrip(tripId); // retry
+        return getTicketsByTrip(tripId);
       } else {
         throw Exception("Nieautoryzowany – token nie działa");
       }
