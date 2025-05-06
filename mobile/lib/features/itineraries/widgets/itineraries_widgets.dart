@@ -99,11 +99,12 @@ class _DaySelectorState extends State<DaySelector> {
             final isInPlan = _isInPlan(date);
             final isActive = _isActive(date);
 
-            final bgColor = isSelected
-                ? AppColors.primary
-                : isInPlan && isActive
-                ? AppColors.cardsBackground
-                : AppColors.subtitleText;
+            final bgColor =
+                isSelected
+                    ? AppColors.primary
+                    : isInPlan && isActive
+                    ? AppColors.cardsBackground
+                    : AppColors.subtitleText;
 
             return GestureDetector(
               onTap: () => widget.onSelect(date),
@@ -137,6 +138,20 @@ class ActivitiesList extends StatelessWidget {
     required this.tripId,
   });
 
+  Widget _getActivityIcon(int type) {
+    switch (type) {
+      case 1:
+        return ActivityIcons.culture;
+      case 2:
+        return ActivityIcons.relax;
+      case 3:
+        return ActivityIcons.explore;
+      case 4:
+      default:
+        return ActivityIcons.other;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (activities.isEmpty) {
@@ -165,12 +180,19 @@ class ActivitiesList extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.event, color: AppColors.titleText, size: 24),
-                    const SizedBox(width: 8),
-                    Text(
-                      a.name,
-                      style: TextStyles.cardTitleHeading,
+                    SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: ColorFiltered(
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.titleText,
+                          BlendMode.srcIn,
+                        ),
+                        child: _getActivityIcon(a.type),
+                      ),
                     ),
+                    const SizedBox(width: 8),
+                    Text(a.name, style: TextStyles.cardTitleHeading),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -182,10 +204,7 @@ class ActivitiesList extends StatelessWidget {
                       color: AppColors.subtitleText,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      a.startTime,
-                      style: TextStyles.subtitle,
-                    ),
+                    Text(a.startTime, style: TextStyles.subtitle),
                     const SizedBox(width: 12),
                     const Icon(
                       Icons.access_time_filled,
@@ -193,10 +212,7 @@ class ActivitiesList extends StatelessWidget {
                       color: AppColors.subtitleText,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      '${a.duration} min',
-                      style: TextStyles.subtitle,
-                    ),
+                    Text('${a.duration} min', style: TextStyles.subtitle),
                   ],
                 ),
               ],
@@ -260,7 +276,11 @@ class PlanDropdownCard extends StatelessWidget {
   }
 }
 
-void showActivityDetailsModal(BuildContext context, ActivityModel activity, int tripId) {
+void showActivityDetailsModal(
+  BuildContext context,
+  ActivityModel activity,
+  int tripId,
+) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -309,7 +329,9 @@ void showActivityDetailsModal(BuildContext context, ActivityModel activity, int 
                   child: ElevatedButton.icon(
                     onPressed: () async {
                       try {
-                        final tickets = await TicketService.getTicketsByTrip(tripId);
+                        final tickets = await TicketService.getTicketsByTrip(
+                          tripId,
+                        );
                         final ticket = tickets.firstWhere(
                           (t) => t.id == activity.ticket,
                         );
@@ -349,20 +371,36 @@ void showActivityDetailsModal(BuildContext context, ActivityModel activity, int 
                   child: ElevatedButton.icon(
                     onPressed: () async {
                       final encoded = Uri.encodeComponent(activity.location);
-                      final uri = Uri.parse('https://www.google.com/maps/dir/?api=1&destination=$encoded');
+                      final uri = Uri.parse(
+                        'https://www.google.com/maps/dir/?api=1&destination=$encoded',
+                      );
 
                       if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                        await launchUrl(
+                          uri,
+                          mode: LaunchMode.externalApplication,
+                        );
                       } else {
                         debugPrint('Nie można otworzyć Google Maps');
                       }
                     },
-                    icon: const Icon(Icons.location_on, color: AppColors.cardsBackground),
-                    label: const Text("Lokalizacja", style: TextStyles.whiteSubtitle),
+                    icon: const Icon(
+                      Icons.location_on,
+                      color: AppColors.cardsBackground,
+                    ),
+                    label: const Text(
+                      "Lokalizacja",
+                      style: TextStyles.whiteSubtitle,
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),

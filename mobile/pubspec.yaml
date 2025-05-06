@@ -69,6 +69,8 @@ flutter:
   assets:
     - C:\Users\Mateusz\PycharmProjects\PI\mobile\assets\images\logo.png
     - assets/icons/app/
+    - assets/icons/app/activities/
+    - assets/icons/app/expenses/
     - assets/icons/navbar/
   fonts:
       - family: Quicksand

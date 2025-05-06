@@ -9,6 +9,7 @@ class ExpenseModel {
   final String? note;
   final String category;
   final String? user;
+  final String? username;
 
   ExpenseModel({
     required this.id,
@@ -19,6 +20,7 @@ class ExpenseModel {
     required this.category,
     this.note,
     this.user,
+    this.username
   });
 
   factory ExpenseModel.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class ExpenseModel {
       category: json['category'].toString(),
       note: json['note'],
       user: json['user']?.toString(),
+      username: json['username']?.toString(),
     );
   }
 }

@@ -18,3 +18,17 @@ class AppIcons{
   static final money = SvgPicture.asset('${_path}money_icon.svg');
   static final itinerary = SvgPicture.asset('${_path}itinerary.svg');
 }
+
+class ActivityIcons {
+  static final culture = SvgPicture.asset('assets/icons/app/activities/culture.svg');
+  static final explore = SvgPicture.asset('assets/icons/app/activities/explore.svg');
+  static final relax = SvgPicture.asset('assets/icons/app/activities/relax.svg');
+  static final other = SvgPicture.asset('assets/icons/app/activities/other.svg');
+}
+
+class ExpenseIcons {
+  static final attraction = SvgPicture.asset('assets/icons/app/expenses/attraction.svg');
+  static final food = SvgPicture.asset('assets/icons/app/expenses/food.svg');
+  static final transport = SvgPicture.asset('assets/icons/app/expenses/transport.svg');
+  static final other = SvgPicture.asset('assets/icons/app/expenses/other.svg');
+}

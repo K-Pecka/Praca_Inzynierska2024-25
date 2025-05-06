@@ -62,6 +62,7 @@ class BudgetService {
     required String date,
     required String note,
     required String currency,
+    required String category,
   }) async {
     final url = Uri.parse('$_baseUrl/trip/$tripId/expense/create/');
     final body = jsonEncode({
@@ -72,7 +73,7 @@ class BudgetService {
       'note': note,
       'trip': tripId,
       'user': userProfileId,
-      'category': 1,
+      'category': category,
     });
 
     final response = await _authorizedRequest(
