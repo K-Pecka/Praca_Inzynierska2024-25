@@ -26,7 +26,7 @@ class Chatroom(BaseModel):
     )
     trip = models.ForeignKey(
         Trip,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="chat_rooms",
         verbose_name=_("Wycieczka"), help_text=_("Wycieczka")
     )
