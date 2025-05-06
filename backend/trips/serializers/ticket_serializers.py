@@ -14,6 +14,9 @@ class TicketCreateSerializer(serializers.ModelSerializer):
     profiles = serializers.PrimaryKeyRelatedField(
         many=True, queryset=UserProfile.objects.all(), required=False
     )
+    trip = serializers.PrimaryKeyRelatedField(
+        queryset=Trip.objects.all(), write_only=True, required=False
+    )
     valid_from_date = serializers.DateField(
         format="%d.%m.%Y",
         input_formats=["%d.%m.%Y", "iso-8601"],
@@ -50,7 +53,7 @@ class TicketCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = [
-            'id', 'name', 'file', 'type', 'type_display',
+            'id', 'name', 'file', 'type', 'type_display', 'trip',
             'owner', 'profiles', 'valid_from_date', 'valid_from_time'
         ]
 
