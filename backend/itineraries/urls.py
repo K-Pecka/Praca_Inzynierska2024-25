@@ -21,4 +21,7 @@ urlpatterns = [
          name='activity-update'),
     path('<int:itinerary_pk>/activities/<int:pk>/delete/', ItineraryActivityDestroyAPIView.as_view(),
          name='activity-delete'),
+
+    # Itinerary activity type
+    path('activity-types/all/', ItineraryActivityTypeListAPIView.as_view(), name='activity-type-list'),
 ]
