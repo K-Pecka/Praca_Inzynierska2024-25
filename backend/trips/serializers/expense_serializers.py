@@ -42,8 +42,13 @@ class ExpenseListSerializer(serializers.ModelSerializer):
     note = serializers.CharField(read_only=True)
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
     user = serializers.PrimaryKeyRelatedField(read_only=True)
-    username = serializers.CharField(source='user.full_name', read_only=True)
+    username = serializers.SerializerMethodField(read_only=True)
     category = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    def get_username(self, obj):
+        if obj.user:
+            return obj.user.user.full_name
+        return None
 
     class Meta:
         model = Expense

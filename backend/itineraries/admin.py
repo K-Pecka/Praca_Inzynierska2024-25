@@ -7,8 +7,8 @@ from itineraries.models import ItineraryActivity, ItineraryActivityType
 
 @admin.register(ItineraryActivity)
 class ItineraryActivityAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type')
+    list_display = ('id', 'name', 'type')
 
 @admin.register(ItineraryActivityType)
 class ItineraryActivityTypeAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('id', 'name',)
