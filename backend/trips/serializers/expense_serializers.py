@@ -31,6 +31,7 @@ class ExpenseRetrieveSerializer(serializers.ModelSerializer):
             'title', 'amount', 'currency', 'date', 'note', 'trip', 'user', 'category'
         ]
 
+
 class ExpenseListSerializer(serializers.ModelSerializer):
     id  = serializers.IntegerField(read_only=True)
     title = serializers.CharField(read_only=True)
@@ -40,13 +41,15 @@ class ExpenseListSerializer(serializers.ModelSerializer):
     note = serializers.CharField(read_only=True)
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
     user = serializers.PrimaryKeyRelatedField(read_only=True)
+    username = serializers.CharField(source='user.full_name', read_only=True)
     category = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Expense
         fields = [
-            'id', 'title', 'amount', 'currency', 'date', 'note', 'trip', 'user', 'category'
+            'id', 'title', 'amount', 'currency', 'date', 'note', 'trip', 'user', 'username', 'category'
         ]
+
 
 class ExpenseCreateSerializer(serializers.ModelSerializer):
     title = serializers.CharField()
@@ -77,6 +80,7 @@ class ExpenseCreateSerializer(serializers.ModelSerializer):
         fields = [
             'title', 'amount', 'currency', 'date', 'user', 'category'
         ]
+
 
 class ExpenseUpdateSerializer(serializers.ModelSerializer):
     title = serializers.CharField(required=False, write_only=True)
