@@ -1,5 +1,6 @@
 from django.urls import path
 
+from itineraries.views.itinerary_activity_type_views import ItineraryActivityTypeListAPIView
 from itineraries.views.itinerary_activity_views import ItineraryActivityListAPIView, ItineraryActivityCreateAPIView, \
     ItineraryActivityRetrieveAPIView, ItineraryActivityUpdateAPIView, ItineraryActivityDestroyAPIView
 from itineraries.views.itinerary_views import ItineraryListAPIView, ItineraryCreateAPIView, ItineraryRetrieveAPIView, \
