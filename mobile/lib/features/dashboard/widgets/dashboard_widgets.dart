@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../core/theme/themes.dart';
 import '/core/models/trip_model.dart';
 import '/core/theme/text_styles.dart';
 import '/core/theme/icons.dart';
@@ -26,7 +27,7 @@ class TripDropdownCard extends StatelessWidget {
           children: [
             ColorFiltered(
               colorFilter: const ColorFilter.mode(
-                Color(0xB32F27CE),
+                AppColors.primary,
                 BlendMode.srcIn,
               ),
               child: SizedBox(width: 36, height: 36, child: AppIcons.location),
@@ -51,7 +52,7 @@ class TripDropdownCard extends StatelessWidget {
             }
           },
           decoration: CustomDropdownDecoration(
-            closedFillColor: const Color(0xFFF0ECFC),
+            closedFillColor: AppColors.cardsBackground,
             closedBorderRadius: BorderRadius.circular(16),
             closedSuffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
             headerStyle: TextStyles.cardTitleHeading,
@@ -86,7 +87,7 @@ class TripDetailsCard extends StatelessWidget {
           children: [
             ColorFiltered(
               colorFilter: const ColorFilter.mode(
-                Color(0xB32F27CE),
+                AppColors.primary,
                 BlendMode.srcIn,
               ),
               child: SizedBox(width: 36, height: 36, child: AppIcons.map),
@@ -98,7 +99,7 @@ class TripDetailsCard extends StatelessWidget {
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: const Color(0x80DEDCFF),
+            color: AppColors.cardsBackground,
             borderRadius: BorderRadius.circular(24),
           ),
           padding: const EdgeInsets.all(20),
@@ -117,7 +118,7 @@ class TripDetailsCard extends StatelessWidget {
                       horizontal: 12,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2D1ED6),
+                      color: AppColors.primary,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text('$duration dni', style: TextStyles.whiteSubtitle),

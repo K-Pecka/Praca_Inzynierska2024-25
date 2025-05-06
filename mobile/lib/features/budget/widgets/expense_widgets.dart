@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../core/models/expense_model.dart';
 import '../../../core/services/budget_service.dart';
 import '../../../core/services/user_service.dart';
+import '../../../core/theme/themes.dart';
 import '../../../core/widgets/custom_expense_input_field.dart';
 import '../../../core/theme/text_styles.dart';
 
@@ -115,7 +116,7 @@ class _ExpenseTileState extends State<ExpenseTile> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFFF4F2FF),
+      color: AppColors.cardsBackground,
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       margin: const EdgeInsets.only(bottom: 16),

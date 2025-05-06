@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '/core/theme/icons.dart';
+import '/core/theme/themes.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -12,15 +13,15 @@ class CustomBottomNavBar extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _selectedColor = Color(0xFF6C55ED);
-  static const _unselectedColor = Colors.white;
+  static const _selectedColor = AppColors.primary;
+  static const _unselectedColor = AppColors.cardsBackground;
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: onTap,
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.navigationBackground,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: _selectedColor,
       unselectedItemColor: _unselectedColor,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/services/ticket_service.dart';
+import '../../../core/theme/themes.dart';
 import '../../tickets/screens/ticket_preview_screen.dart';
 import '/core/models/itinerary_model.dart';
 import '/core/models/activity_model.dart';
@@ -99,10 +100,10 @@ class _DaySelectorState extends State<DaySelector> {
             final isActive = _isActive(date);
 
             final bgColor = isSelected
-                ? const Color(0xBF2F27CE)
+                ? AppColors.primary
                 : isInPlan && isActive
-                ? const Color(0x90DEDCFF)
-                : const Color(0x40000000);
+                ? AppColors.cardsBackground
+                : AppColors.subtitleText;
 
             return GestureDetector(
               onTap: () => widget.onSelect(date),
@@ -156,7 +157,7 @@ class ActivitiesList extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFF4F2FF),
+              color: AppColors.cardsBackground,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -164,7 +165,7 @@ class ActivitiesList extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.event, color: Colors.black87, size: 24),
+                    const Icon(Icons.event, color: AppColors.titleText, size: 24),
                     const SizedBox(width: 8),
                     Text(
                       a.name,
@@ -178,7 +179,7 @@ class ActivitiesList extends StatelessWidget {
                     const Icon(
                       Icons.access_time,
                       size: 18,
-                      color: Colors.black54,
+                      color: AppColors.subtitleText,
                     ),
                     const SizedBox(width: 4),
                     Text(
@@ -189,7 +190,7 @@ class ActivitiesList extends StatelessWidget {
                     const Icon(
                       Icons.access_time_filled,
                       size: 18,
-                      color: Colors.black54,
+                      color: AppColors.subtitleText,
                     ),
                     const SizedBox(width: 4),
                     Text(
@@ -228,7 +229,7 @@ class PlanDropdownCard extends StatelessWidget {
           children: [
             ColorFiltered(
               colorFilter: const ColorFilter.mode(
-                Color(0xB32F27CE),
+                AppColors.primary,
                 BlendMode.srcIn,
               ),
               child: SizedBox(width: 36, height: 36, child: AppIcons.itinerary),
@@ -246,7 +247,7 @@ class PlanDropdownCard extends StatelessWidget {
             if (newPlan != null) onPlanSelected(newPlan);
           },
           decoration: CustomDropdownDecoration(
-            closedFillColor: const Color(0xFFF0ECFC),
+            closedFillColor: AppColors.cardsBackground,
             closedBorderRadius: BorderRadius.circular(16),
             closedSuffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
             headerStyle: TextStyles.cardTitleHeading,
@@ -278,7 +279,7 @@ void showActivityDetailsModal(BuildContext context, ActivityModel activity, int 
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey[400],
+                    color: AppColors.subtitleText,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -327,11 +328,11 @@ void showActivityDetailsModal(BuildContext context, ActivityModel activity, int 
                     },
                     icon: const Icon(
                       Icons.airplane_ticket,
-                      color: Colors.white,
+                      color: AppColors.cardsBackground,
                     ),
                     label: const Text("Bilet", style: TextStyles.whiteSubtitle),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6C55ED),
+                      backgroundColor: AppColors.primary,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 32,
                         vertical: 12,
@@ -356,10 +357,10 @@ void showActivityDetailsModal(BuildContext context, ActivityModel activity, int 
                         debugPrint('Nie można otworzyć Google Maps');
                       }
                     },
-                    icon: const Icon(Icons.location_on, color: Colors.white),
+                    icon: const Icon(Icons.location_on, color: AppColors.cardsBackground),
                     label: const Text("Lokalizacja", style: TextStyles.whiteSubtitle),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6C55ED),
+                      backgroundColor: AppColors.primary,
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),

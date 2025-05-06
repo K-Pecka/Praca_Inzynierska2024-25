@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/models/ticket_model.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../core/theme/themes.dart';
 import '../screens/ticket_preview_screen.dart';
 
 class TicketTile extends StatelessWidget {
@@ -20,7 +21,7 @@ class TicketTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color(0xFFF4F2FF),
+      color: AppColors.cardsBackground,
       margin: const EdgeInsets.only(bottom: 16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
@@ -46,7 +47,7 @@ class TicketTile extends StatelessWidget {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2F27CE),
+                    backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/services/trip_service.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/theme/themes.dart';
 import '../../../core/widgets/menu_screen.dart';
 import '/core/models/trip_model.dart';
 import '../widgets/dashboard_widgets.dart';
@@ -95,14 +96,14 @@ class _TouristDashboardState extends State<TouristDashboard> {
                       );
                     },
                     child: CircleAvatar(
-                      radius: 20,
-                      backgroundColor: const Color(0x80DEDCFF),
+                      radius: 24,
+                      backgroundColor: AppColors.cardsBackground,
                       child: Text(
                         initials,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          color: Color(0xBF2F27CE),
+                          color: AppColors.primary,
                         ),
                       ),
                     ),

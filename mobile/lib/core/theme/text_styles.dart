@@ -56,4 +56,11 @@ class TextStyles {
       fontWeight: FontWeight.w600,
     );
   }
+
+  static const TextStyle textHint = TextStyle(
+    color: Colors.black38,
+    fontWeight: FontWeight.w600,
+    fontSize: 18,
+  );
+
 }

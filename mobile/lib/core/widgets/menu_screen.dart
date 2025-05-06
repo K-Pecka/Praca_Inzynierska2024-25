@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/theme/themes.dart';
 import '../../features/auth/screens/start_screen.dart';
 import '../services/auth_service.dart';
+import '../theme/text_styles.dart';
 
 class ProfileMenuScreen extends StatelessWidget {
   const ProfileMenuScreen({super.key});
@@ -23,10 +25,10 @@ class ProfileMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final initials = _getInitials();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.screenBackground,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
+        backgroundColor: AppColors.screenBackground,
+        foregroundColor: AppColors.titleText,
       ),
       body: ListView(
         children: [
@@ -36,23 +38,20 @@ class ProfileMenuScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 40,
-                  backgroundColor: const Color(0x80DEDCFF),
+                  backgroundColor: AppColors.cardsBackground,
                   child: Text(
                     initials,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 28,
-                      color: Color(0xBF2F27CE),
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   "${AuthService.firstName ?? ''} ${AuthService.lastName ?? ''}",
-                  style: const TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyles.sectionHeading
                 ),
                 const SizedBox(height: 12),
               ],
@@ -65,25 +64,25 @@ class ProfileMenuScreen extends StatelessWidget {
             Icons.person,
             "Profil",
             () => _logout(context),
-            color: Colors.black87,
+            color: AppColors.titleText,
           ),
           _buildMenuItem(
             Icons.settings,
             "Ustawienia",
             () => _logout(context),
-            color: Colors.black87,
+            color: AppColors.titleText,
           ),
           _buildMenuItem(
             Icons.report_problem,
             "Zgłoś problem",
             () => _logout(context),
-            color: Colors.black87,
+            color: AppColors.titleText,
           ),
           _buildMenuItem(
             Icons.logout,
             "Wyloguj się",
             () => _logout(context),
-            color: Colors.red,
+            color: AppColors.logout,
           ),
         ],
       ),

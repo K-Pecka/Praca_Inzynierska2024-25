@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/theme/icons.dart';
+import '../../../core/theme/themes.dart';
 
 class BudgetOverviewCard extends StatefulWidget {
   final double totalBudget;
@@ -37,7 +38,7 @@ class _BudgetOverviewCardState extends State<BudgetOverviewCard> {
           children: [
             ColorFiltered(
               colorFilter: const ColorFilter.mode(
-                Color(0xFF6C55ED),
+                AppColors.primary,
                 BlendMode.srcIn,
               ),
               child: SizedBox(width: 36, height: 36, child: AppIcons.money),
@@ -52,7 +53,7 @@ class _BudgetOverviewCardState extends State<BudgetOverviewCard> {
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: const Color(0xFFF4F2FF),
+            color: AppColors.cardsBackground,
             borderRadius: BorderRadius.circular(20),
           ),
           padding: const EdgeInsets.all(16),
@@ -110,7 +111,7 @@ class ToggleExpenseFormButton extends StatelessWidget {
         icon: Icon(
           showForm ? Icons.remove_circle_outline : Icons.add_circle_outline,
           size: 48,
-          color: const Color(0xFF6C55ED),
+          color: AppColors.primary,
         ),
         onPressed: onToggle,
       ),

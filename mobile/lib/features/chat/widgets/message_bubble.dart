@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/models/chat_message_model.dart';
+import '../../../core/theme/themes.dart';
 
 class MessageBubble extends StatelessWidget {
   final MessageModel message;
@@ -15,13 +16,13 @@ class MessageBubble extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isMine ? Colors.blue : Colors.grey.shade300,
+          color: isMine ? AppColors.primary : AppColors.cardsBackground,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
           message.content,
           style: TextStyle(
-            color: isMine ? Colors.white : Colors.black87,
+            color: isMine ? Colors.white : AppColors.titleText,
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),

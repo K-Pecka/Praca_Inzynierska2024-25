@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/text_styles.dart';
+
 Widget buildInputField({
   required TextEditingController controller,
   required String label,
@@ -20,11 +22,7 @@ Widget buildInputField({
     onTap: onTap,
     decoration: InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(
-        color: Colors.black38,
-        fontWeight: FontWeight.w600,
-        fontSize: 18,
-      ),
+      labelStyle: TextStyles.textHint,
       border: border,
       focusedBorder: border,
     ),

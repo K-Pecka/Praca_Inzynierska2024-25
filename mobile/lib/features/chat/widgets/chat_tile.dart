@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/text_styles.dart';
+import '../../../core/theme/themes.dart';
+
 class ChatTile extends StatelessWidget {
   final String label;
   final String message;
@@ -24,12 +27,12 @@ class ChatTile extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundColor: const Color(0xFFDEDCFF).withOpacity(0.5),
+            backgroundColor: AppColors.cardsBackground,
             child: isAnnouncement
-                ? const Icon(Icons.info_outline, color: Color(0xFF6A5AE0))
+                ? const Icon(Icons.info_outline, color: AppColors.primary)
                 : Text(
               initials ?? '',
-              style: const TextStyle(color: Color(0xFF6A5AE0)),
+              style: const TextStyle(color: AppColors.primary),
             ),
           ),
           const SizedBox(width: 12),
@@ -39,7 +42,7 @@ class ChatTile extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFDEDCFF).withOpacity(0.2),
+                  color: AppColors.cardsBackground,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
@@ -47,15 +50,12 @@ class ChatTile extends StatelessWidget {
                   children: [
                     Text(
                       label,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
+                      style: TextStyles.cardTitleHeading,
                     ),
                     Text(
                       message,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 18),
+                      style: TextStyles.subtitle,
                     ),
                   ],
                 ),

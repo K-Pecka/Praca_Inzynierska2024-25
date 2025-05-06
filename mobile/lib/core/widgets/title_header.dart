@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/text_styles.dart';
 import '../services/auth_service.dart';
+import '../theme/themes.dart';
 import 'menu_screen.dart';
 
 class TripTitleHeader extends StatelessWidget {
@@ -39,14 +40,14 @@ class TripTitleHeader extends StatelessWidget {
               );
             },
             child: CircleAvatar(
-              radius: 20,
-              backgroundColor: const Color(0x80DEDCFF),
+              radius: 24,
+              backgroundColor: AppColors.cardsBackground,
               child: Text(
                 initials,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
-                  color: Color(0xBF2F27CE),
+                  color: AppColors.primary,
                 ),
               ),
             ),
