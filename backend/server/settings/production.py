@@ -13,5 +13,6 @@ API_URL = 'https://api.plannder.com'
 
 DATABASE_URL = os.environ.get('DATABASE_URL', '')
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True)}
-
+DATABASES = {'default': dj_database_url.config(conn_max_age=60,
+                                               ssl_require=True,
+                                               conn_health_checks=True)}
