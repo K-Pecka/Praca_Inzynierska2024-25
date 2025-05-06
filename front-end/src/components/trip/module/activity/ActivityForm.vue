@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import AppButton from "@/components/budget/AppButton.vue";
+import AppButton from "@/components/AppButton.vue";
 import { VTimePicker } from "vuetify/labs/VTimePicker";
 import { defineEmits } from "vue";
 

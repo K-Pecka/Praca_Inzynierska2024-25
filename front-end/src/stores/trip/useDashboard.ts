@@ -1,10 +1,10 @@
 import {computed} from "vue";
-import {useQuery} from "@tanstack/vue-query";
 import {useRoleStore} from "@/stores/auth/useRoleStore";
-import {fetchTrip} from "@/api";
 import {Role} from "@/types/enum";
-import type {Trip} from "@/types";
-import { getExpensesQuery } from "@/api/services/expenseQuery";
+
+import { sectionDashboard } from "@/data/section/sectionName";
+import { useBudget } from "./useBudget";
+import { useTrips } from "./useTrips";
 
 function formatPL(dateString: string) {
     const dateObj = new Date(dateString);
@@ -12,39 +12,29 @@ function formatPL(dateString: string) {
     return new Intl.DateTimeFormat("pl-PL").format(dateObj);
 }
 
-export const useDashboard = () => {
+export const useDashboard= (tripId:Function) => {
     const {getRole} = useRoleStore();
-    const getExpenseItem = () => {
-        return {
-            sectionName:
-                getRole() == Role.TURIST
-                    ? "Twoje ostatnie wydatki"
-                    : "Ostatnie zaległości uczestników",
-        };
-    };
+    const {getExpensByTrip} = useBudget(tripId);
+    const {getTripDetails} = useTrips(tripId);
 
-    const getTripDetails = (id: number) => {
-        return useQuery<Trip, Error, Trip, [string, number]>({
-            queryKey: ["trip", id],
-            queryFn: fetchTrip,
-            //keepPreviousData: true,
-        });
-    };
+    const getSpecialSectionName = () => sectionDashboard(getRole());
 
-    const getDashboard = (id: string) => {
-        const {data: tripRaw, isLoading, error} = getTripDetails(Number(id));
-        const getExpenseQuery = getExpensesQuery(Number(id));
-        const {data: tripExpenseRaw} = getExpenseQuery;
+    // DO POPRAWY TEN SEGEMENT
+    const getDashboard = () => {
+
+        const {trip, isLoading_trip, error_trip} = getTripDetails(tripId());
+        const {expensesByTrip} = getExpensByTrip(tripId());
         const tripTime = computed(() => {
-            if (!tripRaw.value) return "...";
-            return `${formatPL(tripRaw.value.start_date)} - ${formatPL(
-                tripRaw.value.end_date
+            if (!trip.value) return "...";
+            return `${formatPL(trip.value.start_date)} - ${formatPL(
+                trip.value.end_date
             )}`;
         });
 
-        const budget = computed(() => `${tripRaw.value?.budget?.amount ?? "..."}`);
+        const budget = computed(() => `${trip.value?.budget?.amount ?? "..."}`);
+        const members = computed(() => [...trip.value?.members ?? [], ...trip.value?.pending_members ?? []]);
         const participantCount = computed(
-            () => `${tripRaw.value?.members?.length ?? 0} Uczestników`
+            () => `${members.value.length ?? 0} ${members.value.length==1? "Uczestnik" : "Uczestników"}`
         );
 
         const activityCount = computed(() => ({
@@ -53,9 +43,9 @@ export const useDashboard = () => {
             content: getRole() == Role.TURIST ? "0 Aktywności" : "0 Wiadomości",
         }));
 
-        const tripName = computed(() => tripRaw.value?.name ?? "...");
-        const members = computed(() => tripRaw.value?.members ?? []);
-        const expenses = computed(() => tripExpenseRaw.value?.reduce((acc, expense) => Number(acc) + Number(expense.amount), 0) ?? 0);
+        const tripName = computed(() => trip.value?.name ?? "...");
+        
+        const expenses = computed(() => expensesByTrip.value?.reduce((acc, expense) => Number(acc) + Number(expense.amount), 0) ?? 0);
         const boxes = computed(() => [
             {
                 title: "Czas trwania",
@@ -74,7 +64,7 @@ export const useDashboard = () => {
                     expenses: expenses.value,
                     amount: Number(budget.value),
                     currency: "PLN",
-                    convertedAmount: Number(budget.value) * 0.24,
+                    convertedAmount: Number(expenses.value) * 0.24,
                     convertedCurrency: "EUR",
                 },
                 set: {
@@ -102,8 +92,8 @@ export const useDashboard = () => {
             },
         ]);
 
-        return {boxes, isLoading, error, tripName, members};
+        return {boxes, isLoading_trip, error_trip, tripName, members};
     };
 
-    return {getDashboard, getTripDetails, getExpenseItem};
+    return {getDashboard, getSpecialSectionName};
 };

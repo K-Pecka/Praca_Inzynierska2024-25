@@ -8,9 +8,9 @@ import {Role} from "@/types/enum";
 
 const {getSideNavItems} = usePagePanelStore();
 const route = useRoute();
-usePagePanelStore().initialize(route.name as string);
+usePagePanelStore().initialize();
 const items: SideNavItem[] = getSideNavItems(
-    useUtilsStore().getTripId().value as string
+    String(useUtilsStore().getTripId())
 );
 const {checkPermission} = useAuthStore();
 const {goTo} = usePermissionStore();

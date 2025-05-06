@@ -3,6 +3,8 @@ import { defineProps } from "vue";
 import { DashboardBox } from "@/types/interface";
 import BudgetContent from "@/components/ui/BudgetContent.vue";
 const props = defineProps<DashboardBox>();
+console.log("hej",typeof props.content);
+console.log("hej");
 </script>
 
 <template>
@@ -31,7 +33,7 @@ const props = defineProps<DashboardBox>();
 
       <BudgetContent 
         v-if="typeof props.content === 'object' && 'amount' in props.content" 
-        v-bind="{ content: props.content, showCurrency: undefined }"
+        v-bind="{ content: props.content, showCurrency: true }"
       />
 
       <template v-else>

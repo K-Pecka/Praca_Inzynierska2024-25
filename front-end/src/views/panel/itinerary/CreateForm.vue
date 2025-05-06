@@ -3,14 +3,15 @@ import { ref, watch } from "vue";
 import { Section, Form } from "@/components";
 import { useFormStore,useTripStore } from "@/stores";
 import { FormType } from "@/types/enum";
-import { useRoute } from "vue-router";
 import { Plan } from "@/types/interface";
 
 const { planMutationAdd } = useTripStore();
 const { getFormInputs, isFormValid } = useFormStore();
-const route = useRoute();
-const id = Number(Array.isArray(route.params.tripId) ? route.params.tripId[0] : route.params.tripId);
-const { data:trip } = useTripStore().getTripDetails(id);
+
+const {trip:tripStore} = useTripStore();
+const {getTripDetails} = tripStore;
+const {trip} = getTripDetails();
+
 const inputs = ref(getFormInputs(FormType.PLAN));
 const formValues = ref<Record<string, string>>(
     Object.fromEntries(inputs.value.map(input => [input.name, ""]))
@@ -35,14 +36,14 @@ const handleSubmit = (_formData: any, config: any) => {
     const { tripName, city,tripDates } = formValues.value;
     const [start_date, end_date] = tripDates.split(' - ');
     const newPlan:Plan = {
-      id: id,
+      id: trip?.value?.id ?? 0,
       name: tripName,
       country: city,
       start_date: start_date || '',
       end_date: end_date || ''
     };
     try {
-      planMutationAdd.mutateAsync({ data: newPlan, tripId: id });
+      planMutationAdd.mutateAsync({ data: newPlan, tripId: trip?.value?.id ?? 0 });
     } catch (error) {
       
     }

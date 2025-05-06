@@ -8,6 +8,7 @@ defineProps<{
   fontAuto?: boolean | string;
   dense?: boolean | string;
   stretch?: boolean | string;
+  onClick?: () => any
 }>();
 
 </script>
@@ -24,6 +25,7 @@ defineProps<{
        dense ? 'dense' : '',
        stretch ? 'stretch' : ''
       ]"
+      :onClick = onClick
   >
     {{text}}
   </v-btn>

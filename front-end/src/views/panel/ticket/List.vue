@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, watchEffect} from "vue";
+import {computed, ref, watchEffect} from "vue";
 import {useRoute} from "vue-router";
 import {Section} from "@/components";
 
@@ -7,53 +7,22 @@ import {useTripStore} from "@/stores/trip/useTripStore";
 
 
 import TicketForm from "@/components/trip/module/ticket/TicketForm.vue";
-import AppButton from "@/components/budget/AppButton.vue";
+import AppButton from "@/components/AppButton.vue";
 import {useUtilsStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
 import {createTicket,fetchUserById} from "@/api"
 import axios from "axios";
-const {combineDateAndTime} = useUtilsStore();
-const route = useRoute();
-const tripId = route.params.tripId as string;
-const {data: tripData} = useTripStore().getTripDetails(Number(tripId));
-const {data: tickets, isLoading} = useTripStore().getTickets(tripId);
-const getUserById =async (id:number)=>{
-  const user = await fetchUserById(id);
-  //console.log(user)
-  return {
-    name: `${user.first_name} ${user.last_name}`,
-    userId: id
-  };
-}
-const members = ref<{ name: string; userId: number }[]>([]);
+const {combineDateAndTime,getTripId} = useUtilsStore();
+const {trip:tripStore} = useTripStore();
+const {getTripDetails} = tripStore;
+const {trip} = getTripDetails();
+const {data: tickets, isLoading} = useTripStore().getTickets(String(getTripId()));
 
-watchEffect(async () => {
-  const membersRaw = tripData.value?.members ?? [];
-  const pendingRaw = tripData.value?.pending_members ?? [];
 
-  const confirmed = await Promise.all(
-    membersRaw.map(async (entry) => {
-      const id =  entry;
-      const user = await getUserById(id);
-      return { ...user, is_guest: false };
-    })
-  );
+import {useMembersStore} from "@/stores/trip/useMembersStore"
+const {members:membersStore} =useMembersStore();
+const members = computed(()=>membersStore)
 
-  const pending = await Promise.all(
-    pendingRaw.map(async (entry) => {
-      const id = typeof entry === 'object' && entry !== null ? entry.id : entry;
-      const user = await getUserById(id);
-      return { ...user, is_guest: true };
-    })
-  );
-  const userMap = new Map<number, typeof confirmed[0]>();
-  
-  for (const user of [...pending, ...confirmed]) {
-    userMap.set(user.userId, user);
-  }
-
-  members.value = Array.from(userMap.values());
-});
 const showForm = ref(false);
 async function handleAddTicket(newTicketData: {
   type: string;
@@ -65,11 +34,11 @@ async function handleAddTicket(newTicketData: {
 }) {
   const formData = new FormData();
   formData.append("type", newTicketData.type);
-  formData.append("trip", tripId);
+  formData.append("trip", String(getTripId()));
   formData.append("valid_from", combineDateAndTime(newTicketData.date, newTicketData.time));
   formData.append("file", newTicketData.file);
   try {
-    await createTicket(formData,{ tripId:tripId });
+    await createTicket(formData,{ tripId:String(getTripId()) });
     showForm.value = false;
   } catch (error) {
     //console.error("Błąd podczas tworzenia biletu:", error);
@@ -89,7 +58,7 @@ const downloadItem = async ( url: string )=> {
 
 const filteredTickets = () => {
   return (
-      tickets.value?.filter((ticket) => ticket.trip === Number(tripId)) ?? []
+      tickets.value?.filter((ticket) => ticket.trip === Number(getTripId())) ?? []
   );
 };
 
@@ -121,7 +90,7 @@ const toggleForm = () => {
 
         <!-- Empty state when no tickets are present -->
         <v-row
-            v-if="isLoading && tickets && tickets.length === 0"
+            v-if="!isLoading && tickets && tickets.length === 0"
             class="background-secondary"
         >
           <v-icon size="48" color="black"

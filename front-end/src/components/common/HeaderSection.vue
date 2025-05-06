@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {useRoute} from "vue-router";
 import {useTripStore} from "@/stores";
-import AppButton from "@/components/budget/AppButton.vue";
+import AppButton from "@/components/AppButton.vue";
 
 const route = useRoute();
 const tripId = Number(route.params.tripId);
 const {getTripDetails} = useTripStore();
-const {data: tripData, isLoading, error} = getTripDetails(tripId);
+const {trip, isLoading_trip, error_trip} = getTripDetails(tripId);
 
 defineProps<{
   subtitle?: string;
@@ -21,8 +21,8 @@ defineProps<{
   <v-col cols="12">
     <v-row class="flex-column">
       <v-col cols="12" class="title font-weight-bold color-text">
-        <span v-if="!isLoading && !error">
-          {{ tripData?.name }}
+        <span v-if="!isLoading_trip && !error_trip">
+          {{ trip?.name }}
         </span>
         <span v-else>
           ...

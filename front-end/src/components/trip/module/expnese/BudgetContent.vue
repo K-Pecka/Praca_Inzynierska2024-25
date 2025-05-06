@@ -13,14 +13,13 @@ const safeDivision = (numerator: number, denominator: number, percent: boolean) 
   }
   return (numerator / denominator).toFixed(2);
 };
-console.log("BudgetContent", props);
+console.log("BudgetContent", typeof props.showCurrency);
 </script>
 
 <template>
   <div v-if="typeof props.content === 'object' && props.content !== null">
     <div class="mb-2 budget-amount">
       <span class="text-h6 font-weight-bold" v-if="props.showCurrency === true">
-        {{ props.content.amount }} {{ props.content.currency }}
         {{ props.content.expenses }} {{ props.content.currency }}
       </span>
     </div>

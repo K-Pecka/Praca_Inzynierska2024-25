@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from "vue";
-import AppButton from "@/components/budget/AppButton.vue";
+import AppButton from "@/components/AppButton.vue";
 import { VTimePicker } from 'vuetify/labs/VTimePicker'
 import { VDateInput } from "vuetify/labs/components";
 import { ticketCategory } from "@/data/category/ticket";

@@ -6,15 +6,10 @@ import { budget } from "@/data/category/budget"; // Adjust the import to match t
 export const useUtilsStore = defineStore("utils", () => {
   const route = useRoute();
   const useRouter = () => router;
-  const getTripId = () => {
-    return computed<string>(() => {
-      const tripId = route.params?.tripId;
-      return Array.isArray(tripId) ? tripId[0] : tripId;
-    });
-  };
-  const getCurrentPath = () => {
-    name: route.name;
-  };
+  const getTripId = ()=>{
+    const id = route.params.tripId;
+      return Number(Array.isArray(id) ? id[0] : id);
+  }
   const isCurrentRouteNotInSet = (RouteSet: string[]) =>
     computed(() => {
       return !RouteSet.includes(route.name as string);
@@ -58,5 +53,5 @@ export const useUtilsStore = defineStore("utils", () => {
     return dateTime.toISOString();
   }
   
-  return {combineDateAndTime,mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, getCurrentPath, formatDatePolish };
+  return {combineDateAndTime,mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, formatDatePolish };
 });

@@ -15,26 +15,27 @@ const formValues = ref<Record<string, string>>(
     Object.fromEntries(inputs.value.map((input) => [input.name, ""]))
 );
 
-const { getTripDetails, tripMutationUpdate } = useTripStore();
-const { data: tripData, isLoading, error } = getTripDetails(id);
+const { trip:tripStore } = useTripStore();
+const {updateTrip,getTripDetails}= tripStore
+const { trip, isLoading_trip, error_trip } = getTripDetails();
 
 watch(
-    () => tripData.value,
+    () => trip,
     (trip) => {
       const tripDatesInput = inputs.value.find(
           (input) => input.name === "tripDates"
       );
       if (tripDatesInput) {
-        formValues.value.tripName = trip?.name ?? '';
-        formValues.value.start_date = trip?.start_date ?? '';
-        formValues.value.end_date = trip?.end_date ?? '';
+        formValues.value.tripName = trip?.value?.name ?? '';
+        formValues.value.start_date = trip?.value?.start_date ?? '';
+        formValues.value.end_date = trip?.value?.end_date ?? '';
         if (tripDatesInput) {
 
           tripDatesInput.config = {
             ...tripDatesInput.config,
             edit: true,
-            min: trip?.start_date ?? '',
-            max: trip?.end_date ?? '',
+            min: trip?.value?.start_date ?? '',
+            max: trip?.value?.end_date ?? '',
           };
           //console.log(tripDatesInput.config.min, tripDatesInput.config.max);
         }
@@ -53,7 +54,7 @@ function handleSubmit(_formData: any, config: any) {
       start_date: start_date || '',
       end_date: end_date || '',
     };
-    tripMutationUpdate.mutateAsync({ tripId: String(id), newData });
+    updateTrip.mutateAsync({ tripId: String(id), newData });
   }
 }
 </script>
@@ -66,8 +67,8 @@ function handleSubmit(_formData: any, config: any) {
     </template>
 
     <template #content>
-      <p v-if="isLoading">Ładowanie danych wycieczki...</p>
-      <p v-else-if="error">Błąd: {{ error.message }}</p>
+      <p v-if="isLoading_trip">Ładowanie danych wycieczki...</p>
+      <p v-else-if="error_trip">Błąd: {{ error_trip.message }}</p>
 
       <Form
         v-else

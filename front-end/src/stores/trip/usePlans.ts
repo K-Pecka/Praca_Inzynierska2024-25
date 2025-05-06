@@ -37,10 +37,10 @@ export const usePlans = () => {
         },
     });
 
-    const getPlans = (id: string) =>
+    const getPlans = (id?: string) =>
         useQuery({
             queryKey: ["plans", id],
-            queryFn: () => fetchPlans({ tripId: id }),
+            queryFn: () => fetchPlans({ tripId: id ?? getTripId() }),
         });
 
     const yourPlans = computed(() => ({
@@ -65,3 +65,7 @@ export const usePlans = () => {
 
     return { planMutationAdd, getPlans, yourPlans, handleDeleteItinerary };
 };
+function getTripId(): string {
+    return "1";
+}
+

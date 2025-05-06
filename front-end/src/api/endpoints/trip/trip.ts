@@ -30,6 +30,7 @@ export const fetchTrip = async ({ queryKey }: QueryFunctionContext<[string,numbe
   return data;
 };
 export const deleteTrip = async (param: Record<string, string>={}) => {
+  console.log(setParam(apiEndpoints.trip.delete, param));
   const { data, error } = await fetchData(
     setParam(apiEndpoints.trip.delete, param),
     {},

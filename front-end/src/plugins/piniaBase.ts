@@ -1,11 +1,11 @@
 import type { PiniaPluginContext } from "pinia";
 import { useRoleStore } from "@/stores/auth/useRoleStore";
-
+import { useRoute } from "vue-router";
 export function piniaBasePlugin({ store }: PiniaPluginContext) {
 
-  store.initialize = (payload: string) => {
+  store.initialize = () => {
     const { setRole } = useRoleStore();
-    setRole(payload);
+    setRole(String(useRoute().name) || '');
   };
 
   const initialState = JSON.parse(JSON.stringify(store.$state));

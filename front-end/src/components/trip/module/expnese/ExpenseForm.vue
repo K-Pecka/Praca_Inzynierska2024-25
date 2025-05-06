@@ -1,52 +1,17 @@
 <script setup lang="ts">
-import {ref, computed, watchEffect} from "vue";
-import AppButton from "@/components/budget/AppButton.vue";
+import {ref} from "vue";
+import AppButton from "@/components/AppButton.vue";
 import {VDateInput} from "vuetify/labs/components";
 import { budget } from "@/data/category/budget";
-import {fetchUserById} from "@/api"
 const categoryBudget = budget;
 import {useTripStore} from "@/stores/trip/useTripStore";
 const {getTripDetails, createExpense} = useTripStore();
 import {useRoute} from "vue-router";
+import { User } from "@/types";
 const tripId = useRoute().params.tripId as string;
-const {data: tripData} = getTripDetails(Number(tripId));
-const getUserById =async (id:number)=>{
-  const user = await fetchUserById(id);
-  //console.log(user)
-  return {
-    name: `${user.first_name} ${user.last_name}`,
-    userId: id
-  };
-}
-const members = ref<{ name: string; userId: number }[]>([]);
-
-watchEffect(async () => {
-  const membersRaw = tripData.value?.members ?? [];
-  const pendingRaw = tripData.value?.pending_members ?? [];
-
-  const confirmed = await Promise.all(
-    membersRaw.map(async (entry) => {
-      const id =  entry;
-      const user = await getUserById(id);
-      return { ...user, is_guest: false };
-    })
-  );
-
-  const pending = await Promise.all(
-    pendingRaw.map(async (entry) => {
-      const id = typeof entry === 'object' && entry !== null ? entry.id : entry;
-      const user = await getUserById(id);
-      return { ...user, is_guest: true };
-    })
-  );
-  const userMap = new Map<number, typeof confirmed[0]>();
-  
-  for (const user of [...pending, ...confirmed]) {
-    userMap.set(user.userId, user);
-  }
-
-  members.value = Array.from(userMap.values());
-});
+const {members} = defineProps<{
+  members:User[]
+}>();
 const form = ref({
   title:"",
   amount: 0,
@@ -64,11 +29,12 @@ const submitTicket = () =>{
     amount: form.value.amount,
     currency: form.value.currency,
     date: new Intl.DateTimeFormat('pl-PL').format(new Date(form.value.date)),
-    user: form.value.user !== "" ? Number(form.value.user) : members.value[0].userId,
+    user: form.value.user !== "" ? Number(form.value.user) : members[0].userId,
     category: form.value.category,
     note: form.value.note,
   });
 }
+
 </script>
 
 <template>

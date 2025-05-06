@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Expense } from "@/types";
-import AppCard from "./AppCard.vue";
+import AppCard from "@/components/AppCard.vue";
 import { useUtilsStore } from "@/stores";
 const { mapCategoryBudget} = useUtilsStore();
 const props=defineProps<{
@@ -23,9 +23,9 @@ const {icon, name:categoryName} = mapCategoryBudget(props.expense.category);
       </div>
     </div>
     <template v-if="!!variant && variant === 'manage'">
-      <div class="amount">
+      <div >
       <strong class="text-black-70">{{ expense.amount }}{{ expense.currency }}</strong>
-      <v-icon :style="{ marginTop: '-6px' }">mdi-trash-can-outline</v-icon>
+      <v-icon size="28" class="amount">mdi-trash-can-outline</v-icon>
     </div>
       </template> 
     <div v-else>
@@ -53,7 +53,9 @@ const {icon, name:categoryName} = mapCategoryBudget(props.expense.category);
 }
 
 .amount {
-  font-size: 16px;
   color: #e74c3c;
+}
+.background-card{
+  background-color: rgb(var(--v-theme-background));
 }
 </style>

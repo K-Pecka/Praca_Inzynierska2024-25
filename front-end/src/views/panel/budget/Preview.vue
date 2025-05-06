@@ -1,68 +1,20 @@
 <script setup lang="ts">
-import AppCard from "@/components/budget/AppCard.vue";
-import AppButton from "@/components/budget/AppButton.vue";
-import AppProgress from "@/components/budget/AppProgress.vue";
-import ExpenseList from "@/components/budget/ExpenseList.vue";
-import Section from "../../../components/common/Section.vue";
-import HeaderSection from "@/components/common/HeaderSection.vue";
-import ExpenseForm from "@/components/trip/module/expnese/ExpenseForm.vue";
-import BudgetContent from "@/components/ui/BudgetContent.vue";
-import { fetchUserById } from "@/api";
-import { useUtilsStore } from "@/stores";
+import { ExpensesList,Section,HeaderSection,ExpenseForm,BudgetContent,AppButton,AppCard } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
-import { useRoute } from "vue-router";
 import { budget as budgetCategory } from "@/data/category/budget";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref } from "vue";
+import {useMembersStore} from "@/stores/trip/useMembersStore"
+const {members:membersStore} =useMembersStore();
+const members = computed(()=>membersStore)
+const { budget:budgetStore, trip:tripStore } = useTripStore();
+const {getExpensByTrip} = budgetStore;
 
-const route = useRoute();
-const id = route.params.tripId as string;
+const {getTripDetails} = tripStore;
+const {  trip } = getTripDetails();
+const { expensesByTrip:expenses } = getExpensByTrip();
 
-const { getTripDetails, getExpensesQuery } = useTripStore();
-const { mapCategoryBudget } = useUtilsStore();
-
-const { data: tripRaw } = getTripDetails(Number(id));
-const { data: expenses } = getExpensesQuery(Number(id));
-
-const budget = computed(() => Number(tripRaw.value?.budget?.amount) ?? 0);
-const budgetCurrency = computed(() => tripRaw.value?.budget?.currency ?? "PLN");
-
-const getUserById = async (id: number) => {
-  const user = await fetchUserById(id);
-  return {
-    name: `${user.first_name} ${user.last_name}`,
-    userId: id,
-  };
-};
-
-const members = ref<{ name: string; userId: number }[]>([]);
-
-watchEffect(async () => {
-  const membersRaw = tripRaw.value?.members ?? [];
-  const pendingRaw = tripRaw.value?.pending_members ?? [];
-
-  const confirmed = await Promise.all(
-    membersRaw.map(async (entry) => {
-      const id = entry;
-      const user = await getUserById(id);
-      return { ...user, is_guest: false };
-    })
-  );
-
-  const pending = await Promise.all(
-    pendingRaw.map(async (entry) => {
-      const id = typeof entry === 'object' && entry !== null ? entry.id : entry;
-      const user = await getUserById(id);
-      return { ...user, is_guest: true };
-    })
-  );
-
-  const userMap = new Map<number, typeof confirmed[0]>();
-  for (const user of [...pending, ...confirmed]) {
-    userMap.set(user.userId, user);
-  }
-
-  members.value = Array.from(userMap.values());
-});
+const budget = computed(() => Number(trip.value?.budget?.amount) ?? 0);
+const budgetCurrency = computed(() => trip.value?.budget?.currency ?? "PLN");
 
 const spent = computed(() => {
   return (
@@ -71,19 +23,6 @@ const spent = computed(() => {
 });
 
 const remaining = computed(() => Number(budget.value) - spent.value);
-
-const categories = computed(() => {
-  return [
-    ...new Set(expenses.value?.map((expense) => expense.category) ?? []),
-  ].map((categoryId) => {
-    const category = mapCategoryBudget(categoryId);
-    return {
-      title: category.name,
-      value: categoryId,
-      icon: category.icon,
-    };
-  });
-});
 
 const showForm = ref(false);
 const showFilters = ref(false);
@@ -148,7 +87,7 @@ const filter = () => {
                 :content="{
                   amount: budget,
                   currency: budgetCurrency,
-                  convertedAmount: budget / 4.6,
+                  convertedAmount: spent * 0.24,
                   convertedCurrency: 'EUR',
                   expenses: spent,
                 }"
@@ -167,7 +106,7 @@ const filter = () => {
 
         <v-row>
           <v-col cols="12">
-            <ExpenseForm v-if="showForm" @cancelForm="showForm = false" class="form-container" />
+            <ExpenseForm v-if="showForm" :members="members" @cancelForm="showForm = false" class="form-container" />
           </v-col>
         </v-row>
 
@@ -188,7 +127,7 @@ const filter = () => {
                 </AppButton>
               </v-container>
 
-              <ExpenseList
+              <ExpensesList
                 variant="manage"
                 :expenses="expenses"
                 :config="appliedFilters"
@@ -226,6 +165,7 @@ const filter = () => {
                     label="Kategoria"
                     variant="outlined"
                     bg-color="background"
+                    clearable
                   />
                 </v-col>
                 <v-col cols="12">
@@ -237,7 +177,9 @@ const filter = () => {
                     label="Uczestnik"
                     :disabled="members.length === 0"
                     variant="outlined"
-                    bg-color="background"
+                    bg-color="transparent"
+                    clearable
+                    
                   />
                 </v-col>
                 <v-col cols="12" md="6">
@@ -246,7 +188,8 @@ const filter = () => {
                     label="Data od"
                     type="date"
                     variant="outlined"
-                    bg-color="background"
+                    bg-color="transparent"
+                    clearable
                   />
                 </v-col>
                 <v-col cols="12" md="6">
@@ -255,7 +198,8 @@ const filter = () => {
                     label="Data do"
                     type="date"
                     variant="outlined"
-                    bg-color="background"
+                    bg-color="transparent"
+                    clearable
                   />
                 </v-col>
               </v-row>

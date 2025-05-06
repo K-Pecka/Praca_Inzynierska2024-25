@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import {useTripStore} from "@/stores/trip/useTripStore";
-import {useRoute} from "vue-router";
-import AppButton from "@/components/budget/AppButton.vue";
-import {useUtilsStore} from "@/stores";
+import { useTripStore, useUtilsStore } from "@/stores";
+import AppButton from "@/components/AppButton.vue";
 import {images} from "@/data";
+useTripStore().initialize();
 
-useTripStore().initialize(useRoute().name as string);
-
-const {yourTrips} = useTripStore();
-const {data: trips} = yourTrips.trips()
-const {formatDatePolish} = useUtilsStore();
+const {formatDatePolish} = useUtilsStore()
+const {trip} = useTripStore();
+const {getTrips,deleteTrip} = trip
+const {trips, isLoading_trips} = getTrips();
 
 </script>
 
@@ -18,7 +16,6 @@ const {formatDatePolish} = useUtilsStore();
 
     <!-- Header with button -->
     <v-row
-        v-if="trips && trips.length"
         no-gutters
         class="justify-space-between align-center mb-10"
     >
@@ -36,9 +33,9 @@ const {formatDatePolish} = useUtilsStore();
     </v-row>
 
     <!-- Trip cards -->
-    <v-row no-gutters class="ga-4">
+    <v-row no-gutters class="ga-4" v-if="trips && !isLoading_trips">
       <v-col
-          v-if="trips && trips.length"
+          v-if="trips.length>0"
           v-for="trip in trips" :key="trip.id"
       >
         <v-card class="rounded-xl background-secondary">
@@ -78,6 +75,7 @@ const {formatDatePolish} = useUtilsStore();
                     height-auto
                     stretch
                     text="Usuń wycieczkę"
+                    :onclick="() => deleteTrip.mutate({tripId:String(trip.id)})"
                 />
 
               </v-card-actions>

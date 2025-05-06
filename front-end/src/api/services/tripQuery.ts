@@ -13,6 +13,7 @@ export const getTripDetailsQuery = (id: number) => {
     return useQuery<Trip, Error, Trip, [string, number]>({
         queryKey: ["trip", id],
         queryFn: fetchTrip,
+        enabled: !!id,
     })
 }
 export const getMutationCreate = (option: Record<string,any>) => useMutation({

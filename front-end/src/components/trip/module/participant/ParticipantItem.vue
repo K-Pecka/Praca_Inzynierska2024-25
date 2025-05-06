@@ -76,12 +76,10 @@ const tags = [
   align-items: center;
   background-color: rgb(var(--v-theme-background));
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .participant-item--noactive {
-  background-color: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(var(--v-theme-background),0.6);
 }
 
 .participant-left {
@@ -112,6 +110,7 @@ const tags = [
 .participant-email {
   font-size: 0.9rem;
   color: #555;
+  margin-bottom: 2px;
 }
 
 .tags-row {

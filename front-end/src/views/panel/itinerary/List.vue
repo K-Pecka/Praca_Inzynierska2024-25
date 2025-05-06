@@ -2,22 +2,22 @@
 import {Section, TripCard} from "@/components";
 import {useTripStore} from "@/stores/trip/useTripStore";
 import HeaderSection from "@/components/common/HeaderSection.vue";
-import AppButton from "@/components/budget/AppButton.vue";
+import AppButton from "@/components/AppButton.vue";
 import {images} from "@/data";
+import { useUtilsStore } from "@/stores";
+const {getTripId} = useUtilsStore();
+const {yourPlans} = useTripStore();
+const {data: rawPlans, isLoading, error} = yourPlans.plans();
 
-const {yourPlans, getTripDetails} = useTripStore();
-import {useRoute} from "vue-router";
-
-const route = useRoute();
-const id = route.params.tripId as string;
-const {data: rawPlans, isLoading, error} = yourPlans.plans(id);
-const {data: trip_data} = getTripDetails(Number(id));
+const {trip:tripStore} = useTripStore();
+const {getTripDetails} = tripStore;
+const {trip} = getTripDetails();
 </script>
 
 <template>
 
   <Section>
-    <template #title v-if="trip_data && rawPlans && rawPlans.length">
+    <template #title v-if="trip && rawPlans && rawPlans.length">
       <HeaderSection>
         <template #subtitle>
           <span class="trip-title">
@@ -29,7 +29,7 @@ const {data: trip_data} = getTripDetails(Number(id));
     <template #content>
       <p v-if="isLoading">Ładowanie...</p>
       <p v-else-if="error">Błąd: {{ error.message }}</p>
-      <template v-else-if="trip_data && rawPlans && rawPlans.length">
+      <template v-else-if="trip && rawPlans && rawPlans.length">
         <TripCard :plans="rawPlans" :btn="yourPlans.btn ?? []"/>
       </template>
 
@@ -47,7 +47,7 @@ const {data: trip_data} = getTripDetails(Number(id));
                 aspect-ratio="1"
                 contain
             />
-            <router-link :to="{ name: 'createPlan', params: { tripId: id } }">
+            <router-link :to="{ name: 'createPlan', params: { tripId: String(getTripId()) } }">
               <AppButton
                   variant="secondary"
                   class="plan-button"

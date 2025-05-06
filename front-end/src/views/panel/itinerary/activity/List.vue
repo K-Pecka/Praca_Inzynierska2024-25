@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import { useActivityStore } from "@/stores/trip/useActivityStore";
 import ActivityCard from "@/components/trip/module/activity/ActivityCard.vue";
 import ActivityForm from "@/components/trip/module/activity/ActivityForm.vue";
-import AppButton from "@/components/budget/AppButton.vue";
+import AppButton from "@/components/AppButton.vue";
 import { Section } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
 import { useRoute } from "vue-router";

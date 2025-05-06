@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import ExpenseItem from "./ExpenseItem.vue";
 import { computed } from "vue";
-
+import { Expense } from "@/types";
 const { expenses, variant, config, limit } = defineProps<{
-  expenses?: any[];
+  expenses?: Expense[];
   variant?: "manage" | "view";
   config?: Record<string, any>;
   limit?: number;

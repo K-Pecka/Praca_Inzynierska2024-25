@@ -1,60 +1,25 @@
 <script setup lang="ts">
-import {ref, watchEffect} from "vue";
+import {computed, ref} from "vue";
 import {useRoute} from "vue-router";
 import {Section} from "@/components";
 import ParticipantList from "@/components/trip/module/participant/ParticipantList.vue";
 import ParticipantsCounter from "@/components/trip/module/participant/ParticipantsCounter.vue";
 import ParticipantAddForm from "@/components/trip/module/participant/ParticipantAddForm.vue";
-import {fetchUserById} from "@/api"
 import {useTripStore, useNotificationStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
-import {User} from "@/types";
 const {setErrorCurrentMessage} = useNotificationStore();
 const route = useRoute();
 const tripId = Number(route.params.tripId);
 
-const {getTripDetails, removeParticipant, addParticipant} = useTripStore();
-const {data: tripData, isLoading, error} = getTripDetails(tripId);
 
-const members = ref<User[]>([]);
-const getUserById =async (id:number)=>{
-  //console.log("id user:",id)
-  const user = await fetchUserById(id);
-  //console.log(user)
-  return {
-    name: `${user.first_name} ${user.last_name}`,
-    email: user.email,
-    userId:id
-  };
-}
-watchEffect(async () => {
-  const membersRaw = tripData.value?.members ?? [];
-  const pendingRaw = tripData.value?.pending_members ?? [];
+const {trip:tripStore} = useTripStore();
+const {getTripDetails} = tripStore;
+const {trip} = getTripDetails();
+const {removeParticipant, addParticipant,} = useTripStore();
 
-  const confirmed = await Promise.all(
-    membersRaw.map(async (entry) => {
-      const id =  entry;
-      const user = await getUserById(id);
-      return { ...user, is_guest: false };
-    })
-  );
-
-  const pending = await Promise.all(
-    pendingRaw.map(async (entry) => {
-      console.log("pending entry:",entry)
-      const id = typeof entry === 'object' && entry !== null ? entry.id : entry;
-      const user = await getUserById(id);
-      return { ...user, is_guest: true };
-    })
-  );
-  const userMap = new Map<number, typeof confirmed[0]>();
-  
-  for (const user of [...pending, ...confirmed]) {
-    userMap.set(user.userId, user);
-  }
-
-  members.value = Array.from(userMap.values());
-});
+import {useMembersStore} from "@/stores/trip/useMembersStore"
+const {members:membersStore} =useMembersStore();
+const members = computed(()=>membersStore)
 
 
 const maxParticipants = 5;

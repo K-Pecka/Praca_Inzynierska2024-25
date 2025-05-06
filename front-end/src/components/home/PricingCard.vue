@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppButton from "@/components/budget/AppButton.vue";
+import AppButton from "@/components/AppButton.vue";
 import { PricingCard } from "@/types/interface";
 
 defineProps<PricingCard>();
