@@ -3,13 +3,114 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/models/expense_model.dart';
 import '../../../core/services/budget_service.dart';
+import '../../../core/services/user_service.dart';
 import '../../../core/widgets/custom_expense_input_field.dart';
 import '../../../core/theme/text_styles.dart';
 
-class ExpenseTile extends StatelessWidget {
+class ExpenseTile extends StatefulWidget {
   final ExpenseModel expense;
+  final int tripId;
+  final VoidCallback onDeleted;
+  final BuildContext scaffoldContext;
 
-  const ExpenseTile({super.key, required this.expense});
+  const ExpenseTile({
+    super.key,
+    required this.expense,
+    required this.tripId,
+    required this.onDeleted,
+    required this.scaffoldContext,
+  });
+
+  @override
+  State<ExpenseTile> createState() => _ExpenseTileState();
+}
+
+class _ExpenseTileState extends State<ExpenseTile> {
+  String? userName;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    if (widget.expense.user != null) {
+      try {
+        final user = await UserService().fetchUserInfoByProfileId(int.parse(widget.expense.user!));
+        setState(() {
+          userName = '${user.firstName} ${user.lastName}';
+        });
+      } catch (e) {
+        debugPrint("Błąd pobierania użytkownika: $e");
+      }
+    }
+  }
+
+  void _showExpenseDetails(BuildContext modalContext) {
+    showModalBottomSheet(
+      context: modalContext,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      isScrollControlled: true,
+      builder: (modalCtx) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text("Tytuł: ${widget.expense.title}", style: TextStyles.cardTitleHeading),
+              const SizedBox(height: 8),
+              Text("Kwota: ${widget.expense.amount.toStringAsFixed(2)} ${widget.expense.currency}", style: TextStyles.subtitle),
+              const SizedBox(height: 8),
+              Text("Data: ${DateFormat('dd.MM.yyyy').format(widget.expense.date)}", style: TextStyles.subtitle),
+              const SizedBox(height: 8),
+              Text("Kategoria: ${widget.expense.category}", style: TextStyles.subtitle),
+              const SizedBox(height: 8),
+              Text("Wydający: ${userName ?? 'Ładowanie...'}", style: TextStyles.subtitle),
+              const SizedBox(height: 24),
+              Center(
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    Navigator.of(modalContext).pop();
+                    try {
+                      await BudgetService.deleteExpense(
+                        tripId: widget.tripId,
+                        expenseId: widget.expense.id,
+                      );
+                      widget.onDeleted();
+                    } catch (e) {
+                      debugPrint('Błąd usuwania: $e');
+                    }
+                  },
+                  icon: const Icon(Icons.delete, color: Colors.white),
+                  label: const Text("Usuń wydatek", style: TextStyles.whiteSubtitle),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,16 +119,19 @@ class ExpenseTile extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       margin: const EdgeInsets.only(bottom: 16),
-      child: ListTile(
-        leading: const Icon(Icons.restaurant, color: Colors.black87, size: 36),
-        title: Text(expense.title, style: TextStyles.cardTitleHeading),
-        subtitle: Text(
-          DateFormat('dd.MM.yyyy').format(expense.date),
-          style: TextStyles.subtitle,
-        ),
-        trailing: Text(
-          '${expense.amount.toStringAsFixed(0)} ${expense.currency}',
-          style: TextStyles.subtitle,
+      child: InkWell(
+        onTap: () => _showExpenseDetails(context),
+        child: ListTile(
+          leading: const Icon(Icons.restaurant, color: Colors.black87, size: 36),
+          title: Text(widget.expense.title, style: TextStyles.cardTitleHeading),
+          subtitle: Text(
+            DateFormat('dd.MM.yyyy').format(widget.expense.date),
+            style: TextStyles.subtitle,
+          ),
+          trailing: Text(
+            '${widget.expense.amount.toStringAsFixed(0)} ${widget.expense.currency}',
+            style: TextStyles.subtitle,
+          ),
         ),
       ),
     );
@@ -38,12 +142,14 @@ class ExpenseForm extends StatefulWidget {
   final int tripId;
   final int userProfileId;
   final VoidCallback onSaved;
+  final VoidCallback onAdded;
 
   const ExpenseForm({
     super.key,
     required this.tripId,
     required this.userProfileId,
     required this.onSaved,
+    required this.onAdded,
   });
 
   @override
@@ -104,6 +210,8 @@ class _ExpenseFormState extends State<ExpenseForm> {
         date: date,
         note: '',
       );
+
+      widget.onAdded();
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Wydatek dodany')),

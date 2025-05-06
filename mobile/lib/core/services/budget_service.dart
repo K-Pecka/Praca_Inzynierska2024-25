@@ -100,5 +100,22 @@ class BudgetService {
       throw Exception('Błąd pobierania kursu: ${response.body}');
     }
   }
+
+  static Future<void> deleteExpense({
+    required int tripId,
+    required int expenseId,
+  }) async {
+    final url = Uri.parse('$_baseUrl/trip/$tripId/expense/$expenseId/delete/');
+    final headers = {
+      'Authorization': 'Bearer ${AuthService.accessToken}',
+      'accept': 'application/json',
+    };
+
+    final response = await http.delete(url, headers: headers);
+
+    if (response.statusCode != 204) {
+      throw Exception('Nie udało się usunąć wydatku: ${response.body}');
+    }
+  }
 }
 
