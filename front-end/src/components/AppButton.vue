@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   text?: string;
-  variant?: "primary" | "secondary" | "accent";
+  color?: "primary" | "secondary" | "accent" | "empty";
   width?: string;
   maxWidth?: string;
   heightAuto?: boolean | string;
@@ -15,11 +15,11 @@ defineProps<{
 
 <template>
   <v-btn
-      class="button-media border-none font-weight-bold text-none w-100"
+      class="button-media font-weight-bold text-none w-100"
       v-bind="$attrs"
       :style="{ maxWidth: maxWidth ? width : '200px', width: width }"
       :class="[
-       variant,
+       color,
        heightAuto ? 'height-auto' : '',
        fontAuto ? 'font-auto' : '',
        dense ? 'dense' : '',
@@ -41,18 +41,22 @@ defineProps<{
 }
 
 .primary {
-  background-color: $primary-color;
+  background-color: rgb($primary-color);
   color: white;
 }
 
 .secondary {
-  background-color: $secondary-color;
+  background-color: rgb($secondary-color);
   color: $text-color;
 }
 
 .accent {
-  background-color: rgb($accent-color);
+  background-color: $accent-color;
   color: white;
+}
+
+.empty {
+  border-width: 2px;
 }
 
 .height-auto {
@@ -60,7 +64,7 @@ defineProps<{
 }
 
 .font-auto {
-  font-size: clamp(1em, 0.4vw + 0.4rem, 1.5em);
+  font-size: clamp(0.5em, 0.4vw + 0.4rem, 1.5em);
 }
 
 .stretch {

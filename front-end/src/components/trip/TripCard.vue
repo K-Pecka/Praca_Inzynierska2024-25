@@ -50,7 +50,7 @@ const props = defineProps<{
           lg="12"
           class="px-0"
       >
-        <v-card class="d-flex trip-card rounded-lg pa-5 flex-wrap" elevation="3">
+        <v-card class="trip-card background-secondary rounded-lg pa-5 flex-wrap" elevation="4">
           <v-row>
             <v-col cols="12" sm="8" md="9" lg="10">
               <v-card-title class="text-h6 font-weight-bold pa-0">
@@ -61,7 +61,7 @@ const props = defineProps<{
               </v-card-subtitle>
               <v-card-text class="pa-0 font-weight-medium">
                 {{ formatPL(trip.start_date) }} - {{ formatPL(trip.end_date) }}
-                <span class="activity-number ml-2">{{ trip.activities_count || 0 }} aktywności</span>
+                <span class="color-accent ml-2">{{ trip.activities_count || 0 }} aktywności</span>
               </v-card-text>
             </v-col>
 
@@ -86,20 +86,3 @@ const props = defineProps<{
     </v-row>
   </v-container>
 </template>
-
-<style lang="scss" scoped>
-.activity-number {
-  color: rgb(var(--v-theme-accent), 0.75);
-}
-
-.trip-card {
-  background-color: rgba(var(--v-theme-secondary), 0.5);
-  transition: transform 0.2s, box-shadow 0.2s;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  }
-}
-
-</style>

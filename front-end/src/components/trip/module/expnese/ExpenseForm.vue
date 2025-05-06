@@ -148,10 +148,11 @@ const submitTicket = () =>{
     <v-card-actions class="form-actions">
       <AppButton
           @click="$emit('cancelForm')"
+          color="secondary"
           text="Anuluj"
       />
       <AppButton
-          variant="primary"
+          color="primary"
           text="Dodaj"
           @click="submitTicket"
       />

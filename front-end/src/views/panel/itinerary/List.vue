@@ -18,13 +18,7 @@ const {trip} = getTripDetails();
 
   <Section>
     <template #title v-if="trip && rawPlans && rawPlans.length">
-      <HeaderSection>
-        <template #subtitle>
-          <span class="trip-title">
-            Plany podróży
-          </span>
-        </template>
-      </HeaderSection>
+      <HeaderSection subtitle="Plany podróży" />
     </template>
     <template #content>
       <p v-if="isLoading">Ładowanie...</p>
@@ -49,7 +43,7 @@ const {trip} = getTripDetails();
             />
             <router-link :to="{ name: 'createPlan', params: { tripId: String(getTripId()) } }">
               <AppButton
-                  variant="secondary"
+                  color="secondary"
                   class="plan-button"
                   width="300px"
                   height="height-auto"
@@ -70,7 +64,7 @@ const {trip} = getTripDetails();
 
 .empty-header {
   font-size: clamp(0.3em, 1.5vw + 0.5em, 1.5em);
-  color: $primary-color;
+  color: rgb($primary-color);
 }
 
 .empty-plan-image {

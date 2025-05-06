@@ -12,7 +12,7 @@ const {trips, isLoading_trips} = getTrips();
 </script>
 
 <template>
-  <v-col cols="10">
+  <v-col cols="12" sm="10" md="10" lg="10" xl="10">
 
     <!-- Header with button -->
     <v-row
@@ -23,22 +23,26 @@ const {trips, isLoading_trips} = getTrips();
           Zarządzaj wycieczkami
         </span>
       <router-link :to="{ name: 'createTrip' }">
-        <v-btn
+
+        <AppButton
+            color="empty"
+            height-auto
+            font-auto
             text="Dodaj wycieczkę"
-            variant="outlined"
-            rounded="lg"
-            class="create-trip-button text-none"
         />
       </router-link>
     </v-row>
 
     <!-- Trip cards -->
-    <v-row no-gutters class="ga-4" v-if="trips && !isLoading_trips">
+    <v-row>
       <v-col
-          v-if="trips.length>0"
+          v-if="trips && trips.length"
           v-for="trip in trips" :key="trip.id"
+          cols="12"
+          sm="6"
+          md="4"
       >
-        <v-card class="rounded-xl background-secondary">
+        <v-card class="rounded-xl background-secondary d-flex justify-center">
           <v-card-text>
             <v-row no-gutters justify="space-around" align="center">
 
@@ -52,7 +56,7 @@ const {trips, isLoading_trips} = getTrips();
               />
 
               <!-- Trip Info -->
-              <v-card-actions class="flex-column">
+              <v-card-actions class="flex-column" style="max-width: 220px;">
                 <v-card-title class="font-weight-bold">{{ trip.name }}</v-card-title>
                 <v-card-subtitle class="font-weight-medium pb-6">
                   {{ formatDatePolish(trip.start_date) }} - {{ formatDatePolish(trip.end_date) }}
@@ -61,8 +65,7 @@ const {trips, isLoading_trips} = getTrips();
                 <!-- Buttons -->
                 <AppButton
                     :to="{ name: 'panel', params: { tripId: trip.id } }"
-                    variant="primary"
-                    font-auto
+                    color="primary"
                     height-auto
                     stretch
                     text="Zarządzaj wycieczką"
@@ -70,12 +73,10 @@ const {trips, isLoading_trips} = getTrips();
 
                 <AppButton
                     to=""
-                    variant="accent"
-                    font-auto
+                    color="accent"
                     height-auto
                     stretch
                     text="Usuń wycieczkę"
-                    :onclick="() => deleteTrip.mutate({tripId:String(trip.id)})"
                 />
 
               </v-card-actions>
@@ -99,8 +100,7 @@ const {trips, isLoading_trips} = getTrips();
           />
           <router-link :to="{ name: 'createTrip' }">
             <AppButton
-                variant="secondary"
-                class="trip-button"
+                color="secondary"
                 text="Dodaj wycieczkę"
             />
           </router-link>
@@ -115,16 +115,12 @@ const {trips, isLoading_trips} = getTrips();
 @use "@/assets/styles/variables" as *;
 
 .text-h4 {
-  color: $primary-color;
-}
-
-.trip-button {
-  font-size: clamp(0.4em, 0.6vw + 0.45em, 1em);
+  color: rgb($primary-color);
 }
 
 .empty-header {
   font-size: clamp(0.9em, 1.5vw + 0.8em, 2.3em);
-  color: $primary-color;
+  color: rgb($primary-color);
 }
 
 .empty-trip-image {

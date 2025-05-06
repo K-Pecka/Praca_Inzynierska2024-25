@@ -90,7 +90,7 @@ function handleSubmit() {
                   density="comfortable"
               />
               <AppButton
-                  variant="primary"
+                  color="primary"
                   type="submit"
                   max-width="120px"
                   class="mt-4 font-weight-bold"

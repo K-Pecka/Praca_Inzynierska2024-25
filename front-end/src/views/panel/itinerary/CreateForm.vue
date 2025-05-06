@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue";
-import { Section, Form } from "@/components";
+import {Section, Form, HeaderSection} from "@/components";
 import { useFormStore,useTripStore } from "@/stores";
 import { FormType } from "@/types/enum";
 import { Plan } from "@/types/interface";
@@ -54,8 +54,11 @@ const handleSubmit = (_formData: any, config: any) => {
 <template>
   <Section>
     <template #title>
-      <h1>Stwórz swój idealny plan</h1>
-      <p>elastyczny harmonogram wymarzonej podróży</p>
+      <HeaderSection
+          title="Stwórz swój idealny plan"
+          subtitle="elastyczny harmonogram wymarzonej podróży"
+          center
+      />
     </template>
 
     <template #content>

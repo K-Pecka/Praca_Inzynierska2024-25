@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
 import {useRoute} from "vue-router";
-import {Section, Form} from "@/components";
+import {Section, Form, HeaderSection} from "@/components";
 import {useFormStore, useTripStore} from "@/stores";
 import {FormType} from "@/types/enum";
 
@@ -62,8 +62,11 @@ function handleSubmit(_formData: any, config: any) {
 <template>
   <Section>
     <template #title>
-      <h1>Edytuj wycieczkę</h1>
-      <p>Zmodyfikuj nazwę i daty wycieczki</p>
+      <HeaderSection
+          title="Edytuj wycieczkę"
+          subtitle="Zmodyfikuj nazwę i daty wycieczki"
+          center
+      />
     </template>
 
     <template #content>

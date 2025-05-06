@@ -44,7 +44,7 @@ const {icon, name:categoryName} = mapCategoryBudget(props.expense.category);
 }
 
 .category {
-  color: $primary-color;
+  color: rgb($primary-color);
   font-weight: 400;
 }
 

@@ -2,6 +2,7 @@
 import {useRoute} from "vue-router";
 import {useTripStore} from "@/stores";
 import AppButton from "@/components/AppButton.vue";
+import {no} from "vuetify/locale";
 
 const route = useRoute();
 const tripId = Number(route.params.tripId);
@@ -14,31 +15,38 @@ defineProps<{
   button?: boolean;
   buttonText?: string;
   buttonAction?: () => void;
+  title?: string;
+  center?: boolean;
 }>();
 </script>
 
 <template>
   <v-col cols="12">
     <v-row class="flex-column">
-      <v-col cols="12" class="title font-weight-bold color-text">
-        <span v-if="!isLoading_trip && !error_trip">
-          {{ trip?.name }}
-        </span>
-        <span v-else>
-          ...
-        </span>
-      </v-col>
-      <v-col cols="12 justify-space-between">
-        <v-row class="justify-space-between" no-gutters>
-          <span class="text-h5" v-if="!noSubTitle && subtitle">
-            {{ subtitle }}
+      <v-col cols="12">
+        <v-row :class="{ 'justify-center': center }" class="title font-weight-bold color-text" no-gutters>
+          <span v-if="!isLoading_trip && !error_trip && !title">
+            {{ trip?.name }}
+          </span>
+          <span v-else-if="!isLoading_trip && !error_trip" class="color-primary">
+            {{ title }}
           </span>
           <span v-else>
             ...
           </span>
+        </v-row>
+      </v-col>
+      <v-col cols="12 justify-space-between">
+        <v-row :class="center ? 'justify-center' : 'justify-space-between'" no-gutters>
+          <span class="text-h5" v-if="!noSubTitle && subtitle">
+            {{ subtitle }}
+          </span>
+          <span v-else-if="!noSubTitle">
+            ...
+          </span>
           <AppButton
               v-if="!noSubTitle && button"
-              variant="primary"
+              color="primary"
               @click="buttonAction"
               dense
               height-auto

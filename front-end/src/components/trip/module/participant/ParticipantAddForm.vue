@@ -39,12 +39,12 @@ function handleCancel() {
 
     <div class="form-buttons pt-3">
       <AppButton
-          variant="secondary"
+          color="secondary"
           text="Anuluj"
           @click="handleCancel"
       />
       <AppButton
-          variant="primary"
+          color="primary"
           text="Dodaj"
           @click="handleSubmit"
       />

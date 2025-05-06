@@ -41,7 +41,7 @@ function submitActivity() {
 }
 import activityGroups from "@/data/category/activity";
 
-const selected = ref<(typeof activityGroups)[0]>(activityGroups[0]);
+ref<(typeof activityGroups)[0]>(activityGroups[0]);
 </script>
 
 <template>
@@ -145,12 +145,12 @@ const selected = ref<(typeof activityGroups)[0]>(activityGroups[0]);
     <v-card-actions>
       <v-spacer />
       <AppButton
-          variant="secondary"
+          color="secondary"
           text="Anuluj"
           @click="$emit('cancelForm')"
       />
       <AppButton
-          variant="primary"
+          color="primary"
           text="Dodaj"
           @click="submitActivity"
           :disabled="!isFormValid"

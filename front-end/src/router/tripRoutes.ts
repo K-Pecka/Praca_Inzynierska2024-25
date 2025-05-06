@@ -20,6 +20,11 @@ const tripRoutes = {
             name: "roleSelection",
             component: roleSelection
         },
+        {
+            path: "trip/create",
+            name: "createTrip",
+            component: TripForm
+        },
     ]
 };
 

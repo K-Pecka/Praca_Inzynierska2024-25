@@ -48,6 +48,6 @@ watch(
   justify-content: space-between;
 }
 .text-primary {
- color: $primary-color
+ color: rgb($primary-color)
 }
 </style>

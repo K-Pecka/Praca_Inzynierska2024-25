@@ -45,11 +45,6 @@ const homeRoutes: RouteRecordRaw[] = [
         meta: { goBack: true, title: "Rejestracja" },
       },
       {
-        path: "trip/create",
-        name: "createTrip",
-        component: TripForm
-      },
-      {
         path: "settings",
         name: "AccountSettings",
         component: AccountSettings

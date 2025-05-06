@@ -12,7 +12,11 @@
 }
 
 .color-primary {
-    color: $primary-color;
+    color: rgb($primary-color);
+}
+
+.color-accent {
+    color: $accent-color;
 }
 
 .background-secondary {

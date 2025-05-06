@@ -1,7 +1,7 @@
 $text-color: rgba(#030309, 0.70);
-$primary-color: #2F27CE;
+$primary-color: var(--v-theme-primary);
 $secondary-color: var(--v-theme-secondary);
-$accent-color: var(--v-theme-accent);
+$accent-color: rgba(var(--v-theme-accent), 0.75);
 $background-color: var(--v-theme-background);
 
 $header-section-title-font-size: 2rem;
@@ -15,13 +15,13 @@ $choose-profile-button-bg: rgba($primary-color, 0.6);
 
 $panel-header-height: 64px;
 $panel-font-size: 1rem;
-$panel-header-border-bottom: 2px solid $primary-color;
+$panel-header-border-bottom: 2px solid rgba($primary-color);
 
-$main-header-border: 2px solid $primary-color;
+$main-header-border: 2px solid rgba($primary-color);
 $main-header-border-radius: 36px;
 
 $footer-height: 200px;
 
 $navbar-width: 256px;
 
-$panel-content-width: 80%;
+$panel-content-width: 95%;

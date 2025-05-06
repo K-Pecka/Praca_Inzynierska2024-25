@@ -103,7 +103,7 @@
 }
 
 .panel-button {
-  background-color: $primary-color;
+  background-color: rgb($primary-color);
   color: white;
 }
 </style>

@@ -160,12 +160,12 @@ defineProps<{
 
     <v-card-actions class="form-actions">
       <AppButton
-          variant="secondary"
+          color="secondary"
           text="Anuluj"
           @click="$emit('cancelForm')"
       />
       <AppButton
-          variant="primary"
+          color="primary"
           text="Dodaj"
           @click="submitTicket"
       />

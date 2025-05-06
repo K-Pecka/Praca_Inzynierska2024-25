@@ -55,7 +55,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-navigation-drawer>
+  <v-navigation-drawer style="border-right: 2px solid blue !important;">
     <!-- Navigation Drawer -->
     <v-list>
       <template v-for="item in side_nav_items">
@@ -110,9 +110,4 @@ onMounted(() => {
     />
   </v-navigation-drawer>
 </template>
-
-<style lang="scss" scoped>
-@use "@/assets/styles/variables" as *;
-
-</style>
 

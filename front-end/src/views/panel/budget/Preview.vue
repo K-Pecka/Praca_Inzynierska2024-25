@@ -71,17 +71,17 @@ const filter = () => {
     </template>
 
     <template #content>
-      <v-container fluid>
+      <v-container fluid class="text-h6 font-weight-bold">
         <v-row>
           <v-col cols="12" md="4">
-            <AppCard class="summary-card ml-md-0">
-              <h3>Budżet</h3>
-              <p class="amount">{{ budget }} {{ budgetCurrency }}</p>
+            <AppCard>
+              <span>Budżet</span>
+              <p>{{ budget }} {{ budgetCurrency }}</p>
             </AppCard>
           </v-col>
           <v-col cols="12" md="4">
-            <AppCard class="summary-card">
-              <h3>Wydano</h3>
+            <AppCard>
+              <span>Wydano</span>
               <BudgetContent
                 :showCurrency="false"
                 :content="{
@@ -95,8 +95,8 @@ const filter = () => {
             </AppCard>
           </v-col>
           <v-col cols="12" md="4">
-            <AppCard class="summary-card mr-md-0">
-              <h3>Pozostało</h3>
+            <AppCard>
+              <span>Pozostało</span>
               <p :class="remaining > 0 ? 'remaining' : 'amount'" :style="remaining <= 0 ? 'color:red' : ''">
                 {{ remaining <= 0 ? 0 : remaining }} {{ budgetCurrency }}
               </p>
@@ -105,18 +105,18 @@ const filter = () => {
         </v-row>
 
         <v-row>
-          <v-col cols="12">
-            <ExpenseForm v-if="showForm" :members="members" @cancelForm="showForm = false" class="form-container" />
+          <v-col cols="12" v-if="showForm">
+            <ExpenseForm :members="members" @cancelForm="showForm = false" class="form-container" />
           </v-col>
         </v-row>
 
         <v-row>
           <v-col>
-            <AppCard class="expenses">
-              <v-container class="title-container">
+            <AppCard>
+              <v-row justify="space-between" no-gutters>
                 <span class="mb-2">Wydatki</span>
                 <AppButton
-                  variant="primary"
+                  color="primary"
                   @click="showFilters = true"
                   height-auto
                   font-auto
@@ -125,7 +125,7 @@ const filter = () => {
                 >
                   <v-icon start>mdi-filter</v-icon>
                 </AppButton>
-              </v-container>
+              </v-row>
 
               <ExpensesList
                 variant="manage"
@@ -138,13 +138,13 @@ const filter = () => {
 
         <v-row>
           <v-col>
-            <AppCard class="chart-card ml-0">
-              <span class="section-title">Wydatki - Kategorie</span>
+            <AppCard>
+              <span>Wydatki - Kategorie</span>
             </AppCard>
           </v-col>
           <v-col>
-            <AppCard class="chart-card mr-0">
-              <span class="section-title">Wydatki - Uczestnicy</span>
+            <AppCard>
+              <span>Wydatki - Uczestnicy</span>
             </AppCard>
           </v-col>
         </v-row>
@@ -216,25 +216,7 @@ const filter = () => {
 </template>
 
 <style scoped lang="scss">
-.title-container {
-  display: flex;
-  justify-content: space-between;
-}
 .remaining {
-  color: #2e7d32;
-}
-.amount {
-  font-size: 1.125rem;
-  font-weight: bold;
-}
-.section-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-.expenses {
-  padding: 20px;
-  margin-top: 2rem;
-  border-radius: 12px;
+  color: rgba(22, 163, 74, .75)
 }
 </style>

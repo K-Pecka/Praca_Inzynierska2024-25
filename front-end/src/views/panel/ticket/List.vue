@@ -141,7 +141,7 @@ const toggleForm = () => {
 
               <!-- Button to download the ticket -->
               <AppButton
-                  variant="primary"
+                  color="primary"
                   @click="() => downloadItem(ticket.file)"
                   height-auto
                   font-auto
