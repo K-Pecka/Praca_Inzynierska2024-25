@@ -62,8 +62,8 @@ class TripCreateSerializer(serializers.ModelSerializer):
 
 class TripRetrieveSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True)
-    creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
+    creator = UserProfileListSerializer(read_only=True)
+    members = UserProfileListSerializer(read_only=True, many=True)
     pending_members = serializers.SerializerMethodField()
     start_date = serializers.DateField(read_only=True)
     end_date = serializers.DateField(read_only=True)
@@ -75,10 +75,7 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
         return UserProfileListSerializer(guest_members, many=True).data
 
     def get_budget(self, obj):
-        budget = obj.budget
-        return {
-            'amount': str(budget.amount),
-        }
+        return obj.budget
 
     class Meta:
         model = Trip
@@ -88,8 +85,8 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
 class TripListSerializer(TripRetrieveSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
-    creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
+    creator = UserProfileListSerializer(read_only=True)
+    members = UserProfileListSerializer(read_only=True, many=True)
     start_date = serializers.DateField(read_only=True)
     end_date = serializers.DateField(read_only=True)
     is_creator = serializers.SerializerMethodField()
