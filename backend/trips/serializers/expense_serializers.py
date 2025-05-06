@@ -23,12 +23,13 @@ class ExpenseRetrieveSerializer(serializers.ModelSerializer):
     note = serializers.CharField(read_only=True)
     trip = serializers.PrimaryKeyRelatedField(read_only=True)
     user = serializers.PrimaryKeyRelatedField(read_only=True)
+    username = serializers.CharField(source='user.full_name', read_only=True)
     category = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Expense
         fields = [
-            'title', 'amount', 'currency', 'date', 'note', 'trip', 'user', 'category'
+            'title', 'amount', 'currency', 'date', 'note', 'trip', 'user', 'username', 'category'
         ]
 
 
