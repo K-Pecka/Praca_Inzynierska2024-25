@@ -47,7 +47,7 @@ class ExpenseListSerializer(serializers.ModelSerializer):
 
     def get_username(self, obj):
         if obj.user:
-            return obj.user.full_name
+            return obj.user.user.full_name
         return None
 
     class Meta:
