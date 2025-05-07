@@ -35,22 +35,15 @@ class TripCreateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Data rozpoczęcia nie może być wcześniejsza niż dzisiaj.")
         return data
 
-    class Meta:
-        model = Trip
-        fields = ['id', 'name', 'creator', 'members', 'start_date', 'end_date']
-
     def create(self, validated_data):
         try:
             with transaction.atomic():
                 request = self.context['request']
-                budget_amount = validated_data.pop('budget_amount')
 
                 if 'creator' not in validated_data:
                     validated_data['creator'] = request.user.get_default_profile()
 
                 trip = super().create(validated_data)
-
-                Budget.objects.create(trip=trip, amount=budget_amount)
 
                 return trip
         except Exception as e:
