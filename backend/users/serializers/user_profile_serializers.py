@@ -13,10 +13,18 @@ class UserProfileListSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         source='user.email'
     )
+    first_name = serializers.CharField(
+        source="user.first_name",
+        read_only=True
+    )
+    last_name = serializers.CharField(
+        source="user.last_name",
+        read_only=True
+    )
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'type', 'email',]
+        fields = ['id', 'type', 'email', 'first_name', 'last_name']
 
 
 class UserProfileListJWTSerializer(serializers.ModelSerializer):
