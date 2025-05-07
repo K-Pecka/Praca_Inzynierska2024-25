@@ -25,6 +25,7 @@ def validate_iso_currency(value):
             f"Dostępne kody: {', '.join(available)}"
         )
 
+
 class Trip(BaseModel):
     name = models.CharField(
         max_length=50,
@@ -42,6 +43,14 @@ class Trip(BaseModel):
         related_name="trips_as_member",
         verbose_name=_("Profil"), help_text=_("Profil")
     )
+
+    budget_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        verbose_name=_("Budżet"), help_text=_("Budżet wycieczki")
+    )
+
     start_date = models.DateField(
         verbose_name=_("Data rozpoczęcia"), help_text=_("Data rozpoczęcia")
     )
@@ -54,13 +63,6 @@ class Trip(BaseModel):
     )
 
     objects = TripManager()
-
-    @property
-    def budget(self):
-        try:
-            return Budget.objects.get(trip=self)
-        except Budget.DoesNotExist:
-            return Budget.objects.create(trip=self, currency='PLN')
 
     @classmethod
     def add_member(cls, trip, user_profile):
