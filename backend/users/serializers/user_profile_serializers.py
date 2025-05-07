@@ -54,7 +54,7 @@ class UserProfileCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ['type', 'is_default']
+        fields = ['id', 'type', 'is_default']
 
     def create(self, validated_data):
         request = self.context['request']
