@@ -33,7 +33,7 @@ export const fetchData = async <T = unknown>(
       ...options,
       body: options.body ? options.body : undefined,
     });
-    //console.log(url, method, options.body, response.status);
+    console.log(url, method, options.body, response.status);
     clearTimeout(timeoutId);
     const result = await response.json().catch(() => null);
 

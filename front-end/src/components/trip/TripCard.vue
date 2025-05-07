@@ -1,19 +1,15 @@
 <script setup lang="ts">
 
 import router from "@/router";
-import {usePlans} from "@/stores/trip/usePlans";
-import {ref} from "vue";
+import { useTripStore } from "@/stores";
 
-const plansStore = usePlans();
-
+const {plan} = useTripStore()
+const {handleDeleteItinerary}=plan;
 function formatPL(dateString: string): string {
   const dateObj = new Date(dateString);
   if (isNaN(dateObj.getTime())) return dateString;
   return new Intl.DateTimeFormat('pl-PL').format(dateObj);
 }
-
-// onclick: (trip: string, id: string) =>
-// router.push({ name: "ActivityView", params: { tripId: trip, planId: id } }),
 const items = [
   {
     title: "Zarządzaj planem",
@@ -27,7 +23,7 @@ const items = [
     class: "red",
     icon: "mdi-trash-can-outline",
     onclick: (tripId: string, itineraryId: string) =>
-        plansStore.handleDeleteItinerary(tripId, itineraryId),
+        handleDeleteItinerary(tripId, itineraryId),
   },
 ]
 
@@ -35,7 +31,7 @@ const props = defineProps<{
   plans: any;
   btn: any;
 }>();
-
+console.log(props.plans);
 </script>
 
 <template>
