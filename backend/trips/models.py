@@ -1,8 +1,5 @@
 import secrets
 import pycountry
-import requests
-from decimal import Decimal
-
 from cloudinary_storage.storage import MediaCloudinaryStorage
 
 from rest_framework.response import Response
@@ -65,6 +62,10 @@ class Trip(BaseModel):
     )
 
     objects = TripManager()
+
+    @property
+    def activity_count(self):
+        return sum(itinerary.activities.count() for itinerary in self.itineraries.all())
 
     @classmethod
     def add_member(cls, trip, user_profile):
@@ -228,29 +229,6 @@ class Ticket(BaseModel):
         verbose_name_plural = "Bilety"
 
 
-class Budget(BaseModel):
-    amount = models.DecimalField(
-        max_digits=7,
-        decimal_places=2,
-        default=0,
-        validators=[MinValueValidator(0)],
-        verbose_name=_("Kwota budżetu"),
-        help_text=_("Kwota budżetu")
-    )
-    trip = models.OneToOneField(
-        Trip,
-        on_delete=models.CASCADE,
-        related_name="budgets",
-        verbose_name=_("Wycieczka"),
-        help_text=_("Powiązana wycieczka")
-    )
-
-    class Meta:
-        db_table = "budgets"
-        verbose_name = "Budżet"
-        verbose_name_plural = _("Budżety")
-
-
 class ExpenseType(BaseModel):
     name = models.CharField(
         max_length=124,
@@ -326,28 +304,6 @@ class Expense(BaseModel):
         help_text=_("Kategoria wydatku")
     )
 
-    @property
-    def converted_amount(self):
-        try:
-            if self.currency == 'PLN':
-                return round(self.amount, 2)
-
-            response = requests.get(
-                'https://api.frankfurter.app/latest',
-                params={'from': self.currency, 'to': 'PLN'}
-            )
-            data = response.json()
-            print('data', data)
-
-            if 'rates' not in data:
-                return round(self.amount, 2)
-
-            rate = Decimal(list(data['rates'].values())[0])
-            return round(self.amount * rate, 2)
-
-        except Exception as e:
-            print("Conversion error:", e)
-            return None
     class Meta:
         db_table = "expenses"
         verbose_name = "Wydatek"

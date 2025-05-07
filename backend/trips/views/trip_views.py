@@ -21,12 +21,10 @@ class TripRetrieveAPIView(RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = TripRetrieveSerializer
 
-    def get_object(self):
-        trip_id = self.kwargs.get('pk')
-
+    def get_queryset(self):
         return Trip.objects.annotate(
             activity_count=Count('itineraries__activities')
-        ).get(pk=trip_id)
+        )
 
 
 @extend_schema(tags=['trip'])
