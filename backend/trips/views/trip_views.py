@@ -1,7 +1,8 @@
 from drf_spectacular.utils import extend_schema
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
-from rest_framework.permissions import IsAuthenticated
+from django.db.models import Count
 
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.permissions import IsAuthenticated\
 
 from server.permissions import IsTripParticipant, IsTripCreator
 from trips.models import Trip
@@ -17,9 +18,13 @@ class TripCreateAPIView(CreateAPIView):
 
 @extend_schema(tags=['trip'])
 class TripRetrieveAPIView(RetrieveAPIView):
-    queryset = Trip.objects.all()
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = TripRetrieveSerializer
+
+    def get_queryset(self):
+        return Trip.objects.annotate(
+            activity_count=Count('itineraries__activities')
+        )
 
 
 @extend_schema(tags=['trip'])
