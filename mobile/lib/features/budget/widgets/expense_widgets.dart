@@ -235,8 +235,9 @@ class _ExpenseFormState extends State<ExpenseForm> {
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate() ||
         _selectedDate == null ||
-        _selectedCurrency == null)
+        _selectedCurrency == null) {
       return;
+    }
 
     final String title = _titleController.text.trim();
     final double amount = double.parse(_amountController.text);
