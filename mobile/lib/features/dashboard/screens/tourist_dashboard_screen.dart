@@ -7,6 +7,7 @@ import '../../../core/widgets/menu_screen.dart';
 import '/core/models/trip_model.dart';
 import '../widgets/dashboard_widgets.dart';
 import 'package:mobile/core/utils/error_handler.dart';
+
 class TouristDashboard extends StatefulWidget {
   final int userProfileId;
   final TripModel trip;
