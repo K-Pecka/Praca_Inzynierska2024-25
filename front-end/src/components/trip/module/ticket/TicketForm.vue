@@ -50,7 +50,10 @@ defineProps<{
 </script>
 
 <template>
-  <v-card class="ticket-form pa-4 mt-4">
+  <v-card
+      class="pa-4 mt-4 background-secondary rounded-lg"
+      elevation="4"
+  >
     <v-card-title>Dodaj nowy bilet</v-card-title>
 
     <v-card-text>
@@ -123,7 +126,6 @@ defineProps<{
           </v-text-field>
         </v-col>
 
-
         <v-col cols="12" lg="6" md="12" class="tight-col">
           <v-select
               v-model="form.assignedTo"
@@ -160,7 +162,7 @@ defineProps<{
 
     <v-card-actions class="form-actions">
       <AppButton
-          color="secondary"
+          color="accent"
           text="Anuluj"
           @click="$emit('cancelForm')"
       />
@@ -176,16 +178,6 @@ defineProps<{
 
 <style scoped lang="scss">
 @use "@/assets/styles/variables" as *;
-
-.ticket-form {
-  background-color: $background-color;
-  border-radius: 1rem;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-
-  @media (max-width: 600px) {
-    padding: 0.5rem !important;
-  }
-}
 
 .form-actions {
   gap: 1rem;

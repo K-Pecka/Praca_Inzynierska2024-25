@@ -63,92 +63,97 @@ const filter = () => {
   <Section>
     <template #title>
       <HeaderSection
-        subtitle="Wydatki"
-        button
-        button-text="Dodaj"
-        :button-action="toggleForm"
+          subtitle="Wydatki"
+          button
+          button-text="Dodaj"
+          :button-action="toggleForm"
       />
     </template>
 
     <template #content>
-      <v-container fluid class="text-h6 font-weight-bold">
-        <v-row>
-          <v-col cols="12" md="4">
-            <AppCard>
-              <span>Budżet</span>
-              <p>{{ budget }} {{ budgetCurrency }}</p>
-            </AppCard>
-          </v-col>
-          <v-col cols="12" md="4">
-            <AppCard>
-              <span>Wydano</span>
-              <BudgetContent
+      <v-col
+          cols="12"
+          class="text-h5 font-weight-bold"
+      >
+
+        <!-- Budget Overview -->
+        <v-row class="budget-overview-gap">
+
+          <!-- Budget Card -->
+          <AppCard>
+            <p class="mb-4">Budżet</p>
+            <p class="text-h3 font-weight-bold">{{ budget }} {{ budgetCurrency }}</p>
+          </AppCard>
+
+          <!-- Spent Card -->
+          <AppCard>
+            <span>Wydano</span>
+            <BudgetContent
                 :showCurrency="false"
                 :content="{
-                  amount: budget,
-                  currency: budgetCurrency,
-                  convertedAmount: spent * 0.24,
-                  convertedCurrency: 'EUR',
-                  expenses: spent,
-                }"
-              />
-            </AppCard>
-          </v-col>
-          <v-col cols="12" md="4">
-            <AppCard>
-              <span>Pozostało</span>
-              <p :class="remaining > 0 ? 'remaining' : 'amount'" :style="remaining <= 0 ? 'color:red' : ''">
-                {{ remaining <= 0 ? 0 : remaining }} {{ budgetCurrency }}
-              </p>
-            </AppCard>
-          </v-col>
-        </v-row>
+            amount: budget,
+            currency: budgetCurrency,
+            convertedAmount: spent * 0.24,
+            convertedCurrency: 'EUR',
+            expenses: spent,
+          }"
+            />
+          </AppCard>
 
-        <v-row>
+          <!-- Remaining Budget Card -->
+          <AppCard>
+            <p class="mb-3">Pozostało</p>
+            <p class="text-h3 font-weight-bold" :class="remaining > 0 ? 'remaining' : 'amount'"
+               :style="remaining <= 0 ? 'color:red' : ''">
+              {{ remaining <= 0 ? 0 : remaining }} {{ budgetCurrency }}
+            </p>
+          </AppCard>
+
+          <!-- Form for adding expenses -->
           <v-col cols="12" v-if="showForm">
-            <ExpenseForm :members="members" @cancelForm="showForm = false" class="form-container" />
+            <v-row>
+              <ExpenseForm :members="members" @cancelForm="showForm = false" class="form-container"/>
+            </v-row>
           </v-col>
-        </v-row>
 
-        <v-row>
-          <v-col>
-            <AppCard>
-              <v-row justify="space-between" no-gutters>
-                <span class="mb-2">Wydatki</span>
-                <AppButton
-                  color="primary"
-                  @click="showFilters = true"
-                  height-auto
-                  font-auto
-                  dense
-                  text="Filtruj"
-                >
-                  <v-icon start>mdi-filter</v-icon>
-                </AppButton>
-              </v-row>
+          <!-- List of expenses -->
+          <v-col cols="12">
+            <v-row>
+              <AppCard cols="12">
 
-              <ExpensesList
-                variant="manage"
-                :expenses="expenses"
-                :config="appliedFilters"
-              />
-            </AppCard>
-          </v-col>
-        </v-row>
+                <!-- Header with title and filter button -->
+                <v-row justify="space-between" align="center" class="mb-4" no-gutters>
+                  <span>Wydatki</span>
+                  <AppButton
+                      color="primary"
+                      @click="showFilters = true"
+                      height-auto
+                      font-auto
+                      dense
+                      text="Filtruj"
+                  >
+                    <v-icon start>mdi-filter</v-icon>
+                  </AppButton>
+                </v-row>
 
-        <v-row>
-          <v-col>
-            <AppCard>
-              <span>Wydatki - Kategorie</span>
-            </AppCard>
+                <!-- Expenses List -->
+                <ExpensesList
+                    variant="manage"
+                    :expenses="expenses"
+                    :config="appliedFilters"
+                />
+              </AppCard>
+            </v-row>
           </v-col>
-          <v-col>
-            <AppCard>
-              <span>Wydatki - Uczestnicy</span>
-            </AppCard>
-          </v-col>
+
+          <AppCard cols="6">
+            <span>Wydatki - Kategorie</span>
+          </AppCard>
+          <AppCard cols="6">
+            <span>Wydatki - Uczestnicy</span>
+          </AppCard>
         </v-row>
-      </v-container>
+      </v-col>
 
       <v-dialog v-model="showFilters" max-width="500">
         <v-card class="pa-3">
@@ -158,48 +163,48 @@ const filter = () => {
               <v-row dense>
                 <v-col cols="12">
                   <v-select
-                    v-model="selectedCategory"
-                    :items="budgetCategory"
-                    item-title="name"
-                    item-value="id"
-                    label="Kategoria"
-                    variant="outlined"
-                    bg-color="background"
-                    clearable
+                      v-model="selectedCategory"
+                      :items="budgetCategory"
+                      item-title="name"
+                      item-value="id"
+                      label="Kategoria"
+                      variant="outlined"
+                      bg-color="background"
+                      clearable
                   />
                 </v-col>
                 <v-col cols="12">
                   <v-select
-                    v-model="selectedParticipant"
-                    :items="members"
-                    item-title="name"
-                    item-value="userId"
-                    label="Uczestnik"
-                    :disabled="members.length === 0"
-                    variant="outlined"
-                    bg-color="transparent"
-                    clearable
-                    
+                      v-model="selectedParticipant"
+                      :items="members"
+                      item-title="name"
+                      item-value="userId"
+                      label="Uczestnik"
+                      :disabled="members.length === 0"
+                      variant="outlined"
+                      bg-color="transparent"
+                      clearable
+
                   />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field
-                    v-model="dateFrom"
-                    label="Data od"
-                    type="date"
-                    variant="outlined"
-                    bg-color="transparent"
-                    clearable
+                      v-model="dateFrom"
+                      label="Data od"
+                      type="date"
+                      variant="outlined"
+                      bg-color="transparent"
+                      clearable
                   />
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field
-                    v-model="dateTo"
-                    label="Data do"
-                    type="date"
-                    variant="outlined"
-                    bg-color="transparent"
-                    clearable
+                      v-model="dateTo"
+                      label="Data do"
+                      type="date"
+                      variant="outlined"
+                      bg-color="transparent"
+                      clearable
                   />
                 </v-col>
               </v-row>

@@ -4,7 +4,8 @@ $secondary-color: var(--v-theme-secondary);
 $accent-color: rgba(var(--v-theme-accent), 0.75);
 $background-color: var(--v-theme-background);
 
-$header-section-title-font-size: 2rem;
+$header-section-title-font-size: 2.2rem;
+$header-section-subtitle-font-size: 2rem;
 
 $default-font: 'Quicksand', sans-serif;
 
@@ -24,4 +25,4 @@ $footer-height: 200px;
 
 $navbar-width: 256px;
 
-$panel-content-width: 95%;
+$panel-content-width: 90%;

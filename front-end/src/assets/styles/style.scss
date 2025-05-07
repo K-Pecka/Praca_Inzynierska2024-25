@@ -3,6 +3,10 @@
 @use "../styles/variables.scss" as *;
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
+html {
+  overflow-y: hidden;
+}
+
 .v-container{
   max-width: 2560px;
 }
@@ -21,6 +25,19 @@
 
 .background-secondary {
     background-color: $background-secondary;
+}
+
+.font-header-title {
+  font-size: $header-section-title-font-size;
+}
+
+.font-header-subtitle {
+  font-size: $header-section-subtitle-font-size;
+}
+
+.budget-overview-gap {
+  row-gap: clamp(5px, 1vw, 30px);
+  column-gap: clamp(8px, 2vw, 70px);
 }
 
 * {

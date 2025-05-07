@@ -18,8 +18,8 @@ console.log("BudgetContent", typeof props.showCurrency);
 
 <template>
   <div v-if="typeof props.content === 'object' && props.content !== null">
-    <div class="mb-2 budget-amount">
-      <span class="text-h6 font-weight-bold" v-if="props.showCurrency === true">
+    <div>
+      <span class="text-h5 font-weight-bold" v-if="props.showCurrency === true">
         {{ props.content.expenses }} {{ props.content.currency }}
       </span>
     </div>
@@ -28,15 +28,15 @@ console.log("BudgetContent", typeof props.showCurrency);
       :model-value="safeDivision(props.content.expenses, props.content.amount, true)"
       height="6"
       rounded
-      class="expenses-green"
+      class="expenses-green my-5"
       background-color="grey-lighten-3"
     ></v-progress-linear>
 
-    <v-row justify="space-between" class="pa-3 mt-1">
-      <span class="text-subtitle-1 expenses-green" style="font-weight: bold;">
+    <v-row justify="space-between" class="px-3">
+      <span class="text-h6 expenses-green" style="font-weight: bold;">
         {{ props.content.convertedAmount.toFixed(2) }} {{ props.content.convertedCurrency }}
       </span>
-      <span class="text-grey-darken-1 text-subtitle-1" style="font-weight: bold">
+      <span class="text-grey-darken-1 text-h6" style="font-weight: bold">
         {{ safeDivision(props.content.expenses, props.content.amount, true) }}%
       </span>
     </v-row>

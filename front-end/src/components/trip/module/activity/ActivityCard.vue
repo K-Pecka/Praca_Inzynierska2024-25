@@ -39,7 +39,7 @@ const formatTime = (timeString: string) => {
 </script>
 
 <template>
-  <v-col cols="12">
+  <v-col cols="12" class="pb-2">
     <v-card class="activity-card w-100" elevation="0">
       <v-card-text>
         <v-row class="activity-header justify-space-between" no-gutters>

@@ -1,6 +1,13 @@
 <script lang="ts" setup>
 import Header from "@/components/panel/Header.vue";
 import Navbar from "@/components/panel/Navbar.vue";
+
+defineProps({
+  tripId: {
+    type: String,
+    required: true
+  }
+})
 </script>
 
 <template>

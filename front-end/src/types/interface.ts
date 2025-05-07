@@ -62,6 +62,8 @@ export interface Expense {
   user: number;
   category: number;
   note?: string;
+  username?: string;
+  converted_amount?: string;
 }
 export interface Trip {
   id: number;
@@ -71,8 +73,9 @@ export interface Trip {
   country?: string;
   city?: string;
   members?: number[];
-  budget?: Budget;
   pending_members?: Memebers[];
+  activity_count?: number;
+  budget_amount?: number;
 }
 export interface Memebers {
   id: number;

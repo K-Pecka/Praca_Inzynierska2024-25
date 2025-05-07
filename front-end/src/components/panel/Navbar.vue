@@ -55,10 +55,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-navigation-drawer style="border-right: 2px solid blue !important;">
+  <v-navigation-drawer class="navbar-border font-weight-bold">
+
     <!-- Navigation Drawer -->
     <v-list>
       <template v-for="item in side_nav_items">
+
         <!-- Pages with children -->
         <v-list-group
             v-if="item.children"
@@ -110,4 +112,10 @@ onMounted(() => {
     />
   </v-navigation-drawer>
 </template>
+
+<style scoped lang="scss">
+.navbar-border {
+    border-right: 2px solid blue !important;
+}
+</style>
 

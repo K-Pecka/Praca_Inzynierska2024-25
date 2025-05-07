@@ -75,10 +75,11 @@ const toggleForm = () => {
     </template>
 
     <template #content>
-      <v-col cols="12">
+
+      <!-- Ticket create form -->
+      <v-col cols="12" v-if="showForm">
         <TicketForm
             :members="members"
-            v-if="showForm"
             @submitTicket="handleAddTicket"
             @cancelForm="showForm = false"
             class="form-container"
@@ -101,16 +102,18 @@ const toggleForm = () => {
             Dodaj pierwszy bilet
           </a>
         </v-row>
+
         <!-- Loaded tickets -->
         <v-card
-            class="background-secondary rounded-xl my-5"
+            class="background-secondary rounded-lg"
             v-else-if="tickets && tickets.length > 0"
             v-for="ticket in filteredTickets().reverse()"
             :key="ticket.id"
             elevation="4"
         >
-          <!-- Ticket card header -->
           <v-card-text>
+
+            <!-- Ticket card header -->
             <v-sheet elevation="0" color="transparent" class="d-flex justify-center">
               <v-icon class="color-text" large size="70px"> mdi-download</v-icon>
               <v-row no-gutters class="flex-column justify-center pl-4">
@@ -121,7 +124,8 @@ const toggleForm = () => {
                 </span>
               </v-row>
             </v-sheet>
-            <v-divider class="my-4 mx-2" />
+            <v-divider thickness="2" class="my-4 mx-2 opacity-50" />
+
             <!-- Ticket card body -->
             <v-card-actions class="justify-space-between flex-wrap">
               <v-select
