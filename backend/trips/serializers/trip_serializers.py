@@ -34,9 +34,10 @@ class TripCreateSerializer(serializers.ModelSerializer):
             if data["start_date"] < timezone.now().date():
                 raise serializers.ValidationError("Data rozpoczęcia nie może być wcześniejsza niż dzisiaj.")
         return data
+
     class Meta:
         model = Trip
-        fields = ['id', 'name', 'creator', 'members',  'start_date', 'end_date']
+        fields = ['id', 'name', 'creator', 'members', 'start_date', 'end_date']
 
     def create(self, validated_data):
         try:
@@ -67,15 +68,19 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
     pending_members = serializers.SerializerMethodField()
     start_date = serializers.DateField(read_only=True)
     end_date = serializers.DateField(read_only=True)
+    budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     def get_pending_members(self, obj):
         access_tokens = obj.access_tokens.filter(is_pending=True)
         guest_members = [access_token.user_profile for access_token in access_tokens]
         return UserProfileListSerializer(guest_members, many=True).data
 
+    def get_budget(self, obj):
+        return obj.budget
+
     class Meta:
         model = Trip
-        fields = ['name', 'creator', 'members', 'pending_members', 'start_date', 'end_date']
+        fields = ['name', 'creator', 'members', 'pending_members', 'start_date', 'end_date', 'budget_amount']
 
 
 class TripListSerializer(TripRetrieveSerializer):
@@ -86,6 +91,7 @@ class TripListSerializer(TripRetrieveSerializer):
     start_date = serializers.DateField(read_only=True)
     end_date = serializers.DateField(read_only=True)
     is_creator = serializers.SerializerMethodField()
+    budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     def get_is_creator(self, obj):
         request = self.context['request']
@@ -94,7 +100,7 @@ class TripListSerializer(TripRetrieveSerializer):
 
     class Meta:
         model = Trip
-        fields = ['id', 'name', 'creator', 'members',  'start_date', 'end_date', 'is_creator']
+        fields = ['id', 'name', 'creator', 'members', 'start_date', 'end_date', 'is_creator', 'budget_amount']
 
 
 class TripUpdateSerializer(serializers.ModelSerializer):
@@ -104,6 +110,7 @@ class TripUpdateSerializer(serializers.ModelSerializer):
     members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all())
     start_date = serializers.DateField()
     end_date = serializers.DateField()
+    budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     def validate(self, data):
         if data.get("start_date") and data.get("end_date"):
@@ -115,7 +122,8 @@ class TripUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Trip
-        fields = ['id', 'name', 'creator', 'members',  'start_date', 'end_date']
+        fields = ['id', 'name', 'creator', 'members', 'start_date', 'end_date', 'budget_amount']
+
 
 class TripDestroySerializer(serializers.ModelSerializer):
     class Meta:
