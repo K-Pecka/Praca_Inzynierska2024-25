@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Trip, Ticket, TicketType, ExpenseType, Expense, Budget, TripAccessToken
+from .models import Trip, Ticket, TicketType, ExpenseType, Expense, TripAccessToken
 
 
 @admin.register(Trip)
@@ -42,16 +42,8 @@ class ExpenseAdmin(admin.ModelAdmin):
     date_hierarchy = 'date'
 
 
-@admin.register(Budget)
-class BudgetAdmin(admin.ModelAdmin):
-    list_select_related = ('trip',)
-    list_display = ('amount', 'trip')
-    list_filter = ('trip',)
-
-
 @admin.register(TripAccessToken)
 class TripAccessTokenAdmin(admin.ModelAdmin):
     list_select_related = ('trip', 'user_profile')
     list_display = ('trip', 'token', 'user_profile')
     list_filter = ('trip',)
-

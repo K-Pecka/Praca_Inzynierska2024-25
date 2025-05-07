@@ -4,74 +4,12 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 from django.core.files.storage import FileSystemStorage
 from django.test.utils import override_settings
-from django.db.models.fields.files import FileField
-from trips.views.budget_views import BudgetUpdateAPIView, BudgetDestroyAPIView
 from trips.views.expense_views import ExpenseCreateAPIView, ExpenseRetrieveAPIView, ExpenseUpdateAPIView, \
     ExpenseDestroyAPIView
 from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketDestroyAPIView, \
     TicketUpdateAPIView
 from users.models import CustomUser, UserProfile, UserProfileType
-from trips.models import Trip, Budget, Expense, Ticket, TicketType, ExpenseType
-
-
-class BudgetAPITestCase(TestCase):
-    def setUp(self):
-        """
-        Set up the test data, including a user, their profile, a trip, and a budget.
-        """
-        self.factory = APIRequestFactory()
-        self.default_user_profile = UserProfileType.objects.create(
-            code="tourist",
-            name="Tourist",
-        )
-        self.user = CustomUser.objects.create_user(
-            email="testuser@example.com",
-            password="TestPassword123",
-            first_name="Test",
-            last_name="User",
-        )
-        self.user_profile, created = UserProfile.objects.get_or_create(user=self.user)
-
-        self.trip = Trip.objects.create(
-            creator=self.user_profile,
-            settings={"currency": "USD"},
-            start_date="2025-06-01",
-            end_date="2025-06-15"
-        )
-
-        self.trip.members.add(self.user_profile)
-
-        self.budget = Budget.objects.create(
-            trip=self.trip,
-            amount=1000.00,
-        )
-
-    def test_budget_update(self):
-        """
-        Test updating a budget when the user is authenticated.
-        """
-        data = {
-            'amount': 1500.00,
-            'currency': 'EUR'
-        }
-        view = BudgetUpdateAPIView.as_view()
-        request = self.factory.patch(f'/trip/{self.trip.id}/budget/{self.budget.id}/update/', data)
-        force_authenticate(request, user=self.user)
-        response = view(request, trip_pk=self.budget.id)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.budget.refresh_from_db()
-        self.assertEqual(str(self.budget.amount), "1500.00")
-
-    def test_budget_destroy(self):
-        """
-        Test deleting a budget.
-        """
-        view = BudgetDestroyAPIView.as_view()
-        request = self.factory.delete(f'/trips/{self.trip.id}/budget/{self.budget.id}/delete/')
-        force_authenticate(request, user=self.user)
-        response = view(request, trip_pk=self.trip.id, budget_id=self.budget.id)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(Budget.objects.filter(id=self.budget.id).exists())
+from trips.models import Trip, Expense, Ticket, TicketType, ExpenseType
 
 
 class ExpenseAPITestCase(TestCase):
@@ -100,11 +38,6 @@ class ExpenseAPITestCase(TestCase):
         )
 
         self.trip.members.add(self.user_profile)
-
-        self.budget = Budget.objects.create(
-            trip=self.trip,
-            amount=3000.00,
-        )
         self.expense_category = ExpenseType.objects.create(name='food')
         self.expense = Expense.objects.create(
             trip=self.trip,

@@ -3,7 +3,7 @@ from django.db import transaction
 
 from rest_framework import serializers
 
-from trips.models import Budget, Trip
+from trips.models import Trip
 from users.models import UserProfile
 from users.serializers.user_profile_serializers import UserProfileListSerializer
 

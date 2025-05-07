@@ -229,29 +229,6 @@ class Ticket(BaseModel):
         verbose_name_plural = "Bilety"
 
 
-class Budget(BaseModel):
-    amount = models.DecimalField(
-        max_digits=7,
-        decimal_places=2,
-        default=0,
-        validators=[MinValueValidator(0)],
-        verbose_name=_("Kwota budżetu"),
-        help_text=_("Kwota budżetu")
-    )
-    trip = models.OneToOneField(
-        Trip,
-        on_delete=models.CASCADE,
-        related_name="budgets",
-        verbose_name=_("Wycieczka"),
-        help_text=_("Powiązana wycieczka")
-    )
-
-    class Meta:
-        db_table = "budgets"
-        verbose_name = "Budżet"
-        verbose_name_plural = _("Budżety")
-
-
 class ExpenseType(BaseModel):
     name = models.CharField(
         max_length=124,
