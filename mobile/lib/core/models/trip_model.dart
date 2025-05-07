@@ -6,6 +6,7 @@ class TripModel {
   final DateTime startDate;
   final DateTime endDate;
   final bool isCreator;
+  final double budgetAmount;
 
   TripModel({
     required this.id,
@@ -15,6 +16,7 @@ class TripModel {
     required this.startDate,
     required this.endDate,
     required this.isCreator,
+    required this.budgetAmount,
   });
 
   @override
@@ -31,6 +33,7 @@ class TripModel {
       startDate: DateTime.parse(json['start_date']),
       endDate: DateTime.parse(json['end_date']),
       isCreator: json['is_creator'],
+      budgetAmount: double.tryParse(json['budget_amount'].toString()) ?? 5000.0,
     );
   }
 }

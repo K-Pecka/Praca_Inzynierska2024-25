@@ -63,6 +63,7 @@ class TripService {
                     startDate: DateTime.now(),
                     endDate: DateTime.now(),
                     isCreator: false,
+                    budgetAmount: 0.0,
                   ),
     );
   }

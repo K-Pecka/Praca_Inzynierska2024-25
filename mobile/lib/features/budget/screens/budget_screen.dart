@@ -33,9 +33,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
   }
 
   Future<void> _loadData() async {
-    final data = await BudgetService.fetchExpenses(
-      tripId: widget.trip.id,
-    );
+    final data = await BudgetService.fetchExpenses(tripId: widget.trip.id);
     final used = await _calculateUsedInPLN(data);
 
     setState(() {
@@ -77,60 +75,58 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const double totalBudget = 5000.0;
-
+    final totalBudget =
+        widget.trip.budgetAmount != 0.0 ? widget.trip.budgetAmount : 5000.0;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : BaseScreen(
-        trip: widget.trip,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            BudgetOverviewCard(totalBudget: totalBudget, used: _used),
-            const SizedBox(height: 16),
-            ToggleExpenseFormButton(
-              showForm: _showForm,
-              onToggle: () => setState(() => _showForm = !_showForm),
-            ),
-            const SizedBox(height: 16),
-            if (_showForm)
-              ExpenseForm(
-                tripId: widget.trip.id,
-                userProfileId: widget.userProfileId,
-                onSaved: () {
-                  setState(() => _showForm = false);
-                },
-                onAdded: _loadData,
-              ),
-            const SizedBox(height: 24),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _expenses.length,
-              itemBuilder: (context, index) {
-                return Builder(
-                  builder: (scaffoldContext) {
-                    return ExpenseTile(
-                      expense: _expenses[index],
-                      tripId: widget.trip.id,
-                      scaffoldContext: scaffoldContext,
-                      onDeleted: () {
-                        _loadData();
+      body:
+          _loading
+              ? const Center(child: CircularProgressIndicator())
+              : BaseScreen(
+                trip: widget.trip,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    BudgetOverviewCard(totalBudget: totalBudget, used: _used),
+                    const SizedBox(height: 16),
+                    ToggleExpenseFormButton(
+                      showForm: _showForm,
+                      onToggle: () => setState(() => _showForm = !_showForm),
+                    ),
+                    const SizedBox(height: 16),
+                    if (_showForm)
+                      ExpenseForm(
+                        tripId: widget.trip.id,
+                        userProfileId: widget.userProfileId,
+                        onSaved: () {
+                          setState(() => _showForm = false);
+                        },
+                        onAdded: _loadData,
+                      ),
+                    const SizedBox(height: 24),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _expenses.length,
+                      itemBuilder: (context, index) {
+                        return Builder(
+                          builder: (scaffoldContext) {
+                            return ExpenseTile(
+                              expense: _expenses[index],
+                              tripId: widget.trip.id,
+                              scaffoldContext: scaffoldContext,
+                              onDeleted: () {
+                                _loadData();
+                              },
+                            );
+                          },
+                        );
                       },
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+                    ),
+                  ],
+                ),
+              ),
     );
   }
 }
-
-
-

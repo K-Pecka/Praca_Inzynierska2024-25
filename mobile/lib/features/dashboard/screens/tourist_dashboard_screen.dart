@@ -52,6 +52,7 @@ class _TouristDashboardState extends State<TouristDashboard> {
             startDate: DateTime.now(),
             endDate: DateTime.now(),
             isCreator: false,
+            budgetAmount: 0.0,
           ),
         );
         _isLoading = false;
