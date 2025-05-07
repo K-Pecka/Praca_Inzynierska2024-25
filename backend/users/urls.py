@@ -1,6 +1,7 @@
 from django.urls import path
 
-from users.views.user_profile_views import UserProfileListAPIView, UserProfileUpdateAPIView, UserProfileCreateAPIView
+from users.views.user_profile_views import UserProfileListAPIView, UserProfileUpdateAPIView, UserProfileCreateAPIView, \
+    ChangeDefaultUserProfileView
 from users.views.user_views import UserUpdateAPIView, UserUpdatePasswordAPIView, UserCreateAPIView, ConfirmEmailView, \
     CheckAccessView, CheckAccountTypeAPIView, UserByProfileRetrieveAPIView
 
@@ -21,4 +22,5 @@ urlpatterns = [
     path('profile/<int:pk>/update/', UserProfileUpdateAPIView.as_view(), name='user-profile-update'),
 
     path('user/by-profile/<str:pk>/', UserByProfileRetrieveAPIView.as_view(), name='user-by-profile'),
+    path('profile/change-default/', ChangeDefaultUserProfileView.as_view(), name='change-default-user-profile'),
 ]

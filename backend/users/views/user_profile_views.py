@@ -1,10 +1,13 @@
+from django.db import transaction
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView
+
+from rest_framework import serializers
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from users.models import UserProfile
 from users.serializers.user_profile_serializers import UserProfileListSerializer, UserProfileUpdateSerializer, \
-    UserProfileCreateSerializer
+    UserProfileCreateSerializer, UserChangeProfileSerializer
 
 
 @extend_schema(tags=['profile'], parameters = [
@@ -37,10 +40,10 @@ class UserProfileUpdateAPIView(RetrieveUpdateAPIView):
 class UserProfileCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserProfileCreateSerializer
-    queryset = UserProfile.objects.all()
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['request'] = self.request
-        return context
+
+@extend_schema(tags=['profile'])
+class ChangeDefaultUserProfileView(UpdateAPIView):
+    serializer_class = UserChangeProfileSerializer
+    permission_classes = [IsAuthenticated]
 

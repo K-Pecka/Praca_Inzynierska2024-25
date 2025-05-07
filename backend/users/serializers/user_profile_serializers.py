@@ -1,3 +1,5 @@
+from django.db import transaction
+
 from rest_framework import serializers
 
 from users.models import UserProfile, UserProfileType
@@ -44,8 +46,8 @@ class UserProfileListJWTSerializer(serializers.ModelSerializer):
 
 
 class UserProfileCreateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     type = serializers.PrimaryKeyRelatedField(
-        write_only=True,
         queryset=UserProfileType.objects.all()
     )
     is_default = serializers.BooleanField(required=False)
@@ -55,21 +57,16 @@ class UserProfileCreateSerializer(serializers.ModelSerializer):
         fields = ['type', 'is_default']
 
     def create(self, validated_data):
-        user = self.context['request'].user
-        is_default = validated_data.pop('is_default', False)
+        request = self.context['request']
+        user = request.user
 
-        if is_default:
-            UserProfile.objects.filter(user=user).update(is_default=False)
-        else:
-            has_default = UserProfile.objects.filter(user=user, is_default=True).exists()
-            if not has_default:
-                is_default = True
+        if len(user.profiles) == 2:
+            raise serializers.ValidationError("Użytkownik nie może stworzyć więcej profili.")
 
-        return UserProfile.objects.create(
-            user=user,
-            is_default=is_default,
-            **validated_data
-        )
+        if user.is_guest:
+            raise serializers.ValidationError("Gość nie może tworzyć nowych kont.")
+
+        return UserProfile.objects.create(**validated_data)
 
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
@@ -91,3 +88,28 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
             ).exclude(pk=instance.pk).update(is_default=False)
 
         return super().update(instance, validated_data)
+
+
+class UserChangeProfileSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    type = serializers.PrimaryKeyRelatedField(
+        queryset=UserProfileType.objects.all(),
+        required=False
+    )
+    is_default = serializers.BooleanField(required=False)
+
+    def update(self, instance, validated_data):
+        request = self.context['request']
+
+        profiles = request.profiles.filter(is_active=True).exclude(type='guest')
+        if len(profiles) < 2:
+            raise serializers.ValidationError("Użytkownik posiada tylko jeden aktywny profil.")
+
+        with transaction.atomic():
+            for profile in profiles:
+                profile.is_default = not profile.is_default
+        return request.user.get_default_profile()
+
+    class Meta:
+        model = UserProfile
+        fields = ['id', 'type', 'is_default']
