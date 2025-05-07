@@ -10,6 +10,7 @@ import '/core/theme/icons.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mobile/core/utils/error_handler.dart';
+
 class DaySelector extends StatefulWidget {
   final DateTime start;
   final DateTime end;
@@ -312,7 +313,10 @@ void showActivityDetailsModal(
               const SizedBox(height: 8),
               Text("Opis: ${activity.description}", style: TextStyles.subtitle),
               const SizedBox(height: 8),
-              Text("Data: ${activity.date}", style: TextStyles.subtitle),
+              Text(
+                "Data: ${DateFormat('d MMMM y', 'pl_PL').format(activity.date)}",
+                style: TextStyles.subtitle,
+              ),
               const SizedBox(height: 8),
               Text(
                 "Godzina: ${activity.startTime}",
@@ -345,7 +349,11 @@ void showActivityDetailsModal(
                           ),
                         );
                       } catch (e) {
-                        handleError(context, e, userMessage: 'Nie udało się pobrać biletu.');
+                        handleError(
+                          context,
+                          e,
+                          userMessage: 'Nie udało się pobrać biletu.',
+                        );
                       }
                     },
                     icon: const Icon(
