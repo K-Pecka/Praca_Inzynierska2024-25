@@ -46,10 +46,11 @@ class _TouristDashboardState extends State<TouristDashboard> {
               : TripModel(
             id: -1,
             name: 'Brak',
-            creatorId: 0,
+            creator: Member(id: 0, email: 'brak@brak.pl'),
             members: [],
             startDate: DateTime.now(),
             endDate: DateTime.now(),
+            isCreator: false,
           ),
         );
         _isLoading = false;

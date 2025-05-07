@@ -65,6 +65,7 @@ class TripService {
 
   static Future<TripModel?> getTripById(int tripId) async {
     final trips = await getAllTrips();
+
     return trips.firstWhere(
           (trip) => trip.id == tripId,
       orElse: () => trips.isNotEmpty
@@ -72,10 +73,11 @@ class TripService {
           : TripModel(
         id: -1,
         name: 'Brak',
-        creatorId: 0,
+        creator: Member(id: 0, email: 'brak@brak.pl'),
         members: [],
         startDate: DateTime.now(),
         endDate: DateTime.now(),
+        isCreator: false,
       ),
     );
   }

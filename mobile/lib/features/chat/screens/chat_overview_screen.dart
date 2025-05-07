@@ -51,47 +51,34 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
     }
   }
 
-  Future<String> getChatLabel(ChatroomModel room) async {
+  String getChatLabel(ChatroomModel room) {
     final otherId = room.memberIds.firstWhere(
           (id) => id != widget.userProfileId,
       orElse: () => room.creatorId,
     );
 
-    final local = widget.trip.members.firstWhere(
+    final member = widget.trip.members.firstWhere(
           (m) => m.id == otherId,
       orElse: () => Member(id: otherId, email: ''),
     );
 
-    if ((local.firstName ?? '').isNotEmpty) {
-      return '${local.firstName} ${local.lastName}'.trim();
-    }
-
-    final fetched = await ChatService.getUserByProfileId(otherId);
-    return '${fetched.firstName ?? ''} ${fetched.lastName ?? ''}'.trim();
+    final name = '${member.firstName ?? ''} ${member.lastName ?? ''}'.trim();
+    return name.isNotEmpty ? name : member.email;
   }
 
-  Future<String> getInitialsForRoom(ChatroomModel room) async {
+  String getInitialsForRoom(ChatroomModel room) {
     final otherId = room.memberIds.firstWhere(
           (id) => id != widget.userProfileId,
       orElse: () => room.creatorId,
     );
 
-    final local = widget.trip.members.firstWhere(
+    final member = widget.trip.members.firstWhere(
           (m) => m.id == otherId,
       orElse: () => Member(id: otherId, email: ''),
     );
 
-    String first = '';
-    String last = '';
-
-    if ((local.firstName ?? '').isNotEmpty) {
-      first = local.firstName![0];
-      last = (local.lastName?.isNotEmpty ?? false) ? local.lastName![0] : '';
-    } else {
-      final fetched = await ChatService.getUserByProfileId(otherId);
-      first = fetched.firstName?.isNotEmpty == true ? fetched.firstName![0] : '';
-      last = fetched.lastName?.isNotEmpty == true ? fetched.lastName![0] : '';
-    }
+    final first = (member.firstName?.isNotEmpty ?? false) ? member.firstName![0] : '';
+    final last = (member.lastName?.isNotEmpty ?? false) ? member.lastName![0] : '';
 
     return (first + last).toUpperCase();
   }
@@ -139,34 +126,21 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
           const SizedBox(height: 8),
 
           for (var room in otherRooms)
-            FutureBuilder(
-              future: Future.wait([
-                getChatLabel(room),
-                getInitialsForRoom(room),
-              ]),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox(height: 60);
-                }
-                final label = snapshot.data![0];
-                final initials = snapshot.data![1];
-                return ChatTile(
-                  label: label,
-                  initials: initials,
-                  message: room.lastMessage?.content ?? 'Brak wiadomości',
-                  isAnnouncement: false,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PrivateChatScreen(
-                          userProfileId: widget.userProfileId,
-                          trip: widget.trip,
-                          chatroomId: room.id,
-                        ),
-                      ),
-                    );
-                  },
+            ChatTile(
+              label: getChatLabel(room),
+              initials: getInitialsForRoom(room),
+              message: room.lastMessage?.content ?? 'Brak wiadomości',
+              isAnnouncement: false,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PrivateChatScreen(
+                      userProfileId: widget.userProfileId,
+                      trip: widget.trip,
+                      chatroomId: room.id,
+                    ),
+                  ),
                 );
               },
             ),

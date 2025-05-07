@@ -63,17 +63,12 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
 
       if (otherId != null) {
         final localMember = widget.trip.members.firstWhere(
-          (m) => m.id == otherId,
+              (m) => m.id == otherId,
           orElse: () => Member(id: otherId, email: ''),
         );
 
-        if (localMember.firstName?.isNotEmpty == true) {
-          fullName = '${localMember.firstName} ${localMember.lastName}'.trim();
-        } else {
-          final fetched = await ChatService.getUserByProfileId(otherId);
-          fullName =
-              '${fetched.firstName ?? ''} ${fetched.lastName ?? ''}'.trim();
-        }
+        fullName = '${localMember.firstName ?? ''} ${localMember.lastName ?? ''}'.trim();
+        if (fullName.isEmpty) fullName = localMember.email;
       }
 
       setState(() {

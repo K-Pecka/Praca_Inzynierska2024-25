@@ -1,18 +1,20 @@
 class TripModel {
   final int id;
   final String name;
-  final int creatorId;
+  final Member creator;
   final List<Member> members;
   final DateTime startDate;
   final DateTime endDate;
+  final bool isCreator;
 
   TripModel({
     required this.id,
     required this.name,
-    required this.creatorId,
+    required this.creator,
     required this.members,
     required this.startDate,
     required this.endDate,
+    required this.isCreator,
   });
 
   @override
@@ -22,14 +24,13 @@ class TripModel {
     return TripModel(
       id: json['id'],
       name: json['name'],
-      creatorId: json['creator'],
+      creator: Member.fromJson(json['creator']),
       members: (json['members'] as List)
-          .map((m) => m is int
-          ? Member(id: m, email: '')
-          : Member.fromJson(m))
+          .map((m) => Member.fromJson(m))
           .toList(),
       startDate: DateTime.parse(json['start_date']),
       endDate: DateTime.parse(json['end_date']),
+      isCreator: json['is_creator'],
     );
   }
 }
@@ -39,12 +40,14 @@ class Member {
   final String email;
   final String? firstName;
   final String? lastName;
+  final int? type;
 
   Member({
     required this.id,
     required this.email,
     this.firstName,
     this.lastName,
+    this.type,
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
@@ -53,6 +56,7 @@ class Member {
       email: json['email'],
       firstName: json['first_name'],
       lastName: json['last_name'],
+      type: json['type'],
     );
   }
 
@@ -60,12 +64,14 @@ class Member {
     String? email,
     String? firstName,
     String? lastName,
+    int? type,
   }) {
     return Member(
       id: id,
       email: email ?? this.email,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
+      type: type ?? this.type,
     );
   }
 }

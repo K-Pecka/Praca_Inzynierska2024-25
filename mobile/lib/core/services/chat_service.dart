@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/web_socket_channel.dart';
-
 import '../models/chat_message_model.dart';
 import '../models/chatroom_model.dart';
-import '../models/trip_model.dart';
 import 'auth_service.dart';
 
 class ChatService {
@@ -47,26 +45,6 @@ class ChatService {
   static void disconnectWebSocket() {
     _channel?.sink.close();
     _channel = null;
-  }
-
-  static Future<Member> getUserByProfileId(int profileId) async {
-    final url = Uri.parse('$baseUrl/user/user/by-profile/$profileId/');
-    final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${AuthService.accessToken}',
-      'accept': 'application/json',
-    });
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return Member(
-        id: profileId,
-        email: data['email'],
-        firstName: data['first_name'],
-        lastName: data['last_name'],
-      );
-    } else {
-      throw Exception("Błąd ładowania danych użytkownika: ${response.body}");
-    }
   }
 
   static WebSocketChannel? connectToWebSocket(int chatroomId) {
