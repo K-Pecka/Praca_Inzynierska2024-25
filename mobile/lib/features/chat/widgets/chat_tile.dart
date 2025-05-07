@@ -26,13 +26,13 @@ class ChatTile extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
-            radius: 20,
+            radius: 24,
             backgroundColor: AppColors.cardsBackground,
             child: isAnnouncement
                 ? const Icon(Icons.info_outline, color: AppColors.primary)
                 : Text(
               initials ?? '',
-              style: const TextStyle(color: AppColors.primary),
+              style: TextStyles.initials,
             ),
           ),
           const SizedBox(width: 12),

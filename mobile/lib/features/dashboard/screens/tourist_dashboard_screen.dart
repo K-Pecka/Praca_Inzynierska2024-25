@@ -101,11 +101,7 @@ class _TouristDashboardState extends State<TouristDashboard> {
                       backgroundColor: AppColors.cardsBackground,
                       child: Text(
                         initials,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: AppColors.primary,
-                        ),
+                        style: TextStyles.initials
                       ),
                     ),
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/theme/themes.dart';
 
 class TextStyles {
   static const loginTitleHeading = TextStyle(
@@ -10,7 +11,7 @@ class TextStyles {
   static const loginReturnButton = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w600,
-    color: Color(0xFF7C4DFF)
+    color: Color(0xFF7C4DFF),
   );
 
   static const sectionHeading = TextStyle(
@@ -50,11 +51,7 @@ class TextStyles {
   );
 
   static TextStyle usedBudget(Color color) {
-    return TextStyle(
-      color: color,
-      fontSize: 18,
-      fontWeight: FontWeight.w600,
-    );
+    return TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w600);
   }
 
   static const TextStyle textHint = TextStyle(
@@ -63,4 +60,9 @@ class TextStyles {
     fontSize: 18,
   );
 
+  static const TextStyle initials = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 18,
+    color: AppColors.primary,
+  );
 }
