@@ -6,7 +6,6 @@ from rest_framework.response import Response
 
 from django.core.validators import MinValueValidator
 from django.db import models
-
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -63,6 +62,10 @@ class Trip(BaseModel):
     )
 
     objects = TripManager()
+
+    @property
+    def activity_count(self):
+        return sum(itinerary.activities.count() for itinerary in self.itineraries.all())
 
     @classmethod
     def add_member(cls, trip, user_profile):
