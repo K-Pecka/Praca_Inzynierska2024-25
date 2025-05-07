@@ -44,6 +44,7 @@ class ExpenseListSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     username = serializers.SerializerMethodField(read_only=True)
     category = serializers.PrimaryKeyRelatedField(read_only=True)
+    converted_amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     def get_username(self, obj):
         if obj.user:
@@ -53,7 +54,7 @@ class ExpenseListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = [
-            'id', 'title', 'amount', 'currency', 'date', 'note', 'trip', 'user', 'username', 'category'
+            'id', 'title', 'amount', 'currency', 'date', 'note', 'trip', 'user', 'username', 'category', 'converted_amount'
         ]
 
 
