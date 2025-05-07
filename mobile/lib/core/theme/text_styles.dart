@@ -65,4 +65,10 @@ class TextStyles {
     fontSize: 18,
     color: AppColors.primary,
   );
+
+  static const TextStyle menuInitials = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 24,
+    color: AppColors.primary,
+  );
 }

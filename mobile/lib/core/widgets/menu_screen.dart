@@ -41,7 +41,7 @@ class ProfileMenuScreen extends StatelessWidget {
                   backgroundColor: AppColors.cardsBackground,
                   child: Text(
                     initials,
-                    style: TextStyles.initials
+                    style: TextStyles.menuInitials
                   ),
                 ),
                 const SizedBox(height: 16),
