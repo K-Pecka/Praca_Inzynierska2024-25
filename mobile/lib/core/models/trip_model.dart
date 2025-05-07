@@ -5,6 +5,7 @@ class TripModel {
   final List<Member> members;
   final DateTime startDate;
   final DateTime endDate;
+  final double budgetAmount;
 
   TripModel({
     required this.id,
@@ -13,6 +14,7 @@ class TripModel {
     required this.members,
     required this.startDate,
     required this.endDate,
+    required this.budgetAmount,
   });
 
   factory TripModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class TripModel {
           .toList(),
       startDate: DateTime.parse(json['start_date']),
       endDate: DateTime.parse(json['end_date']),
+      budgetAmount: double.tryParse(json['budget_amount'].toString()) ?? 0.0,
     );
   }
 }

@@ -35,6 +35,7 @@ class TripService {
         members: [],
         startDate: DateTime.now(),
         endDate: DateTime.now(),
+        budgetAmount: 0.0,
       ),
     );
   }

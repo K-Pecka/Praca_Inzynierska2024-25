@@ -9,7 +9,7 @@ import '../widgets/dashboard_widgets.dart';
 class TouristDashboard extends StatefulWidget {
   final String token;
   final int userProfileId;
-  final TripModel trip; // Received the trip model
+  final TripModel trip;
   final Function(TripModel) onTripChange;
 
   const TouristDashboard({
@@ -51,6 +51,7 @@ class _TouristDashboardState extends State<TouristDashboard> {
             members: [],
             startDate: DateTime.now(),
             endDate: DateTime.now(),
+            budgetAmount: 0.0,
           ),
         );
         _isLoading = false;
