@@ -47,3 +47,9 @@ jobs:
         run: |
           git remote add heroku "https://heroku:${HEROKU_API_KEY}@git.heroku.com/backend-plannder.git"
           git push heroku `git subtree split --prefix backend main`:main --force
+
+      - name: Run Migrations on Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku run python manage.py migrate --app backend-plannder
