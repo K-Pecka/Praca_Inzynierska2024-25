@@ -63,10 +63,6 @@ class Trip(BaseModel):
 
     objects = TripManager()
 
-    @property
-    def activity_count(self):
-        return sum(itinerary.activities.count() for itinerary in self.itineraries.all())
-
     @classmethod
     def add_member(cls, trip, user_profile):
         if trip.members.filter(id=user_profile.id).exists():

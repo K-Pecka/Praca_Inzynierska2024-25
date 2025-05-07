@@ -68,7 +68,7 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
     pending_members = serializers.SerializerMethodField()
     start_date = serializers.DateField(read_only=True)
     end_date = serializers.DateField(read_only=True)
-    activity_count = serializers.IntegerField(read_only=True)
+    activity_count = serializers.SerializerMethodField()
     budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     def get_pending_members(self, obj):
@@ -76,8 +76,8 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
         guest_members = [access_token.user_profile for access_token in access_tokens]
         return UserProfileListSerializer(guest_members, many=True).data
 
-    def get_budget(self, obj):
-        return obj.budget
+    def get_activity_count(self, obj):
+        return sum(itinerary.activities.count() for itinerary in obj.itineraries.all())
 
     class Meta:
         model = Trip
