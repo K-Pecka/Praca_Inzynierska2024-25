@@ -1,4 +1,4 @@
-import {useQueryClient} from "@tanstack/vue-query";
+import {useMutation, useQueryClient} from "@tanstack/vue-query";
 import {useNotificationStore} from "@/stores";
 import { getTripQuery,getTripDetailsQuery, getMutationCreate, getMutationDelete,getMutationUpdate } from "@/api/services/tripQuery";
 export const useTrips = (tripId:Function) => {
@@ -11,8 +11,8 @@ export const useTrips = (tripId:Function) => {
      }
 
     const getTripDetails = (id?: number) => {
-       const {data:trip,isLoading:isLoading_trip,error:error_trip} =  getTripDetailsQuery(id ?? tripId())
-       return {trip,isLoading_trip,error_trip}
+        const {data:trip,isLoading:isLoading_trip,error:error_trip} =  getTripDetailsQuery(id ?? tripId())
+        return {trip,isLoading_trip,error_trip,}
     }
 
     const deleteTrip = getMutationDelete({

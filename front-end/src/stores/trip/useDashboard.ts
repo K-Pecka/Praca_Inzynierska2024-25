@@ -30,8 +30,7 @@ export const useDashboard= (tripId:Function) => {
                 trip.value.end_date
             )}`;
         });
-
-        const budget = computed(() => `${trip.value?.budget?.amount ?? "..."}`);
+        const budget = computed(() => `${trip.value?.budget_amount ?? "..."}`);
         const members = computed(() => [...trip.value?.members ?? [], ...trip.value?.pending_members ?? []]);
         const participantCount = computed(
             () => `${members.value.length ?? 0} ${members.value.length==1? "Uczestnik" : "Uczestników"}`
@@ -45,7 +44,7 @@ export const useDashboard= (tripId:Function) => {
 
         const tripName = computed(() => trip.value?.name ?? "...");
         
-        const expenses = computed(() => expensesByTrip.value?.reduce((acc, expense) => Number(acc) + Number(expense.amount), 0) ?? 0);
+        const expenses = computed(() => expensesByTrip.value?.reduce((acc, expense) => Number(acc) + Number(expense.converted_amount), 0) ?? 0);
         const boxes = computed(() => [
             {
                 title: "Czas trwania",
@@ -63,9 +62,7 @@ export const useDashboard= (tripId:Function) => {
                 content: {
                     expenses: expenses.value,
                     amount: Number(budget.value),
-                    currency: "PLN",
-                    convertedAmount: Number(expenses.value) * 0.24,
-                    convertedCurrency: "EUR",
+                    currency: "PLN"
                 },
                 set: {
                     order: 2,

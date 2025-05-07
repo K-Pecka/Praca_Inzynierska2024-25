@@ -15,6 +15,7 @@ export const useMembersStore = defineStore("tripDetails", () => {
     const user = await fetchUserById(id);
     return {
       name: `${user.first_name} ${user.last_name}`,
+      email: user.email,
       userId: id,
     };
   };

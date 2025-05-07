@@ -13,12 +13,12 @@ const {getTripDetails} = tripStore;
 const {  trip } = getTripDetails();
 const { expensesByTrip:expenses } = getExpensByTrip();
 
-const budget = computed(() => Number(trip.value?.budget?.amount) ?? 0);
-const budgetCurrency = computed(() => trip.value?.budget?.currency ?? "PLN");
+const budget = computed(() => Number(trip.value?.budget_amount) ?? 0);
+const budgetCurrency = computed(() => "PLN");
 
 const spent = computed(() => {
   return (
-    expenses.value?.reduce((acc, expense) => Number(acc) + Number(expense.amount), 0) ?? 0
+    expenses.value?.reduce((acc, expense) => Number(acc) + Number(expense.converted_amount), 0) ?? 0
   );
 });
 
@@ -93,8 +93,6 @@ const filter = () => {
                 :content="{
             amount: budget,
             currency: budgetCurrency,
-            convertedAmount: spent * 0.24,
-            convertedCurrency: 'EUR',
             expenses: spent,
           }"
             />

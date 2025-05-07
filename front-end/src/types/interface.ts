@@ -75,7 +75,7 @@ export interface Trip {
   members?: number[];
   pending_members?: Memebers[];
   activity_count?: number;
-  budget_amount?: number;
+  budget_amount?: string;
 }
 export interface Memebers {
   id: number;
@@ -203,8 +203,6 @@ export interface InvateUser {
 export interface BudgetData {
   amount: number;
   currency: string;
-  convertedAmount: number;
-  convertedCurrency: string;
   expenses: number;
 }
 export interface Activity {

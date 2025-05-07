@@ -34,9 +34,9 @@ const {trips, isLoading_trips} = getTrips();
     </v-row>
 
     <!-- Trip cards -->
-    <v-row>
+    <v-row v-if="trips">
       <v-col
-          v-if="trips && trips.length"
+          v-if="trips.length > 0"
           v-for="trip in trips" :key="trip.id"
           cols="12"
           sm="6"

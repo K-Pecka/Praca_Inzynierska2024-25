@@ -30,11 +30,10 @@ export const useBudget = (tripId:Function) => {
   const getExpensByTrip = (id?:number) => {
     const { data: expensesByTrip, isLoading: isLoading_expenses,error:error_expenses } =
       getExpensesQuery(id ?? tripId());
-
     return {
       expensesByTrip,
       isLoading_expenses,
-      error_expenses
+      error_expenses,
     };
   };
 
