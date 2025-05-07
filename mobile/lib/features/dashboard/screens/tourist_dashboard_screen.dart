@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../../../core/services/trip_service.dart';
 import '../../../core/theme/text_styles.dart';
 import '/core/models/trip_model.dart';
