@@ -9,7 +9,7 @@ import '/core/theme/text_styles.dart';
 import '/core/theme/icons.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:mobile/core/utils/error_handler.dart';
 class DaySelector extends StatefulWidget {
   final DateTime start;
   final DateTime end;
@@ -345,7 +345,7 @@ void showActivityDetailsModal(
                           ),
                         );
                       } catch (e) {
-                        debugPrint('Nie udało się pobrać biletu: $e');
+                        handleError(context, e, userMessage: 'Nie udało się pobrać biletu.');
                       }
                     },
                     icon: const Icon(

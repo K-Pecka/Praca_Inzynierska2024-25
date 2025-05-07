@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/utils/error_handler.dart';
 import '../../../core/widgets/bottom_navigation_scaffold.dart';
 import '../widgets/auth_widgets.dart';
 import '../../../core/services/auth_service.dart';
@@ -61,9 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Błąd logowania: ${e.toString()}')),
-      );
+      if (mounted) {
+        handleError(context, e, userMessage: 'Błąd logowania. Spróbuj ponownie.');
+      }
     } finally {
       setState(() => _isLoading = false);
     }

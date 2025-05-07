@@ -6,6 +6,7 @@ import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/services/chat_service.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/utils/error_handler.dart';
 import '../widgets/chat_input_field.dart';
 import '../widgets/message_bubble.dart';
 
@@ -90,10 +91,10 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
     } catch (e) {
-      setState(() => _isLoading = false);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Błąd ładowania: $e")));
+      if (mounted) {
+        setState(() => _isLoading = false);
+        handleError(context, e, userMessage: 'Nie udało się załadować danych.');
+      }
     }
   }
 

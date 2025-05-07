@@ -6,7 +6,7 @@ import '../../../core/theme/themes.dart';
 import '../../../core/widgets/menu_screen.dart';
 import '/core/models/trip_model.dart';
 import '../widgets/dashboard_widgets.dart';
-
+import 'package:mobile/core/utils/error_handler.dart';
 class TouristDashboard extends StatefulWidget {
   final int userProfileId;
   final TripModel trip;
@@ -56,7 +56,10 @@ class _TouristDashboardState extends State<TouristDashboard> {
         _isLoading = false;
       });
     } catch (e) {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+        handleError(context, e, userMessage: 'Nie udało się pobrać listy wycieczek.');
+      }
     }
   }
 

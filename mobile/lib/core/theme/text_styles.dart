@@ -71,4 +71,10 @@ class TextStyles {
     fontSize: 24,
     color: AppColors.primary,
   );
+
+  static const TextStyle errorMessage = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 18,
+    color: Colors.white,
+  );
 }

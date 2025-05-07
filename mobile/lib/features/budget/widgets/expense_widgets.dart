@@ -1,12 +1,13 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../core/models/expense_model.dart';
-import '../../../core/services/budget_service.dart';
-import '../../../core/theme/icons.dart';
-import '../../../core/theme/themes.dart';
-import '../../../core/widgets/custom_expense_input_field.dart';
-import '../../../core/theme/text_styles.dart';
+import 'package:mobile/core/models/expense_model.dart';
+import 'package:mobile/core/services/budget_service.dart';
+import 'package:mobile/core/theme/icons.dart';
+import 'package:mobile/core/theme/themes.dart';
+import 'package:mobile/core/widgets/custom_expense_input_field.dart';
+import 'package:mobile/core/theme/text_styles.dart';
+import 'package:mobile/core/utils/error_handler.dart';
 
 class ExpenseTile extends StatefulWidget {
   final ExpenseModel expense;
@@ -110,7 +111,7 @@ class _ExpenseTileState extends State<ExpenseTile> {
                       );
                       widget.onDeleted();
                     } catch (e) {
-                      debugPrint('Błąd usuwania: $e');
+                      handleError(context, e, userMessage: 'Nie udało się usunąć wydatku.');
                     }
                   },
                   icon: const Icon(Icons.delete, color: Colors.white),
@@ -264,9 +265,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
         context,
       ).showSnackBar(const SnackBar(content: Text('Wydatek dodany')));
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Błąd dodawania: $e')));
+      handleError(context, e, userMessage: 'Nie udało się dodać elementu.');
     }
 
     _formKey.currentState!.reset();

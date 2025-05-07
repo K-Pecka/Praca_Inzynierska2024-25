@@ -8,4 +8,5 @@ class AppColors {
   static const Color subtitleText = Colors.black54;
   static const Color screenBackground = Colors.white;
   static const Color logout = Colors.red;
+  static const Color errorBackground = Colors.red;
 }

@@ -3,6 +3,7 @@ import 'package:mobile/features/chat/screens/private_chat_screen.dart';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/services/chat_service.dart';
+import '../../../core/utils/error_handler.dart';
 import '../../../core/widgets/base_screen.dart';
 import 'announcement_channel_screen.dart';
 import '../widgets/chat_tile.dart';
@@ -41,13 +42,18 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
         final bDate = DateTime.tryParse(b.lastMessage?.created ?? '') ?? DateTime(2000);
         return bDate.compareTo(aDate);
       });
+
+      if (!mounted) return;
+
       setState(() {
         chatrooms = rooms;
         isLoading = false;
       });
     } catch (e) {
-      setState(() => isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Błąd ładowania: $e')));
+      if (mounted) {
+        setState(() => isLoading = false);
+        handleError(context, e, userMessage: 'Nie udało się załadować czatów.');
+      }
     }
   }
 

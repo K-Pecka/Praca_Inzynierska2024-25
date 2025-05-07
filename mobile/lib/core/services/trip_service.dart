@@ -40,24 +40,7 @@ class TripService {
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      final trips = data.map((e) => TripModel.fromJson(e)).toList();
-
-      for (final trip in trips) {
-        for (int i = 0; i < trip.members.length; i++) {
-          final member = trip.members[i];
-          try {
-            final enriched = await _fetchUserInfoByProfileId(member.id);
-            trip.members[i] = member.copyWith(
-              email: enriched.email,
-              firstName: enriched.firstName,
-              lastName: enriched.lastName,
-            );
-          } catch (e) {
-          }
-        }
-      }
-
-      return trips;
+      return data.map((e) => TripModel.fromJson(e)).toList();
     } else {
       throw Exception('Błąd podczas pobierania wycieczek');
     }
@@ -67,38 +50,20 @@ class TripService {
     final trips = await getAllTrips();
 
     return trips.firstWhere(
-          (trip) => trip.id == tripId,
-      orElse: () => trips.isNotEmpty
-          ? trips.first
-          : TripModel(
-        id: -1,
-        name: 'Brak',
-        creator: Member(id: 0, email: 'brak@brak.pl'),
-        members: [],
-        startDate: DateTime.now(),
-        endDate: DateTime.now(),
-        isCreator: false,
-      ),
+      (trip) => trip.id == tripId,
+      orElse:
+          () =>
+              trips.isNotEmpty
+                  ? trips.first
+                  : TripModel(
+                    id: -1,
+                    name: 'Brak',
+                    creator: Member(id: 0, email: 'brak@brak.pl'),
+                    members: [],
+                    startDate: DateTime.now(),
+                    endDate: DateTime.now(),
+                    isCreator: false,
+                  ),
     );
-  }
-
-  static Future<Member> _fetchUserInfoByProfileId(int profileId) async {
-    final url = Uri.parse('$_baseUrl/user/user/by-profile/$profileId/');
-    final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${AuthService.accessToken}',
-      'accept': 'application/json',
-    });
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return Member(
-        id: profileId,
-        email: data['email'],
-        firstName: data['first_name'],
-        lastName: data['last_name'],
-      );
-    } else {
-      throw Exception('Błąd pobierania użytkownika $profileId');
-    }
   }
 }
