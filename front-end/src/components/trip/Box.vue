@@ -69,11 +69,19 @@ import {BudgetContent} from "@/components";
       order: props.set.order,
     }"
   >
+<<<<<<< Updated upstream
     <v-card-title class="text-h5 font-weight-bold py-4 px-0 d-flex align-center">
       <v-icon class="mr-2" color="primary">{{ `${props.icon}` }}</v-icon>
       {{ props.title }}
     </v-card-title>
     <v-card-text class="px-0 py-0 text-h5 font-weight-bold">
+=======
+    <v-card-title class="text-h5 font-weight-bold py-4 d-flex align-center">
+      <v-icon class="mr-2" color="primary">{{ `${props.icon}` }}</v-icon>
+      {{ props.title }}
+    </v-card-title>
+    <v-card-text class="text-h5 font-weight-bold">
+>>>>>>> Stashed changes
       <template v-if="Array.isArray(props.content)">
         <v-list v-if="props.content.length > 0">
           <v-list-item v-for="(item, index) in props.content" :key="index">

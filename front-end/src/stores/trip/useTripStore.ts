@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { defineStore } from "pinia";
 import { useParticipants } from "./useParticipants";
 import { useDashboard } from "./useDashboard";
@@ -19,9 +20,17 @@ export const useTripStore = defineStore("trip", () => {
   const { tripMutationBudget, createExpense, getExpensByTrip } =
     useBudget(getTripId);
   const { getPlans, yourPlans, planMutationAdd, handleDeleteItinerary } = usePlans(getTripId);
+=======
+import {useMutation, useQueryClient} from "@tanstack/vue-query";
+import {fetchAddParticipant, fetchRemoveParticipant} from "@/api";
+import {useNotificationStore} from "@/stores";
+>>>>>>> Stashed changes
 
-  const { addParticipant, removeParticipant } = useParticipants();
+export const useTripStore = () => {
+    const queryClient = useQueryClient();
+    const notifications = useNotificationStore();
 
+<<<<<<< Updated upstream
   const { getTickets } = useTicketStore();
   return {
     dashboard: {
@@ -59,54 +68,39 @@ export const useTripStore = defineStore("trip", () => {
 // import { useTrips } from "./useTrips";
 // import { useBudget } from "./useBudget";
 // import { useTicketStore } from "@/stores";
+=======
+    const addParticipantMutation = useMutation({
+        mutationFn: ({idTrip, participant}: {
+            idTrip: number, participant: { name: string, email: string }
+        }) => fetchAddParticipant(idTrip, participant),
+        onSuccess: (idTrip) => {
+            notifications.setSuccessCurrentMessage("Dodano uczestnika");
+            queryClient.invalidateQueries({queryKey: ["trip", String(idTrip)]});
+        },
+        onError: (err: any) =>
+            notifications.setErrorCurrentMessage(err.message || "Błąd"),
+    });
+>>>>>>> Stashed changes
 
-// export const useTripStore = defineStore("trip", () => {
-//   // Dashboard
-//   const { getDashboard, getExpenseItem } = useDashboard();
+    const removeParticipantMutation = useMutation({
+        mutationFn: ({idTrip, idParticipant}: {
+            idTrip: number; idParticipant: number;
+        }) => fetchRemoveParticipant(idTrip, idParticipant),
+        onSuccess: (idTrip) => {
+            notifications.setSuccessCurrentMessage("Usunięto uczestnika");
+            queryClient.invalidateQueries({queryKey: ["trip", String(idTrip)]});
+        },
+        onError: (err: any) =>
+            notifications.setErrorCurrentMessage(err.message || "Błąd"),
+    });
 
-//   // Plans
-//   const { getPlans, yourPlans, addPlan } = usePlans();
+    const addParticipant = (
+        idTrip: number,
+        participant: { name: string; email: string }
+    ) => addParticipantMutation.mutateAsync({idTrip, participant});
 
-//   // Trips
-//   const { yourTrips, getTripDetails, getTrips, addTrip, updateTrip } = useTrips();
+    const removeParticipant = (idTrip: number, idParticipant: number) =>
+        removeParticipantMutation.mutateAsync({idTrip, idParticipant});
 
-//   // Participants
-//   const { addParticipant, removeParticipant } = useParticipants();
-
-//   // Budget
-//   const { addExpense, getExpenses, budgetMutation } = useBudget();
-
-//   // Tickets
-//   const { getTickets } = useTicketStore();
-
-//   return {
-//     dashboard: {
-//       getDashboard,
-//       getExpenseItem,
-//     },
-//     plans: {
-//       getPlans,
-//       yourPlans,
-//       addPlan,
-//     },
-//     trips: {
-//       yourTrips,
-//       getTripDetails,
-//       getTrips,
-//       addTrip,
-//       updateTrip,
-//     },
-//     participants: {
-//       addParticipant,
-//       removeParticipant,
-//     },
-//     budget: {
-//       addExpense,
-//       getExpenses,
-//       budgetMutation,
-//     },
-//     tickets: {
-//       getTickets,
-//     },
-//   };
-// });
+    return {addParticipant, removeParticipant};
+};

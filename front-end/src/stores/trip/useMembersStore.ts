@@ -52,5 +52,6 @@ export const useMembersStore = defineStore("tripDetails", () => {
 
   return {
     members,
+    getUserById,
   };
 });

@@ -48,7 +48,7 @@ const props = defineProps<{
         <v-card class="trip-card background-secondary rounded-lg pa-5 flex-wrap" elevation="4">
           <v-row>
             <v-col cols="12" sm="8" md="9" lg="10">
-              <v-card-title class="text-h6 font-weight-bold pa-0">
+              <v-card-title class="text-h4 font-weight-bold pa-0">
                 {{ trip.name }}
               </v-card-title>
               <v-card-subtitle class="px-0 pb-1 font-weight-medium">

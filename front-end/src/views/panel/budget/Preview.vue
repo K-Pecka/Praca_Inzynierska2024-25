@@ -1,26 +1,45 @@
 <script setup lang="ts">
 import {ExpensesList, Section, HeaderSection, ExpenseForm, BudgetContent, AppButton, AppCard} from "@/components";
+<<<<<<< Updated upstream
 import {useTripStore} from "@/stores/trip/useTripStore";
 import {budget as budgetCategory} from "@/data/category/budget";
 import {computed, ref} from "vue";
 import {useMembersStore} from "@/stores/trip/useMembersStore"
 import {Expense} from "@/types";
+=======
+import {useTripStore} from "@/stores";
+import {budget as budgetCategory} from "@/data/category/budget";
+import {computed, ref} from "vue";
+import {useMembersStore} from "@/stores/trip/useMembersStore"
+>>>>>>> Stashed changes
 
 const {members: membersStore} = useMembersStore();
 const members = computed(() => membersStore)
 const {budget: budgetStore, trip: tripStore} = useTripStore();
+<<<<<<< Updated upstream
 const {getExpensByTrip} = budgetStore;
 
 const {getTripDetails} = tripStore;
 const {trip} = getTripDetails();
 const {expensesByTrip: expenses} = getExpensByTrip();
+=======
+const {getExpensesByTrip} = budgetStore;
+
+const {getTripDetails} = tripStore;
+const {trip} = getTripDetails();
+const {expensesByTrip: expenses} = getExpensesByTrip();
+>>>>>>> Stashed changes
 
 const budget = computed(() => Number(trip.value?.budget_amount) ?? 0);
 const budgetCurrency = computed(() => "PLN");
 
 const spent = computed(() => {
   return (
+<<<<<<< Updated upstream
       expenses.value?.reduce((acc, expense) => Number(acc) + Number(expense.converted_amount), 0) ?? 0
+=======
+      expenses.value?.reduce((acc, expense) => Number(acc) + Number(expense.amount), 0) ?? 0
+>>>>>>> Stashed changes
   );
 });
 

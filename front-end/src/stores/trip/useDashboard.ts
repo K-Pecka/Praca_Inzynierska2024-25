@@ -14,7 +14,6 @@ function formatPL(dateString: string) {
 
 export const useDashboard = (tripId: Function) => {
     const {getRole} = useRoleStore();
-    const {getExpensByTrip} = useBudget(tripId);
     const {getTripDetails} = useTrips(tripId);
 
     const getSpecialSectionName = () => sectionDashboard(getRole());
@@ -23,14 +22,17 @@ export const useDashboard = (tripId: Function) => {
     const getDashboard = () => {
 
         const {trip, isLoading_trip, error_trip} = getTripDetails(tripId());
-        const {expensesByTrip} = getExpensByTrip(tripId());
         const tripTime = computed(() => {
             if (!trip.value) return "...";
             return `${formatPL(trip.value.start_date)} - ${formatPL(
                 trip.value.end_date
             )}`;
         });
+<<<<<<< Updated upstream
         const budget = computed(() => `${trip.value?.budget_amount ?? "..."}`);
+=======
+
+>>>>>>> Stashed changes
         const members = computed(() => [...trip.value?.members ?? [], ...trip.value?.pending_members ?? []]);
         const participantCount = computed(
             () => `${members.value.length ?? 0} ${members.value.length == 1 ? "Uczestnik" : "Uczestników"}`
@@ -45,8 +47,12 @@ export const useDashboard = (tripId: Function) => {
         }));
 
         const tripName = computed(() => trip.value?.name ?? "...");
+<<<<<<< Updated upstream
 
         const expenses = computed(() => expensesByTrip.value?.reduce((acc, expense) => Number(acc) + Number(expense.converted_amount), 0) ?? 0);
+=======
+        
+>>>>>>> Stashed changes
         const boxes = computed(() => [
             {
                 title: "Czas trwania",
@@ -61,11 +67,14 @@ export const useDashboard = (tripId: Function) => {
             {
                 title: "Budżet",
                 icon: "mdi-currency-usd",
+<<<<<<< Updated upstream
                 content: {
                     expenses: expenses.value,
                     amount: Number(budget.value),
                     currency: "PLN"
                 },
+=======
+>>>>>>> Stashed changes
                 set: {
                     order: 2,
                     size: {xs: {col: 12, row: 1}, sm: {col: 12, row: 1}, md: {col: 6, row: 1}, lg: {col: 3, row: 1}}
