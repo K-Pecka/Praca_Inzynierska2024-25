@@ -1,16 +1,13 @@
 <script lang="ts" setup>
-import { defineProps } from "vue";
 import { DashboardBox } from "@/types/interface";
 import BudgetContent from "@/components/ui/BudgetContent.vue";
 const props = defineProps<DashboardBox>();
-console.log("hej",typeof props.content);
-console.log("hej");
 </script>
 
 <template>
   <v-card
     class="pa-4 rounded-lg"
-    elevation="3"
+    elevation="4"
     :style="{
       gridColumn: `span ${12}`,
       gridRow: `span ${2}`,
@@ -42,7 +39,3 @@ console.log("hej");
     </v-card-text>
   </v-card>
 </template>
-
-<script lang="ts" setup>
-import BudgetContent from "@/components/BudgetContent.vue";
-</script>

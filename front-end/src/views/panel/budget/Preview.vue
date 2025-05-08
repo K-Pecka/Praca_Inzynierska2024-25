@@ -1,24 +1,26 @@
 <script setup lang="ts">
-import { ExpensesList,Section,HeaderSection,ExpenseForm,BudgetContent,AppButton,AppCard } from "@/components";
-import { useTripStore } from "@/stores/trip/useTripStore";
-import { budget as budgetCategory } from "@/data/category/budget";
-import { computed, ref } from "vue";
+import {ExpensesList, Section, HeaderSection, ExpenseForm, BudgetContent, AppButton, AppCard} from "@/components";
+import {useTripStore} from "@/stores/trip/useTripStore";
+import {budget as budgetCategory} from "@/data/category/budget";
+import {computed, ref} from "vue";
 import {useMembersStore} from "@/stores/trip/useMembersStore"
-const {members:membersStore} =useMembersStore();
-const members = computed(()=>membersStore)
-const { budget:budgetStore, trip:tripStore } = useTripStore();
+import {Expense} from "@/types";
+
+const {members: membersStore} = useMembersStore();
+const members = computed(() => membersStore)
+const {budget: budgetStore, trip: tripStore} = useTripStore();
 const {getExpensByTrip} = budgetStore;
 
 const {getTripDetails} = tripStore;
-const {  trip } = getTripDetails();
-const { expensesByTrip:expenses } = getExpensByTrip();
+const {trip} = getTripDetails();
+const {expensesByTrip: expenses} = getExpensByTrip();
 
 const budget = computed(() => Number(trip.value?.budget_amount) ?? 0);
 const budgetCurrency = computed(() => "PLN");
 
 const spent = computed(() => {
   return (
-    expenses.value?.reduce((acc, expense) => Number(acc) + Number(expense.converted_amount), 0) ?? 0
+      expenses.value?.reduce((acc, expense) => Number(acc) + Number(expense.converted_amount), 0) ?? 0
   );
 });
 
@@ -57,6 +59,7 @@ const filter = () => {
   };
   showFilters.value = false;
 };
+
 </script>
 
 <template>
@@ -148,7 +151,22 @@ const filter = () => {
             <span>Wydatki - Kategorie</span>
           </AppCard>
           <AppCard cols="6">
-            <span>Wydatki - Uczestnicy</span>
+            <v-row no-gutters>
+              <span>Wydatki - Uczestnicy</span>
+              <v-col
+                  v-if="expenses"
+                  v-for="partition in [{}, {}]"
+              >
+                <p>
+                  <span>
+                    {{ partition }}
+                  </span>
+                  <span>
+                    {{ partition }}
+                  </span>
+                </p>
+              </v-col>
+            </v-row>
           </AppCard>
         </v-row>
       </v-col>

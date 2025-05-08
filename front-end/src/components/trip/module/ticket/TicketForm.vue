@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from "vue";
+import { ref, computed } from "vue";
 import AppButton from "@/components/AppButton.vue";
 import { VTimePicker } from 'vuetify/labs/VTimePicker'
 import { VDateInput } from "vuetify/labs/components";
 import { ticketCategory } from "@/data/category/ticket";
-import { User } from "@/types";
 const emit = defineEmits(["submitTicket", "cancelForm"]);
 
 const form = ref({

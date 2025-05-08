@@ -55,8 +55,4 @@ defineProps({
   height: 100%;
   border-radius: 1.5rem;
 }
-
-.backgroud-card {
-  background-color: rgb(var(--v-theme-background));
-}
 </style>

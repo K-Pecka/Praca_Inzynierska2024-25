@@ -3,7 +3,6 @@ import { computed, ref } from "vue";
 import {useActivityStore} from "@/stores/trip/useActivityStore";
 import AppButton from "@/components/AppButton.vue";
 import { VTimePicker } from "vuetify/labs/VTimePicker";
-import { defineEmits } from "vue";
 
 const emit = defineEmits(["submitActivity", "cancelForm"]);
 

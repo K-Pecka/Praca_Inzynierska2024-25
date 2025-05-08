@@ -31,7 +31,6 @@ const props = defineProps<{
   plans: any;
   btn: any;
 }>();
-console.log(props.plans);
 </script>
 
 <template>
@@ -57,7 +56,7 @@ console.log(props.plans);
               </v-card-subtitle>
               <v-card-text class="pa-0 font-weight-medium">
                 {{ formatPL(trip.start_date) }} - {{ formatPL(trip.end_date) }}
-                <span class="color-accent ml-2">{{ trip.activities_count || 0 }} aktywności</span>
+                <span class="color-accent ml-2">{{ trip.activity_count}} aktywności</span>
               </v-card-text>
             </v-col>
 

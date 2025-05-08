@@ -62,7 +62,7 @@ export interface Expense {
   user: number;
   category: number;
   note?: string;
-  username?: string;
+  username: string;
   converted_amount?: string;
 }
 export interface Trip {

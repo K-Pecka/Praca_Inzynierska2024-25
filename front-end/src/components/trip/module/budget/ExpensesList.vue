@@ -7,6 +7,7 @@ const { expenses, variant, config, limit } = defineProps<{
   variant?: "manage" | "view";
   config?: Record<string, any>;
   limit?: number;
+  noIcon?: boolean;
 }>();
 
 function convertToDate(dateStr: string): number {
@@ -46,6 +47,7 @@ const visibleExpenses = computed(() => {
     <ExpenseItem
       v-for="(expense, index) in visibleExpenses"
       :key="index"
+      :no-icon="noIcon"
       :expense="expense"
       :variant="variant"
     />

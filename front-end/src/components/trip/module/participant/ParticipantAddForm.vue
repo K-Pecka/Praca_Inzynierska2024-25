@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {defineProps, defineEmits, ref} from "vue";
+import {ref} from "vue";
 import AppButton from "@/components/AppButton.vue";
 
 const props = defineProps<{ title?: string }>();
