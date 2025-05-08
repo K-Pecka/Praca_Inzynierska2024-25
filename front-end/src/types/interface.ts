@@ -207,7 +207,7 @@ export interface BudgetData {
 }
 export interface Activity {
   id: number;
-  type: string;
+  type: number;
   name: string;
   date: string;
   start_time?: string;
@@ -223,4 +223,9 @@ export interface User {
   email?: string;
   name?: string;
   is_guest?: boolean;
+}
+
+export interface ActivityType {
+  id: number;
+  name: string;
 }

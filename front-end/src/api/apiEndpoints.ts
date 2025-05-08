@@ -104,6 +104,9 @@ export const apiEndpoints = {
     delete: `${hostName}/trip/:tripId/activity/:activityId/delete/`,
     create: `${hostName}/trip/:tripId/itinerary/:planId/activities/create/`,
   },
+  activityType: {
+    all: `${hostName}/trip/:tripId/itinerary/activity-types/all/`,
+  },
   ticket: {
     create: `${hostName}/trip/ticket/create/`,
     all: `${hostName}/trip/:tripId/ticket/all/`,

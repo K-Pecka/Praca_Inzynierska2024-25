@@ -48,8 +48,8 @@ const {trip} = getTripDetails();
                   width="300px"
                   height="height-auto"
                   fontSize="font-auto"
+                  text="Dodaj plan podróży"
               >
-                Dodaj plan podróży
               </AppButton>
             </router-link>
           </v-row>

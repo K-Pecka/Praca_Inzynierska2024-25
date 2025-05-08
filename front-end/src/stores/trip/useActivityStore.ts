@@ -3,26 +3,17 @@ import { ref, computed } from "vue";
 import { useMutation, useQuery } from "@tanstack/vue-query";
 import { createActivity } from "@/api/endpoints/trip/activity";
 import { useNotificationStore } from "@/stores";
-import { fetchActivity } from "@/api/endpoints/trip/activity";
-import { Activity } from "@/types/interface";
+import { fetchActivity, fetchActivityTypes } from "@/api/endpoints/trip/activity";
+import { Activity, ActivityType } from "@/types/interface";
 
-interface ActivityType {
-  value: number;
-  label: string;
-  icon: string;
-}
 
 export const useActivityStore = defineStore("activity", () => {
   const activities = ref<Activity[]>([]);
   const activeError = ref<boolean>(false);
   const { setErrorCurrentMessage, setSuccessCurrentMessage } =
     useNotificationStore();
-  const activityTypes = ref<ActivityType[]>([
-    { value: 1, label: "Zwiedzanie", icon: "mdi-binoculars" },
-    { value: 2, label: "Jedzenie", icon: "mdi-food" },
-    { value: 3, label: "Sport", icon: "mdi-basketball" },
-    { value: 4, label: "Relaks", icon: "mdi-beach" },
-  ]);
+  const activityTypes = ref<ActivityType[]>([]);
+
   //   const fetchActivity = async() => {
   //     return [
   //       {
@@ -111,6 +102,14 @@ export const useActivityStore = defineStore("activity", () => {
     },
   });
 
+  async function loadActivityTypes(tripId: string) {
+    const typesFromApi = await fetchActivityTypes(tripId);
+    activityTypes.value = typesFromApi.map(t => ({
+      id: t.id,
+      name: t.name,
+    }));
+  }
+
   return {
     getErrorStatus,
     setError,
@@ -120,5 +119,6 @@ export const useActivityStore = defineStore("activity", () => {
     addActivity,
     removeActivity,
     activitiesByDate,
+    loadActivityTypes
   };
 });
