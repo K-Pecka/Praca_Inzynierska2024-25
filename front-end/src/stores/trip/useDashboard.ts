@@ -2,9 +2,9 @@ import {computed} from "vue";
 import {useRoleStore} from "@/stores/auth/useRoleStore";
 import {Role} from "@/types/enum";
 
-import { sectionDashboard } from "@/data/section/sectionName";
-import { useBudget } from "./useBudget";
-import { useTrips } from "./useTrips";
+import {sectionDashboard} from "@/data/section/sectionName";
+import {useBudget} from "./useBudget";
+import {useTrips} from "./useTrips";
 
 function formatPL(dateString: string) {
     const dateObj = new Date(dateString);
@@ -12,7 +12,7 @@ function formatPL(dateString: string) {
     return new Intl.DateTimeFormat("pl-PL").format(dateObj);
 }
 
-export const useDashboard= (tripId:Function) => {
+export const useDashboard = (tripId: Function) => {
     const {getRole} = useRoleStore();
     const {getExpensByTrip} = useBudget(tripId);
     const {getTripDetails} = useTrips(tripId);
@@ -33,13 +33,15 @@ export const useDashboard= (tripId:Function) => {
         const budget = computed(() => `${trip.value?.budget_amount ?? "..."}`);
         const members = computed(() => [...trip.value?.members ?? [], ...trip.value?.pending_members ?? []]);
         const participantCount = computed(
-            () => `${members.value.length ?? 0} ${members.value.length==1? "Uczestnik" : "Uczestników"}`
+            () => `${members.value.length ?? 0} ${members.value.length == 1 ? "Uczestnik" : "Uczestników"}`
         );
 
         const activityCount = computed(() => ({
             icon: getRole() == Role.TURIST ? "mdi-clock-outline" : "mdi-email",
             title: getRole() == Role.TURIST ? "Aktywności" : "Wiadomości",
-            content: getRole() == Role.TURIST ? "0 Aktywności" : "0 Wiadomości",
+            content: getRole() === Role.TURIST
+                ? `${trip.value?.activity_count ?? 0} Aktywności`
+                : "Wiadomości",
         }));
 
         const tripName = computed(() => trip.value?.name ?? "...");
