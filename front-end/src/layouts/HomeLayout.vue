@@ -36,23 +36,9 @@ const footerData = computed(() => useStore.getFooterData());
   position: relative;
   z-index: 2;
 }
-.wrapper {
-  position: relative;
-  overflow-x: hidden;
-}
+
 main {
   width: 90%;
 }
-.wrapper::after {
-  content: "";
-  display: none;
-  width: 50%;
-  height: 50%;
-  border-radius: 50%;
-  background-color: rgb(var(--v-theme-secondary));
-  position: absolute;
-  top: -7vw;
-  right: -6vw;
-  z-index: 1;
-}
+
 </style>

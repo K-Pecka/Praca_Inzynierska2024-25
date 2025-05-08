@@ -1,85 +1,87 @@
 <script setup lang="ts">
-import {useTripStore} from "@/stores/trip/useTripStore";
-import {useRoute} from "vue-router";
-import AppButton from "@/components/budget/AppButton.vue";
-import {useUtilsStore} from "@/stores";
+import { useTripStore, useUtilsStore } from "@/stores";
+import AppButton from "@/components/AppButton.vue";
 import {images} from "@/data";
+useTripStore().initialize();
 
-useTripStore().initialize(useRoute().name as string);
-
-const {yourTrips} = useTripStore();
-const {data: trips} = yourTrips.trips()
-const {formatDatePolish} = useUtilsStore();
+const {formatDatePolish} = useUtilsStore()
+const {trip} = useTripStore();
+const {getTrips,deleteTrip} = trip
+const {trips, isLoading_trips} = getTrips();
 
 </script>
 
 <template>
-  <v-col cols="12">
-    <v-row class="trip-wrapper mx-auto w-100" dense>
+  <v-col cols="12" sm="10" md="10" lg="10" xl="10">
 
-      <!-- Header with button -->
-      <v-col v-if="trips && trips.length" cols="12" class="mb-4">
-        <v-row class="align-center">
-          <v-col cols="12" md="8" class="d-flex justify-center text-center text-md-start justify-md-start">
-            <span class="text-h4 font-weight-bold">
-              Zarządzaj wycieczkami
-            </span>
-          </v-col>
-          <v-col cols="12" md="4" class="text-md-right text-start d-flex justify-center justify-md-end">
-            <router-link :to="{ name: 'createTrip' }">
-              <v-btn
-                  text="Dodaj wycieczkę"
-                  variant="outlined"
-                  rounded="lg"
-                  class="create-trip-button text-none"
-              />
-            </router-link>
-          </v-col>
-        </v-row>
-      </v-col>
+    <!-- Header with button -->
+    <v-row
+        no-gutters
+        class="justify-space-between align-center mb-10"
+    >
+        <span class="text-h4 pb-4 font-weight-bold">
+          Zarządzaj wycieczkami
+        </span>
+      <router-link :to="{ name: 'createTrip' }">
 
-      <!-- Trip cards -->
-      <v-col v-if="trips && trips.length" cols="12" md="6" v-for="trip in trips" :key="trip.id" class="pa-4">
-        <v-card rounded="xl" elevation="4" class="trip-box">
-          <v-row class="pa-4" align="center" justify="space-around" no-gutters>
+        <AppButton
+            color="empty"
+            height-auto
+            font-auto
+            text="Dodaj wycieczkę"
+        />
+      </router-link>
+    </v-row>
 
-            <!-- Image -->
-            <v-col cols="12" sm="4" class="text-center pr-5">
+    <!-- Trip cards -->
+    <v-row v-if="trips">
+      <v-col
+          v-if="trips.length > 0"
+          v-for="trip in trips" :key="trip.id"
+          cols="12"
+          sm="6"
+          md="4"
+      >
+        <v-card class="rounded-xl background-secondary d-flex justify-center">
+          <v-card-text>
+            <v-row no-gutters justify="space-around" align="center">
+
+              <!-- Card image -->
               <v-img
                   :src="images.backgrounds.trip.img"
                   :alt="images.backgrounds.trip.alt"
-                  class="trip-image"
                   aspect-ratio="1"
-                  cover
+                  width="auto"
+                  max-width="230px"
               />
-            </v-col>
 
-            <!-- Trip Info -->
-            <v-col cols="auto">
-              <v-row class="flex-column align-center pa-2">
-                <v-card-title class="font-weight-bold pt-0">{{ trip.name }}</v-card-title>
+              <!-- Trip Info -->
+              <v-card-actions class="flex-column" style="max-width: 220px;">
+                <v-card-title class="font-weight-bold">{{ trip.name }}</v-card-title>
                 <v-card-subtitle class="font-weight-medium pb-6">
                   {{ formatDatePolish(trip.start_date) }} - {{ formatDatePolish(trip.end_date) }}
                 </v-card-subtitle>
 
+                <!-- Buttons -->
                 <AppButton
                     :to="{ name: 'panel', params: { tripId: trip.id } }"
-                    class="trip-button w-100 mb-1"
-                    variant="primary"
-                >
-                  Zarządzaj wycieczką
-                </AppButton>
+                    color="primary"
+                    height-auto
+                    stretch
+                    text="Zarządzaj wycieczką"
+                />
 
                 <AppButton
                     to=""
-                    class="trip-button w-100"
-                    variant="accent"
-                >
-                  Usuń wycieczkę
-                </AppButton>
-              </v-row>
-            </v-col>
-          </v-row>
+                    color="accent"
+                    height-auto
+                    stretch
+                    text="Usuń wycieczkę"
+                />
+
+              </v-card-actions>
+            </v-row>
+          </v-card-text>
         </v-card>
       </v-col>
 
@@ -98,11 +100,9 @@ const {formatDatePolish} = useUtilsStore();
           />
           <router-link :to="{ name: 'createTrip' }">
             <AppButton
-                variant="secondary"
-                class="trip-button"
-            >
-              Dodaj wycieczkę
-            </AppButton>
+                color="secondary"
+                text="Dodaj wycieczkę"
+            />
           </router-link>
         </v-row>
       </v-col>
@@ -115,32 +115,12 @@ const {formatDatePolish} = useUtilsStore();
 @use "@/assets/styles/variables" as *;
 
 .text-h4 {
-  color: $primary-color;
-}
-
-.trip-button {
-  font-size: clamp(0.4em, 0.6vw + 0.45em, 1em);
-}
-
-.trip-box {
-  background-color: $background-secondary;
-}
-
-.preview-trip-button {
-  background-color: $primary-color;
-}
-
-.delete-trip-button {
-  background-color: $accent-color;
-}
-
-.trip-wrapper {
-  max-width: 80%;
+  color: rgb($primary-color);
 }
 
 .empty-header {
   font-size: clamp(0.9em, 1.5vw + 0.8em, 2.3em);
-  color: $primary-color;
+  color: rgb($primary-color);
 }
 
 .empty-trip-image {

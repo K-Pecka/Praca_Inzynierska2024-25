@@ -56,7 +56,7 @@ const getGridRows = () => {
   return size[breakpoint]?.row || size.lg?.row || 1;
 };
 
-import BudgetContent from "@/components/ui/BudgetContent.vue";
+import {BudgetContent} from "@/components";
 </script>
 
 <template>
@@ -90,7 +90,7 @@ import BudgetContent from "@/components/ui/BudgetContent.vue";
             props.content !== null &&
             !Array.isArray(props.content)
           "
-          :content="props.content"
+          v-bind="{ content: props.content, showCurrency: true }"
         />
       </template>
       <template v-else>

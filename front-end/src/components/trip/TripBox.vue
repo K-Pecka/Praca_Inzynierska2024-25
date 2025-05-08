@@ -21,7 +21,7 @@ const props = defineProps({
     type: Object as () => Image,
   }
 });
-console.log(props);
+//console.log(props);
 </script>
 
 <template>

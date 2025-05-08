@@ -1,4 +1,4 @@
-import pycountry
+from django.shortcuts import get_object_or_404
 
 from rest_framework import serializers
 
@@ -66,15 +66,22 @@ class ExpenseCreateSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
     category = serializers.PrimaryKeyRelatedField(queryset=ExpenseType.objects.all())
 
-    def validate_date(self, value):
+    def validate(self, data):
         view = self.context['view']
         trip_pk = view.kwargs.get('trip_pk')
-        trip = Trip.objects.get(pk=trip_pk)
+        trip = get_object_or_404(Trip, pk=trip_pk)
         if not trip:
             raise serializers.ValidationError("Nie znaleziono wycieczki o podanym id.")
-        if value < trip.start_date or value > trip.end_date:
+
+        date = data['date']
+        if date < trip.start_date or date > trip.end_date:
             raise serializers.ValidationError("Data wydatku musi być w zakresie daty wycieczki.")
-        return value
+
+        access_tokens = trip.access_tokens.filter(is_pending=False)
+        members = [access_token.user_profile for access_token in access_tokens]
+        if data['user'] not in members:
+            raise serializers.ValidationError("Użytkownik nie jest uczestnikiem wycieczki")
+        return data
 
     def create(self, validated_data):
         view = self.context['view']

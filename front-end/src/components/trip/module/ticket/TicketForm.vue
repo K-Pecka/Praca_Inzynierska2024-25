@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import {ref, computed} from "vue";
-import {useTicketStore} from "@/stores/trip/useTicketStore";
-import AppButton from "@/components/budget/AppButton.vue";
-import {VTimePicker} from 'vuetify/labs/VTimePicker'
-import {VDateInput} from "vuetify/labs/components";
+import { ref, computed } from "vue";
+import AppButton from "@/components/AppButton.vue";
+import { VTimePicker } from 'vuetify/labs/VTimePicker'
+import { VDateInput } from "vuetify/labs/components";
 import { ticketCategory } from "@/data/category/ticket";
-
 const emit = defineEmits(["submitTicket", "cancelForm"]);
 
 const form = ref({
@@ -30,7 +28,7 @@ function submitTicket() {
     ...form.value,
     date: form.value.date ? formatDateToYYYYMMDD(form.value.date) : new Date("YYYY-MM-DD").getDate(),
   };
-  console.log("Payload", payload);
+  //console.log("Payload", payload);
   emit("submitTicket", payload);
 
   form.value = {
@@ -45,10 +43,16 @@ function submitTicket() {
 
 const timeMenu = ref(false);
 
+defineProps<{
+  members: {name:string,userId:number}[];
+}>();
 </script>
 
 <template>
-  <v-card class="ticket-form pa-4 mt-4">
+  <v-card
+      class="pa-4 mt-4 background-secondary rounded-lg"
+      elevation="4"
+  >
     <v-card-title>Dodaj nowy bilet</v-card-title>
 
     <v-card-text>
@@ -121,13 +125,15 @@ const timeMenu = ref(false);
           </v-text-field>
         </v-col>
 
-
         <v-col cols="12" lg="6" md="12" class="tight-col">
           <v-select
               v-model="form.assignedTo"
               label="Przypisz do osoby (Opcjonalnie)"
               variant="outlined"
-              :items="['Jan', 'Anna', 'Piotr']"
+              :disabled="members.length === 0"
+              :items="members"
+              item-title="name"
+              item-value="userId"
               chips
               clearable
               multiple
@@ -154,29 +160,23 @@ const timeMenu = ref(false);
     </v-card-text>
 
     <v-card-actions class="form-actions">
-      <AppButton variant="secondary"
-                 @click="$emit('cancelForm')">
-        Anuluj
-      </AppButton>
-      <AppButton variant="primary" @click="submitTicket">
-        Dodaj
-      </AppButton>
+      <AppButton
+          color="accent"
+          text="Anuluj"
+          @click="$emit('cancelForm')"
+      />
+      <AppButton
+          color="primary"
+          text="Dodaj"
+          @click="submitTicket"
+      />
     </v-card-actions>
   </v-card>
 </template>
 
 
 <style scoped lang="scss">
-.ticket-form {
-  background-color: rgb(var(--v-theme-secondary), 0.5);
-  border-radius: 1rem;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  margin: 0 auto;
-
-  @media (max-width: 600px) {
-    padding: 0.5rem !important;
-  }
-}
+@use "@/assets/styles/variables" as *;
 
 .form-actions {
   gap: 1rem;

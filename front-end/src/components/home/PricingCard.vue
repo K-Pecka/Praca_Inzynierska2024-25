@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppButton from "@/components/budget/AppButton.vue";
+import AppButton from "@/components/AppButton.vue";
 import { PricingCard } from "@/types/interface";
 
 defineProps<PricingCard>();
@@ -33,7 +33,11 @@ defineProps<PricingCard>();
       </v-list-item>
     </v-list>
 
-    <AppButton :variant="buttonVariant" width="150px">Wybierz</AppButton>
+    <AppButton
+        :color="buttonVariant"
+        max-width="150px"
+        text="Wybierz"
+    />
   </v-card>
 </template>
 

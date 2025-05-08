@@ -43,12 +43,11 @@ watch(
   background-color: rgb(var(--v-theme-background));
 }
 .application--wrap{
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 .text-primary {
- color: $primary-color
+ color: rgb($primary-color)
 }
 </style>

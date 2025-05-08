@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import ParticipantItem from "./ParticipantItem.vue";
-import { Participant} from "@/types";
+import { User } from "@/types";
 
 const props = defineProps<{
-  participants: Participant[];
+  participants: User[];
 }>();
 
 const emit = defineEmits<{
@@ -21,8 +21,8 @@ console.log(props.participants)
   <div class="participant-list">
     <ParticipantItem
         v-for="participant in participants"
-        :key="participant.id"
-        v-bind="participant"
+        :key="participant.userId"
+        :user="participant"
         @remove="handleRemove"
     />
   </div>

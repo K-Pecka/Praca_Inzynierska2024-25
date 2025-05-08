@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {defineProps, defineEmits, ref} from "vue";
-import AppButton from "@/components/budget/AppButton.vue";
+import {ref} from "vue";
+import AppButton from "@/components/AppButton.vue";
 
 const props = defineProps<{ title?: string }>();
 
@@ -38,8 +38,16 @@ function handleCancel() {
     </div>
 
     <div class="form-buttons pt-3">
-      <AppButton variant="secondary" @click="handleCancel">Anuluj</AppButton>
-      <AppButton variant="primary" @click="handleSubmit">Dodaj</AppButton>
+      <AppButton
+          color="secondary"
+          text="Anuluj"
+          @click="handleCancel"
+      />
+      <AppButton
+          color="primary"
+          text="Dodaj"
+          @click="handleSubmit"
+      />
     </div>
   </div>
   </div>

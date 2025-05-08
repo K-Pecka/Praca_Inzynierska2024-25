@@ -2,19 +2,14 @@ import { defineStore } from "pinia";
 import { useRoute } from "vue-router";
 import router from "@/router";
 import { computed } from "vue";
-import { budget } from "@/data/category/budget"; // Adjust the import to match the correct export
+import { budget } from "@/data/category/budget";
 export const useUtilsStore = defineStore("utils", () => {
   const route = useRoute();
   const useRouter = () => router;
-  const getTripId = () => {
-    return computed<string>(() => {
-      const tripId = route.params?.tripId;
-      return Array.isArray(tripId) ? tripId[0] : tripId;
-    });
-  };
-  const getCurrentPath = () => {
-    name: route.name;
-  };
+  const getTripId = ()=>{
+    const id = route.params.tripId;
+      return Number(Array.isArray(id) ? id[0] : id);
+  }
   const isCurrentRouteNotInSet = (RouteSet: string[]) =>
     computed(() => {
       return !RouteSet.includes(route.name as string);
@@ -42,7 +37,7 @@ export const useUtilsStore = defineStore("utils", () => {
     }
     return {
       name: "Unknown",
-      icon: "mdi-help-circle"
+      icon: "mdi-help-circle-outline"
     };
   };
   const  combineDateAndTime = (date: string, time: string): string => {
@@ -57,6 +52,14 @@ export const useUtilsStore = defineStore("utils", () => {
 
     return dateTime.toISOString();
   }
-  
-  return {combineDateAndTime,mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, getCurrentPath, formatDatePolish };
+  const safeDivision = (numerator: number, denominator: number, percent: boolean) => {
+    if (denominator === 0) {
+      return percent ? 100 : 0;
+    }
+    if(percent) {
+      return ((numerator / denominator) * 100).toFixed(2);
+    }
+    return (numerator / denominator).toFixed(2);
+  };
+  return {safeDivision,combineDateAndTime,mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, formatDatePolish };
 });

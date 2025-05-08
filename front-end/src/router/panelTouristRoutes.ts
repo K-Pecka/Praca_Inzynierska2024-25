@@ -60,7 +60,7 @@ const panelRoutes: RouteRecordRaw = {
       component: YourTrip
     },
     {
-      path: "trip/:tripId/plan/:planId/activity",
+      path: "plan/:planId/activity",
       name: "ActivityView",
       component: ActivityView
     },

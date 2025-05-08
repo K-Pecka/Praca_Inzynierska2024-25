@@ -1,25 +1,29 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {computed, ref, watchEffect} from "vue";
 import {useRoute} from "vue-router";
 import {Section} from "@/components";
-import {useTicketStore} from "@/stores/trip/useTicketStore";
+
 import {useTripStore} from "@/stores/trip/useTripStore";
-import { useDisplay } from 'vuetify'
+
 
 import TicketForm from "@/components/trip/module/ticket/TicketForm.vue";
-import AppButton from "@/components/budget/AppButton.vue";
+import AppButton from "@/components/AppButton.vue";
 import {useUtilsStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
+import {createTicket,fetchUserById} from "@/api"
+import axios from "axios";
+const {combineDateAndTime,getTripId} = useUtilsStore();
+const {trip:tripStore} = useTripStore();
+const {getTripDetails} = tripStore;
+const {trip} = getTripDetails();
+const {data: tickets, isLoading} = useTripStore().getTickets(String(getTripId()));
 
-const {combineDateAndTime} = useUtilsStore();
-const route = useRoute();
-const tripId = route.params.tripId as string;
 
-const {createTicket} = useTicketStore();
-const {data: tickets, isLoading} = useTripStore().getTickets();
+import {useMembersStore} from "@/stores/trip/useMembersStore"
+const {members:membersStore} =useMembersStore();
+const members = computed(()=>membersStore)
 
 const showForm = ref(false);
-const { smAndDown } = useDisplay()
 async function handleAddTicket(newTicketData: {
   type: string;
   name: string;
@@ -30,162 +34,136 @@ async function handleAddTicket(newTicketData: {
 }) {
   const formData = new FormData();
   formData.append("type", newTicketData.type);
-  formData.append("trip", tripId);
+  formData.append("trip", String(getTripId()));
   formData.append("valid_from", combineDateAndTime(newTicketData.date, newTicketData.time));
   formData.append("file", newTicketData.file);
   try {
-    await createTicket(formData);
+    await createTicket(formData,{ tripId:String(getTripId()) });
     showForm.value = false;
   } catch (error) {
-    console.error("Błąd podczas tworzenia biletu:", error);
+    //console.error("Błąd podczas tworzenia biletu:", error);
   }
 }
 
-const downloadFile = (ticket: string) => {
-  const link = document.createElement('a');
-  link.href = ticket;
-  link.download = 'bilet.pdf';
-  link.click();
-}
+const downloadItem = async ( url: string )=> {
+  //console.log(url)
+      const response = await axios.get(url, { responseType: "blob" });
+      const blob = new Blob([response.data], { type: "application/jpeg" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "Prosze pobierz się.jpeg";
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
 
 const filteredTickets = () => {
   return (
-      tickets.value?.filter((ticket) => ticket.trip === Number(tripId)) ?? []
+      tickets.value?.filter((ticket) => ticket.trip === Number(getTripId())) ?? []
   );
 };
 
+const toggleForm = () => {
+  showForm.value = !showForm.value;
+};
 
 </script>
 
 <template>
   <Section>
     <template #title>
-      <HeaderSection>
-        <template #subtitle>
-          <v-col cols="12">
-            <v-row class="pb-1 justify-space-between" align="center">
-              <span>
-                Bilety
-              </span>
-              <AppButton
-                  variant="primary"
-                  v-if="!showForm"
-                  @click="showForm = !showForm"
-                  width="200px"
-                  height="height-auto"
-                  font-size="font-auto"
-              >
-                Dodaj Bilet
-              </AppButton>
-            </v-row>
-          </v-col>
-        </template>
-      </HeaderSection>
+      <HeaderSection subtitle="Bilety" button button-text="Dodaj Bilet" :button-action="toggleForm" />
     </template>
 
     <template #content>
-      <TicketForm
-          v-if="showForm"
-          @submitTicket="handleAddTicket"
-          @cancelForm="showForm = false"
-          class="form-container"
-      />
+
+      <!-- Ticket create form -->
+      <v-col cols="12" v-if="showForm">
+        <TicketForm
+            :members="members"
+            @submitTicket="handleAddTicket"
+            @cancelForm="showForm = false"
+            class="form-container"
+        />
+      </v-col>
 
       <!-- Ticket cards -->
-      <v-col cols="12" class="pa-0">
+      <v-col cols="12">
 
         <!-- Empty state when no tickets are present -->
         <v-row
-            v-if="isLoading && tickets && tickets.length === 0"
-            class="empty-tickets pa-5"
+            v-if="!isLoading && tickets && tickets.length === 0"
+            class="background-secondary"
         >
           <v-icon size="48" color="black"
           >mdi-ticket-confirmation-outline
           </v-icon>
-          <p class="empty-text">Brak dodanych biletów</p>
-          <a class="add-link" @click="showForm = true">
+          <p>Brak dodanych biletów</p>
+          <a class="color-primary" @click="showForm = true">
             Dodaj pierwszy bilet
           </a>
         </v-row>
+
         <!-- Loaded tickets -->
         <v-card
-            class="ticket-card rounded-xl px-10 pt-10 pb-6"
+            class="background-secondary rounded-lg"
             v-else-if="tickets && tickets.length > 0"
             v-for="ticket in filteredTickets().reverse()"
             :key="ticket.id"
             elevation="4"
         >
-          <!-- Ticket card header -->
-          <v-row>
-            <v-icon class="ticket-icon mr-5" large size="80px"> mdi-download</v-icon>
-            <v-sheet elevation="0" color="transparent" class="d-flex flex-column justify-center">
-              <span class="ticket-name font-weight-bold text-h4 pb-2">{{ ticket.name }}</span>
-              <span class="ticket-date text-h6 font-weight-medium"
-                    v-if="ticket.valid_from_date && ticket.valid_from_time">
-                {{ ticket.valid_from_time }} {{ ticket.valid_from_date }}
-              </span>
+          <v-card-text>
+
+            <!-- Ticket card header -->
+            <v-sheet elevation="0" color="transparent" class="d-flex justify-center">
+              <v-icon class="color-text" large size="70px"> mdi-download</v-icon>
+              <v-row no-gutters class="flex-column justify-center pl-4">
+                <span class="color-text font-weight-bold text-h5">{{ ticket.name }}</span>
+                <span class="color-primary text-h6 font-weight-medium"
+                      v-if="ticket.valid_from_date && ticket.valid_from_time">
+                  {{ ticket.valid_from_time }} {{ ticket.valid_from_date }}
+                </span>
+              </v-row>
             </v-sheet>
+            <v-divider thickness="2" class="my-4 mx-2 opacity-50" />
 
-            <v-divider color="black" opacity="0.7" class="my-4" />
-          </v-row>
+            <!-- Ticket card body -->
+            <v-card-actions class="justify-space-between flex-wrap">
+              <v-select
+                  :items="members"
+                  :disabled="members.length === 0"
+                  label="Przypisz do osoby (Opcjonalnie)"
+                  variant="outlined"
+                  multiple
+                  item-title="name"
+                  item-value="userId"
+                  density="compact"
+                  bg-color="background"
+                  max-width="600px"
+                  min-width="200px"
+                  rounded="lg"
+              />
 
-          <!-- Ticket card body -->
-          <v-row class="justify-space-between align-center">
-            <v-select
-                :items="['Jan', 'Anna', 'Piotr']"
-                label="Przypisz do osoby (Opcjonalnie)"
-                variant="outlined"
-                multiple
-                bg-color="background"
-                max-width="600px"
-                min-width="200px"
-                rounded="lg"
-            />
-
-            <!-- Button to download the ticket -->
-            <AppButton
-                variant="primary"
-                width="200px"
-                class="mb-5"
-                @click="() => downloadFile(ticket.file)"
-                height="height-auto"
-                font-size="font-auto"
-            >
-              <v-icon>mdi-download</v-icon>
-              <span class="pl-1">Pobierz bilet</span>
-            </AppButton>
-          </v-row>
+              <!-- Button to download the ticket -->
+              <AppButton
+                  color="primary"
+                  @click="() => downloadItem(ticket.file)"
+                  height-auto
+                  font-auto
+                  text="Pobierz bilet"
+                  stretch
+              >
+                <v-icon>mdi-download</v-icon>
+              </AppButton>
+            </v-card-actions>
+          </v-card-text>
         </v-card>
       </v-col>
     </template>
   </Section>
 </template>
 
-<style scoped lang="scss">
-@use "@/assets/styles/variables" as *;
-
-.ticket-icon {
-  color: $text-color;
+<style lang="scss">
+.v-select .v-input__details {
+  position: absolute;
 }
-
-.ticket-card {
-  background-color: $background-secondary;
-}
-
-.ticket-date {
-  color: $primary-color;
-}
-
-.ticket-name {
-  color: $text-color;
-}
-
-.empty-tickets {
-  background-color: $background-secondary;
-}
-
-.add-link {
-  color: $primary-color;
-}
-
 </style>

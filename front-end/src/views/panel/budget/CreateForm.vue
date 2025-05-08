@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import {Section,Form} from "@/components";
+import {Section, Form, HeaderSection} from "@/components";
 import { useFormStore,useTripStore } from "@/stores";
 import { FormType } from "@/types/enum";
 import { useRoute } from "vue-router";
@@ -32,7 +32,11 @@ const handleSubmit = (_formData: any, config: any) => {
 <template>
   <Section>
     <template #title>
-      <h1 class="pb-5">Zaplanuj budżet na wycieczkę</h1>
+      <header-section
+          no-sub-title
+          center
+          title="Zaplanuj budżet na wycieczkę"
+      />
     </template>
 
     <template #content>

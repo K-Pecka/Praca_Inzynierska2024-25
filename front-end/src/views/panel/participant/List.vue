@@ -1,65 +1,58 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { useRoute } from "vue-router";
-import { Section } from "@/components";
-import AppButton from "@/components/budget/AppButton.vue";
+import {computed, ref} from "vue";
+import {useRoute} from "vue-router";
+import {Section} from "@/components";
 import ParticipantList from "@/components/trip/module/participant/ParticipantList.vue";
 import ParticipantsCounter from "@/components/trip/module/participant/ParticipantsCounter.vue";
 import ParticipantAddForm from "@/components/trip/module/participant/ParticipantAddForm.vue";
-import { Participant } from "@/types";
-import { useTripStore, useNotificationStore } from "@/stores";
+import {useTripStore, useNotificationStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
-const { setErrorCurrentMessage } = useNotificationStore();
+const {setErrorCurrentMessage} = useNotificationStore();
 const route = useRoute();
 const tripId = Number(route.params.tripId);
 
-const { getTripDetails, removeParticipant, addParticipant } = useTripStore();
-const { data: tripData, isLoading, error } = getTripDetails(tripId);
-const participants = computed<Participant[]>(() => {
-  if (!tripData.value) return [];  
 
-  return [
-    ...tripData.value?.members ?? [],   
-    ...tripData.value?.pending_members ?? [] 
-  ];
-});
+const {trip:tripStore} = useTripStore();
+const {getTripDetails} = tripStore;
+const {trip} = getTripDetails();
+const {removeParticipant, addParticipant,} = useTripStore();
+
+import {useMembersStore} from "@/stores/trip/useMembersStore"
+const {members:membersStore} =useMembersStore();
+const members = computed(()=>membersStore)
+
 
 const maxParticipants = 5;
 
 const showForm = ref(false);
 
 function inviteParticipant(participant: { name: string; email: string }) {
-  if (participants.value.length == maxParticipants) {
+  if (members.value.length == maxParticipants) {
     setErrorCurrentMessage("Osiągnięto limit");
     return;
   }
   addParticipant(Number(tripId), participant);
 }
+
 function removeParticipantById(id: number) {
   removeParticipant(Number(tripId), id);
 }
-console.log('participants', participants.value);
+
+const toggleForm = () => {
+  showForm.value = !showForm.value;
+};
 </script>
 
 <template>
   <div class="page-container">
     <Section>
       <template #title>
-            <HeaderSection>
-              <template #subtitle>
-                  <div class="title-container pb-4 w-100">
-                    <span class="trip-title">Zarządzaj uczestnikami</span>
-                 <AppButton
-                    variant="primary"
-                    @click="showForm = !showForm"
-                  >
-                    <v-icon v-if="$vuetify.display.smAndDown">mdi-plus</v-icon>
-                    <span v-else>Dodaj</span>
-                  </AppButton>
-                  </div>
-                 
-              </template>
-              </HeaderSection>
+        <HeaderSection
+            subtitle="Zarządzaj uczestnikami"
+            button
+            button-text="Dodaj"
+            :button-action="toggleForm"
+        />
       </template>
 
       <template #content>
@@ -67,19 +60,19 @@ console.log('participants', participants.value);
           <v-row>
             <v-col>
               <ParticipantsCounter
-                :current="participants.length"
-                :max="maxParticipants"
-                title="Uczestnicy"
+                  :current="members.length"
+                  :max="maxParticipants"
+                  title="Uczestnicy"
               />
             </v-col>
           </v-row>
           <v-row>
             <v-col>
               <ParticipantAddForm
-                v-if="showForm"
-                title="Dodaj uczestnika"
-                @cancel="showForm = false"
-                @submitForm="inviteParticipant"
+                  v-if="showForm"
+                  title="Dodaj uczestnika"
+                  @cancel="showForm = false"
+                  @submitForm="inviteParticipant"
               />
             </v-col>
           </v-row>
@@ -89,8 +82,9 @@ console.log('participants', participants.value);
                 <h3 class="card-title">Dodani uczestnicy</h3>
 
                 <ParticipantList
-                  :participants="participants"
-                  @remove="removeParticipantById"
+                    v-if="members.length > 0"
+                    :participants="members"
+                    @remove="removeParticipantById"
                 />
               </div>
             </v-col>
@@ -102,10 +96,6 @@ console.log('participants', participants.value);
 </template>
 
 <style scoped lang="scss">
-.page-container {
-  padding-top: 0;
-}
-
 .header-wrapper {
   display: flex;
   justify-content: space-between;
@@ -119,16 +109,8 @@ console.log('participants', participants.value);
   justify-content: space-between;
 }
 
-.trip-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin: 0 0 0.2rem 0;
-}
-
-.second-title {
-  font-size: 2.5rem;
-  font-weight: 600;
-  margin: 0;
+.sub-title {
+  font-size: 2rem;
 }
 
 .button-container {
@@ -149,39 +131,4 @@ console.log('participants', participants.value);
   font-weight: 600;
 }
 
-@media (max-width: 768px) {
-  .trip-title {
-    font-size: 2rem;
-  }
-
-  .second-title {
-    font-size: 1.8rem;
-  }
-
-  .button-container {
-    justify-content: flex-start;
-  }
-
-  .participants-card {
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .trip-title {
-    font-size: 1.6rem;
-  }
-
-  .second-title {
-    font-size: 1.5rem;
-  }
-
-  .card-title {
-    font-size: 1rem;
-  }
-
-  .participants-card {
-    padding: 0.75rem;
-  }
-}
 </style>

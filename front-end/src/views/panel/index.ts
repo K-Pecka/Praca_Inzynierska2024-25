@@ -1,6 +1,6 @@
 export { default as RoleSelection } from "./RoleSelection.vue";
 export { default as TripDashboard } from "@/views/panel/trip/Dashboard.vue";
-export { default as YourTrip } from "./trip/YourTrip.vue";
+export { default as YourTrip } from "@/views/panel/YourTrip.vue";
 export { default as ExpenseTracker } from "@/views/panel/budget/Preview.vue";
 export { default as YourPlan } from "@/views/panel/itinerary/List.vue";
 export { default as TicketsView } from "@/views/panel/ticket/List.vue";

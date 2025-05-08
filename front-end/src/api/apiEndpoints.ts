@@ -42,6 +42,7 @@ export const fetchData = async <T = unknown>(
     }, 3000);
     if (!response.ok) {
       errorStatus(response.status);
+      console.error("data:", options.body);
       console.error("Error response:", result);
       throw new Error(result?.message || `Błąd HTTP: ${response.status}`);
     }
@@ -59,13 +60,16 @@ export const setParam = (
     if (acc.includes(`:${key}`)) {
       return acc.replace(`:${key}`, encodeURIComponent(params[key]));
     } else {
-      console.warn(`Missing parameter: ${key}`);
+      //console.warn(`Missing parameter: ${key}`);
       return acc;
     }
   }, url);
 };
 
 export const apiEndpoints = {
+  user:{
+    getUserById: `${hostName}/user/user/by-profile/:userId/`,
+  },
   auth: {
     login: `${hostName}/user_auth/login/`,
     register: `${hostName}/user/create/`,
@@ -102,7 +106,7 @@ export const apiEndpoints = {
   },
   ticket: {
     create: `${hostName}/trip/ticket/create/`,
-    all: `${hostName}/trip/ticket/all/`,
+    all: `${hostName}/trip/:tripId/ticket/all/`,
   },
   budget: {
     update: `${hostName}/trip/:tripId/budget/update/`,

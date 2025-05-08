@@ -5,7 +5,7 @@ import { computed } from "vue";
 import { Plan } from "@/types";
 import { useNotificationStore } from "@/stores";
 
-export const usePlans = () => {
+export const usePlans = (tripId:Function) => {
     const queryClient = useQueryClient();
     const notifications = useNotificationStore();
 
@@ -37,10 +37,10 @@ export const usePlans = () => {
         },
     });
 
-    const getPlans = (id: string) =>
+    const getPlans = (id?: string) =>
         useQuery({
             queryKey: ["plans", id],
-            queryFn: () => fetchPlans({ tripId: id }),
+            queryFn: () => fetchPlans({ tripId: id ?? tripId() }),
         });
 
     const yourPlans = computed(() => ({
@@ -65,3 +65,4 @@ export const usePlans = () => {
 
     return { planMutationAdd, getPlans, yourPlans, handleDeleteItinerary };
 };
+

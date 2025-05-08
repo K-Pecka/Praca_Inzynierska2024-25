@@ -67,7 +67,7 @@ export const useAuthStore = defineStore(
             }
             try {
                 const tokenRefresh: TOKEN = await fetchRefreshToken(token.value);
-                console.warn("refreshToken", tokenRefresh);
+                //console.warn("refreshToken", tokenRefresh);
                 if (tokenRefresh) {
                     saveToken(tokenRefresh);
                     return true;

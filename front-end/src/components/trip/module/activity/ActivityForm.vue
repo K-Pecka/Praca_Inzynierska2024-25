@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import AppButton from "@/components/budget/AppButton.vue";
+import AppButton from "@/components/AppButton.vue";
 import { VTimePicker } from "vuetify/labs/VTimePicker";
-import { defineEmits } from "vue";
 
 const emit = defineEmits(["submitActivity", "cancelForm"]);
 
@@ -27,7 +26,7 @@ function submitActivity() {
     alert("Uzupełnij nazwę aktywności.");
     return;
   }
-  console.log(form.value)
+  //console.log(form.value)
   emit("submitActivity", { ...form.value });
   form.value = {
     type: "tour",
@@ -41,7 +40,7 @@ function submitActivity() {
 }
 import activityGroups from "@/data/category/activity";
 
-const selected = ref<(typeof activityGroups)[0]>(activityGroups[0]);
+ref<(typeof activityGroups)[0]>(activityGroups[0]);
 </script>
 
 <template>
@@ -144,10 +143,17 @@ const selected = ref<(typeof activityGroups)[0]>(activityGroups[0]);
 
     <v-card-actions>
       <v-spacer />
-      <AppButton variant="secondary" @click="$emit('cancelForm')">
-        Anuluj
-      </AppButton>
-      <AppButton variant="primary" @click="submitActivity" :disabled="!isFormValid"> Dodaj </AppButton>
+      <AppButton
+          color="secondary"
+          text="Anuluj"
+          @click="$emit('cancelForm')"
+      />
+      <AppButton
+          color="primary"
+          text="Dodaj"
+          @click="submitActivity"
+          :disabled="!isFormValid"
+      />
     </v-card-actions>
   </v-card>
 </template>

@@ -4,8 +4,8 @@ import {Section,Form} from "@/components";
 import { useFormStore,useTripStore } from "@/stores";
 import { FormType } from "@/types/enum";
 
-const { tripMutationAdd } = useTripStore();
-
+const { trip } = useTripStore();
+const {createTrip} = trip;
 const { getFormInputs, isFormValid } = useFormStore();
 
 const inputs = ref(getFormInputs(FormType.TRIP));
@@ -24,12 +24,15 @@ const handleSubmit = (_formData: any, config: any) => {
     }
   
     try {
-      tripMutationAdd.mutateAsync(data);
+      createTrip.mutateAsync(data);
     } catch (error) {
       
     }
   }
 };
+console.log('inputs', inputs.value);
+console.log('formValues', formValues.value);
+
 </script>
 
 <template>

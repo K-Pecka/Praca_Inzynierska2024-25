@@ -1,49 +1,39 @@
-import {useQueryClient} from "@tanstack/vue-query";
-import {computed} from "vue";
-import {useRoleStore} from "@/stores/auth/useRoleStore";
+import {useMutation, useQueryClient} from "@tanstack/vue-query";
 import {useNotificationStore} from "@/stores";
-import {Role} from "@/types/enum";
-import type { Btn } from "@/types";
 import { getTripQuery,getTripDetailsQuery, getMutationCreate, getMutationDelete,getMutationUpdate } from "@/api/services/tripQuery";
-import { getBtn } from "@/data/page/panel";
-import { TypeOfButton } from "@/types/enum";
-export const useTrips = () => {
+export const useTrips = (tripId:Function) => {
     const queryClient = useQueryClient();
     const notifications = useNotificationStore();
-    const {getRole} = useRoleStore();
 
-    const getTrips = () => getTripQuery();
+    const getTrips = () => {
+        const {data:trips,isLoading:isLoading_trips,error:error_trips} =  getTripQuery()
+        return {trips,isLoading_trips,error_trips}
+     }
 
-    const getTripDetails = (id: number) => getTripDetailsQuery(id)
+    const getTripDetails = (id?: number) => {
+        const {data:trip,isLoading:isLoading_trip,error:error_trip} =  getTripDetailsQuery(id ?? tripId())
+        return {trip,isLoading_trip,error_trip,}
+    }
 
-    const deleteTripMutation = getMutationDelete({
+    const deleteTrip = getMutationDelete({
         notifications,
         successMessage: "Pomyślnie usunięto wycieczkę",
         errorMessage: "Nie udało się usunąć wycieczki",
     })
 
-    const tripMutationAdd = getMutationCreate({
+    const createTrip = getMutationCreate({
         notifications,
         queryClient,
         successMessage: "Dodano wycieczkę",
         errorMessage: "Nie udało się dodać wycieczki",
     })
 
-    const tripMutationUpdate = getMutationUpdate({
+    const updateTrip = getMutationUpdate({
         notifications,
         queryClient,
         successMessage: "Zaktualizowano wycieczkę",
         errorMessage: "Nie udało się zaktualizować wycieczki",
     })
 
-    const yourTrips = computed(() => ({
-        btn: getBtn({
-          filter: (el: Btn) => el.type == TypeOfButton.TRIP,
-          btnPath: getRole() === Role.TURIST ? "tripDashboard" : "tripDashboardGuide",
-          handleDeleteTrip: (id: string) => deleteTripMutation.mutateAsync({ tripId: id }).catch(() => {}),
-        }),
-        trips: getTrips,
-      }));
-
-    return {getTrips, getTripDetails, yourTrips, tripMutationUpdate, tripMutationAdd};
+    return {getTrips, getTripDetails, deleteTrip, updateTrip, createTrip};
 };

@@ -49,7 +49,7 @@
 @use "@/assets/styles/variables" as *;
 
 .text-h4 {
-  color: $primary-color;
+  color: rgb($primary-color);
 }
 
 .middle-card-color {

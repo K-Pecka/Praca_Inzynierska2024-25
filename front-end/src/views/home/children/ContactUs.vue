@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import Section from '@/components/common/Section.vue';
-import AppButton from '@/components/budget/AppButton.vue';
+import AppButton from '@/components/AppButton.vue';
 import { useNotificationStore } from '@/stores';
 
 const { setSuccessCurrentMessage, setErrorCurrentMessage } = useNotificationStore();
@@ -35,7 +35,7 @@ function handleSubmit() {
     return;
   }
   setSuccessCurrentMessage('Dziękujemy za wiadomość! Odpiszemy najszybciej jak to możliwe.');
-  console.log(form.value);
+  //console.log(form.value);
 }
 </script>
 
@@ -90,14 +90,13 @@ function handleSubmit() {
                   density="comfortable"
               />
               <AppButton
-                  variant="primary"
+                  color="primary"
                   type="submit"
-                  width="120px"
+                  max-width="120px"
                   class="mt-4 font-weight-bold"
                   :disabled="!isFormValid"
-              >
-                Wyślij
-              </AppButton>
+                  text="Wyślij"
+              />
             </v-form>
           </v-col>
         </v-row>

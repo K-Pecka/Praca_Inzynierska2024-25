@@ -1,61 +1,24 @@
 <script lang="ts" setup>
-import { Box, Section } from "@/components";
+import { Box, Section, HeaderSection,ExpensesList } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
-import ExpenseList from "@/components/budget/ExpenseList.vue";
-import HeaderSection from "@/components/common/HeaderSection.vue";
-import { useRoute } from "vue-router";
+useTripStore().initialize();
+const { dashboard, budget } = useTripStore();
+const { getDashboard, getSpecialSectionName } = dashboard;
+const { getExpensByTrip } = budget;
 
-useTripStore().initialize(useRoute().name as string);
-const { getDashboard,getExpenseItem } = useTripStore();
-
-const route = useRoute();
-const id = route.params.tripId as string;
-
-const { boxes, isLoading, error } = getDashboard(id);
+const { boxes, isLoading_trip, error_trip } = getDashboard();
+const { expensesByTrip, isLoading_expenses } = getExpensByTrip();
 </script>
 
 <template>
   <Section>
     <template #title>
-      <HeaderSection>
-        <template #subtitle>
-          <span class="trip-title">Panel</span>
-        </template>
-      </HeaderSection>
+      <HeaderSection subtitle="Panel" />
     </template>
     <template #content>
-      <template v-if="isLoading">
-        <div class="grid-container">
-          <Box
-            title="Ładowanie..."
-            content="Pobieranie danych..."
-            :set="{
-              order: 1,
-              size: {
-                sm: { col: 12, row: 4 },
-                md: { col: 12, row: 4 },
-                lg: { col: 12, row: 4 }
-              }
-            }"
-          />
-        </div>
-      </template>
-      <template v-else-if="error">
-        <div class="grid-container">
-          <Box
-            title="Błąd"
-            :content="`Błąd: ${error.message}`"
-            :set="{
-              order: 1,
-              size: {
-                sm: { col: 12, row: 4 },
-                md: { col: 12, row: 4 },
-                lg: { col: 12, row: 4 },
-              },
-            }"
-          />
-        </div>
-      </template>
+      <!-- Loadder -->
+      <template v-if="isLoading_trip"> Loading... </template>
+      <template v-else-if="error_trip">Error ... </template>
       <template v-else>
         <div class="grid-container w-100">
           <template v-for="(box, index) in boxes" :key="index">
@@ -68,10 +31,19 @@ const { boxes, isLoading, error } = getDashboard(id);
           </template>
         </div>
         <v-card class="dashboard-card w-100" elevation="3">
-          <v-card-title class="text-h6 pt-0 font-weight-bold expense-card-title">
-            {{getExpenseItem().sectionName}}
+          <v-card-title
+            class="text-h6 pt-0 font-weight-bold expense-card-title"
+          >
+            {{ getSpecialSectionName() }}
           </v-card-title>
-          <ExpenseList variant="view" :limit="4" />
+          <!-- Loadder -->
+          <template v-if="isLoading_expenses"> Loading expenses... </template> 
+          <ExpensesList
+            v-else
+            variant="view"
+            :limit="4"
+            :expenses="expensesByTrip"
+          />
         </v-card>
       </template>
     </template>
@@ -101,4 +73,3 @@ h1 {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 </style>
-
