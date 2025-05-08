@@ -2,9 +2,9 @@ import {computed} from "vue";
 import {useRoleStore} from "@/stores/auth/useRoleStore";
 import {Role} from "@/types/enum";
 
-import {sectionDashboard} from "@/data/section/sectionName";
-import {useBudget} from "./useBudget";
-import {useTrips} from "./useTrips";
+import { sectionDashboard } from "@/data/section/sectionName";
+import { useBudget } from "./useBudget";
+import { useTrips } from "./useTrips";
 
 function formatPL(dateString: string) {
     const dateObj = new Date(dateString);
@@ -12,8 +12,9 @@ function formatPL(dateString: string) {
     return new Intl.DateTimeFormat("pl-PL").format(dateObj);
 }
 
-export const useDashboard = (tripId: Function) => {
+export const useDashboard= (tripId:Function) => {
     const {getRole} = useRoleStore();
+    const {getExpensByTrip} = useBudget(tripId);
     const {getTripDetails} = useTrips(tripId);
 
     const getSpecialSectionName = () => sectionDashboard(getRole());
@@ -22,37 +23,28 @@ export const useDashboard = (tripId: Function) => {
     const getDashboard = () => {
 
         const {trip, isLoading_trip, error_trip} = getTripDetails(tripId());
+        const {expensesByTrip} = getExpensByTrip(tripId());
         const tripTime = computed(() => {
             if (!trip.value) return "...";
             return `${formatPL(trip.value.start_date)} - ${formatPL(
                 trip.value.end_date
             )}`;
         });
-<<<<<<< Updated upstream
         const budget = computed(() => `${trip.value?.budget_amount ?? "..."}`);
-=======
-
->>>>>>> Stashed changes
         const members = computed(() => [...trip.value?.members ?? [], ...trip.value?.pending_members ?? []]);
         const participantCount = computed(
-            () => `${members.value.length ?? 0} ${members.value.length == 1 ? "Uczestnik" : "Uczestników"}`
+            () => `${members.value.length ?? 0} ${members.value.length==1? "Uczestnik" : "Uczestników"}`
         );
 
         const activityCount = computed(() => ({
             icon: getRole() == Role.TURIST ? "mdi-clock-outline" : "mdi-email",
             title: getRole() == Role.TURIST ? "Aktywności" : "Wiadomości",
-            content: getRole() === Role.TURIST
-                ? `${trip.value?.activity_count ?? 0} Aktywności`
-                : "Wiadomości",
+            content: getRole() == Role.TURIST ? "0 Aktywności" : "0 Wiadomości",
         }));
 
         const tripName = computed(() => trip.value?.name ?? "...");
-<<<<<<< Updated upstream
 
         const expenses = computed(() => expensesByTrip.value?.reduce((acc, expense) => Number(acc) + Number(expense.converted_amount), 0) ?? 0);
-=======
-        
->>>>>>> Stashed changes
         const boxes = computed(() => [
             {
                 title: "Czas trwania",
@@ -67,14 +59,11 @@ export const useDashboard = (tripId: Function) => {
             {
                 title: "Budżet",
                 icon: "mdi-currency-usd",
-<<<<<<< Updated upstream
                 content: {
                     expenses: expenses.value,
                     amount: Number(budget.value),
                     currency: "PLN"
                 },
-=======
->>>>>>> Stashed changes
                 set: {
                     order: 2,
                     size: {xs: {col: 12, row: 1}, sm: {col: 12, row: 1}, md: {col: 6, row: 1}, lg: {col: 3, row: 1}}

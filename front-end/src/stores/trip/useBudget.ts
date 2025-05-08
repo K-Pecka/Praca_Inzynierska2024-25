@@ -27,7 +27,7 @@ export const useBudget = (tripId:Function) => {
       notifications.setErrorCurrentMessage(err?.message || "Błąd");
     },
   });
-  const getExpensesByTrip = (id?:number) => {
+  const getExpensByTrip = (id?:number) => {
     const { data: expensesByTrip, isLoading: isLoading_expenses,error:error_expenses } =
       getExpensesQuery(id ?? tripId());
     return {
@@ -40,6 +40,6 @@ export const useBudget = (tripId:Function) => {
   return {
     tripMutationBudget,
     createExpense,
-    getExpensesByTrip,
+    getExpensByTrip,
   };
 };
