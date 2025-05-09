@@ -9,7 +9,7 @@ from trips.views.expense_views import ExpenseCreateAPIView, ExpenseRetrieveAPIVi
 from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketDestroyAPIView, \
     TicketUpdateAPIView
 from users.models import CustomUser, UserProfile, UserProfileType
-from trips.models import Trip, Expense, Ticket, TicketType, ExpenseType, TripAccessToken
+from trips.models import Trip, Expense, Ticket, TicketType, ExpenseType
 
 
 class ExpenseAPITestCase(TestCase):
@@ -37,9 +37,7 @@ class ExpenseAPITestCase(TestCase):
             end_date="2025-06-15"
         )
 
-        self.access_token = TripAccessToken.objects.get_or_create(trip=self.trip, token='tst', user_profile=self.user_profile, is_pending=False)
-
-        self.trip.members.set([self.user_profile])
+        self.trip.members.add(self.user_profile)
         self.expense_category = ExpenseType.objects.create(name='food')
         self.expense = Expense.objects.create(
             trip=self.trip,

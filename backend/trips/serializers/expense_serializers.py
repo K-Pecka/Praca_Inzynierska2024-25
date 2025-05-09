@@ -79,8 +79,8 @@ class ExpenseCreateSerializer(serializers.ModelSerializer):
 
         access_tokens = trip.access_tokens.filter(is_pending=False)
         members = [access_token.user_profile for access_token in access_tokens]
-        if data['user'] not in members:
-            raise serializers.ValidationError("Użytkownik nie jest uczestnikiem wycieczki")
+        if data['user'] not in members and data['user'] != trip.creator:
+            raise serializers.ValidationError("Użytkownik nie jest uczestnikiem wycieczki.")
         return data
 
     def create(self, validated_data):
