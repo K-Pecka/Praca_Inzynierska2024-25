@@ -29,8 +29,7 @@ defineProps<{
               alt="Zdjęcie członka zespołu"
           />
 
-          <!-- Cała zawartość wypchnięta do dołu -->
-          <div class="card-bottom pa-4 d-flex flex-column flex-grow-1 xd">
+          <div class="card-bottom pa-4 d-flex flex-column flex-grow-1 bottom-card">
             <div class="text-center mb-4">
               <h3 class="text-h6 font-weight-bold">{{ member.name }}</h3>
               <p class="text-subtitle-2 text-grey-darken-1 mb-2">{{ member.role }}</p>
@@ -49,7 +48,6 @@ defineProps<{
                     mdi-github
                   </v-icon>
                 </a>
-                <!-- inne ikony -->
               </div>
             </div>
           </div>
@@ -75,7 +73,7 @@ defineProps<{
   overflow: hidden;
   position: relative;
 }
-.xd{
+.bottom-card{
   height: 60%;
 }
 </style>
