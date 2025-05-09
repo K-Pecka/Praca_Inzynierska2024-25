@@ -25,19 +25,7 @@ import { aboutTeam } from "@/data";
                 </span>
                 <p class="text-justify">{{ paragraph.paragraph }}</p>
                 <template v-if="index == 0">
-                  <v-divider
-                    class="my-4"
-                    color="grey lighten-2"
-                    height="2px"
-                    width="100%"
-                  />
                   <TeamMemberCard :members="aboutTeam.teamMembers" />
-                  <v-divider
-                    class="my-4"
-                    color="grey lighten-2"
-                    height="2px"
-                    width="100%"
-                  />
                 </template>
               </div>
             </div>

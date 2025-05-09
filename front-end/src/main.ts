@@ -12,7 +12,13 @@ import piniaPersist from "pinia-plugin-persistedstate";
 import { piniaBasePlugin } from "./plugins/piniaBase";
 import { messages } from "./lib/messages";
 const app = createApp(App);
-const queryClient = new QueryClient({});
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+    }
+  }
+});
 
 const pinia = createPinia();
 pinia.use(piniaPersist);

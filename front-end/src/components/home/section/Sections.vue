@@ -17,13 +17,12 @@
       <h1
           class="gradient-text"
           style="
+          text-align: center;
             font-size: clamp(
               1rem,
               4.5vw,
               20rem
             );
-            line-height: 1;
-            width: 80%;
             margin-bottom: 5vh;
           "
       >

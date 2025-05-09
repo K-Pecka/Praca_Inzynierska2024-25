@@ -108,7 +108,7 @@ export const apiEndpoints = {
     all: `${hostName}/trip/:tripId/itinerary/activity-types/all/`,
   },
   ticket: {
-    create: `${hostName}/trip/ticket/create/`,
+    create: `${hostName}/trip/:tripId/ticket/create/`,
     all: `${hostName}/trip/:tripId/ticket/all/`,
   },
   budget: {

@@ -113,27 +113,12 @@ export const aboutTeam ={
     {
       title: "Nasz zespół",
       paragraph:
-        "Nasz zespół to czterech studentów informatyki, którzy połączyli swoje pasje i doświadczenie, by stworzyć aplikację, która zmienia sposób organizowania podróży grupowych. Zdecydowaliśmy się zaprojektować narzędzie, które pozwoli na łatwiejsze planowanie wyjazdów, dając użytkownikom pełną swobodę działania. W odróżnieniu od innych rozwiązań dostępnych na rynku, które często narzucają gotowe plany wyjazdów, nasza aplikacja umożliwia elastyczne dostosowanie podróży do indywidualnych potrzeb.",
-    },
-    {
-      title: "Inspiracja do stworzenia aplikacji",
-      paragraph:
-        "Pomysł na naszą aplikację zrodził się z osobistych doświadczeń. Wiele razy, podczas planowania wspólnych wyjazdów z przyjaciółmi, napotykaliśmy na problemy związane z chaosem, brakiem komunikacji i trudnościami w podziale kosztów. Dotychczasowe aplikacje nie dawały nam wystarczającej kontroli nad procesem planowania – były sztywne, wymuszały określony sposób działania i nie pozwalały na dostosowanie planu do naszych potrzeb. Dlatego postanowiliśmy stworzyć narzędzie, które umożliwi użytkownikom pełną swobodę w planowaniu wyjazdów – od ustalania trasy, przez budżet, po organizowanie harmonogramu i listy uczestników.",
-    },
-    {
-      title: "Nasze podejście do tworzenia aplikacji",
-      paragraph:
-        "Podzieliliśmy się zadaniami według naszych umiejętności: frontend, backend oraz dokumentacja. Dzięki takiemu podziałowi pracy udało nam się stworzyć aplikację, która nie tylko działa sprawnie, ale jest również przyjazna dla użytkownika i responsywna. Każdy z nas wniósł coś cennego do projektu, co pozwoliło stworzyć narzędzie, które jest proste w obsłudze, ale równocześnie potężne w zakresie funkcjonalności.",
+        "Jesteśmy grupą studentów, których połączyła pasja do podróży i chęć ułatwienia życia sobie i innym. Z własnego doświadczenia wiemy, jak trudno czasem zorganizować wspólny wyjazd — dlatego stworzyliśmy aplikację, która to upraszcza. Nie chcemy nikomu nic narzucać – dajemy jedynie narzędzia, które pozwalą zaplanować podróż dokładnie tak, jak chcecie. Prosto, wygodnie i po swojemu."
     },
     {
       title: "Mobilność i wygoda użytkowania",
       paragraph:
-        "Oprócz wersji na komputer, stworzyliśmy także aplikację mobilną. Dzięki niej użytkownicy mogą na bieżąco dodawać wydatki, podglądać zaplanowane podróże, a także wyświetlać bilety. Dla przewodników przygotowaliśmy możliwość zarządzania grupą, tworzenia kanału ogłoszeniowego oraz dzielenia się wydatkami z uczestnikami. Dzięki temu cała organizacja wyjazdu staje się prostsza, a komunikacja w grupie – bardziej efektywna.",
-    },
-    {
-      title: "Nasza wizja",
-      paragraph:
-        "Naszym celem było stworzenie narzędzia, które daje użytkownikom pełną swobodę i kontrolę nad każdym etapem planowania wyjazdu. W odróżnieniu od innych aplikacji, które narzucają sztywne zasady, nasza aplikacja pozwala na dostosowanie wszystkiego do własnych potrzeb, co sprawia, że organizowanie podróży staje się przyjemnością. Dzięki temu możemy zaoferować coś, czego brakuje w konkurencyjnych rozwiązaniach – pełną elastyczność, która pozwala na swobodę działania.",
+        "Poza wersją na komputer przygotowaliśmy też aplikację mobilną. Dzięki niej możesz szybko dodać nowy wydatek, sprawdzić plan podróży czy podejrzeć bilety – wszystko pod ręką. Jeśli jesteś przewodnikiem, masz też dostęp do funkcji zarządzania grupą, ogłoszeń i wspólnego budżetu. Organizacja wyjazdu staje się dzięki temu o wiele łatwiejsza, a kontakt z uczestnikami – prostszy i wygodniejszy."
     },
   ],
   teamMembers: [
@@ -141,21 +126,25 @@ export const aboutTeam ={
       name: "Andrzej Ebertowski",
       role: "Specjalista ds. Dokumentacji",
       description: "Tworzenie dokumentacji, testowanie funkcjonalności, wspieranie frontendu.",
+      photo:"/src/assets/images/avatar/AE_avatar.jpg"
     },
     {
       name: "Kacper Pecka",
       role: "Główny Frontend Developer",
       description: "Projektowanie interfejsu, wdrażanie responsywności, integracja frontendu z API.",
+      photo:"/src/assets/images/avatar/AE_avatar.jpg"
     },
     {
       name: "Jakub Pobłocki",
       role: "Główny Backend Developer",
       description: "Budowanie API, dostosowywanie logiki serwera do potrzeb aplikacji.",
+      photo:"/src/assets/images/avatar/AE_avatar.jpg"
     },
     {
       name: "Mateusz Wiśniewski",
       role: "Project Manager",
       description: "Koordynowanie zespołu, zarządzanie sprintami, kontrolowanie realizacji zadań.",
+      photo:"/src/assets/images/avatar/AE_avatar.jpg"
     },
   ],
 };

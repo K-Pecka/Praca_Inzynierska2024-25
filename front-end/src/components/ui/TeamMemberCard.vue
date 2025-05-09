@@ -23,70 +23,65 @@ window.addEventListener("resize", () => {
 
 <template>
   <v-row
-    class="d-flex ga-md-0 ga-8"
+    class="d-flex ga-md-0 ga-8 my-5"
     :style="{
-      'max-width': $vuetify.display.lgAndUp ? '80%' : '100%',
       margin: 'auto',
     }"
   >
-    <v-col
+  <v-carousel
+    height="500"
+    hide-delimiters
+    show-arrows="hover"
+    class="rounded-xl bg-grey-lighten-5 elevation-2"
+    bg-color="transparent"
+  >
+    <v-carousel-item
       v-for="(member, index) in members"
-      :key="member.name"
-      cols="12"
-      sm="10"
-      offset-sm="1"
-      offset-md="0"
-      md="6"
-      class="d-flex"
+      :key="index"
     >
-      <v-card
-        class="team-member-card w-100"
-        elevation="4"
-        color="primary"
-        variant="tonal"
-      >
+      <v-container class="fill-height d-flex align-center">
         <v-row
-          class="d-flex align-center pa-4"
-          :class="{
-            'flex-row-reverse':
-              member?.photo && isSmallScreen && index % 2 === 1,
-          }"
+          align="center"
+          justify="center"
+          class="w-100"
         >
-          <v-col
-            v-if="member.photo"
-            cols="12"
-            sm="4"
-            class="d-flex justify-center"
-          >
-            <div class="team-avatar-wrapper">
+          <!-- Awatar -->
+          <v-col cols="12" md="4" class="d-flex justify-center mb-6 mb-md-0">
+            <div
+              v-if="member.photo"
+              class="rounded-circle overflow-hidden elevation-4"
+              style="width: 220px; height: 220px;"
+            >
               <v-img
                 :src="member.photo"
-                alt="Zdjęcie członka zespołu"
-                class="team-avatar"
-                aspect-ratio="1"
                 cover
+                alt="Zdjęcie członka zespołu"
               />
             </div>
           </v-col>
 
-          <v-col cols="12" :class="member.photo ? 'sm:col-span-8' : 'sm:col-span-12'">
-            <v-card-text>
-              <h3
-                class="font-weight-bold"
-                :class="{
-                  'text-body-1': !$vuetify.display.smAndUp,
-                  'text-h6': $vuetify.display.smAndUp,
-                }"
-              >
+          <!-- Dane członka zespołu -->
+          <v-col cols="12" md="6">
+            <v-card
+              class="pa-6 rounded-lg bg-white elevation-1"
+              flat
+            >
+              <h3 class="text-h5 text-primary font-weight-bold mb-2">
                 {{ member.name }}
               </h3>
-              <p class="text-subtitle-1 font-italic">{{ member.role }}</p>
-              <p class="text-body-1">{{ member.description }}</p>
-            </v-card-text>
+              <p class="text-subtitle-1 text-grey-darken-1 font-italic mb-3">
+                {{ member.role }}
+              </p>
+              <p class="text-body-1 text-grey-darken-3">
+                {{ member.description }}
+              </p>
+            </v-card>
           </v-col>
         </v-row>
-      </v-card>
-    </v-col>
+      </v-container>
+    </v-carousel-item>
+  </v-carousel>
+
   </v-row>
 </template>
 

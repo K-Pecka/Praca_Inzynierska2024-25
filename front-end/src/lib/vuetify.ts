@@ -7,6 +7,9 @@ export default createVuetify({
     VBtn: {
       variant: 'outlined',
     },
+    VDateInput: {
+      class: 'transparent-bg',
+    },
   },
   theme: {
     defaultTheme: APP_DARK_MODE ? 'dark' : 'light',
