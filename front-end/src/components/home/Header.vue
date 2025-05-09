@@ -38,7 +38,7 @@
 </script>
 
 <template>
-  <v-app-bar :height="100" class="header mt-5 bg-header">
+  <v-app-bar :height="100" class="header mt-5 bg-header" absolute>
     <!-- Logo -->
     <template v-slot:prepend>
       <router-link to="/" class="d-flex items-center pl-5">
