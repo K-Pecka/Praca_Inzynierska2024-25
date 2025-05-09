@@ -7,7 +7,7 @@ import { aboutTeam } from "@/data";
 <template>
   <Section class="pb-10">
     <template #title>
-      <h1 class="text-h4 text-center text-primary font-weight-bold mb-6">
+      <h1 class="text-h3 text-center text-primary font-weight-bold mb-6">
           {{ aboutTeam.mainTitle }}
         </h1>
     </template>
@@ -20,7 +20,7 @@ import { aboutTeam } from "@/data";
                 v-for="(paragraph, index) in aboutTeam.paragraphs"
                 :key="index"
               >
-                <p class="text-justify">{{ paragraph.paragraph }}</p>
+                <p class="text-justify text-h6">{{ paragraph.paragraph }}</p>
                 <template v-if="index == 0">
                   <TeamMemberCard :members="aboutTeam.teamMembers" />
                 </template>
