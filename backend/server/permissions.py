@@ -143,7 +143,7 @@ class IsTripParticipant(BasePermission):
         trip = self.get_related_trip(obj)
         if not trip:
             return False
-        return trip.creator == profile or profile in trip.members.all()
+        return trip.creator == profile or trip.members.filter(pk=profile.pk).exists()
 
     def get_related_trip(self, obj):
         """

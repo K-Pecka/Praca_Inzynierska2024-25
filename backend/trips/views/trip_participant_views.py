@@ -68,6 +68,11 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
 
     def handle_invite(self, trip, data):
         user = CustomUser.objects.filter(email=data['email']).first()
+        if not user:
+            raise ValidationError(_("Nie podano użytkownika"))
+
+        if user == self.request.user:
+            raise ValidationError(_("Nie możesz zaprosić samego siebie"))
 
         if trip.members.count() >= 5:
             raise ValidationError(_("Wycieczka może mieć maksymalnie 5 uczestników."))
