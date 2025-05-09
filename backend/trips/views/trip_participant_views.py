@@ -67,9 +67,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             )
 
     def handle_invite(self, trip, data):
-        user = CustomUser.objects.filter(email=data['email']).first()
-        if not user:
-            raise ValidationError(_("Nie podano użytkownika"))
+        user = CustomUser.objects.filter(email=data['email'])
 
         if user == self.request.user:
             raise ValidationError(_("Nie możesz zaprosić samego siebie"))
@@ -88,7 +86,10 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
 
             profile = user.get_default_profile()
         else:
-            profile = user.get_default_profile()
+            profile = UserProfile.objects.filter(user=user, type__code='tourist').first()
+
+            if not profile:
+                raise ValidationError(_("Użytkownik o podanym mailu nie posiada konta turysty"))
 
             if profile.type.code == 'guide':
                 raise ValidationError(_("Nie można dodać przewodnika do wycieczki."))
