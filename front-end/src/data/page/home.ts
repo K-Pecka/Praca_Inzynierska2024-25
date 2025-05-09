@@ -115,11 +115,6 @@ export const aboutTeam ={
       paragraph:
         "Jesteśmy grupą studentów, których połączyła pasja do podróży i chęć ułatwienia życia sobie i innym. Z własnego doświadczenia wiemy, jak trudno czasem zorganizować wspólny wyjazd — dlatego stworzyliśmy aplikację, która to upraszcza. Nie chcemy nikomu nic narzucać – dajemy jedynie narzędzia, które pozwalą zaplanować podróż dokładnie tak, jak chcecie. Prosto, wygodnie i po swojemu."
     },
-    {
-      title: "Mobilność i wygoda użytkowania",
-      paragraph:
-        "Poza wersją na komputer przygotowaliśmy też aplikację mobilną. Dzięki niej możesz szybko dodać nowy wydatek, sprawdzić plan podróży czy podejrzeć bilety – wszystko pod ręką. Jeśli jesteś przewodnikiem, masz też dostęp do funkcji zarządzania grupą, ogłoszeń i wspólnego budżetu. Organizacja wyjazdu staje się dzięki temu o wiele łatwiejsza, a kontakt z uczestnikami – prostszy i wygodniejszy."
-    },
   ],
   teamMembers: [
     {
