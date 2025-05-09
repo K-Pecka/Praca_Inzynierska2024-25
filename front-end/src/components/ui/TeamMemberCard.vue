@@ -29,7 +29,7 @@ defineProps<{
           />
 
           <!-- Cała zawartość wypchnięta do dołu -->
-          <div class="card-bottom pa-4 d-flex flex-column flex-grow-1">
+          <div class="card-bottom pa-4 d-flex flex-column flex-grow-1 xd">
             <div class="text-center mb-4">
               <h3 class="text-h6 font-weight-bold">{{ member.name }}</h3>
               <p class="text-subtitle-2 text-grey-darken-1 mb-2">{{ member.role }}</p>
@@ -55,35 +55,20 @@ defineProps<{
 .team-card {
   border-radius: 16px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  transition: border 0.3s ease;
-  height: 100%;
   display: flex;
+  height: 100%;
   flex-direction: column;
 }
 .team-image {
   aspect-ratio: 5/7;
-  max-height: 60%;
+  height: auto;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   overflow: hidden;
   position: relative;
 }
-@media (max-width: 830px) {
-  .team-image {
-    max-height: 50%;
-  }
-}
-
-/* Usunięcie efektu padding-bottom od Vuetify */
-::v-deep(.team-image .v-responsive__sizer) {
-  padding-bottom: 0 !important;
-}
-
-/* Dodatkowo: wymuszenie 100% wysokości na samym <img> */
-::v-deep(.team-image .v-img__img) {
-  height: 100% !important;
-  object-fit: cover;
-  object-position: top;
+.xd{
+  height: 60%;
 }
 </style>
 
