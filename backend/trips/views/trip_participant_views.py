@@ -67,7 +67,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             )
 
     def handle_invite(self, trip, data):
-        user = CustomUser.objects.filter(email=data['email'])
+        user = CustomUser.objects.filter(email=data['email']).first()
 
         if user == self.request.user:
             raise ValidationError(_("Nie możesz zaprosić samego siebie"))
@@ -82,7 +82,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
                         data['email']
                 )
             except Exception as e:
-                raise ValidationError(_("Nie udało się utworzyć konta gościa. Sprawdź poprawność danych. {e}".format(e=e)))
+                raise ValidationError(_("Nie udało się utworzyć konta gościa. Sprawdź poprawność danych. {e}".format(e=str(e))))
 
             profile = user.get_default_profile()
         else:
