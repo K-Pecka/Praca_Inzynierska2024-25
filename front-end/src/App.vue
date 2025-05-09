@@ -38,10 +38,6 @@ watch(
 
 <style lang="scss" scoped>
 @use "@/assets/styles/variables" as *;
-
-.bg-app {
-  background-color: rgb(var(--v-theme-background));
-}
 .application--wrap{
   display: flex;
   flex-direction: column;

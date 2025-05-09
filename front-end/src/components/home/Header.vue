@@ -38,54 +38,52 @@
 </script>
 
 <template>
-  <v-col class="header-container">
-    <v-app-bar absolute :height="100" class="header mt-5">
-      <!-- Logo -->
-      <template v-slot:prepend>
-        <router-link to="/" class="d-flex items-center pl-5">
-          <v-img
-            aspect-ratio="16/9"
-            :src="images.logo.img"
-            :min-width="150"
-            :max-width="250"
-          />
-        </router-link>
-      </template>
+  <v-app-bar :height="100" class="header mt-5 bg-header">
+    <!-- Logo -->
+    <template v-slot:prepend>
+      <router-link to="/" class="d-flex items-center pl-5">
+        <v-img
+          aspect-ratio="16/9"
+          :src="images.logo.img"
+          :min-width="150"
+          :max-width="250"
+        />
+      </router-link>
+    </template>
 
-      <!-- Desktop nav -->
-      <template v-slot:append>
-        <div class="pr-5" v-if="!smAndDown">
-          <v-btn
+    <!-- Desktop nav -->
+    <template v-slot:append>
+      <div class="pr-5" v-if="!smAndDown">
+        <v-btn
+          v-for="(item, i) in visibleItems"
+          :key="i"
+          :to="item.to"
+          variant="text"
+          class="px-3 rounded-lg"
+          :class="[item.title === 'Panel' || item.title === 'Zarejestruj się' ? 'panel-button' : '']"
+        >
+          {{ item.title }}
+        </v-btn>
+      </div>
+
+      <!-- Mobile nav -->
+      <v-menu v-else>
+        <template v-slot:activator="{ props }">
+          <v-app-bar-nav-icon v-bind="props" />
+        </template>
+        <v-list>
+          <v-list-item
             v-for="(item, i) in visibleItems"
             :key="i"
-            :to="item.to"
-            variant="text"
-            class="px-3 rounded-lg"
-            :class="[item.title === 'Panel' || item.title === 'Zarejestruj się' ? 'panel-button' : '']"
+            @click="panelStore.handleClick(() => router.push(item.to))"
+            link
           >
-            {{ item.title }}
-          </v-btn>
-        </div>
-
-        <!-- Mobile nav -->
-        <v-menu v-else>
-          <template v-slot:activator="{ props }">
-            <v-app-bar-nav-icon v-bind="props" />
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="(item, i) in visibleItems"
-              :key="i"
-              @click="panelStore.handleClick(() => router.push(item.to))"
-              link
-            >
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </template>
-    </v-app-bar>
-  </v-col>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </template>
+  </v-app-bar>
 </template>
 
 <style scoped lang="scss">
@@ -100,6 +98,7 @@
   border-radius: $main-header-border-radius;
   width: 80% !important;
   left: 10% !important;
+
 }
 
 .panel-button {

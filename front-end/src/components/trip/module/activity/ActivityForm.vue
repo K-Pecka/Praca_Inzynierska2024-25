@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import {useActivityStore} from "@/stores/trip/useActivityStore";
 import AppButton from "@/components/AppButton.vue";
 import { VTimePicker } from "vuetify/labs/VTimePicker";
 
 const emit = defineEmits(["submitActivity", "cancelForm"]);
 
 const form = ref({
-  type: "Zwiedzanie",
+  type: 1,
   name: "",
   start_time: "",
   duration: "",
@@ -29,7 +30,7 @@ function submitActivity() {
   //console.log(form.value)
   emit("submitActivity", { ...form.value });
   form.value = {
-    type: "tour",
+    type: 1,
     name: "",
     start_time: "",
     duration: "",
@@ -38,13 +39,12 @@ function submitActivity() {
     description: "",
   };
 }
-import activityGroups from "@/data/category/activity";
 
-ref<(typeof activityGroups)[0]>(activityGroups[0]);
+const { activityTypes } = useActivityStore();
 </script>
 
 <template>
-  <v-card class="activity-form pa-4 mt-4">
+  <v-card class="activity-form pa-4 mt-4" elevation="0">
     <v-card-title>Dodaj nową aktywność</v-card-title>
 
     <v-card-text>
@@ -52,7 +52,7 @@ ref<(typeof activityGroups)[0]>(activityGroups[0]);
         <v-col cols="12" sm="6">
           <v-select
             v-model="form.type"
-            :items="activityGroups"
+            :items="activityTypes"
             label="Typ aktywności"
             variant="outlined"
             bg-color="background"
@@ -162,6 +162,5 @@ ref<(typeof activityGroups)[0]>(activityGroups[0]);
 .activity-form {
   background-color: rgb(var(--v-theme-background));
   border-radius: 1rem;
-  box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
 }
 </style>

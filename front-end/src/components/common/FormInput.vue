@@ -35,7 +35,7 @@
         :placeholder="inputData.placeholder"
         @input="updateModel"
         @blur="handleInput"
-        class="input"
+        class="input background"
         :class="{ error: inputData.error && inputData.error.length > 0 }"
       />
     </template>

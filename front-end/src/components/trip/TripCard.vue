@@ -31,7 +31,6 @@ const props = defineProps<{
   plans: any;
   btn: any;
 }>();
-console.log(props.plans);
 </script>
 
 <template>
@@ -49,7 +48,7 @@ console.log(props.plans);
         <v-card class="trip-card background-secondary rounded-lg pa-5 flex-wrap" elevation="4">
           <v-row>
             <v-col cols="12" sm="8" md="9" lg="10">
-              <v-card-title class="text-h6 font-weight-bold pa-0">
+              <v-card-title class="text-h4 font-weight-bold pa-0">
                 {{ trip.name }}
               </v-card-title>
               <v-card-subtitle class="px-0 pb-1 font-weight-medium">
@@ -57,7 +56,7 @@ console.log(props.plans);
               </v-card-subtitle>
               <v-card-text class="pa-0 font-weight-medium">
                 {{ formatPL(trip.start_date) }} - {{ formatPL(trip.end_date) }}
-                <span class="color-accent ml-2">{{ trip.activities_count || 0 }} aktywności</span>
+                <span class="color-accent ml-2">{{ trip.activity_count}} aktywności</span>
               </v-card-text>
             </v-col>
 

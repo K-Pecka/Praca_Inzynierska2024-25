@@ -39,7 +39,7 @@ export const usePlans = (tripId:Function) => {
 
     const getPlans = (id?: string) =>
         useQuery({
-            queryKey: ["plans", id],
+            queryKey: ["plans", id ?? tripId()],
             queryFn: () => fetchPlans({ tripId: id ?? tripId() }),
         });
 

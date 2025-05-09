@@ -10,9 +10,10 @@ defineProps({
 
 const store = useActivityStore();
 
-const getTypeLabel = (type: string) => {
-  const found = store.activityTypes.find((t) => t.label === type || String(t.value) === type);
-  return found ? found.label : type;
+const getTypeLabel = (type: number | string) => {
+  const typeAsNumber = Number(type);
+  const found = store.activityTypes.find((t) => t.id === typeAsNumber);
+  return found ? found.name : String(type);
 };
 
 const formatDuration = (minutes: string | number | null) => {

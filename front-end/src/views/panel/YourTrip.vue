@@ -77,6 +77,7 @@ const {trips, isLoading_trips} = getTrips();
                     height-auto
                     stretch
                     text="Usuń wycieczkę"
+                    :onClick=" ()=> deleteTrip.mutate({tripId:String(trip.id)})"
                 />
 
               </v-card-actions>

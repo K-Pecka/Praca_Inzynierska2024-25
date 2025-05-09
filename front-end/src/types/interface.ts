@@ -66,6 +66,19 @@ export interface Expense {
   converted_amount?: string;
 }
 export interface Trip {
+  creator: {id:number,first_name:string,last_name:string};
+  id: number;
+  name: string;
+  start_date: string;
+  end_date: string;
+  country?: string;
+  city?: string;
+  members?: number[];
+  pending_members?: Memebers[];
+  activity_count?: number;
+  budget_amount?: string;
+}
+export interface NewPlan {
   id: number;
   name: string;
   start_date: string;
@@ -161,7 +174,7 @@ export interface NewTrip {
   end_date: string;
 }
 export interface Plan {
-  id: number;
+  id?: number;
   name: string;
   country: string;
   city?: string;
@@ -207,7 +220,7 @@ export interface BudgetData {
 }
 export interface Activity {
   id: number;
-  type: string;
+  type: number;
   name: string;
   date: string;
   start_time?: string;
@@ -223,4 +236,9 @@ export interface User {
   email?: string;
   name?: string;
   is_guest?: boolean;
+}
+
+export interface ActivityType {
+  id: number;
+  name: string;
 }

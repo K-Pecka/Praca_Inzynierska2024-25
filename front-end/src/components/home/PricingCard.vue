@@ -35,6 +35,7 @@ defineProps<PricingCard>();
 
     <AppButton
         :color="buttonVariant"
+        class="border-none"
         max-width="150px"
         text="Wybierz"
     />

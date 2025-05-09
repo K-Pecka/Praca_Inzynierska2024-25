@@ -1,6 +1,6 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
 import { APP_MODE_DEV } from "@/config/envParams";
-import { Activity } from "@/types";
+import { Activity, ActivityType } from "@/types";
 export const createActivity = async (newActivity:Activity,param: Record<string, string>={}) => {
   if (APP_MODE_DEV) {
     return {};
@@ -31,3 +31,14 @@ export const createActivity = async (newActivity:Activity,param: Record<string, 
   
     return Array.isArray(data) ? data : [];
   }
+
+export const fetchActivityTypes = async (tripId: string): Promise<ActivityType[]> => {
+  const url = setParam(apiEndpoints.activityType.all, { tripId });
+  const { data, error } = await fetchData<ActivityType[]>(url);
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  return data || [];
+};

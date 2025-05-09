@@ -3,6 +3,9 @@ import { computed } from "vue";
 import { HomeHeader, Footer } from "@/components/home";
 import { usePageHomeStore } from "@/stores";
 import { images } from "@/data";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 const useStore = usePageHomeStore();
 const SiteName = computed(() => useStore.getSiteName());
@@ -11,16 +14,14 @@ const footerData = computed(() => useStore.getFooterData());
 </script>
 
 <template>
-
   <HomeHeader :links="navData" />
   <v-col cols="12" class="d-flex flex-column align-center">
-    <main class="d-flex flex-column align-center">
+    <main class="d-flex flex-column align-center main-style">
       <router-view />
     </main>
   </v-col>
 
-
-  <Footer :footerData="footerData">
+  <Footer :footerData="footerData" v-if="route.name === 'landing'">
     <template #logo>
       <img
           :src="images.logo.img"
@@ -35,6 +36,10 @@ const footerData = computed(() => useStore.getFooterData());
 .v-container {
   position: relative;
   z-index: 2;
+}
+
+.main-style {
+  margin-top: 10vh;
 }
 
 main {

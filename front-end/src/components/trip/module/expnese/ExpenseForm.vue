@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import AppButton from "@/components/AppButton.vue";
 import {VDateInput} from "vuetify/labs/components";
 import { budget } from "@/data/category/budget";
 const categoryBudget = budget;
 import {useTripStore} from "@/stores/trip/useTripStore";
-const {getTripDetails, createExpense} = useTripStore();
-import {useRoute} from "vue-router";
 import { User } from "@/types";
-const tripId = useRoute().params.tripId as string;
+import { useUtilsStore } from "@/stores";
+const {trip:tripStore,createExpense} = useTripStore();
+const {getTripDetails} = tripStore;
+const {trip} = getTripDetails();
+const tripDateStart = computed(()=>trip?.value?.end_date || '')
+
+const {getTripId} = useUtilsStore();
 const {members} = defineProps<{
   members: User[]
 }>();
@@ -22,9 +26,10 @@ const form = ref({
   note: "",
 });
 const emit = defineEmits(["cancelForm"]);
+
 const submitTicket = () => {
   createExpense.mutate({
-    trip: Number(tripId),
+    trip: getTripId(),
     title: form.value.title,
     amount: form.value.amount,
     currency: form.value.currency,
@@ -42,7 +47,6 @@ const submitTicket = () => {
   <v-col cols="12">
     <v-card class="ticket-form pa-3">
       <v-card-title>Dodaj nowy wydatek</v-card-title>
-
       <v-card-text>
         <v-row>
           <v-col cols="12" lg="6" md="6" class="tight-col">
@@ -74,13 +78,14 @@ const submitTicket = () => {
 
           <v-col cols="12" lg="3" md="6" class="tight-col">
             <v-date-input
+                :max="tripDateStart"
+                :min="new Date().toISOString().split('T')[0]"
                 v-model="form.date"
                 label="Wybierz datę"
                 prepend-icon=""
                 prepend-inner-icon="mdi-calendar"
                 variant="outlined"
                 :hide-actions=true
-                :min="new Date().toISOString().split('T')[0]"
                 bg-color="background"
                 density="comfortable"
             />

@@ -1,7 +1,7 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
-import { Trip, NewTrip } from "@/types/interface";
+import { Plan, NewPlan } from "@/types/interface";
 export const fetchPlans = async (param: Record<string, string> = {}) => {
-  const { data, error } = await fetchData<Trip[]>(
+  const { data, error } = await fetchData<Plan[]>(
     setParam(apiEndpoints.plan.all, param),
     {},
     "GET"
@@ -13,7 +13,7 @@ export const fetchPlans = async (param: Record<string, string> = {}) => {
   return data;
 };
 export const fetchPlan = async () => {
-  const { data, error } = await fetchData<Trip[]>(
+  const { data, error } = await fetchData<Plan>(
     apiEndpoints.plan.detail,
     {},
     "GET"
@@ -37,12 +37,12 @@ export const deleteItinerary = async (param: Record<string, string> = {}) => {
   return param;
 };
 export const createPlan = async (
-  newTrip: Trip,
+  newPlan: Plan,
   param: Record<string, string> = {}
 ) => {
-  const { data, error } = await fetchData<NewTrip>(
+  const { data, error } = await fetchData<NewPlan>(
     setParam(apiEndpoints.plan.create, param),
-    { body: JSON.stringify(newTrip) },
+    { body: JSON.stringify(newPlan) },
     "POST"
   );
   if (error) {

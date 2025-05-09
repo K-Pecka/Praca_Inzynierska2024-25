@@ -1,39 +1,46 @@
 <script setup lang="ts">
-import ExpenseItem from "./ExpenseItem.vue";
 import { computed } from "vue";
+import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import ExpenseItem from "./ExpenseItem.vue";
 import { Expense } from "@/types";
-const { expenses, variant, config, limit } = defineProps<{
+
+dayjs.extend(isSameOrBefore);
+
+const { expenses, variant, config, limit, noIcon } = defineProps<{
   expenses?: Expense[];
   variant?: "manage" | "view";
   config?: Record<string, any>;
   limit?: number;
+  noIcon?: boolean;
 }>();
-
-function convertToDate(dateStr: string): number {
-  return new Date(dateStr).getTime();
-}
 
 const visibleExpenses = computed(() => {
   if (!expenses) return [];
 
-  let filtered = [...expenses].sort((b, a) =>
-    convertToDate(a.date) - convertToDate(b.date)
+  let filtered = [...expenses].sort(
+    (a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf()
   );
 
   if (config?.category) {
     filtered = filtered.filter((e) => e.category === config.category);
   }
+
   if (config?.participants) {
     filtered = filtered.filter((e) => e.user === config.participants);
   }
+
   if (config?.dateFrom) {
-    filtered = filtered.filter(
-      (e) => convertToDate(e.date) >= convertToDate(config.dateFrom)
+    filtered = filtered.filter((e) =>
+      dayjs(e.date).isSame(dayjs(config.dateFrom)) ||
+      dayjs(e.date).isAfter(dayjs(config.dateFrom))
     );
   }
+
   if (config?.dateTo) {
-    filtered = filtered.filter(
-      (e) => convertToDate(e.date) <= convertToDate(config.dateTo)
+    filtered = filtered.filter((e) =>
+      dayjs(e.date).isSame(dayjs(config.dateTo)) ||
+      dayjs(e.date).isBefore(dayjs(config.dateTo))
     );
   }
 
@@ -41,11 +48,13 @@ const visibleExpenses = computed(() => {
 });
 </script>
 
+
 <template>
   <div class="expense-list w-100 ga-6">
     <ExpenseItem
       v-for="(expense, index) in visibleExpenses"
       :key="index"
+      :no-icon="noIcon"
       :expense="expense"
       :variant="variant"
     />

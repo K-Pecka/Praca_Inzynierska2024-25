@@ -63,7 +63,7 @@
 @use "@/assets/styles/variables" as *;
 
 .footer {
-  background-color: $secondary-color;
+  background-color: rgb($secondary-color);
   min-height: $footer-height;
 }
 </style>

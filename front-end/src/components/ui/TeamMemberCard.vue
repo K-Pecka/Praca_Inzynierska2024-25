@@ -1,132 +1,80 @@
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
-
 defineProps<{
   members: {
     name: string;
     role: string;
     description: string;
-    photo?: string;
+    photo: string;
+    github: string;
   }[];
 }>();
-
-const isSmallScreen = ref(false);
-
-onMounted(() => {
-  isSmallScreen.value = window.innerWidth <= 952;
-});
-
-window.addEventListener("resize", () => {
-  isSmallScreen.value = window.innerWidth <= 952;
-});
 </script>
 
 <template>
-  <v-row
-    class="d-flex ga-md-0 ga-8"
-    :style="{
-      'max-width': $vuetify.display.lgAndUp ? '80%' : '100%',
-      margin: 'auto',
-    }"
-  >
-    <v-col
-      v-for="(member, index) in members"
-      :key="member.name"
-      cols="12"
-      sm="10"
-      offset-sm="1"
-      offset-md="0"
-      md="6"
-      class="d-flex"
-    >
-      <v-card
-        class="team-member-card w-100"
-        elevation="4"
-        color="primary"
-        variant="tonal"
+  <v-container fluid class="pa-0">
+    <v-row justify="center" align="stretch" class="my-8" dense>
+      <v-col
+          v-for="(member, index) in members"
+          :key="index"
+          cols="12"
+          sm="6"
+          lg="3"
+          class="d-flex"
       >
-        <v-row
-          class="d-flex align-center pa-4"
-          :class="{
-            'flex-row-reverse':
-              member?.photo && isSmallScreen && index % 2 === 1,
-          }"
-        >
-          <v-col
-            v-if="member.photo"
-            cols="12"
-            sm="4"
-            class="d-flex justify-center"
-          >
-            <div class="team-avatar-wrapper">
-              <v-img
-                :src="member.photo"
-                alt="Zdjęcie członka zespołu"
-                class="team-avatar"
-                aspect-ratio="1"
-                cover
-              />
-            </div>
-          </v-col>
+        <v-card class="team-card elevation-4 w-100 d-flex flex-column">
+          <v-img
+              :src="member.photo"
+              class="team-image"
+              cover
+              alt="Zdjęcie członka zespołu"
+          />
 
-          <v-col cols="12" :class="member.photo ? 'sm:col-span-8' : 'sm:col-span-12'">
-            <v-card-text>
-              <h3
-                class="font-weight-bold"
-                :class="{
-                  'text-body-1': !$vuetify.display.smAndUp,
-                  'text-h6': $vuetify.display.smAndUp,
-                }"
-              >
-                {{ member.name }}
-              </h3>
-              <p class="text-subtitle-1 font-italic">{{ member.role }}</p>
-              <p class="text-body-1">{{ member.description }}</p>
-            </v-card-text>
-          </v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-  </v-row>
+          <div class="card-bottom pa-4 d-flex flex-column flex-grow-1 bottom-card">
+            <div class="text-center mb-4">
+              <h3 class="text-h6 font-weight-bold">{{ member.name }}</h3>
+              <p class="text-subtitle-2 text-grey-darken-1 mb-2">{{ member.role }}</p>
+              <p class="text-body-2 text-grey-darken-2">{{ member.description }}</p>
+            </div>
+
+            <div class="mt-auto">
+              <v-divider class="w-80 mx-auto my-2" />
+              <div class="d-flex justify-center ga-4">
+                <a
+                    :href="member.github"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                  <v-icon color="grey-darken-1" size="40" class="cursor-pointer">
+                    mdi-github
+                  </v-icon>
+                </a>
+              </div>
+            </div>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <style scoped>
-.team-member-card {
-  display: flex;
-  flex-direction: row;
+.team-card {
   border-radius: 16px;
-  transition: transform 0.3s ease;
-}
-
-.team-avatar-wrapper {
-  width: 120px;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
-}
-
-.team-avatar-wrapper:hover {
-  transform: scale(1.05);
-}
-
-.team-avatar {
-  width: 100%;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
   height: 100%;
-  object-fit: cover;
+  flex-direction: column;
 }
-
-.team-member-card:hover {
-  transform: translateY(-5px);
+.team-image {
+  aspect-ratio: 5/7;
+  height: auto;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  overflow: hidden;
+  position: relative;
 }
-
-@media (max-width: 600px) {
-  .team-member-card {
-    flex-direction: column;
-  }
-
-  .team-avatar-wrapper {
-    margin: 0 auto;
-  }
+.bottom-card{
+  height: 60%;
 }
 </style>
+

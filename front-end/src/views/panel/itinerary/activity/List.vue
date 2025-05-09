@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useActivityStore} from "@/stores/trip/useActivityStore";
 import ActivityCard from "@/components/trip/module/activity/ActivityCard.vue";
 import ActivityForm from "@/components/trip/module/activity/ActivityForm.vue";
@@ -82,7 +82,11 @@ const activity = computed(
           return acc;
         }, {} as Record<string, Activity[]>)
 )
+onMounted(() => {
+  activityStore.loadActivityTypes(id);
+});
 
+activityStore.loadActivityTypes(id);
 </script>
 
 <template>
@@ -126,6 +130,7 @@ const activity = computed(
                     v-for="activityItem in activity?.[day] ?? []"
                     :key="activityItem.id"
                     :activity="activityItem"
+                    class="mb-3"
                 />
               </v-row>
             </v-card-item>
