@@ -118,7 +118,7 @@ export const aboutTeam = {
         {
             name: "Mateusz Wiśniewski",
             role: "Team Leader",
-            description: "Koordynowanie zespołu, zarządzanie sprintami, kontrolowanie realizacji zadań, projektowanie interfejsu, programista aplikacji mobilnej i backendu.",
+            description: "Koordynowanie zespołu, zarządzanie sprintami, kontrolowanie realizacji zadań, projektowanie interfejsu, regularne testowanie aplikacji webowej,  programista aplikacji mobilnej i backendu.",
             photo: "/src/assets/images/avatar/MW_avatar.png",
             github: "https://github.com/s24893-pj"
         },
