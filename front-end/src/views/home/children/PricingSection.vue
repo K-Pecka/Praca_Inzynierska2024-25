@@ -21,7 +21,7 @@ const {smAndDown} = useDisplay()
     </template>
 
     <template #content>
-      <v-col cols="7">
+      <v-col cols="12" lg="7" md="10" sm="12" xs="12">
         <v-row justify="center">
           <v-col
               v-for="(plan, index) in pricingPlans"
