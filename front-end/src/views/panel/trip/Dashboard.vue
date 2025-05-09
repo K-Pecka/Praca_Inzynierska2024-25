@@ -19,7 +19,9 @@ const {expensesByTrip, isLoading_expenses} = getExpensByTrip();
     <template #content>
 
       <!-- Loadder -->
-      <template v-if="isLoading_trip"> Loading...</template>
+      <template v-if="isLoading_trip">
+        <AppLoader text="Ładowanie danych..." />
+      </template>  
       <template v-else-if="error_trip">Error ...</template>
       <template v-else>
         <v-col cols="12">

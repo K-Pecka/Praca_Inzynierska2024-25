@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { useTripStore, useUtilsStore } from "@/stores";
+import { useTripStore, useUtilsStore, useAuthStore } from "@/stores";
 import AppButton from "@/components/AppButton.vue";
+import Loader from "@/components/common/AppLoader.vue"
 import {images} from "@/data";
 useTripStore().initialize();
-
+const {userData} = useAuthStore();
+const {isOwner} =userData;
 const {formatDatePolish} = useUtilsStore()
 const {trip} = useTripStore();
 const {getTrips,deleteTrip} = trip
 const {trips, isLoading_trips} = getTrips();
-
 </script>
 
 <template>
@@ -32,9 +33,11 @@ const {trips, isLoading_trips} = getTrips();
         />
       </router-link>
     </v-row>
-
+    <v-row v-if="isLoading_trips">
+      <Loader text="Ładowanie danych..." />
+    </v-row>
     <!-- Trip cards -->
-    <v-row v-if="trips">
+    <v-row v-else-if="trips">
       <v-col
           v-if="trips.length > 0"
           v-for="trip in trips" :key="trip.id"
@@ -61,17 +64,26 @@ const {trips, isLoading_trips} = getTrips();
                 <v-card-subtitle class="font-weight-medium pb-6">
                   {{ formatDatePolish(trip.start_date) }} - {{ formatDatePolish(trip.end_date) }}
                 </v-card-subtitle>
-
+                
                 <!-- Buttons -->
                 <AppButton
                     :to="{ name: 'panel', params: { tripId: trip.id } }"
                     color="primary"
                     height-auto
                     stretch
-                    text="Zarządzaj wycieczką"
+                    :text="isOwner(trip.creator.id) ? 'Zarządzaj wycieczką' : 'Podgląd wycieczki'"
                 />
 
+                <v-card-subtitle
+                  v-if="!isOwner(trip.creator.id)"
+                  class="text-subtitle-2 d-flex align-center text-grey-2 pt-4"
+                >
+                  <v-icon size="18" class="mr-1" color="text-grey-2">mdi-account</v-icon>
+                  {{ trip.creator.first_name }} {{ trip.creator.last_name }}
+                </v-card-subtitle>
+
                 <AppButton
+                    v-else
                     to=""
                     color="accent"
                     height-auto

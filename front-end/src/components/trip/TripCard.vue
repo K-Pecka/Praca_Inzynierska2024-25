@@ -1,8 +1,10 @@
 <script setup lang="ts">
 
 import router from "@/router";
-import { useTripStore } from "@/stores";
-
+import { useTripStore,useAuthStore } from "@/stores";
+import { computed } from "vue";
+const { userData } = useAuthStore();
+const { isOwner } = userData;
 const {plan} = useTripStore()
 const {handleDeleteItinerary}=plan;
 function formatPL(dateString: string): string {
@@ -10,27 +12,13 @@ function formatPL(dateString: string): string {
   if (isNaN(dateObj.getTime())) return dateString;
   return new Intl.DateTimeFormat('pl-PL').format(dateObj);
 }
-const items = [
-  {
-    title: "Zarządzaj planem",
-    class: "primary",
-    icon: "mdi-pencil",
-    onclick: (tripId: string, itineraryId: string) =>
-        router.push({name: "ActivityView", params: {tripId: tripId, planId: itineraryId}}),
-  },
-  {
-    title: "usuń plan",
-    class: "red",
-    icon: "mdi-trash-can-outline",
-    onclick: (tripId: string, itineraryId: string) =>
-        handleDeleteItinerary(tripId, itineraryId),
-  },
-]
 
 const props = defineProps<{
+  isOwner:boolean,
   plans: any;
   btn: any;
 }>();
+const btnValue = computed(()=> props.btn.filter((btn:{showIfOwner:boolean})=> btn.showIfOwner == props.isOwner))
 </script>
 
 <template>
@@ -63,7 +51,7 @@ const props = defineProps<{
             <!-- Buttons -->
             <v-col cols="12" sm="4" md="3" lg="2" class="d-flex flex-row justify-sm-end align-center">
               <v-btn
-                  v-for="(action, i) in items"
+                  v-for="(action, i) in btnValue"
                   :key="i"
                   @click="action.onclick(String(trip.trip),String(trip.id))"
                   variant="flat"

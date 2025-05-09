@@ -2,7 +2,6 @@
 import {useRoute} from "vue-router";
 import {useTripStore} from "@/stores";
 import AppButton from "@/components/AppButton.vue";
-import {no} from "vuetify/locale";
 
 const route = useRoute();
 const tripId = Number(route.params.tripId);
@@ -24,16 +23,17 @@ defineProps<{
   <v-col cols="12">
     <v-row class="flex-column">
       <v-col cols="12">
-        <v-row :class="{ 'justify-center': center }" class="title color-text" no-gutters>
+        <v-row :class="{ 'justify-center': center }" class="title font-weight-bold color-text" no-gutters>
+          <span v-if="isLoading_trip">
+            <AppLoader text="Ładowanie danych..."/>
+          </span>
           <span v-if="!isLoading_trip && !error_trip && !title">
             {{ trip?.name }}
           </span>
           <span v-else-if="!isLoading_trip && !error_trip" class="color-primary text-h3 font-weight-bold">
             {{ title }}
           </span>
-          <span v-else>
-            ...
-          </span>
+          
         </v-row>
       </v-col>
       <v-col cols="12 justify-space-between" v-if="!noSubTitle">

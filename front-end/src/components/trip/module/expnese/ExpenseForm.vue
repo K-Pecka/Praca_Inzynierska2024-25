@@ -155,7 +155,7 @@ const submitTicket = () => {
       <v-card-actions class="form-actions">
         <AppButton
             @click="$emit('cancelForm')"
-            color="secondary"
+            color="accent"
             text="Anuluj"
             font-auto
             height-auto

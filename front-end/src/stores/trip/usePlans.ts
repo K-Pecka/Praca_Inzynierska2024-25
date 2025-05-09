@@ -46,20 +46,30 @@ export const usePlans = (tripId:Function) => {
     const yourPlans = computed(() => ({
         btn: [
             {
-                title: "Zarządzaj planem",
-                class: "primary",
-                icon: "mdi-pencil",
-                onclick: (trip: string, id: string) =>
-                    router.push({ name: "ActivityView", params: { tripId: trip, planId: id } }),
+              title: "Zarządzaj planem",
+              class: "primary",
+              icon: "mdi-pencil",
+              showIfOwner: true,
+              onclick: (tripId: string, itineraryId: string) =>
+                  router.push({name: "ActivityView", params: {tripId: tripId, planId: itineraryId}}),
             },
             {
-                title: "usuń plan",
-                class: "red",
-                icon: "mdi-trash-can-outline",
-                onclick: (tripId: string, itineraryId: string) =>
-                    handleDeleteItinerary(tripId, itineraryId),
+              title: "usuń plan",
+              class: "red",
+              icon: "mdi-trash-can-outline",
+              showIfOwner: true,
+              onclick: (tripId: string, itineraryId: string) =>
+                  handleDeleteItinerary(tripId, itineraryId),
             },
-        ],
+            {
+            title: "Podgląd planu",
+            class: "primary",
+            icon: "mdi-eye-outline",
+            showIfOwner: false,
+            onclick: (tripId: string, itineraryId: string) =>
+              router.push({ name: "ActivityView", params: { tripId, planId: itineraryId } }),
+            }
+          ],
         plans: getPlans,
     }));
 

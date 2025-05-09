@@ -260,8 +260,16 @@ const ExpensesByUser = computed(() => {
             </v-container>
           </v-card-text>
           <v-card-actions class="justify-end">
-            <v-btn text @click="showFilters = false">Anuluj</v-btn>
-            <v-btn color="primary" @click="filter">Zastosuj</v-btn>
+            <AppButton
+              color="accent"
+              text="Anuluj"
+              @click="showFilters = false"
+            />
+            <AppButton
+                color="primary"
+                text="Zastosuj"
+                @click="filter"
+            />
           </v-card-actions>
         </v-card>
       </v-dialog>
