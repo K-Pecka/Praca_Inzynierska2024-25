@@ -3,9 +3,6 @@ import { computed } from "vue";
 import { HomeHeader, Footer } from "@/components/home";
 import { usePageHomeStore } from "@/stores";
 import { images } from "@/data";
-import { useRoute } from "vue-router";
-
-const route = useRoute();
 
 const useStore = usePageHomeStore();
 const SiteName = computed(() => useStore.getSiteName());
@@ -21,7 +18,7 @@ const footerData = computed(() => useStore.getFooterData());
     </main>
   </v-col>
 
-  <Footer :footerData="footerData" v-if="route.name === 'landing'">
+  <Footer :footerData="footerData">
     <template #logo>
       <img
           :src="images.logo.img"
