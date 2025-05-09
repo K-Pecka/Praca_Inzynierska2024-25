@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import {useDisplay} from 'vuetify'
-
 import {pricingPlans} from "@/data/page/home";
 import PricingCard from "@/components/home/PricingCard.vue";
 import Section from "../../../components/common/Section.vue";
 import {HeaderSection} from "@/components";
-
-const {smAndDown} = useDisplay()
 
 </script>
 
@@ -21,14 +17,14 @@ const {smAndDown} = useDisplay()
     </template>
 
     <template #content>
-      <v-col cols="12" lg="7" md="10" sm="12" xs="12">
         <v-row justify="center">
           <v-col
               v-for="(plan, index) in pricingPlans"
               :key="plan.name"
               cols="12"
-              sm="6"
-              md="4"
+              md="6"
+              lg="4"
+              xl="3"
           >
             <v-fade-transition>
               <PricingCard
@@ -50,7 +46,6 @@ const {smAndDown} = useDisplay()
           <router-link :to="{ name: 'contactUs' }">Skontaktuj się</router-link>
           z nami!
         </p>
-      </v-col>
     </template>
   </Section>
 </template>

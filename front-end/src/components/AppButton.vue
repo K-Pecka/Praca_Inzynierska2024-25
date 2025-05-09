@@ -1,9 +1,11 @@
 <script setup lang="ts">
 defineProps<{
   text?: string;
-  color?: "primary" | "secondary" | "accent" | "empty";
+  color?: "primary" | "secondary" | "accent" | "empty" | "orange";
   width?: string;
   maxWidth?: string;
+  minHeight?: string;
+  icon?: boolean;
   heightAuto?: boolean | string;
   fontAuto?: boolean | string;
   dense?: boolean | string;
@@ -17,7 +19,7 @@ defineProps<{
   <v-btn
       class="button-media font-weight-bold text-none w-100"
       v-bind="$attrs"
-      :style="{ maxWidth: maxWidth ? width : '200px', width: width }"
+      :style="{ maxWidth: maxWidth ? width : '200px', width: width, minHeight: minHeight }"
       :class="[
        color,
        heightAuto ? 'height-auto' : '',
@@ -28,6 +30,7 @@ defineProps<{
       :onClick = onClick
   >
     {{text}}
+    <v-icon v-if="icon" class="ml-3">mdi-send</v-icon>
   </v-btn>
 </template>
 
@@ -52,6 +55,11 @@ defineProps<{
 
 .accent {
   background-color: $accent-color;
+  color: white;
+}
+
+.orange {
+  background-color: #F57F17;
   color: white;
 }
 

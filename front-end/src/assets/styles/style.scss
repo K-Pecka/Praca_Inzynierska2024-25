@@ -19,6 +19,10 @@ html {
   max-width: 2560px;
 }
 
+input {
+  border-color: white !important;
+}
+
 .color-text {
     color: $text-color;
 }

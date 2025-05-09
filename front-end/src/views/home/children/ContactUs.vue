@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import {ref, computed} from 'vue';
 import Section from '@/components/common/Section.vue';
 import AppButton from '@/components/AppButton.vue';
-import { useNotificationStore } from '@/stores';
+import {useNotificationStore} from '@/stores';
 import {HeaderSection} from "@/components";
 
-const { setSuccessCurrentMessage, setErrorCurrentMessage } = useNotificationStore();
+const {setSuccessCurrentMessage, setErrorCurrentMessage} = useNotificationStore();
 
 const form = ref({
   name: '',
   email: '',
+  title: '',
   message: '',
 });
 
@@ -43,65 +44,269 @@ function handleSubmit() {
   <Section class="pb-10">
     <template #title>
       <HeaderSection
-          title="Skontaktuj się z nami"
-          subtitle="Masz pytania? Skontaktuj się z nami – chętnie pomożemy."
+          title="Get In"
+          title-gradient-text="Touch"
+          subtitle="Gotowy na zbudowanie niesamowitej współpracy z naszą aplikacją? Zostaw nam wiadomość i odezwiemy się do Ciebie."
           center
       />
     </template>
 
     <template #content>
-      <v-container>
-        <v-row justify="center">
-          <v-col cols="12" md="4">
-            <h3>Dane kontaktowe</h3>
-            <p><v-icon start size="20">mdi-email-outline</v-icon> plannder@gmail.com</p>
-            <p><v-icon start size="20">mdi-phone-outline</v-icon> +48&nbsp;123&nbsp;456&nbsp;789</p>
-            <p><v-icon start size="20">mdi-map-marker-outline</v-icon> Gdańsk, ul.&nbsp;Gdańska&nbsp;1</p>
-          </v-col>
+      <v-row justify="center">
 
-          <v-col cols="12" md="6">
-            <v-form validate-on="blur lazy" @submit.prevent="handleSubmit">
-              <v-text-field
-                  v-model="form.name"
-                  :rules="nameRules"
-                  label="Imię"
-                  variant="outlined"
-                  required
-                  bg-color="background"
-                  density="comfortable"
-              />
-              <v-text-field
-                  v-model="form.email"
-                  :rules="emailRules"
-                  label="E‑mail"
-                  type="email"
-                  variant="outlined"
-                  required
-                  bg-color="background"
-                  density="comfortable"
-              />
-              <v-textarea
-                  v-model="form.message"
-                  :rules="messageRules"
-                  label="Wiadomość"
-                  variant="outlined"
-                  rows="4"
-                  required
-                  bg-color="background"
-                  density="comfortable"
-              />
-              <AppButton
-                  color="primary"
-                  type="submit"
-                  max-width="120px"
-                  class="mt-4 font-weight-bold"
-                  :disabled="!isFormValid"
-                  text="Wyślij"
-              />
-            </v-form>
-          </v-col>
-        </v-row>
-      </v-container>
+        <!-- Left v-card -->
+        <v-col cols="12" lg="6">
+          <v-card rounded="lg" class="h-100">
+            <v-card-text>
+              <v-form validate-on="blur lazy" @submit.prevent="handleSubmit" class="pa-4">
+
+                <!-- Name input -->
+                <v-text-field
+                    v-model="form.name"
+                    :rules="nameRules"
+                    label="Twoje imię"
+                    variant="outlined"
+                    required
+                    bg-color="background"
+                    base-color="blue-grey-lighten-3"
+                    rounded="lg"
+                    density="comfortable"
+                />
+
+                <!-- Email input -->
+                <v-text-field
+                    v-model="form.email"
+                    :rules="emailRules"
+                    label="Twój e‑mail"
+                    type="email"
+                    variant="outlined"
+                    required
+                    bg-color="background"
+                    base-color="blue-grey-lighten-3"
+                    rounded="lg"
+                    density="comfortable"
+                />
+
+                <!-- Subject input -->
+                <v-text-field
+                    v-model="form.title"
+                    :rules="messageRules"
+                    label="Temat"
+                    variant="outlined"
+                    required
+                    bg-color="background"
+                    base-color="blue-grey-lighten-3"
+                    rounded="lg"
+                    density="comfortable"
+                />
+
+                <!-- Text input -->
+                <v-textarea
+                    v-model="form.message"
+                    :rules="messageRules"
+                    label="Wiadomość"
+                    variant="outlined"
+                    rows="4"
+                    required
+                    bg-color="background"
+                    base-color="blue-grey-lighten-3"
+                    rounded="lg"
+                    density="comfortable"
+                />
+
+                <!-- Send button -->
+                <AppButton
+                    color="primary"
+                    type="submit"
+                    max-width="120px"
+                    min-height="50px"
+                    class="mt-4 font-weight-bold"
+                    icon
+                    rounded="lg"
+                    text="Wyślij"
+                />
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-col>
+
+        <!-- Right v-card -->
+        <v-col cols="12" lg="6">
+          <v-card rounded="lg" class="h-100">
+            <v-card-text>
+
+              <!-- email card -->
+              <v-row
+                  class="contact-item rounded-lg mx-1 mx-lg-8 mx-md-8 px-7 py-2 mt-1 mb-4"
+                  justify="center"
+              >
+                <v-col cols="auto" lg="1">
+                  <v-row
+                      justify="center"
+                      no-gutters
+                      class="pr-0 pr-md-4 pr-lg-4"
+                  >
+                  <span class="rounded-lg contact-accent-bg">
+                    <v-icon size="23px" class="contact-icon">
+                      mdi-email-outline
+                    </v-icon>
+                  </span>
+                  </v-row>
+                </v-col>
+                <v-col v-if="$vuetify.display.width > 650">
+                  <v-row
+                      class="flex-column"
+                      justify="start"
+                      align="start"
+                      no-gutters
+                  >
+                    <span class="text-h5 contact-title mb-2">
+                      Wyślij nam maila
+                    </span>
+
+                    <span class="text-h6 color-text mb-1 contact-content">
+                    Odpowiemy w ciągu 24 godzin
+                    </span>
+
+                    <span class="text-h6 contact-accent-color mb-1 contact-footer">
+                      plannder@kontakt.com
+                    </span>
+                  </v-row>
+                </v-col>
+              </v-row>
+
+              <!-- Phone card -->
+              <v-row
+                  class="contact-item rounded-lg mx-1 mx-lg-8 mx-md-8 px-7 py-2 mt-1 mb-4"
+                  justify="center"
+              >
+                <v-col
+                    cols="auto"
+                    lg="1"
+                >
+                  <v-row
+                      justify="center"
+                      no-gutters
+                      class="pr-0 pr-md-4 pr-lg-4"
+                  >
+                  <span class="rounded-lg contact-orange-bg">
+                    <v-icon
+                        size="23px"
+                        class="contact-icon"
+                    >
+                      mdi-phone-outline
+                    </v-icon>
+                  </span>
+                  </v-row>
+                </v-col>
+                <v-col v-if="$vuetify.display.width > 650">
+                  <v-row
+                      class="flex-column"
+                      justify="start"
+                      align="start"
+                      no-gutters
+                  >
+                  <span class="text-h5 contact-title mb-2">
+                    Zadzwoń do nas
+                  </span>
+                    <span class="text-h6 color-text mb-1 contact-content">
+                    Pon-Pt od 9:00 do 18:00
+                  </span>
+                    <span class="text-h6 contact-accent-color mb-1 contact-footer">
+                      +48 883 777 767
+                    </span>
+                  </v-row>
+                </v-col>
+              </v-row>
+
+              <!-- localisation card -->
+              <v-row
+                  class="contact-item rounded-lg mx-1 mx-lg-8 mx-md-8 px-7 py-2 mt-1 mb-4"
+                  justify="center"
+              >
+                <v-col cols="auto" lg="1">
+                  <v-row
+                      justify="center"
+                      no-gutters
+                      class="pr-0 pr-md-4 pr-lg-4"
+                  >
+                  <span class="rounded-lg contact-cyan-bg">
+                    <v-icon size="23px" class="contact-icon">
+                      mdi-map-marker-outline
+                    </v-icon>
+                  </span>
+                  </v-row>
+                </v-col>
+                <v-col v-if="$vuetify.display.width > 650">
+                  <v-row
+                      class="flex-column"
+                      justify="start"
+                      align="start"
+                      no-gutters
+                  >
+                  <span class="text-h5 contact-title mb-2">
+                    Odwiedź nas
+                  </span>
+                    <span class="text-h6 color-text mb-1 contact-content">
+                      Przywitaj się z nami osobiście w naszym biurze
+                    </span>
+                    <span class="text-h6 contact-accent-color mb-1 contact-footer">
+                    Targ drzewny 14, Gdańsk, PL
+                  </span>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
     </template>
   </Section>
 </template>
+
+<style scoped lang="scss">
+@use "@/assets/styles/variables" as *;
+
+.contact-item {
+  border: 1px solid rgb(0, 0, 0, 0.04);
+}
+
+.contact-icon {
+  margin: 10px;
+  color: white;
+}
+
+.contact-content {
+  line-height: 0.9;
+}
+
+.contact-footer {
+  word-break: break-word;
+}
+
+.contact-title {
+  font-weight: 600;
+}
+
+.contact-accent-bg {
+  background-color: #B39DDB;
+}
+
+.contact-orange-bg {
+  background-color: #F57F17;
+}
+
+.contact-cyan-bg {
+  background-color: #4DD0E1;
+}
+
+.contact-accent-color {
+  color: #B39DDB;
+}
+
+:deep(.v-field-label) {
+  color: black;
+  opacity: 1;
+  font-weight: 600;
+}
+</style>
