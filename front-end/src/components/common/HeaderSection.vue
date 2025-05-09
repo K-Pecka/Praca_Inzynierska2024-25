@@ -24,11 +24,11 @@ defineProps<{
   <v-col cols="12">
     <v-row class="flex-column">
       <v-col cols="12">
-        <v-row :class="{ 'justify-center': center }" class="title font-weight-bold color-text" no-gutters>
+        <v-row :class="{ 'justify-center': center }" class="title color-text" no-gutters>
           <span v-if="!isLoading_trip && !error_trip && !title">
             {{ trip?.name }}
           </span>
-          <span v-else-if="!isLoading_trip && !error_trip" class="color-primary">
+          <span v-else-if="!isLoading_trip && !error_trip" class="color-primary text-h3 font-weight-bold">
             {{ title }}
           </span>
           <span v-else>
@@ -36,12 +36,12 @@ defineProps<{
           </span>
         </v-row>
       </v-col>
-      <v-col cols="12 justify-space-between">
+      <v-col cols="12 justify-space-between" v-if="!noSubTitle">
         <v-row :class="center ? 'justify-center' : 'justify-space-between'" no-gutters>
-          <span class="text-h5" v-if="!noSubTitle && subtitle">
+          <span class="text-h4" v-if="!noSubTitle && subtitle">
             {{ subtitle }}
           </span>
-          <span v-else-if="!noSubTitle">
+          <span v-else>
             ...
           </span>
           <AppButton

@@ -2,14 +2,16 @@
 import TeamMemberCard from "@/components/ui/TeamMemberCard.vue";
 import Section from "@/components/common/Section.vue";
 import { aboutTeam } from "@/data";
+import {HeaderSection} from "@/components";
 </script>
 
 <template>
   <Section class="pb-10">
     <template #title>
-      <h1 class="text-h3 text-center text-primary font-weight-bold mb-6">
-          {{ aboutTeam.mainTitle }}
-        </h1>
+      <HeaderSection
+          :title="aboutTeam.mainTitle"
+          no-sub-title center
+      />
     </template>
     <template #content>
       <v-container>

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-col cols="12" class="section mx-auto mt-7">
+    <v-col cols="12" class="section mx-auto">
       <v-sheet elevation="0" class="section__header bg-transparent mb-10">
         <slot name="title"></slot>
       </v-sheet>
