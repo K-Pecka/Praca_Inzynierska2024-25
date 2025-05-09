@@ -3,7 +3,7 @@ import {ref} from "vue";
 import {useMutation} from "@tanstack/vue-query";
 import {useNotificationStore} from "@/stores/ui/useNotificationStore";
 import router from "@/router";
-import {TOKEN} from "@/types";
+import {TOKEN,User} from "@/types";
 import {usePermissionStore} from "@/stores";
 import {
     loginFetch,
@@ -26,7 +26,7 @@ export const useAuthStore = defineStore(
         } = useNotificationStore();
         const {hasPermission} = usePermissionStore();
         const token = ref<TOKEN | null>(null);
-        const user = ref<{ first_name: string; last_name: string } | null>(null);
+        const user = ref<User | null>({first_name:"K",last_name:"P",userId:3});
         const getPermission = useMutation({
             mutationFn: fetchPermission,
         });
@@ -83,11 +83,12 @@ export const useAuthStore = defineStore(
         const saveToken = (data: TOKEN) => {
             token.value = data;
         };
-        const saveUser = (data: { first_name: string; last_name: string }) => {
-            refreshToken()
+        const saveUser = (data: User): void => {
+            console.log(data);
             user.value = data;
         };
-
+        const isOwner = (id:number)=>id == getUser()?.userId
+        const getUser = () =>(user.value)
         const getToken = () => {
             return token.value;
         };
@@ -108,6 +109,7 @@ export const useAuthStore = defineStore(
             onSuccess: () => {
                 setSuccessCurrentMessage(logOutSuccess());
                 token.value = null;
+                user.value = null;
                 router.push({name: "landing"});
             },
             onError: (err) => {
@@ -117,10 +119,13 @@ export const useAuthStore = defineStore(
         const loginMutation = useMutation({
             mutationFn: loginFetch,
             onSuccess: (data) => {
-                const {access, refresh, last_name, first_name} = data;
+                console.log("1",data)
+                const {access, refresh, last_name, first_name,profile} = data;
                 setSuccessCurrentMessage(loginSuccess());
+                console.log(data)
                 saveToken({access, refresh});
-                saveUser({last_name, first_name});
+                saveUser(data);
+                console.log("12",data)
                 router.push({name: "landing"});
             },
             onError: (err) => {
@@ -147,12 +152,13 @@ export const useAuthStore = defineStore(
 
                 return {
                     first_name: dto.first_name || user.value?.first_name || '',
-                    last_name: dto.last_name || user.value?.last_name || ''
+                    last_name: dto.last_name || user.value?.last_name || '',
+                    userId:0
                 };
             },
-            onSuccess: ({first_name, last_name}) => {
+            onSuccess: ({first_name, last_name,userId}) => {
                 if (first_name && last_name) {
-                    saveUser({first_name, last_name});
+                    saveUser({first_name, last_name,userId});
                     setSuccessCurrentMessage('Zaktualizowano dane profilu');
                 }
             },
@@ -167,6 +173,10 @@ export const useAuthStore = defineStore(
         };
 
         return {
+            userData:{
+                getUser,
+                isOwner
+            },
             token,
             user,
             loginMutation,
@@ -180,6 +190,7 @@ export const useAuthStore = defineStore(
             checkPermission,
             updateProfileMutation,
             getUserInitials,
+            getUser
         };
     },
     {

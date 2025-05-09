@@ -69,10 +69,11 @@ const toggleForm = () => {
           <v-row>
             <v-col>
               <ParticipantAddForm
-                  v-if="showForm"
-                  title="Dodaj uczestnika"
-                  @cancel="showForm = false"
-                  @submitForm="inviteParticipant"
+                v-if="showForm"
+                v-model:dialog="showForm"
+                title="Dodaj uczestnika"
+                @cancel="showForm = false"
+                @submitForm="inviteParticipant"
               />
             </v-col>
           </v-row>

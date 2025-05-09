@@ -144,7 +144,7 @@ const { activityTypes } = useActivityStore();
     <v-card-actions>
       <v-spacer />
       <AppButton
-          color="secondary"
+          color="accent"
           text="Anuluj"
           @click="$emit('cancelForm')"
       />

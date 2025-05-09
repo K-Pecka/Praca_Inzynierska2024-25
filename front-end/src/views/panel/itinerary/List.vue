@@ -4,7 +4,7 @@ import {useTripStore} from "@/stores/trip/useTripStore";
 import HeaderSection from "@/components/common/HeaderSection.vue";
 import AppButton from "@/components/AppButton.vue";
 import {images} from "@/data";
-import { useUtilsStore } from "@/stores";
+import { useUtilsStore,useAuthStore } from "@/stores";
 const {getTripId} = useUtilsStore();
 const {yourPlans} = useTripStore();
 const {data: rawPlans, isLoading, error} = yourPlans.plans();
@@ -12,6 +12,10 @@ const {data: rawPlans, isLoading, error} = yourPlans.plans();
 const {trip:tripStore} = useTripStore();
 const {getTripDetails} = tripStore;
 const {trip} = getTripDetails();
+
+const { userData } = useAuthStore();
+const { isOwner } = userData;
+
 </script>
 
 <template>
@@ -24,7 +28,7 @@ const {trip} = getTripDetails();
       <p v-if="isLoading">Ładowanie...</p>
       <p v-else-if="error">Błąd: {{ error.message }}</p>
       <template v-else-if="trip && rawPlans && rawPlans.length">
-        <TripCard :plans="rawPlans" :btn="yourPlans.btn ?? []"/>
+        <TripCard :plans="rawPlans" :btn="yourPlans.btn ?? []" :isOwner = "isOwner(trip?.creator?.id)"/>
       </template>
 
       <!-- Empty state -->

@@ -1,15 +1,31 @@
+<script setup lang="ts">
+defineProps({
+  cols: {
+    type: String,
+    default: '10',
+    required: false,
+  },
+});
+</script>
+
 <template>
   <v-container>
-    <v-col cols="12" class="section mx-auto">
-      <v-sheet elevation="0" class="section__header bg-transparent mb-10">
-        <slot name="title"></slot>
-      </v-sheet>
-      <v-sheet elevation="0" class="section__content bg-transparent" >
-        <slot name="content"></slot>
-      </v-sheet>
-      <v-sheet elevation="0" class="section__footer bg-transparent">
-        <slot name="footer"></slot>
-      </v-sheet>
+    <v-col cols="12" class="section">
+      <v-row elevation="0" class="section__header bg-transparent mb-10 align-content-space-around" justify="center">
+        <v-col :cols="12" :sm="cols" :md="cols" :lg="cols">
+          <slot name="title"></slot>
+        </v-col>
+      </v-row>
+      <v-row elevation="0" class="section__content bg-transparent" justify="center">
+        <v-col :cols="12" :sm="cols" :md="cols" :lg="cols">
+          <slot name="content"></slot>
+        </v-col>
+      </v-row>
+      <v-col :cols="12" :sm="cols" :md="cols" :lg="cols">
+        <v-row elevation="0" class="section__footer bg-transparent">
+          <slot name="footer"></slot>
+        </v-row>
+      </v-col>
     </v-col>
   </v-container>
 </template>
@@ -23,19 +39,18 @@
   flex-direction: column;
   align-items: center;
 }
+
 .section {
   width: $panel-content-width;
-  &__header{
+
+  &__header {
     text-align: center;
   }
-  
+
   &__content {
     line-height: 1.5;
     color: $text-color;
-    width: 100%;
   }
 }
 
 </style>
-<script setup lang="ts">
-</script>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useActivityStore} from "@/stores/trip/useActivityStore";
-
 defineProps({
+  isOwner:Boolean,
   activity: {
     type: Object,
     required: true,
@@ -36,7 +36,6 @@ const formatTime = (timeString: string) => {
   if (!timeString) return "";
   return timeString.slice(0, 5);
 };
-
 </script>
 
 <template>
@@ -44,7 +43,7 @@ const formatTime = (timeString: string) => {
     <v-card class="activity-card w-100" elevation="0">
       <v-card-text>
         <v-row class="activity-header justify-space-between" no-gutters>
-          <v-col cols="11">
+          <v-col :cols="isOwner ? 11 : 12">
             <v-sheet class="bg-transparent">
               <v-row no-gutters>
                 <span class="activity-title font-weight-bold">{{ activity.name }}</span>
@@ -76,7 +75,7 @@ const formatTime = (timeString: string) => {
               </v-row>
             </v-sheet>
           </v-col>
-          <v-col cols="1">
+          <v-col cols="1" v-if="isOwner">
             <v-card-actions class="justify-end">
               <v-btn icon variant="text" color="#E44A3E" class="delete-btn">
                 <v-icon size="32">mdi-trash-can-outline</v-icon>

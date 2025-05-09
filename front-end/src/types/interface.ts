@@ -77,6 +77,7 @@ export interface Trip {
   pending_members?: Memebers[];
   activity_count?: number;
   budget_amount?: string;
+  isOwner?:boolean;
 }
 export interface NewPlan {
   id: number;

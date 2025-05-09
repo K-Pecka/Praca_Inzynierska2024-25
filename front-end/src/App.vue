@@ -1,5 +1,5 @@
 <template>
-  <v-app class="bg-app application--wrap">
+  <v-app class="bg-app">
       <router-view />
   </v-app>
 </template>
@@ -38,11 +38,7 @@ watch(
 
 <style lang="scss" scoped>
 @use "@/assets/styles/variables" as *;
-.application--wrap{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+
 .text-primary {
  color: rgb($primary-color)
 }

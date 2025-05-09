@@ -36,7 +36,7 @@ const footerData = computed(() => useStore.getFooterData());
 }
 
 .main-style {
-  margin-top: 10vh;
+  margin-top: 8rem;
 }
 
 main {

@@ -11,6 +11,7 @@ import "@mdi/font/css/materialdesignicons.css";
 import piniaPersist from "pinia-plugin-persistedstate";
 import { piniaBasePlugin } from "./plugins/piniaBase";
 import { messages } from "./lib/messages";
+
 const app = createApp(App);
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,7 +20,6 @@ const queryClient = new QueryClient({
     }
   }
 });
-
 const pinia = createPinia();
 pinia.use(piniaPersist);
 pinia.use(piniaBasePlugin);
