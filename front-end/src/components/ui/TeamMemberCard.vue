@@ -61,13 +61,17 @@ defineProps<{
   flex-direction: column;
 }
 .team-image {
-  height: 400px;
-  min-height: 400px;
-  max-height: 400px;
+  aspect-ratio: 5/7;
+  max-height: 60%;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   overflow: hidden;
   position: relative;
+}
+@media (max-width: 830px) {
+  .team-image {
+    max-height: 50%;
+  }
 }
 
 /* Usunięcie efektu padding-bottom od Vuetify */
