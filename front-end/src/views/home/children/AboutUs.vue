@@ -20,9 +20,6 @@ import { aboutTeam } from "@/data";
                 v-for="(paragraph, index) in aboutTeam.paragraphs"
                 :key="index"
               >
-                <span class="text-h5 my-4 text-black-70 font-weight-bold">
-                  {{ paragraph.title }}
-                </span>
                 <p class="text-justify">{{ paragraph.paragraph }}</p>
                 <template v-if="index == 0">
                   <TeamMemberCard :members="aboutTeam.teamMembers" />

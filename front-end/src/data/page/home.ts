@@ -107,11 +107,9 @@ export const pricingPlans = [
     },
 ];
 export const aboutTeam = {
-    mainTitle: "Dowiedź się więcej o nas",
-    subTitle: "Nasz zespół",
+    mainTitle: "Nasz Zespół",
     paragraphs: [
         {
-            title: "Nasz zespół",
             paragraph:
                 "Jesteśmy grupą studentów, których połączyła pasja do podróży i chęć ułatwienia życia sobie i innym. Z własnego doświadczenia wiemy, jak trudno czasem zorganizować wspólny wyjazd — dlatego stworzyliśmy aplikację, która to upraszcza. Nie chcemy nikomu nic narzucać – dajemy jedynie narzędzia, które pozwalą zaplanować podróż dokładnie tak, jak chcecie. Prosto, wygodnie i po swojemu."
         },
@@ -121,25 +119,29 @@ export const aboutTeam = {
             name: "Mateusz Wiśniewski",
             role: "Team Leader",
             description: "Koordynowanie zespołu, zarządzanie sprintami, kontrolowanie realizacji zadań, projektowanie interfejsu, programista aplikacji mobilnej i backendu.",
-            photo: "/src/assets/images/avatar/MW_avatar.png"
+            photo: "/src/assets/images/avatar/MW_avatar.png",
+            github: "https://github.com/s24893-pj"
         },
         {
             name: "Jakub Pobłocki",
             role: "Główny Backend Developer",
             description: "Główny programista backendu, zarządzenie strukturą bazy danych, dokumentacja API, wspieranie frontendu",
-            photo: "/src/assets/images/avatar/JP_avatar.png"
+            photo: "/src/assets/images/avatar/JP_avatar.png",
+            github: "https://github.com/s25770-pj"
         },
         {
             name: "Andrzej Ebertowski",
             role: "Specjalista ds. Dokumentacji",
             description: "Tworzenie dokumentacji, testowanie funkcjonalności, wspieranie frontendu.",
-            photo: "/src/assets/images/avatar/AE_avatar.png"
+            photo: "/src/assets/images/avatar/AE_avatar.png",
+            github: "https://github.com/AndrzejjE"
         },
         {
             name: "Kacper Pecka",
             role: "Główny Frontend Developer",
             description: "Główny programista frontendu, wdrażanie responsywności, integracja z API.",
-            photo: "/src/assets/images/avatar/KP_avatar.png"
+            photo: "/src/assets/images/avatar/KP_avatar.png",
+            github: "https://github.com/K-Pecka"
         },
     ],
 };

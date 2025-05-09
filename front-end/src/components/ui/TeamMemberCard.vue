@@ -5,6 +5,7 @@ defineProps<{
     role: string;
     description: string;
     photo: string;
+    github: string;
   }[];
 }>();
 </script>
@@ -20,7 +21,7 @@ defineProps<{
           lg="3"
           class="d-flex"
       >
-        <v-card class="team-card elevation-4 w-100 d-flex flex-column" hover>
+        <v-card class="team-card elevation-4 w-100 d-flex flex-column">
           <v-img
               :src="member.photo"
               class="team-image"
@@ -37,11 +38,18 @@ defineProps<{
             </div>
 
             <div class="mt-auto">
-              <v-divider class="w-50 mx-auto my-2" />
+              <v-divider class="w-80 mx-auto my-2" />
               <div class="d-flex justify-center ga-4">
-                <v-icon color="grey-darken-1" size="20">mdi-twitter</v-icon>
-                <v-icon color="grey-darken-1" size="20">mdi-instagram</v-icon>
-                <v-icon color="grey-darken-1" size="20">mdi-linkedin</v-icon>
+                <a
+                    :href="member.github"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                  <v-icon color="grey-darken-1" size="40" class="cursor-pointer">
+                    mdi-github
+                  </v-icon>
+                </a>
+                <!-- inne ikony -->
               </div>
             </div>
           </div>
