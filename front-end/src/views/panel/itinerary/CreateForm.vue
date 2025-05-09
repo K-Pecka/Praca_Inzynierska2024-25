@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import {Section, Form, HeaderSection} from "@/components";
-import { useFormStore,useTripStore } from "@/stores";
+import { useFormStore,useTripStore, useUtilsStore } from "@/stores";
 import { FormType } from "@/types/enum";
 import { Plan } from "@/types/interface";
 
@@ -11,7 +11,7 @@ const { getFormInputs, isFormValid } = useFormStore();
 const {trip:tripStore} = useTripStore();
 const {getTripDetails} = tripStore;
 const {trip} = getTripDetails();
-
+const {getTripId} = useUtilsStore()
 const inputs = ref(getFormInputs(FormType.PLAN));
 const formValues = ref<Record<string, string>>(
     Object.fromEntries(inputs.value.map(input => [input.name, ""]))
@@ -35,15 +35,15 @@ const handleSubmit = (_formData: any, config: any) => {
   if (config?.send && isFormValid(FormType.PLAN, formValues.value)) {
     const { tripName, city,tripDates } = formValues.value;
     const [start_date, end_date] = tripDates.split(' - ');
+    console.log(trip?.value);
     const newPlan:Plan = {
-      id: trip?.value?.id ?? 0,
       name: tripName,
       country: city,
       start_date: start_date || '',
       end_date: end_date || ''
     };
     try {
-      planMutationAdd.mutateAsync({ data: newPlan, tripId: trip?.value?.id ?? 0 });
+      planMutationAdd.mutateAsync({ data: newPlan, tripId: getTripId() });
     } catch (error) {
       
     }

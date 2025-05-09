@@ -25,7 +25,10 @@
 }
 .section {
   width: $panel-content-width;
-
+  &__header{
+    text-align: center;
+  }
+  
   &__content {
     line-height: 1.5;
     color: $text-color;

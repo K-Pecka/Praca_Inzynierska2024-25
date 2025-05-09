@@ -13,6 +13,7 @@ export const useMembersStore = defineStore("tripDetails", () => {
 
   const getUserById = async (id: number) => {
     const user = await fetchUserById(id);
+    console.log(user);
     return {
       name: `${user.first_name} ${user.last_name}`,
       email: user.email,
@@ -25,6 +26,10 @@ export const useMembersStore = defineStore("tripDetails", () => {
 
     const membersRaw = trip.value?.members ?? [] as { id: number }[];
     const pendingRaw = trip.value?.pending_members ?? [] as { id: number }[];
+    
+    const creator: { userId: number; name: string; email: string | undefined; is_guest: boolean } = trip?.value?.creator?.id 
+      ? { ...(await getUserById(trip.value.creator.id)), is_guest: false }
+      : { userId: -1, name: "Unknown", email: undefined, is_guest: false };
 
     const confirmed = await Promise.all(
       membersRaw.map(async (entry) => {
@@ -43,7 +48,8 @@ export const useMembersStore = defineStore("tripDetails", () => {
     );
 
     const userMap = new Map<number, typeof confirmed[0]>();
-    for (const user of [...pending, ...confirmed]) {
+    for (const user of [creator,...pending, ...confirmed]) {
+      if (user.userId === undefined) continue;
       userMap.set(user.userId, user);
     }
 

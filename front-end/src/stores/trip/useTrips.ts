@@ -17,6 +17,7 @@ export const useTrips = (tripId:Function) => {
 
     const deleteTrip = getMutationDelete({
         notifications,
+        queryClient,
         successMessage: "Pomyślnie usunięto wycieczkę",
         errorMessage: "Nie udało się usunąć wycieczki",
     })

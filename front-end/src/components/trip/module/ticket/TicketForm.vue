@@ -4,8 +4,12 @@ import AppButton from "@/components/AppButton.vue";
 import { VTimePicker } from 'vuetify/labs/VTimePicker'
 import { VDateInput } from "vuetify/labs/components";
 import { ticketCategory } from "@/data/category/ticket";
+import { useTripStore } from "@/stores";
 const emit = defineEmits(["submitTicket", "cancelForm"]);
-
+const {trip:tripStore} = useTripStore();
+const {getTripDetails} = tripStore;
+const {trip} = getTripDetails();
+const tripDateStart = computed(()=>trip?.value?.end_date || '')
 const form = ref({
   type: ticketCategory[0].text,
   name: "",
@@ -16,8 +20,6 @@ const form = ref({
 });
 
 const ticketTypeOptions = computed(() => ticketCategory);
-
-const today = computed(() => new Date().toISOString().split("T")[0]);
 
 function formatDateToYYYYMMDD(date: Date): string {
   return date.toISOString().split("T")[0];
@@ -89,7 +91,8 @@ defineProps<{
               prepend-icon=""
               prepend-inner-icon="mdi-calendar"
               variant="outlined"
-              :min="today"
+              :max="tripDateStart"
+              :min="new Date().toISOString().split('T')[0]"
               bg-color="background"
               density="comfortable"
           />

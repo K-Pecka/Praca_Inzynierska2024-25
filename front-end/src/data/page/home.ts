@@ -138,13 +138,13 @@ export const aboutTeam ={
       name: "Jakub Pobłocki",
       role: "Główny Backend Developer",
       description: "Budowanie API, dostosowywanie logiki serwera do potrzeb aplikacji.",
-      photo:"/src/assets/images/avatar/AE_avatar.jpg"
+      photo:"/src/assets/images/avatar/JP_avatar.png"
     },
     {
       name: "Mateusz Wiśniewski",
       role: "Project Manager",
       description: "Koordynowanie zespołu, zarządzanie sprintami, kontrolowanie realizacji zadań.",
-      photo:"/src/assets/images/avatar/AE_avatar.jpg"
+      photo:"/src/assets/images/avatar/MW_avatar.png"
     },
   ],
 };
