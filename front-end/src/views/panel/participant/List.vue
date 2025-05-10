@@ -22,7 +22,7 @@ const {removeParticipant, addParticipant,} = useTripStore();
 import {useMembersStore} from "@/stores/trip/useMembersStore"
 
 const {members: membersStore} = useMembersStore();
-const members = computed(() => membersStore)
+const members = computed(() => membersStore || []);
 
 
 const maxParticipants = 5;
@@ -51,7 +51,7 @@ const toggleForm = () => {
       <template #title>
         <HeaderSection
             subtitle="Zarządzaj uczestnikami"
-            :button="isOwner(trip?.creator?.id || 0)"
+            :button="isOwner(trip?.creator?.id ?? 0)"
             button-text="Dodaj"
             :button-action="toggleForm"
         />
@@ -71,7 +71,7 @@ const toggleForm = () => {
         <v-row>
           <v-col>
             <ParticipantAddForm
-                v-if="showForm"
+                v-show="showForm"
                 v-model:dialog="showForm"
                 title="Dodaj uczestnika"
                 @cancel="showForm = false"

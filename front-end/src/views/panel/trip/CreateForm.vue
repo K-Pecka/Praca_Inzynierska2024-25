@@ -13,10 +13,10 @@ const inputs = ref(getFormInputs(FormType.TRIP));
 const formValues = ref<Record<string, string>>(
     Object.fromEntries(inputs.value.map(input => [input.name, ""]))
 );
-const handleSubmit = (_formData: any, config: any) => {
+const handleSubmit = async (_formData: any, config: any) => {
   if (config?.send && isFormValid(FormType.TRIP, formValues.value)) {
-    const { tripName, tripDates } = formValues.value;
-    const [start_date, end_date] = tripDates.split(' - ');
+    const { tripDates } = formValues.value;
+    const [start_date = '', end_date = ''] = (tripDates || '').split(' - ');
     const data = {
       name: formValues.value.tripName,
       start_date: start_date || '',
@@ -24,9 +24,9 @@ const handleSubmit = (_formData: any, config: any) => {
     }
   
     try {
-      createTrip.mutateAsync(data);
+      await createTrip.mutateAsync(data);
     } catch (error) {
-      
+      console.error("Błąd tworzenia wycieczki:", error);
     }
   }
 };

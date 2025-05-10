@@ -158,8 +158,8 @@ export interface Image {
   caption?: string;
 }
 export interface Role {
-  title: String;
-  description: String;
+  title: string;
+  description: string;
   image: Image;
   path: string | { name: string; params?: Record<string, string> };
 }
