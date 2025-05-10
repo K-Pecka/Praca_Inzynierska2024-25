@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import { Section,Form } from "@/components";
+import {Section, Form, HeaderSection} from "@/components";
 import { Input,Register } from "@/types/interface";
 import { FormType } from "@/types/enum";
 import { useAuthStore,useFormStore,usePageHomeStore } from "@/stores";
@@ -33,7 +33,11 @@ const handleSubmit = async (_: any, config: any) => {
 <template>
   <Section class="logIn gradient-text">
     <template #title>
-      <h1>{{ sectionTitle }}</h1>
+      <HeaderSection
+          title="Zarejestruj"
+          title-gradient-text="Się"
+          center
+      />
     </template>
     <template #content>
       <Form
