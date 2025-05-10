@@ -26,7 +26,7 @@ export const useAuthStore = defineStore(
         } = useNotificationStore();
         const {hasPermission} = usePermissionStore();
         const token = ref<TOKEN | null>(null);
-        const user = ref<User | null>({first_name:"K",last_name:"P",userId:3});
+        const user = ref<User | null>(null);
         const getPermission = useMutation({
             mutationFn: fetchPermission,
         });
@@ -84,10 +84,10 @@ export const useAuthStore = defineStore(
             token.value = data;
         };
         const saveUser = (data: User): void => {
-            console.log(data);
+            //console.log(data);
             user.value = data;
         };
-        const isOwner = (id:number)=>id == getUser()?.userId
+        const isOwner = (id: number) => id === (getUser()?.profiles?.[0]?.id ?? -1);
         const getUser = () =>(user.value)
         const getToken = () => {
             return token.value;
@@ -119,13 +119,10 @@ export const useAuthStore = defineStore(
         const loginMutation = useMutation({
             mutationFn: loginFetch,
             onSuccess: (data) => {
-                console.log("1",data)
                 const {access, refresh, last_name, first_name,profile} = data;
                 setSuccessCurrentMessage(loginSuccess());
-                console.log(data)
                 saveToken({access, refresh});
                 saveUser(data);
-                console.log("12",data)
                 router.push({name: "landing"});
             },
             onError: (err) => {
@@ -156,9 +153,10 @@ export const useAuthStore = defineStore(
                     userId:0
                 };
             },
-            onSuccess: ({first_name, last_name,userId}) => {
-                if (first_name && last_name) {
-                    saveUser({first_name, last_name,userId});
+            onSuccess: (data) => {
+                if (data && user?.value) {
+                    user.value.first_name = data.first_name;
+                    user.value.last_name = data.last_name;
                     setSuccessCurrentMessage('Zaktualizowano dane profilu');
                 }
             },

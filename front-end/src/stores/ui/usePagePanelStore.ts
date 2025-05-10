@@ -15,17 +15,17 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
                 title: "Turysta",
                 description: "Planowanie indywidualnych podróży dla siebie i rodziny",
                 image: images.role.tourist,
-                path:{name:"Dashboard"}
+                path:{name:"ChooseTrip",params:{role:"tourist"}}
             },
             {
                 title: "Przewodnik",
                 description: "Tworzenie i zarządzanie wycieczkami dla grup turystycznych",
                 image: images.role.guide,
-                path:{name:"yourTripGuide"}
+                path:{name:"ChooseTrip",params:{role:"guide"}}
             },
         ],
     };
-    const selectRole:Record<Role, (tripId:string) => SideNavItem[]>={
+    const selectRole:Record<Role, () => SideNavItem[]>={
         [Role.GUIDE]: getGudieNav,
         [Role.TURIST]: getTouristNav,
         [Role.UNKNOWN]: function (): SideNavItem[] {
@@ -35,9 +35,10 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
             throw new Error("Function not implemented.");
         }
     }
-    const getSideNavItems = (tripId: string): SideNavItem[]=> 
-        selectRole[getRole()](tripId) || [];
-    
+    const getSideNavItems = (): SideNavItem[]=> {
+        //console.log(getRole());
+        return selectRole[getRole()]() || [];
+    }
     return {
         getRoleSelection,
         getSideNavItems,

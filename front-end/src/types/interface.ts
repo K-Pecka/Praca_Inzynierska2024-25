@@ -139,11 +139,11 @@ export interface SubSectionItem {
 }
 
 export interface SideNavItem {
-  label: string;
+  title: string;
   icon?: string;
   iconActive?: string;
-  route?: string | { name: string; params?: Record<string, string> };
-  children?: SideNavItem[];
+  page?: {name: string};
+  children?: {title: string, page: {name: string}}[];
   permission?: number[];
   name?: string;
 }
@@ -237,6 +237,7 @@ export interface User {
   email?: string;
   name?: string;
   is_guest?: boolean;
+  profiles?:{id?:number}[]
 }
 
 export interface ActivityType {

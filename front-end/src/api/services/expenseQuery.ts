@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/vue-query"
 import { saveBudget,createExpenseMutation } from "@/api";
 import { fetchExpenses } from "@/api"
 export const getExpensesQuery = (id: number) => {
-    console.log("getExpensesQuery", id)
+    //console.log("getExpensesQuery", id)
     return useQuery<Expense[], Error, Expense[] | [], [string, number]>({
         queryKey: ["expense", id],
         queryFn: async (context) => {

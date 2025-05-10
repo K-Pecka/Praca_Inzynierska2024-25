@@ -1,149 +1,103 @@
 import { images } from "@/data";
 import router from "@/router";
 
-export const getTouristNav = (tripId: string) => [
+export const getTouristNav = () => [
   {
-    label: "Powrót",
-    icon: images.icon.menu.back,
-    name: "goBack",
-    route: { name: "yourTrip" },
+    title: 'Panel',
+    page: {name: 'tripDashboard'},
+    icon: 'mdi-home-outline'
   },
   {
-    label: "Panel",
-    icon: images.icon.menu.dashboard,
-    name: "panel",
-    route: { name: "Dashboard", params: { tripId: tripId } },
+    title: 'Plany',
+    icon: 'mdi-note-text-outline',
+    children: [
+      {title: 'Utworzone', page: {name: 'tripPlans'}},
+      {title: 'Dodaj', page: {name: 'createPlan'}},
+    ]
   },
   {
-    label: "Plany",
-    name: "plan",
-    icon: images.icon.menu.plan,
+    title: 'Bilety',
+    page: {name: 'yourTickets'},
+    icon: 'mdi-ticket-confirmation-outline'
+  },
+  {
+    title: 'Budżet',
+    icon: 'mdi-currency-usd',
+    children: [
+      {title: 'Pokaż', page: {name: 'ExpenseTracker'}},
+      {title: 'Zmień budżet', page: {name: 'editBudget'}},
+    ]
+  },
+  {
+    title: 'Uczestnicy',
+    page: {name: 'tripParticipants'},
+    icon: 'mdi-account-multiple-outline'
+  },
+  {
+    title: 'Ustawienia',
+    icon: 'mdi-cog-outline',
     children: [
       {
-        label: "Utworzone",
-        name: "yourPlan",
-        route: { name: "yourPlan", params: { tripId: tripId } },
-      },
-      {
-        label: "Dodaj",
-        name: "PlanForm",
-        route: { name: "PlanForm", params: { tripId: tripId } },
-      },
-    ],
-  },
-  {
-    label: "Bilety",
-    name: "ticket",
-    icon: images.icon.menu.ticket,
-    route: { name: "TicketsView", params: { tripId: tripId } },
-  },
-  {
-    label: "Budżet",
-    name: "budget",
-    icon: images.icon.menu.budget,
-    children: [
-      {
-        label: "Pokaż",
-        name: "budgetShow",
-        route: { name: "ExpenseTracker", params: { tripId: tripId } },
-      },
-      {
-        label: "Zmień budżet",
-        name: "budgetChange",
-        route: { name: "budget", params: { tripId: tripId } },
-      },
-    ],
-  },
-  {
-    label: "Uczestnicy",
-    name: "participant",
-    icon: images.icon.menu.participant,
-    route: { name: "ParticipantsView", params: { tripId: tripId } },
-  },
-  {
-    label: "Ustawienia",
-    name: "setting",
-    icon: images.icon.menu.setting,
-    children: [
-      {
-        label: "Edycja wycieczki",
-        name: "settingEdit",
-        route: { name: "TripEdit", params: { tripId: tripId } },
-      },
-    ],
+        title: 'Edycja wycieczki',
+        page: {name: 'editTrip'},
+      }
+    ]
   },
 ];
-export const getGudieNav = (tripId: string) => [
+export const getGudieNav = () => [
   {
-    label: "Panel",
-    icon: images.icon.menu.dashboard,
-    name: "panel",
-    route: { name: "Dashboard", params: { tripId: tripId } },
+    title: 'Panel',
+    page: {name: 'tripDashboard'},
+    icon: 'mdi-home-outline'
   },
   {
-    label: "Plany",
-    name: "plan",
-    icon: images.icon.menu.plan,
+    title: 'Plany',
+    icon: 'mdi-note-text-outline',
     children: [
-      {
-        label: "Utworzone",
-        name: "yourPlan",
-        route: { name: "yourPlan", params: { tripId: tripId } },
-      },
-      {
-        label: "Dodaj",
-        name: "PlanForm",
-        route: { name: "PlanForm", params: { tripId: tripId } },
-      },
-    ],
+      {title: 'Utworzone', page: {name: 'tripPlans'}},
+      {title: 'Dodaj', page: {name: 'createPlan'}},
+    ]
   },
   {
-    label: "Bilety",
-    name: "ticket",
-    icon: images.icon.menu.ticket,
-    route: { name: "TicketsView", params: { tripId: tripId } },
+    title: 'Bilety',
+    page: {name: 'yourTickets'},
+    icon: 'mdi-ticket-confirmation-outline'
   },
   {
-    label: "Zaległości",
+    title: "Zaległości",
     name: "budget",
     icon: images.icon.menu.budget,
     children: [
       {
-        label: "Pokaż",
+        title: "Pokaż",
         name: "budgetShow",
-        route: { name: "ExpenseTracker", params: { tripId: tripId } },
+        page: { name: "ExpenseTracker" },
       },
       {
-        label: "Zmień budżet",
+        title: "Zmień budżet",
         name: "budgetChange",
-        route: { name: "budget", params: { tripId: tripId } },
+        page: { name: "budget" },
       },
     ],
   },
   {
-    label: "Uczestnicy",
+    title: "Uczestnicy",
     name: "participant",
     icon: images.icon.menu.participant,
-    route: { name: "ParticipantsView", params: { tripId: tripId } },
+    page: {name: 'tripParticipants'},
   },
   {
-    label: "Ustawienia",
+    title: "Ustawienia",
     name: "setting",
     icon: images.icon.menu.setting,
     children: [
       {
-        label: "Edycja wycieczki",
+        title: "Edycja wycieczki",
         name: "settingEdit",
-        route: { name: "TripEdit", params: { tripId: tripId } },
+        page: {name: 'editTrip'},
       },
     ],
-  },
-  {
-    label: "Powrót",
-    icon: images.icon.menu.back,
-    name: "goBack",
-    route: { name: "yourTripGuide" },
-  },
+  }
 ];
 enum TypeOfButton{
     TRIP = 'trip',

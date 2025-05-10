@@ -35,7 +35,8 @@ async function handleAddTicket(newTicketData: {
   const formData = new FormData();
   formData.append("type", newTicketData.type);
   formData.append("trip", String(getTripId()));
-  formData.append("valid_from", combineDateAndTime(newTicketData.date, newTicketData.time));
+  formData.append("valid_from_date", newTicketData.date);
+  formData.append("valid_from_time", newTicketData.time);
   formData.append("file", newTicketData.file);
   try {
     await createTicket(formData,{ tripId:String(getTripId()) });
@@ -46,7 +47,7 @@ async function handleAddTicket(newTicketData: {
 }
 
 const downloadItem = async ( url: string )=> {
-  //console.log(url)
+  ////console.log(url)
       const response = await axios.get(url, { responseType: "blob" });
       const blob = new Blob([response.data], { type: "application/jpeg" });
       const link = document.createElement("a");

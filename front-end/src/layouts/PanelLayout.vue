@@ -1,10 +1,23 @@
 <script lang="ts" setup>
 import Header from "@/components/panel/Header.vue";
 import Navbar from "@/components/panel/Navbar.vue";
+import {onMounted,onUnmounted} from "vue"
+onMounted(() => {
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
+});
 
+onUnmounted(() => {
+  document.body.style.overflow = '';
+  document.documentElement.style.overflow = '';
+});
 defineProps({
   tripId: {
     type: String,
+    required: true
+  },
+  role:{
+    type:String,
     required: true
   }
 })

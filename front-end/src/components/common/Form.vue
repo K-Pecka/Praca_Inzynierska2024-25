@@ -37,7 +37,7 @@ const handleFieldUpdate = (name: string, value: string) => {
   props.formValues[name] = value;
   
   const input = props.inputs.find((input) => input.name === name);
-  //console.log(props.formValues)
+  ////console.log(props.formValues)
   if (input) {
     input.error = [...input.validation.validate(value)];
     input.related?.forEach((el) => {

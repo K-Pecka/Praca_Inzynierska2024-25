@@ -5,7 +5,7 @@ export function piniaBasePlugin({ store }: PiniaPluginContext) {
 
   store.initialize = () => {
     const { setRole } = useRoleStore();
-    setRole(String(useRoute().name) || '');
+    setRole(String(useRoute().params.role) || '');
   };
 
   const initialState = JSON.parse(JSON.stringify(store.$state));

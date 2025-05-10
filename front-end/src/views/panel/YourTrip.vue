@@ -67,7 +67,7 @@ const {trips, isLoading_trips} = getTrips();
                 
                 <!-- Buttons -->
                 <AppButton
-                    :to="{ name: 'panel', params: { tripId: trip.id } }"
+                    :to="{ name: 'panel', params: { tripId: trip.id} }"
                     color="primary"
                     height-auto
                     stretch
