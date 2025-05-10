@@ -41,7 +41,7 @@ async function handleAddTicket(newTicketData: {
 }) {
   const formData = new FormData();
 
-  formData.append("type", String(newTicketData.type)); // ← upewnij się, że backend chce liczby jako string
+  formData.append("type", String(newTicketData.type));
   formData.append("name", newTicketData.name);
   formData.append("trip", String(getTripId()));
   formData.append("valid_from_date", newTicketData.date);
