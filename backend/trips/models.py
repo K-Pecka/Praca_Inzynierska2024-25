@@ -80,8 +80,13 @@ class Trip(BaseModel):
         trip.members.remove(user_profile)
         return Response({"message": "User successfully removed from the trip."})
 
-    def check_if_is_member(self, email):
-        if self.members.filter(user__email=email).exists():
+    def check_if_is_member(self, profile):
+        if self.members.filter(pk=profile.pk).exists():
+            return True
+        return False
+
+    def check_if_is_pending(self, profile):
+        if self.access_tokens.filter(trip=self, user_profile=profile, is_pending=True).exists():
             return True
         return False
 

@@ -33,11 +33,7 @@ const handleSubmit = async (_: any, config: any) => {
 <template>
   <Section class="logIn gradient-text">
     <template #title>
-      <HeaderSection
-          title="Zarejestruj"
-          title-gradient-text="Się"
-          center
-      />
+      <HeaderSection no-sub-title :title-gradient-text="sectionTitle" center />
     </template>
     <template #content>
       <Form

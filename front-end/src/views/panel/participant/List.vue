@@ -7,6 +7,7 @@ import ParticipantsCounter from "@/components/trip/module/participant/Participan
 import ParticipantAddForm from "@/components/trip/module/participant/ParticipantAddForm.vue";
 import {useTripStore, useNotificationStore,useAuthStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
+
 const {setErrorCurrentMessage} = useNotificationStore();
 const route = useRoute();
 const tripId = Number(route.params.tripId);
@@ -19,8 +20,9 @@ const {trip} = getTripDetails();
 const {removeParticipant, addParticipant,} = useTripStore();
 
 import {useMembersStore} from "@/stores/trip/useMembersStore"
-const {members:membersStore} =useMembersStore();
-const members = computed(()=>membersStore)
+
+const {members: membersStore} = useMembersStore();
+const members = computed(() => membersStore)
 
 
 const maxParticipants = 5;
@@ -45,7 +47,6 @@ const toggleForm = () => {
 </script>
 
 <template>
-  <div class="page-container">
     <Section>
       <template #title>
         <HeaderSection
@@ -56,81 +57,44 @@ const toggleForm = () => {
         />
       </template>
 
-      <template #content>
-        <v-container class="page-container" fluid>
-          <v-row>
-            <v-col>
-              <ParticipantsCounter
-                  :current="members.length"
-                  :max="maxParticipants"
-                  title="Uczestnicy"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <ParticipantAddForm
+    <template #content>
+      <v-container fluid>
+        <v-row>
+          <v-col>
+            <ParticipantsCounter
+                :current="members.length"
+                :max="maxParticipants"
+                title="Uczestnicy"
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <ParticipantAddForm
                 v-if="showForm"
                 v-model:dialog="showForm"
                 title="Dodaj uczestnika"
                 @cancel="showForm = false"
                 @submitForm="inviteParticipant"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <div class="participants-card">
-                <h3 class="card-title">Dodani uczestnicy</h3>
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-card class="background-secondary" rounded="lg">
+              <v-card-text class="pa-6">
+                <span class="pb-3 text-h5 font-weight-medium">Dodani uczestnicy</span>
 
                 <ParticipantList
                     v-if="members.length > 0"
                     :participants="members"
                     @remove="removeParticipantById"
                 />
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
-      </template>
-    </Section>
-  </div>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </template>
+  </Section>
 </template>
-
-<style scoped lang="scss">
-.header-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.title-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.sub-title {
-  font-size: 2rem;
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.participants-card {
-  background-color: rgb(var(--v-theme-secondary), 0.5);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-top: 1rem;
-}
-
-.card-title {
-  margin: 0 0 1rem;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-</style>

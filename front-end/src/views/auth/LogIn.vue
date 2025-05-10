@@ -3,6 +3,7 @@ import {Form, HeaderSection, ListLink, Section} from "@/components/common";
 import { usePageHomeStore,useFormStore } from "@/stores/";
 import { FormType } from "@/types/enum";
 import { ref } from "vue";
+import {HeaderSection} from "@/components";
 
 const { getSectionTitle } = usePageHomeStore();
 const { getMoreOptions,initForm,sendForm, formValues } = useFormStore();
@@ -19,11 +20,7 @@ const handleSubmit = async (formValue: any, config: any) => {
 <template>
   <Section class="logIn gradient-text">
     <template #title>
-      <HeaderSection
-          title="Zaloguj"
-          title-gradient-text="Się"
-          center
-      />
+      <HeaderSection no-sub-title :title-gradient-text="sectionTitle" center />
     </template>
     <template #content>
       <Form

@@ -113,38 +113,21 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         })
 
     def handle_remove(self, trip, data):
-        email = data.get('email')
         profile = data.get('profile')
+        if not profile:
+            raise ValidationError(_("Nie podano profilu użytkownika do usunięcia"))
 
-        if email and trip.check_if_is_member(email):
-            user = CustomUser.objects.get(email=email)
-            if not user:
-                raise ValidationError(_("Użytkownik o podanym e-mailu nie istnieje."))
-
-
-            profile = user.get_default_profile()
-
-
+        if trip.check_if_is_member(profile) or trip.check_if_is_pending(profile):
             if profile.type.code == 'guest':
                 with transaction.atomic():
-                    user.delete()
-                    self.delete_access_token(trip, profile)
+                    profile.user.delete()
+            else:
+                with transaction.atomic():
+                    trip.members.remove(profile)
+            self.delete_access_token(trip, profile)
 
-                return Response({
-                    "message": _("Użytkownik został usunięty z wycieczki."),
-                })
-
-        if profile:
-            if not trip.members.filter(id=profile.id).exists():
-                raise ValidationError(_("Użytkownik nie jest uczestnikiem tej wycieczki."))
-
-            with transaction.atomic():
-                trip.members.remove(profile)
-                self.delete_access_token(trip, profile)
-
-            return Response({
-                "message": _("Użytkownik został usunięty z wycieczki."),
-            })
+            if not trip.check_if_is_member(profile) or trip.check_if_is_pending(profile):
+                return Response({"message": _("Użytkownik został pomyślnie usunięty z wycieczki")})
 
         return Response({
             "message": _("Użytkownik nie był przypisany do tej wycieczki lub już został usunięty."),
