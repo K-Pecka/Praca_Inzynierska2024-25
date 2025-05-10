@@ -1,11 +1,13 @@
 <script setup lang="ts">
 defineProps<{
   text?: string;
-  color?: "primary" | "secondary" | "accent" | "empty" | "orange";
+  color?: "primary" | "secondary" | "accent" | "empty" | "orange" | "red";
   width?: string;
   maxWidth?: string;
   minHeight?: string;
   icon?: boolean;
+  iconName?: string;
+  iconSize?: string;
   heightAuto?: boolean | string;
   fontAuto?: boolean | string;
   dense?: boolean | string;
@@ -19,7 +21,11 @@ defineProps<{
   <v-btn
       class="button-media font-weight-bold text-none w-100"
       v-bind="$attrs"
-      :style="{ maxWidth: maxWidth ? width : '200px', width: width, minHeight: minHeight }"
+      :style="{
+        maxWidth: maxWidth || '200px',
+        width: width,
+        minHeight: minHeight
+      }"
       :class="[
        color,
        heightAuto ? 'height-auto' : '',
@@ -29,8 +35,16 @@ defineProps<{
       ]"
       :onClick = onClick
   >
-    {{text}}
-    <v-icon v-if="icon" class="ml-3">mdi-send</v-icon>
+    <span v-if="text">
+      {{text}}
+    </span>
+    <v-icon
+        v-if="icon"
+        :size="iconSize || '24px'"
+        :class="{ 'ml-3': text }"
+    >
+      {{ iconName || 'mdi-send'}}
+    </v-icon>
   </v-btn>
 </template>
 
@@ -60,6 +74,11 @@ defineProps<{
 
 .orange {
   background-color: #F57F17;
+  color: white;
+}
+
+.red {
+  background-color: #c6564c;
   color: white;
 }
 
