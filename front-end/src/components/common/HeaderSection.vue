@@ -24,41 +24,98 @@ defineProps<{
   <v-row class="flex-column" justify="center">
 
     <!-- Title -->
-    <v-col>
-      <v-row :class="{ 'justify-center': center }" class="title color-text" no-gutters>
-          <span v-if="!isLoading_trip && !error_trip && !title">
-            {{ trip?.name }}
-          </span>
-        <span v-else-if="!isLoading_trip && !error_trip" class="color-primary text-h3 font-weight-bold">
-            {{ title }}
-          </span>
+    <v-col cols="12">
+      <v-row :class="{ 'justify-center': center || $vuetify.display.smAndDown }" class="title color-text" no-gutters>
+        <span v-if="!isLoading_trip && !error_trip && !title">
+          {{ trip?.name }}
+        </span>
+        <span
+            v-else-if="!isLoading_trip && !error_trip"
+            class="color-primary text-h3 font-weight-bold"
+        >
+          {{ title }}
+        </span>
         <span v-else>
             ...
         </span>
-        <span v-if="titleGradientText" class="gradient-text text-h3 font-weight-bold">
-          &nbsp;{{ titleGradientText }}
-        </span>
+        <span
+            v-if="titleGradientText"
+            class="gradient-text text-h3 font-weight-bold"
+        >
+            &nbsp;{{ titleGradientText }}
+          </span>
       </v-row>
     </v-col>
 
     <!-- Subtitle -->
     <v-col v-if="!noSubTitle">
-      <v-row :class="center ? 'justify-center' : 'justify-space-between'" no-gutters>
-          <span class="text-h4" v-if="subtitle">
-            {{ subtitle }}
-          </span>
-        <span v-else>
-            ...
-          </span>
-        <AppButton
-            v-if="button"
-            color="primary"
-            @click="buttonAction"
-            dense
-            height-auto
-            font-auto
-            :text="buttonText"
-        />
+<!--      <v-row-->
+<!--          v-if="center"-->
+<!--          :class="center ? 'justify-center' : 'justify-space-between'"-->
+<!--          no-gutters-->
+<!--      >-->
+<!--        <v-col cols="12">-->
+<!--          <v-row justify="center" no-gutters>-->
+<!--            <span class="text-h4" v-if="subtitle">-->
+<!--              {{ subtitle }}-->
+<!--            </span>-->
+<!--            <span v-else>-->
+<!--              ...-->
+<!--            </span>-->
+<!--          </v-row>-->
+<!--        </v-col>-->
+<!--        <v-col-->
+<!--            cols="12"-->
+<!--        >-->
+<!--          <v-row justify="end" align="start" no-gutters>-->
+<!--            <AppButton-->
+<!--                v-if="button"-->
+<!--                color="primary"-->
+<!--                @click="buttonAction"-->
+<!--                dense-->
+<!--                font-auto-->
+<!--                :text="buttonText"-->
+<!--            />-->
+<!--          </v-row>-->
+<!--        </v-col>-->
+<!--      </v-row>-->
+
+
+      <v-row
+          :class="center ? 'justify-center' : 'justify-space-between'"
+          no-gutters
+      >
+        <v-col cols="12" sm="12" md="6" lg="6" xl="6">
+          <v-row
+              :class="{ 'justify-center': $vuetify.display.smAndDown || center, 'mb-5': $vuetify.display.smAndDown}"
+              no-gutters
+          >
+            <span class="text-h4" v-if="subtitle">
+              {{ subtitle }}
+            </span>
+            <span v-else>
+              ...
+            </span>
+          </v-row>
+        </v-col>
+        <v-col
+            cols="12"
+            sm="12"
+            md="6"
+            lg="6"
+            xl="6"
+        >
+          <v-row justify="end" no-gutters>
+            <AppButton
+                v-if="button"
+                color="primary"
+                @click="buttonAction"
+                dense
+                font-auto
+                :text="buttonText"
+            />
+          </v-row>
+        </v-col>
       </v-row>
     </v-col>
   </v-row>

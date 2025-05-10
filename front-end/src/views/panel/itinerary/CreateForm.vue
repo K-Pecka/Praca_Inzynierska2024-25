@@ -56,7 +56,7 @@ const handleSubmit = (_formData: any, config: any) => {
     <template #title>
       <HeaderSection
           title="Stwórz swój idealny plan"
-          subtitle="elastyczny harmonogram wymarzonej podróży"
+          no-sub-title
           center
       />
     </template>
