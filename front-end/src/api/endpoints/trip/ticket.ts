@@ -38,7 +38,8 @@ export const createTicket = async (
     body: formData,
   });
   if (!response.ok) {
-    console.error('Error response:', response.json());
+    const errorData = await response.json().catch(() => ({}));
+    console.error('Error response:', errorData);
     throw new Error('Błąd podczas tworzenia biletu');
   }
 

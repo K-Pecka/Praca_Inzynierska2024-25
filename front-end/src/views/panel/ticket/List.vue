@@ -28,24 +28,36 @@ const members = computed(() => membersStore)
 const showForm = ref(false);
 
 async function handleAddTicket(newTicketData: {
-  type: string;
+  type: string | number;
   name: string;
   date: string;
   time: string;
-  assignedTo?: string[];
+  assignedTo?: (string | number)[];
   file: File;
 }) {
   const formData = new FormData();
-  formData.append("type", newTicketData.type);
+
+  formData.append("type", String(newTicketData.type)); // ← upewnij się, że backend chce liczby jako string
+  formData.append("name", newTicketData.name);
   formData.append("trip", String(getTripId()));
   formData.append("valid_from_date", newTicketData.date);
   formData.append("valid_from_time", newTicketData.time);
   formData.append("file", newTicketData.file);
+
+  if (newTicketData.assignedTo?.length) {
+    newTicketData.assignedTo.forEach((id) => {
+      formData.append("profiles", String(id));
+    });
+  }
+
+  formData.forEach((v, k) => console.log(`${k}:`, v));
+
   try {
-    await createTicket(formData, {tripId: String(getTripId())});
+    await createTicket(formData, { tripId: String(getTripId()) });
     showForm.value = false;
-  } catch (error) {
-    //console.error("Błąd podczas tworzenia biletu:", error);
+  } catch (error: any) {
+    const res = await error?.response?.json?.().catch(() => null);
+    console.error("Błąd 400 → szczegóły:", res ?? error);
   }
 }
 
