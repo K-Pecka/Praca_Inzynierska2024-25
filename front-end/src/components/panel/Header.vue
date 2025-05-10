@@ -8,6 +8,7 @@
 
   const userInitials = authStore.getUserInitials();
 
+  const emit = defineEmits(['toggle-drawer'])
 </script>
 
 <template>
@@ -21,7 +22,11 @@
 
       <!-- Nav -->
       <template v-slot:append>
-        <v-menu>
+        <v-app-bar-nav-icon
+            v-if="$vuetify.display.mdAndDown"
+            @click="emit('toggle-drawer')"
+        />
+        <v-menu v-else>
           <template v-slot:activator="{ props }">
             <div v-bind="props" class="account-menu-trigger">
               <v-avatar color="red">

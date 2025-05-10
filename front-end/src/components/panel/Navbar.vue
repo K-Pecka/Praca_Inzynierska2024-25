@@ -1,12 +1,23 @@
 <script lang="ts" setup>
 import {useRouter} from "vue-router";
-import {onMounted, shallowRef} from "vue";
+import {computed, onMounted, shallowRef} from "vue";
 import {usePagePanelStore} from "@/stores"
 usePagePanelStore().initialize();
 const {getSideNavItems} = usePagePanelStore();
 const router = useRouter();
 
+const props = defineProps({
+  modelValue: Boolean
+})
+
 const side_nav_items = shallowRef(getSideNavItems());
+
+const emit = defineEmits(['update:modelValue'])
+
+const drawer = computed({
+  get: () => props.modelValue,
+  set: val => emit('update:modelValue', val)
+})
 
 onMounted(() => {
   router.push({name: 'tripDashboard'})
@@ -14,7 +25,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-navigation-drawer class="navbar-border font-weight-bold">
+  <v-navigation-drawer
+      style="z-index: 999;"
+      class="navbar-border font-weight-bold"
+      v-model="drawer"
+  >
 
     <!-- Navigation Drawer -->
     <v-list>

@@ -36,9 +36,18 @@ const btnValue = computed(() => props.btn.filter((btn: { showIfOwner: boolean })
           lg="12"
           class="px-0"
       >
-        <v-card class="trip-card background-secondary rounded-lg pa-5 flex-wrap" elevation="4">
+        <v-card
+            class="trip-card background-secondary rounded-lg pa-5 flex-wrap"
+            elevation="4"
+        >
           <v-row>
-            <v-col cols="12" sm="8" md="9" lg="10">
+            <v-col
+                cols="12"
+                sm="8"
+                md="8"
+                lg="10"
+                :class="{'text-center': $vuetify.display.smAndDown}"
+            >
               <v-card-title class="text-h5 font-weight-bold pa-0">
                 {{ trip.name }}
               </v-card-title>
@@ -52,18 +61,20 @@ const btnValue = computed(() => props.btn.filter((btn: { showIfOwner: boolean })
             </v-col>
 
             <!-- Buttons -->
-            <v-col cols="12" sm="4" md="3" lg="2" class="d-flex flex-row justify-sm-end align-center">
-              <v-row class="flex-column" align="end" no-gutters>
+            <v-col cols="12" sm="4" md="4" lg="2">
+              <v-row no-gutters justify="center" justify-md="end" justify-lg="end">
                 <AppButton
                     color="primary-outline"
-                    @click="router.push({name: 'ActivityView', params: {tripId: trip.trip, planId: trip.id}})"
+                    @click="router.push({name: 'ActivityView', params: {tripId: trip.trip, planId: trip.id, role: trip.role }})"
                     font-auto
+                    :class="{'w-100' :$vuetify.display.smAndDown}"
                     max-width="190px"
                     text="Zarządzaj planem"
                 />
                 <AppButton
                     color="red"
                     @click="handleDeleteItinerary(trip.trip, trip.id)"
+                    :class="{'w-100' :$vuetify.display.smAndDown}"
                     font-auto
                     max-width="190px"
                     text="Usuń plan"

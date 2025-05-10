@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Header from "@/components/panel/Header.vue";
 import Navbar from "@/components/panel/Navbar.vue";
-import {onMounted,onUnmounted} from "vue"
+import {onMounted, onUnmounted, ref} from "vue"
 onMounted(() => {
   document.body.style.overflow = 'hidden';
   document.documentElement.style.overflow = 'hidden';
@@ -21,14 +21,16 @@ defineProps({
     required: true
   }
 })
+
+const drawer = ref(false)
 </script>
 
 <template>
   <!-- Header -->
-  <Header />
+  <Header @toggle-drawer="drawer = !drawer" />
 
   <!-- Navbar -->
-  <Navbar />
+  <Navbar v-model="drawer" />
 
   <!-- Main Content -->
   <v-col cols="12">

@@ -72,7 +72,7 @@ const tags = [
                   @click="handleRemoveClick"
                   font-auto
                   max-width="190px"
-                  text="Usuń bilet"
+                  text="Usuń uczestnika"
               />
             </v-col>
           </v-row>
