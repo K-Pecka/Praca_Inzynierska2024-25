@@ -10,7 +10,7 @@ defineProps({
   },
   cols: {
     type: String,
-    default: 4,
+    default: "4",
   },
   bgTransparent: {
     type: Boolean,

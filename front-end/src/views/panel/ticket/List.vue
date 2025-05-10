@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import {computed, ref, watchEffect} from "vue";
-import {useRoute} from "vue-router";
+import {computed, ref} from "vue";
 import {Section} from "@/components";
-import { deleteTicket } from "@/api";
+import {deleteTicket} from "@/api";
 import {useTripStore} from "@/stores/trip/useTripStore";
 
 
@@ -10,18 +9,17 @@ import TicketForm from "@/components/trip/module/ticket/TicketForm.vue";
 import AppButton from "@/components/AppButton.vue";
 import {useUtilsStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
-import {createTicket, fetchUserById} from "@/api"
+import {createTicket} from "@/api"
 import axios from "axios";
 
-const {combineDateAndTime, getTripId} = useUtilsStore();
-const {trip: tripStore} = useTripStore();
-const {getTripDetails} = tripStore;
-const {trip} = getTripDetails();
+const {getTripId} = useUtilsStore();
+const tripStore = useTripStore();
+const {getTickets} = tripStore;
 const {
   data: tickets,
   isLoading,
   refetch: refetchTickets
-} = useTripStore().getTickets(String(getTripId()));
+} = getTickets(String(getTripId()));
 
 
 import {useMembersStore} from "@/stores/trip/useMembersStore"
@@ -55,11 +53,11 @@ async function handleAddTicket(newTicketData: {
   }
 
   try {
-    await createTicket(formData, { tripId: String(getTripId()) });
+    await createTicket(formData, {tripId: String(getTripId())});
     await refetchTickets();
     showForm.value = false;
   } catch (error: any) {
-    const res = await error?.response?.json?.().catch(() => null);
+    console.error("Error creating ticket:", error.response?.data || error.message);
   }
 }
 
@@ -77,10 +75,10 @@ const handleDeleteTicket = async (ticketId: number) => {
 
 const downloadItem = async (url: string) => {
   const response = await axios.get(url, {responseType: "blob"});
-  const blob = new Blob([response.data], {type: "application/jpeg"});
+  const blob = new Blob([response.data], { type: response.headers['content-type'] });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "Prosze pobierz się.jpeg";
+  link.download = "Bilet.jpeg";
   link.click();
   URL.revokeObjectURL(link.href);
 }
