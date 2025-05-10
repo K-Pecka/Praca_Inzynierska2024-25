@@ -2,7 +2,7 @@
 import {computed, ref, watchEffect} from "vue";
 import {useRoute} from "vue-router";
 import {Section} from "@/components";
-
+import { deleteTicket } from "@/api";
 import {useTripStore} from "@/stores/trip/useTripStore";
 
 
@@ -60,6 +60,19 @@ async function handleAddTicket(newTicketData: {
     console.error("Błąd 400 → szczegóły:", res ?? error);
   }
 }
+
+const handleDeleteTicket = async (ticketId: number) => {
+  try {
+    await deleteTicket({
+      tripId: String(getTripId()),
+      ticketId: String(ticketId),
+    });
+
+    await useTripStore().getTickets(String(getTripId())).refetch?.();
+  } catch (error) {
+    console.error("Błąd podczas usuwania biletu:", error);
+  }
+};
 
 const downloadItem = async (url: string) => {
   ////console.log(url)
@@ -203,7 +216,7 @@ const toggleForm = () => {
                     <v-col cols="6" sm="6" md="12" lg="12" class="text-end">
                       <AppButton
                           color="red"
-                          @click="() => downloadItem(ticket.file)"
+                          @click="() => handleDeleteTicket(ticket.id)"
                           font-auto
                           max-width="190px"
                           text="Usuń bilet"

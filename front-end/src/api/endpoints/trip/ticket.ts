@@ -45,3 +45,22 @@ export const createTicket = async (
 
   return await response.json();
 };
+
+export const deleteTicket = async (
+    params: Record<string, string>
+): Promise<void> => {
+  const { getToken } = useAuthStore();
+
+  const response = await fetch(setParam(apiEndpoints.ticket.delete, params), {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${getToken()?.access}`
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    console.error("Error deleting ticket:", errorData);
+    throw new Error("Błąd podczas usuwania biletu");
+  }
+};
