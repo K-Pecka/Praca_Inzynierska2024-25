@@ -12,7 +12,6 @@ const form = ref({
   start_time: "",
   duration: "",
   location: "",
-  assignedTo: "",
   description: "",
 });
 
@@ -35,7 +34,6 @@ function submitActivity() {
     start_time: "",
     duration: "",
     location: "",
-    assignedTo: "",
     description: "",
   };
 }
@@ -123,7 +121,6 @@ const { activityTypes } = useActivityStore();
 
         <v-col cols="12" sm="6">
           <v-select
-            v-model="form.assignedTo"
             label="Wybierz bilet"
             variant="outlined"
             :items="['Bilet A', 'Bilet B', 'Bilet C']"

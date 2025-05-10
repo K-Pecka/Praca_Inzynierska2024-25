@@ -5,7 +5,6 @@ import { useActivityStore } from "@/stores/trip/useActivityStore";
 import { useTripStore, useAuthStore } from "@/stores";
 import { useUtilsStore } from "@/stores/utils/useUtilsStore";
 import { Activity } from "@/types/interface";
-
 import ActivityCard from "@/components/trip/module/activity/ActivityCard.vue";
 import ActivityForm from "@/components/trip/module/activity/ActivityForm.vue";
 import AppButton from "@/components/AppButton.vue";
@@ -79,6 +78,7 @@ function addActivity(day: string, activityData: any) {
       planId,
     }
   );
+  showFormForDay.value = null;
 }
 
 onMounted(() => {

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { useMutation, useQuery } from "@tanstack/vue-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { createActivity } from "@/api/endpoints/trip/activity";
 import { useNotificationStore } from "@/stores";
 import { fetchActivity, fetchActivityTypes } from "@/api/endpoints/trip/activity";
@@ -12,6 +12,7 @@ export const useActivityStore = defineStore("activity", () => {
   const activeError = ref<boolean>(false);
   const { setErrorCurrentMessage, setSuccessCurrentMessage } =
     useNotificationStore();
+  const queryClient = useQueryClient();
   const activityTypes = ref<ActivityType[]>([]);
 
   //   const fetchActivity = async() => {
@@ -90,15 +91,16 @@ export const useActivityStore = defineStore("activity", () => {
       activityData: Activity;
       param: Record<string, string>;
     }) => createActivity(activityData, param),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       setSuccessCurrentMessage("Dodano aktywność");
+      queryClient.invalidateQueries({ queryKey: ["activities", variables.param.tripId, variables.param.planId] });
     },
     onError: () => {
         ////console.log(activeError.value);
         setError(true);
         ////console.log(activeError.value);
       setErrorCurrentMessage("Błąd podczas dodawania aktywności");
-      
+
     },
   });
 
