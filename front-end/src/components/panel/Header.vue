@@ -67,6 +67,7 @@
 
 .header {
   border-bottom: $panel-header-border-bottom;
+  z-index: 1008 !important;
 }
 
 .account-menu-trigger {
