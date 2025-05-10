@@ -103,14 +103,19 @@ class UserChangeProfileSerializer(serializers.ModelSerializer):
 
         exclude_profile_type = UserProfileType.objects.get(code='guest')
 
-        profiles = request.user.profiles.filter(user__is_active=True).exclude(type=exclude_profile_type)
-        if len(profiles) < 2:
-            raise serializers.ValidationError("Użytkownik posiada tylko jeden aktywny profil.")
+        profiles = request.user.profiles.filter(
+            user__is_active=True
+        ).exclude(
+            type=exclude_profile_type
+        ).exclude(pk=instance.pk)
 
-        with transaction.atomic():
-            for profile in profiles:
-                profile.is_default = not profile.is_default
-                profile.save()
+        if len(profiles) > 0:
+            with transaction.atomic():
+                for profile in profiles:
+                    profile.is_default = False
+                    profile.save()
+                instance.is_default = True
+                instance.save()
 
         return request.user.get_default_profile()
 
