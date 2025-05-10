@@ -9,8 +9,16 @@ import {HeaderSection} from "@/components";
   <Section class="pb-10">
     <template #title>
       <HeaderSection
-          :title="aboutTeam.mainTitle"
-          no-sub-title center
+          title="Nasz"
+          title-gradient-text="Zespół"
+          subtitle="Jesteśmy grupą studentów, których połączyła pasja
+           do podróży i chęć ułatwienia życia sobie i innym. Z własnego
+            doświadczenia wiemy, jak trudno czasem zorganizować wspólny
+             wyjazd — dlatego stworzyliśmy aplikację, która to upraszcza
+             . Nie chcemy nikomu nic narzucać – dajemy jedynie narzędzia,
+              które pozwalą zaplanować podróż dokładnie tak, jak chcecie
+              . Prosto, wygodnie i po swojemu."
+          center
       />
     </template>
     <template #content>
@@ -21,7 +29,6 @@ import {HeaderSection} from "@/components";
               v-for="(paragraph, index) in aboutTeam.paragraphs"
               :key="index"
             >
-              <p class="text-justify text-h6">{{ paragraph.paragraph }}</p>
               <template v-if="index == 0">
                 <TeamMemberCard :members="aboutTeam.teamMembers" />
               </template>
