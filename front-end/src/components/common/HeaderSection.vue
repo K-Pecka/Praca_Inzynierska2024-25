@@ -3,10 +3,9 @@ import {useRoute} from "vue-router";
 import {useTripStore} from "@/stores";
 import AppButton from "@/components/AppButton.vue";
 
-const route = useRoute();
-const tripId = Number(route.params.tripId);
-const {getTripDetails} = useTripStore();
-const {trip, isLoading_trip, error_trip} = getTripDetails(tripId);
+const {trip:tripStore} = useTripStore();
+const {getTripDetails} = tripStore;
+const {trip, isLoading_trip, error_trip} = getTripDetails();
 
 defineProps<{
   subtitle?: string;

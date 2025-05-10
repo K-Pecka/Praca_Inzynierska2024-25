@@ -20,6 +20,7 @@ export const getMutationCreate = (option: Record<string,any>) => useMutation({
     mutationFn: createTrip,
     onSuccess: () => {
         router.back();
+        option.queryClient.invalidateQueries({queryKey: ["trips"]})
         option.notifications.setSuccessCurrentMessage(option.successMessage);
     },
     onError: (err: any) => {
@@ -37,11 +38,12 @@ export const getMutationDelete = (option: Record<string,any>) => useMutation({
     },
 });
 export const getMutationUpdate = (option: Record<string,any>)=>useMutation({
-    mutationFn: ({tripId, newData}: { tripId: string; newData: any }) =>
-        updateTrip({tripId}, newData),
-    onSuccess: () => {
+    mutationFn: updateTrip,
+    onSuccess: ({tripId}) => {
         option.notifications.setSuccessCurrentMessage(option.successMessage);
+        option.queryClient.invalidateQueries({queryKey: ["trip",Number(tripId)]});
         option.queryClient.invalidateQueries({queryKey: ["trips"]});
+        router.back();
     },
     onError: (err: any) => {
         option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);

@@ -109,6 +109,7 @@ export const apiEndpoints = {
   },
   ticket: {
     create: `${hostName}/trip/:tripId/ticket/create/`,
+    delete:  `${hostName}/trip/:tripId/ticket/:ticketId/delete/`,
     all: `${hostName}/trip/:tripId/ticket/all/`,
   },
   budget: {

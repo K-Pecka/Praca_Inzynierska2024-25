@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import {useActivityStore} from "@/stores/trip/useActivityStore";
+import {useActivity} from "@/stores/trip/useActivity";
 import AppButton from "@/components/AppButton.vue";
 import { VTimePicker } from "vuetify/labs/VTimePicker";
 
@@ -40,7 +40,7 @@ function submitActivity() {
   };
 }
 
-const { activityTypes } = useActivityStore();
+const { activityTypes } = useActivity();
 </script>
 
 <template>

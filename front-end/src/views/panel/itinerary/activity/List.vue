@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
-import { useActivityStore } from "@/stores/trip/useActivityStore";
 import { useTripStore, useAuthStore } from "@/stores";
 import { useUtilsStore } from "@/stores/utils/useUtilsStore";
 import { Activity } from "@/types/interface";
@@ -12,19 +10,21 @@ import AppButton from "@/components/AppButton.vue";
 import HeaderSection from "@/components/common/HeaderSection.vue";
 import { Section } from "@/components";
 
-const route = useRoute();
-const tripId = route.params.tripId as string;
-const planId = route.params.planId as string;
-
-const { trip: tripStore } = useTripStore();
-const { getTripDetails, getPlans } = useTripStore();
-const { userData } = useAuthStore();
 const { formatDatePolish } = useUtilsStore();
-const activityStore = useActivityStore();
 
-const { trip } = getTripDetails();
-const { data: plansData } = getPlans(tripId);
-const { data: activities, isSuccess } = activityStore.getActivity(tripId, planId);
+const { trip: tripStore, plan, activity } = useTripStore();
+const { getPlanDetails } = plan;
+const { plan: planDetails } = getPlanDetails();
+
+const { getTripDetails } = tripStore;
+const { trip, isLoading_trip } = getTripDetails();
+
+const { userData } = useAuthStore();
+const { isOwner } = userData;
+
+const { getActivities } = activity;
+
+const { activities } = getActivities();
 
 const isOwnerValue = computed(() => {
   const creatorId = trip.value?.creator?.id;
@@ -33,8 +33,8 @@ const isOwnerValue = computed(() => {
 
 // Wszystkie dni planu (dla właściciela)
 const allDays = computed(() => {
-  const from = trip.value?.start_date;
-  const to = trip.value?.end_date;
+  const from = planDetails.value?.start_date;
+  const to = planDetails.value?.end_date;
   if (!from || !to) return [];
 
   const arr: string[] = [];
@@ -49,21 +49,23 @@ const allDays = computed(() => {
 
 // Grupowanie aktywności wg dat
 const activityByDate = computed(() => {
-  if (!activities.value) return {};
+  if (!activities.value?.length) return {};
 
   return activities.value.reduce((acc, activity) => {
-    const date = activity.date || "";
-    if (!acc[date]) acc[date] = [];
-    acc[date].push({ ...activity, date });
+    const date = activity.date || "brak daty";
+    (acc[date] ||= []).push(activity);
     return acc;
   }, {} as Record<string, Activity[]>);
 });
 
 // Widoczne dni zależne od właściciela
 const days = computed(() => {
+  console.log(allDays.value,activityByDate);
   return isOwnerValue.value
     ? allDays.value
-    : Object.keys(activityByDate.value).filter((day) => activityByDate.value[day]?.length > 0);
+    : Object.keys(activityByDate.value).filter(
+        (day) => activityByDate.value[day]?.length > 0
+      );
 });
 
 const showFormForDay = ref<string | null>(null);
@@ -80,10 +82,6 @@ function addActivity(day: string, activityData: any) {
     }
   );
 }
-
-onMounted(() => {
-  activityStore.loadActivityTypes(tripId);
-});
 </script>
 
 <template>
@@ -97,7 +95,10 @@ onMounted(() => {
         <v-card class="background-secondary rounded-lg" elevation="4">
           <v-container>
             <v-card-item>
-              <v-row class="justify-space-between align-center text-h6 pb-3" no-gutters>
+              <v-row
+                class="justify-space-between align-center text-h6 pb-3"
+                no-gutters
+              >
                 <div class="font-weight-bold">{{ formatDatePolish(day) }}</div>
                 <AppButton
                   v-if="isOwnerValue"
@@ -117,16 +118,14 @@ onMounted(() => {
                 class="mb-2"
               />
 
-              <span v-if="!isSuccess">Ładuję...</span>
-
               <v-row v-else no-gutters>
-                <ActivityCard
-                  v-for="activityItem in activityByDate?.[day] ?? []"
-                  :key="activityItem.id"
-                  :activity="activityItem"
-                  class="mb-3"
-                  :isOwner="isOwnerValue"
-                />
+                <template v-for="activityItem in activityByDate?.[day] ?? []" :key="activityItem.id">
+                  <ActivityCard
+                    :activity="activityItem"
+                    class="mb-3"
+                    :isOwner="isOwnerValue"
+                  />
+                </template>
               </v-row>
             </v-card-item>
           </v-container>

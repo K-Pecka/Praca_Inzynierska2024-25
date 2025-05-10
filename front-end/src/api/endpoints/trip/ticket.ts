@@ -15,7 +15,19 @@ export const fetchTicket = async (params: { [key: string]: string }) => {
 
   return data;
 };
+export const fetchDeleteTicket = async (params: { [key: string]: string }) => {
+  
+  const { data, error } = await fetchData<TicketData[]>(
+    setParam(apiEndpoints.ticket.delete,params),
+    {},
+    "DELETE"
+  );
+  if (error) {
+    throw new Error(error);
+  }
 
+  return data;
+};
 export const createTicket = async (
   formData: FormData,params: Record<string, string>
 ): Promise<any> => {

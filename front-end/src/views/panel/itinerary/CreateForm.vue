@@ -5,7 +5,8 @@ import { useFormStore,useTripStore, useUtilsStore } from "@/stores";
 import { FormType } from "@/types/enum";
 import { Plan } from "@/types/interface";
 
-const { planMutationAdd } = useTripStore();
+const { plan } = useTripStore();
+const {addPlan} = plan;
 const { getFormInputs, isFormValid } = useFormStore();
 
 const {trip:tripStore} = useTripStore();
@@ -43,7 +44,7 @@ const handleSubmit = (_formData: any, config: any) => {
       end_date: end_date || ''
     };
     try {
-      planMutationAdd.mutateAsync({ data: newPlan, tripId: getTripId() });
+      addPlan.mutateAsync({ data: newPlan, tripId: getTripId() });
     } catch (error) {
       
     }

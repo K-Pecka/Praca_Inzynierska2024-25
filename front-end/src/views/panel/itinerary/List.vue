@@ -6,8 +6,9 @@ import AppButton from "@/components/AppButton.vue";
 import {images} from "@/data";
 import { useUtilsStore,useAuthStore } from "@/stores";
 const {getTripId} = useUtilsStore();
-const {yourPlans} = useTripStore();
-const {data: rawPlans, isLoading, error} = yourPlans.plans();
+const {plan} = useTripStore();
+const {getPlans,planBtn} = plan;
+const {plans,isLoading_plans,error_plans} = getPlans();
 
 const {trip:tripStore} = useTripStore();
 const {getTripDetails} = tripStore;
@@ -21,14 +22,12 @@ const { isOwner } = userData;
 <template>
 
   <Section>
-    <template #title v-if="trip && rawPlans && rawPlans.length">
+    <template #title v-if="trip && plans && plans.length">
       <HeaderSection subtitle="Plany podróży" />
     </template>
     <template #content>
-      <p v-if="isLoading">Ładowanie...</p>
-      <p v-else-if="error">Błąd: {{ error.message }}</p>
-      <template v-else-if="trip && rawPlans && rawPlans.length">
-        <TripCard :plans="rawPlans" :btn="yourPlans.btn ?? []" :isOwner = "isOwner(trip?.creator?.id)"/>
+      <template v-if="trip && plans && plans.length">
+        <TripCard :plans="plans" :btn="planBtn ?? []" :isOwner = "isOwner(trip?.creator?.id)"/>
       </template>
 
       <!-- Empty state -->

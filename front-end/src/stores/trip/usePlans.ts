@@ -1,78 +1,82 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
-import { fetchPlans, createPlan, deleteItinerary } from "@/api";
-import router from "@/router";
-import { computed } from "vue";
-import { Plan } from "@/types";
+import { useQueryClient } from "@tanstack/vue-query";
+import {
+  getPlansQuery,
+  getMutationAddPlan,
+  getMutationDeleteItinerary,
+  getPlanDetailsQuery
+} from "@/api/services/planQuery";
 import { useNotificationStore } from "@/stores";
+import { computed } from "vue";
+import router from "@/router";
 
-export const usePlans = (tripId:Function) => {
-    const queryClient = useQueryClient();
-    const notifications = useNotificationStore();
+export const usePlans = (tripIdFn: () => string | number | undefined,planIdFn: () => string | number | undefined) => {
+  const queryClient = useQueryClient();
+  const notifications = useNotificationStore();
+  const resolvedTripId = () => String(tripIdFn?.() ?? "");
+  const resolvedPlanId = () => String(planIdFn?.() ?? "");
+  const getPlans = (id?: string) => {
+    const {
+      data: plans,
+      isLoading: isLoading_plans,
+      error: error_plans,
+    } = getPlansQuery(id || resolvedTripId());
+    return { plans, isLoading_plans, error_plans };
+  };
+  const getPlanDetails = (tripId?:number,planId?:number)=>{
+    const {
+      data: plan,
+      isLoading: isLoading_plan,
+      error: error_plan,
+    } = getPlanDetailsQuery((tripId || Number(resolvedTripId())),(planId || Number(resolvedPlanId())));
+    return { plan, isLoading_plan, error_plan };
+  }
+  const deleteItinerary = getMutationDeleteItinerary({
+    notifications,
+    queryClient,
+    successMessage: "Pomyślnie usunięto plan",
+    errorMessage: "Nie udało się usunąć planu",
+    tripId: String(resolvedTripId()),
+  });
 
-    const deleteItineraryMutation = useMutation({
-        mutationFn: ({ tripId, planId }: { tripId: string; planId: string }) =>
-            deleteItinerary({ tripId, planId }),
-        onSuccess: (data) => {
-            notifications.setSuccessCurrentMessage("Pomyślnie usunięto plan");
-            queryClient.invalidateQueries({ queryKey: ["plans", data?.tripId] });
-        },
-        onError: (err) => notifications.setErrorCurrentMessage(err.message),
-    });
+  const addPlan = getMutationAddPlan({
+    notifications,
+    queryClient,
+    successMessage: "Dodano plan",
+    errorMessage: "Nie udało się dodać planu",
+    tripId: String(resolvedTripId()),
+  });
+  const planBtn = computed(() => [
+    {
+      title: "Zarządzaj planem",
+      class: "primary",
+      icon: "mdi-pencil",
+      showIfOwner: true,
+      onclick: (itineraryId: string) =>
+        router.push({
+          name: "ActivityView",
+          params: { planId: itineraryId },
+        }),
+    },
+    {
+      title: "usuń plan",
+      class: "red",
+      icon: "mdi-trash-can-outline",
+      showIfOwner: true,
+      onclick: ( itineraryId: string) =>
+        deleteItinerary.mutate({ planId: itineraryId }),
+    },
+    {
+      title: "Podgląd planu",
+      class: "primary",
+      icon: "mdi-eye-outline",
+      showIfOwner: false,
+      onclick: ( itineraryId: string) =>
+        router.push({
+          name: "ActivityView",
+          params: {planId: itineraryId },
+        }),
+    },
+  ]);
 
-    const handleDeleteItinerary = async (tripId: string, planId: string) => {
-        try {
-            await deleteItineraryMutation.mutateAsync({ tripId, planId });
-        } catch (err) {}
-    };
-
-    const planMutationAdd = useMutation({
-        mutationFn: ({ data, tripId }: { data: Plan; tripId: number }) =>
-            createPlan(data, { tripId: String(tripId) }),
-        onSuccess: () => {
-            router.back();
-            notifications.setSuccessCurrentMessage("Dodano plan");
-        },
-        onError: () => {
-            notifications.setErrorCurrentMessage("Błąd");
-        },
-    });
-
-    const getPlans = (id?: string) =>
-        useQuery({
-            queryKey: ["plans", id ?? tripId()],
-            queryFn: () => fetchPlans({ tripId: id ?? tripId() }),
-        });
-
-    const yourPlans = computed(() => ({
-        btn: [
-            {
-              title: "Zarządzaj planem",
-              class: "primary",
-              icon: "mdi-pencil",
-              showIfOwner: true,
-              onclick: (tripId: string, itineraryId: string) =>
-                  router.push({name: "ActivityView", params: {tripId: tripId, planId: itineraryId}}),
-            },
-            {
-              title: "usuń plan",
-              class: "red",
-              icon: "mdi-trash-can-outline",
-              showIfOwner: true,
-              onclick: (tripId: string, itineraryId: string) =>
-                  handleDeleteItinerary(tripId, itineraryId),
-            },
-            {
-            title: "Podgląd planu",
-            class: "primary",
-            icon: "mdi-eye-outline",
-            showIfOwner: false,
-            onclick: (tripId: string, itineraryId: string) =>
-              router.push({ name: "ActivityView", params: { tripId, planId: itineraryId } }),
-            }
-          ],
-        plans: getPlans,
-    }));
-
-    return { planMutationAdd, getPlans, yourPlans, handleDeleteItinerary };
+  return { getPlans, deleteItinerary, addPlan,getPlanDetails, planBtn };
 };
-
