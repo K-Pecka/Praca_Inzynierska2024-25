@@ -26,7 +26,7 @@ onMounted(() => {
 
 <template>
   <v-navigation-drawer
-      style="z-index: 1006;"
+      style="z-index: 999;"
       class="navbar-border font-weight-bold"
       v-model="drawer"
   >
