@@ -164,8 +164,8 @@ const toggleForm = () => {
               <!-- Icon with text -->
               <v-row justify="center">
                 <v-col cols="12" xs="12" sm="8" md="5" lg="5">
-                  <v-row align="center" no-gutters>
-                    <v-icon class="color-text" large size="70px"> mdi-download</v-icon>
+                  <v-row align="center" justify="center" no-gutters>
+                    <v-icon class="color-text" large size="70px" color="primary"> mdi-ticket</v-icon>
                     <v-row no-gutters class="flex-column justify-center pl-4">
                       <span class="color-text font-weight-bold text-h5">{{ ticket.name }}</span>
                       <span class="color-primary text-h6 font-weight-medium"
