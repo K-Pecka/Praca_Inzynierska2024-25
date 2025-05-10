@@ -60,7 +60,7 @@
           :to="item.to"
           variant="text"
           class="px-3 rounded-lg"
-          :class="[item.title === 'Panel' || item.title === 'Zarejestruj się' ? 'panel-button' : '']"
+          :class="[item.title === 'Panel' || item.title === 'Zarejestruj się' ? 'panel-button gradient-bg' : '']"
         >
           {{ item.title }}
         </v-btn>
@@ -99,6 +99,10 @@
   width: 80% !important;
   left: 10% !important;
 
+}
+
+.gradient-bg {
+  background: linear-gradient(to right, #2f27ce, #ac6ed9);
 }
 
 .panel-button {

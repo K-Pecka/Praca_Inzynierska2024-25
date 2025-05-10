@@ -23,8 +23,8 @@ import {HeaderSection} from "@/components";
     </template>
     <template #content>
       <v-row justify="center" class="mb-10">
-        <v-col cols="12" sm="12" offset-md="0" md="10">
-          <div class="text-body-1 w-100">
+        <v-col cols="12" sm="12" offset-md="0">
+          <div class="text-body-1">
             <div
               v-for="(paragraph, index) in aboutTeam.paragraphs"
               :key="index"
