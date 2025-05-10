@@ -39,7 +39,7 @@ class CustomUserAdmin(admin.ModelAdmin):
 @admin.register(UserProfile)
 class ClientProfileAdmin(admin.ModelAdmin):
     list_select_related = ('user',)
-    list_display = ("pk", "get_user_link")
+    list_display = ("pk", "type", "get_user_link")
 
     def get_user_link(self, obj):
         return get_admin_change_link(obj.user)

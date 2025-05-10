@@ -101,10 +101,6 @@
 
 }
 
-.gradient-bg {
-  background: linear-gradient(to right, #2f27ce, #ac6ed9);
-}
-
 .panel-button {
   background-color: rgb($primary-color);
   color: white;
