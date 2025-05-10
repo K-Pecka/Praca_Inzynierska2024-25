@@ -94,9 +94,9 @@ export const useActivityStore = defineStore("activity", () => {
       setSuccessCurrentMessage("Dodano aktywność");
     },
     onError: () => {
-        //console.log(activeError.value);
+        ////console.log(activeError.value);
         setError(true);
-        //console.log(activeError.value);
+        ////console.log(activeError.value);
       setErrorCurrentMessage("Błąd podczas dodawania aktywności");
       
     },

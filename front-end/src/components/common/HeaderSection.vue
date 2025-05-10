@@ -44,14 +44,14 @@ defineProps<{
     <!-- Subtitle -->
     <v-col v-if="!noSubTitle">
       <v-row :class="center ? 'justify-center' : 'justify-space-between'" no-gutters>
-          <span class="text-h4" v-if="!noSubTitle && subtitle">
+          <span class="text-h4" v-if="subtitle">
             {{ subtitle }}
           </span>
         <span v-else>
             ...
           </span>
         <AppButton
-            v-if="!noSubTitle && button"
+            v-if="button"
             color="primary"
             @click="buttonAction"
             dense

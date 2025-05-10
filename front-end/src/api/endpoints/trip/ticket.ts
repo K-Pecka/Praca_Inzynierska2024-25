@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/stores";
 import { apiEndpoints, fetchData, setParam, standardHeaders } from "../../apiEndpoints";
 import { Ticket, TicketData } from "@/types/interface";
 
@@ -21,24 +22,23 @@ export const createTicket = async (
   formData.forEach((value, key) => {
     //console.log(`${key}: ${value}`);
   });
+  const { getToken } = useAuthStore();
   const response = await fetch(setParam(apiEndpoints.ticket.create,params), {
     method: 'POST',
     headers: {
-      ...standardHeaders(),
-      
+      Authorization: `Bearer ${getToken()?.access}`
     },
     body: formData,
   });
-  /*console.log('Response:', {
+  console.log('Response:', {
     method: 'POST',
     headers: {
-      ...standardHeaders(),
-      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${getToken()?.access}`
     },
     body: formData,
-  });*/
+  });
   if (!response.ok) {
-    //console.error('Error response:', response.json());
+    console.error('Error response:', response.json());
     throw new Error('Błąd podczas tworzenia biletu');
   }
 

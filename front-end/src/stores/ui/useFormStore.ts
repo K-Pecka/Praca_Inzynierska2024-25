@@ -17,6 +17,7 @@ export const useFormStore = defineStore("form", () => {
   const { getErrorMessages } = useNotificationStore();
   const { loginMutation } = useAuthStore();
   const formType = ref<FormType>(FormType.LOGIN);
+
   const extraValidationMessages = {
     isEqual: "Hasła muszą być takie same",
     dateRange: "Data zakończenia nie może być wcześniejsza niż rozpoczęcia",
@@ -70,14 +71,15 @@ export const useFormStore = defineStore("form", () => {
   };
   const isSend = ref(false);
   const sendForm =async (formValue: any, config: any)=>{
-    //console.log(config?.send,isFormValid(FormType.LOGIN, formValue),!isSend.value)
+    ////console.log(config?.send,isFormValid(FormType.LOGIN, formValue),!isSend.value)
     if (config?.send && isFormValid(FormType.LOGIN, formValue) && !isSend.value) {
       isSend.value = true;
       try {
         await loginMutation.mutateAsync(formValue);
+        formValue={}
         formType.value = FormType.REGISTER;
       } catch (error) {
-       //console.log("Brak danych")
+       ////console.log("Brak danych")
       }
       isSend.value = false
     }

@@ -32,7 +32,7 @@ function submitTicket() {
       ? formatDateToYYYYMMDD(form.value.date)
       : new Date("YYYY-MM-DD").getDate(),
   };
-  //console.log("Payload", payload);
+  ////console.log("Payload", payload);
   emit("submitTicket", payload);
 
   form.value = {

@@ -27,7 +27,7 @@ function submitActivity() {
     alert("Uzupełnij nazwę aktywności.");
     return;
   }
-  //console.log(form.value)
+  ////console.log(form.value)
   emit("submitActivity", { ...form.value });
   form.value = {
     type: 1,
@@ -95,6 +95,7 @@ const { activityTypes } = useActivityStore();
                 v-model="form.start_time"
                 format="24hr"
                 scrollable
+                :actions="true"
               />
 
             </v-menu>

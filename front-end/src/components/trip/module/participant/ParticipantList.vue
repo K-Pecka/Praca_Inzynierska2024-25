@@ -14,7 +14,7 @@ function handleRemove(id: number) {
   emit("remove", id); 
 }
 
-console.log(props.participants)
+//console.log(props.participants)
 </script>
 
 <template>

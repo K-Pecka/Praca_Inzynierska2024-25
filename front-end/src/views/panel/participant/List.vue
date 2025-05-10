@@ -5,13 +5,14 @@ import {Section} from "@/components";
 import ParticipantList from "@/components/trip/module/participant/ParticipantList.vue";
 import ParticipantsCounter from "@/components/trip/module/participant/ParticipantsCounter.vue";
 import ParticipantAddForm from "@/components/trip/module/participant/ParticipantAddForm.vue";
-import {useTripStore, useNotificationStore} from "@/stores";
+import {useTripStore, useNotificationStore,useAuthStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
 const {setErrorCurrentMessage} = useNotificationStore();
 const route = useRoute();
 const tripId = Number(route.params.tripId);
 
-
+const {userData} = useAuthStore();
+const {isOwner} = userData;
 const {trip:tripStore} = useTripStore();
 const {getTripDetails} = tripStore;
 const {trip} = getTripDetails();
@@ -49,7 +50,7 @@ const toggleForm = () => {
       <template #title>
         <HeaderSection
             subtitle="Zarządzaj uczestnikami"
-            button
+            :button="isOwner(trip?.creator?.id || 0)"
             button-text="Dodaj"
             :button-action="toggleForm"
         />

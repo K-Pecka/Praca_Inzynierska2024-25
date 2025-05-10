@@ -84,7 +84,7 @@ export const useAuthStore = defineStore(
             token.value = data;
         };
         const saveUser = (data: User): void => {
-            console.log(data);
+            //console.log(data);
             user.value = data;
         };
         const isOwner = (id: number) => id === (getUser()?.profiles?.[0]?.id ?? -1);
@@ -119,13 +119,10 @@ export const useAuthStore = defineStore(
         const loginMutation = useMutation({
             mutationFn: loginFetch,
             onSuccess: (data) => {
-                console.log("1",data)
                 const {access, refresh, last_name, first_name,profile} = data;
                 setSuccessCurrentMessage(loginSuccess());
-                console.log(data)
                 saveToken({access, refresh});
                 saveUser(data);
-                console.log("12",data)
                 router.push({name: "landing"});
             },
             onError: (err) => {
