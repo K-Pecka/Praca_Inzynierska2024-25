@@ -4,28 +4,25 @@ import { useDashboard } from "./useDashboard";
 import { usePlans } from "./usePlans";
 import { useTrips } from "./useTrips";
 import { useBudget } from "./useBudget";
-import { useActivity } from "./useActivity";
-import { useTicket } from "./useTicket";
-import { useUtilsStore } from "@/stores";
+import { useTicketStore, useUtilsStore } from "@/stores";
 export const useTripStore = defineStore("trip", () => {
-  const { getTripId, getPlanId } = useUtilsStore();
-
+  const { getTripId } = useUtilsStore();
+  
   const { getDashboard, getSpecialSectionName } = useDashboard(getTripId);
-  const { getTrips, getTripDetails, deleteTrip, createTrip, updateTrip } =
-    useTrips(getTripId);
+  const {
+    getTrips,
+    getTripDetails,
+    deleteTrip,
+    createTrip,
+    updateTrip,
+  } = useTrips(getTripId);
   const { tripMutationBudget, createExpense, getExpensByTrip } =
     useBudget(getTripId);
-  const { getPlans, addPlan, getPlanDetails, planBtn } = usePlans(
-    getTripId,
-    getPlanId
-  );
-
-  const { getActivities } = useActivity(getTripId, getPlanId);
-
-  const { deleteTicket, createTicket, getTickets } = useTicket(getTripId);
+  const { getPlans, yourPlans, planMutationAdd, handleDeleteItinerary } = usePlans(getTripId);
 
   const { addParticipant, removeParticipant } = useParticipants();
 
+  const { getTickets } = useTicketStore();
   return {
     dashboard: {
       getDashboard,
@@ -34,23 +31,28 @@ export const useTripStore = defineStore("trip", () => {
     budget: {
       getExpensByTrip,
     },
-    trip: {
+    trip:{
       getTrips,
       getTripDetails,
       deleteTrip,
       createTrip,
-      updateTrip,
+      updateTrip
     },
-    plan: { getPlans, addPlan, planBtn, getPlanDetails },
-    activity: { getActivities },
-    ticket: { deleteTicket, createTicket, getTickets },
+    plan:{
+      handleDeleteItinerary
+    },
+    yourPlans,
+    getPlans,
+    getTripDetails,
     tripMutationBudget,
+    planMutationAdd,
     removeParticipant,
     addParticipant,
     getTickets,
     createExpense,
   };
 });
+// import { defineStore } from "pinia";
 // import { useParticipants } from "./useParticipants";
 // import { useDashboard } from "./useDashboard";
 // import { usePlans } from "./usePlans";

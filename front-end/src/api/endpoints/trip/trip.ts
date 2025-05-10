@@ -45,7 +45,7 @@ export const deleteTrip = async (param: Record<string, string>={}) => {
 export const createTrip = async (newTrip:NewTrip,param: Record<string, string>={}) => {
     const { data, error } = await fetchData<NewTrip>(
       setParam(apiEndpoints.trip.create, param),
-      { body: JSON.stringify({...newTrip,budget_amount:0}) },
+      { body: JSON.stringify({...newTrip,budget_amount:1}) },
       "POST"
     );
     if (error) {
@@ -56,9 +56,9 @@ export const createTrip = async (newTrip:NewTrip,param: Record<string, string>={
   };
 
 export const updateTrip = async (
+    param: Record<string, string>,
     tripData: Partial<Trip>
 ) => {
-  const param={tripId:String(tripData.id)}
     const url = setParam(apiEndpoints.trip.update, param);
     const { data, error } = await fetchData<Trip>(
         url,
@@ -71,5 +71,5 @@ export const updateTrip = async (
     if (error) {
       throw new Error(error);
     }
-    return {data,tripId:param.tripId};
+    return data;
 };

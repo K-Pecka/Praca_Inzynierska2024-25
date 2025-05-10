@@ -6,5 +6,5 @@ export { usePageHomeStore } from './ui/usePageHomeStore';
 export { usePagePanelStore } from './ui/usePagePanelStore';
 export { useFormStore } from './ui/useFormStore';
 export { useTripStore } from './trip/useTripStore';
-export { useTicket } from './trip/useTicket';
+export { useTicketStore } from './trip/useTicketStore';
 export {useUtilsStore} from './utils/useUtilsStore';

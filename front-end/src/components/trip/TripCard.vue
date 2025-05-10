@@ -8,7 +8,7 @@ import AppButton from "../AppButton.vue";
 const {userData} = useAuthStore();
 const {isOwner} = userData;
 const {plan} = useTripStore()
-const {} = plan;
+const {handleDeleteItinerary} = plan;
 
 function formatPL(dateString: string): string {
   const dateObj = new Date(dateString);

@@ -4,7 +4,7 @@ import {useRoute} from "vue-router";
 import {Section, Form, HeaderSection} from "@/components";
 import {useFormStore, useTripStore} from "@/stores";
 import {FormType} from "@/types/enum";
-import dayjs from "dayjs";
+
 const route = useRoute();
 const id = Number(route.params.tripId);
 
@@ -34,7 +34,7 @@ watch(
           tripDatesInput.config = {
             ...tripDatesInput.config,
             edit: true,
-            min: dayjs().format('YYYY-MM-DD') ?? '',
+            min: trip?.value?.start_date ?? '',
             max: trip?.value?.end_date ?? '',
           };
           ////console.log(tripDatesInput.config.min, tripDatesInput.config.max);
@@ -51,16 +51,10 @@ function handleSubmit(_formData: any, config: any) {
 
     const newData = {
       name: tripName,
-      id: String(id),
       start_date: start_date || '',
-      end_date: end_date || ''
+      end_date: end_date || '',
     };
-    try{
-      updateTrip.mutateAsync(newData);
-    }
-    catch(error){
-      console.log("BŁĄD")
-    }
+    updateTrip.mutateAsync({ tripId: String(id), newData });
   }
 }
 </script>

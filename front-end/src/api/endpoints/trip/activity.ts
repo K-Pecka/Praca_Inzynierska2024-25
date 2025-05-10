@@ -16,7 +16,7 @@ export const createActivity = async (newActivity:Activity,param: Record<string, 
   
     return data;
   };
-  export const fetchActivities = async (param: Record<string, string> = {}):Promise<Activity[]> => {
+  export const fetchActivity = async (param: Record<string, string> = {}):Promise<Activity[]> => {
     if (APP_MODE_DEV) {
       return [];
     }

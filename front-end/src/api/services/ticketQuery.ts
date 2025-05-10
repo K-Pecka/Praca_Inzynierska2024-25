@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/vue-query"
 import type { TicketData } from "@/types";
-import { fetchTicket as originalFetchTicket,createTicket,fetchDeleteTicket } from "@/api";
+import { fetchTicket as originalFetchTicket,createTicket } from "@/api";
 
 const fetchTicket = async (tripId: string): Promise<TicketData[]> => {
     const result = await originalFetchTicket({ tripId: tripId });
@@ -9,7 +9,7 @@ const fetchTicket = async (tripId: string): Promise<TicketData[]> => {
 
 export const getTicketsQuery = (tripId: string) => {
     return useQuery<TicketData[], Error>({
-        queryKey: ["tickets", Number(tripId)],
+        queryKey: ["ticket", tripId],
         queryFn: ({ queryKey }) => {
             const [, tripId] = queryKey as [string, string];
             return fetchTicket(tripId);
@@ -27,13 +27,3 @@ export const createTicketMutation = (formData: FormData,params:Record<string, st
       //console.error('Błąd podczas tworzenia biletu:', error);
     },
   });
-export const deleteTicektMutation = (option: Record<string,any>) => useMutation({
-    mutationFn: fetchDeleteTicket,
-    onSuccess: () => {
-        option.notifications.setSuccessCurrentMessage(option.successMessage);
-        option.queryClient.invalidateQueries({queryKey: ["tickets",Number(option.tripId)]});
-    },
-    onError: (err) => {
-        option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);
-    },
-});

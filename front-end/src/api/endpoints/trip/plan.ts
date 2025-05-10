@@ -12,9 +12,9 @@ export const fetchPlans = async (param: Record<string, string> = {}) => {
 
   return data;
 };
-export const fetchPlanDetails = async (param:{tripId:string,planId:string}) => {
+export const fetchPlan = async () => {
   const { data, error } = await fetchData<Plan>(
-    setParam(apiEndpoints.plan.detail,param),
+    apiEndpoints.plan.detail,
     {},
     "GET"
   );
@@ -30,9 +30,7 @@ export const deleteItinerary = async (param: Record<string, string> = {}) => {
     {},
     "DELETE"
   );
-  console.log(param)
   if (error) {
-    
     throw new Error(error);
   }
 

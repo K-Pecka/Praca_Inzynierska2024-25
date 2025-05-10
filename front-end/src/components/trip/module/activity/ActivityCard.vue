@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useActivity} from "@/stores/trip/useActivity";
+import {useActivityStore} from "@/stores/trip/useActivityStore";
 defineProps({
   isOwner:Boolean,
   activity: {
@@ -7,14 +7,13 @@ defineProps({
     required: true,
   },
 });
-console.log("h");
-const {activityTypes} = useActivity();
+
+const store = useActivityStore();
 
 const getTypeLabel = (type: number | string) => {
-  // const typeAsNumber = Number(type);
-  // const found = activityTypes.find((t) => t.id === typeAsNumber);
-  // return found ? found.name : String(type);
-  return "UNKNOW"
+  const typeAsNumber = Number(type);
+  const found = store.activityTypes.find((t) => t.id === typeAsNumber);
+  return found ? found.name : String(type);
 };
 
 const formatDuration = (minutes: string | number | null) => {
