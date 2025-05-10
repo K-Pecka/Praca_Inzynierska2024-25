@@ -2,6 +2,7 @@
   import { images } from "@/data";
   import { usePanelStore} from "@/stores/panel/usePanelStore";
   import { useAuthStore } from "@/stores";
+  import { onMounted } from 'vue';
 
   const panelStore = usePanelStore();
   const authStore = useAuthStore();
@@ -9,6 +10,10 @@
   const userInitials = authStore.getUserInitials();
 
   const emit = defineEmits(['toggle-drawer'])
+
+  onMounted(() => {
+    emit('toggle-drawer')
+  })
 </script>
 
 <template>

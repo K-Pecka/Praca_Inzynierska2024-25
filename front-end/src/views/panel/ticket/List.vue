@@ -86,7 +86,7 @@ const toggleForm = () => {
     <template #content>
 
       <!-- Ticket create form -->
-      <v-col cols="12" v-if="showForm">
+      <v-col cols="12" class="pa-0" v-if="showForm">
         <TicketForm
             :members="members"
             @submitTicket="handleAddTicket"
