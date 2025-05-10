@@ -56,6 +56,7 @@ async function handleAddTicket(newTicketData: {
 
   try {
     await createTicket(formData, { tripId: String(getTripId()) });
+    await refetchTickets();
     showForm.value = false;
   } catch (error: any) {
     const res = await error?.response?.json?.().catch(() => null);
