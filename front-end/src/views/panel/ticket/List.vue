@@ -17,7 +17,11 @@ const {combineDateAndTime, getTripId} = useUtilsStore();
 const {trip: tripStore} = useTripStore();
 const {getTripDetails} = tripStore;
 const {trip} = getTripDetails();
-const {data: tickets, isLoading} = useTripStore().getTickets(String(getTripId()));
+const {
+  data: tickets,
+  isLoading,
+  refetch: refetchTickets
+} = useTripStore().getTickets(String(getTripId()));
 
 
 import {useMembersStore} from "@/stores/trip/useMembersStore"
@@ -68,14 +72,13 @@ const handleDeleteTicket = async (ticketId: number) => {
       ticketId: String(ticketId),
     });
 
-    await useTripStore().getTickets(String(getTripId())).refetch?.();
+    await refetchTickets();
   } catch (error) {
     console.error("Błąd podczas usuwania biletu:", error);
   }
 };
 
 const downloadItem = async (url: string) => {
-  ////console.log(url)
   const response = await axios.get(url, {responseType: "blob"});
   const blob = new Blob([response.data], {type: "application/jpeg"});
   const link = document.createElement("a");
