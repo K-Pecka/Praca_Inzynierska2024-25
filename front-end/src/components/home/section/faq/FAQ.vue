@@ -69,7 +69,7 @@ const toggle = (index: number) => {
 
       .faq__answer {
         margin-top: 0.5rem;
-        font-size: 10px;
+        font-size: 15px;
         color: rgb(var(--v-theme-primary));
       }
 

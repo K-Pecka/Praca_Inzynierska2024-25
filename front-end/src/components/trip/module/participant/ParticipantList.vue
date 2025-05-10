@@ -13,12 +13,10 @@ const emit = defineEmits<{
 function handleRemove(id: number) {
   emit("remove", id);
 }
-
-//console.log(props.participants)
 </script>
 
 <template>
-  <v-col cols="12">
+  <v-col cols="12 mt-4">
     <v-row class="flex-column ga-5">
       <ParticipantItem
           v-for="participant in participants"

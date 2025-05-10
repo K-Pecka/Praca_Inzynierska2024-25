@@ -83,7 +83,9 @@ const toggleForm = () => {
           <v-col>
             <v-card class="background-secondary" rounded="lg">
               <v-card-text class="pa-6">
-                <span class="pb-3 text-h5 font-weight-medium">Dodani uczestnicy</span>
+                <span class="text-h5 font-weight-bold">
+                  Dodani uczestnicy
+                </span>
 
                 <ParticipantList
                     v-if="members.length > 0"

@@ -3,7 +3,6 @@ import {Form, HeaderSection, ListLink, Section} from "@/components/common";
 import { usePageHomeStore,useFormStore } from "@/stores/";
 import { FormType } from "@/types/enum";
 import { ref } from "vue";
-import {HeaderSection} from "@/components";
 
 const { getSectionTitle } = usePageHomeStore();
 const { getMoreOptions,initForm,sendForm, formValues } = useFormStore();
