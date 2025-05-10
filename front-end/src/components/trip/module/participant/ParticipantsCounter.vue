@@ -19,14 +19,19 @@ const props = defineProps<{
     </div>
     <v-progress-linear
         :model-value="(props.current / props.max) * 100"
-        color="primary"
         height="12"
         rounded
+        class="progress-color"
     />
   </div>
 </template>
 
 <style scoped lang="scss">
+@use "@/assets/styles/variables.scss" as *;
+
+.progress-color {
+  color: $background-primary;
+}
 .participants-counter-card {
   background-color: rgb(var(--v-theme-secondary), 0.5);
   border-radius: 12px;

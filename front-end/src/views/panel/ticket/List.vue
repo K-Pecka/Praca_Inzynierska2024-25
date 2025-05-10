@@ -181,7 +181,7 @@ const toggleForm = () => {
                         lg="12"
                         :class="$vuetify.display.smAndDown ? 'text-start' : 'text-end'">
                       <AppButton
-                          color="primary"
+                          color="primary-outline"
                           @click="() => downloadItem(ticket.file)"
                           font-auto
                           max-width="190px"

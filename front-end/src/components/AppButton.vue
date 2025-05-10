@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   text?: string;
-  color?: "primary" | "secondary" | "accent" | "empty" | "orange" | "red";
+  color?: "primary" | "secondary" | "accent" | "empty" | "orange" | "red" | "primary-outline";
   width?: string;
   maxWidth?: string;
   minHeight?: string;
@@ -62,6 +62,14 @@ defineProps<{
   color: white;
 }
 
+.primary-outline {
+  border: 3px solid $background-primary;
+  margin: 3px;
+  border-radius: 15px;
+  background-color: transparent;
+  color: $background-primary;
+}
+
 .secondary {
   background-color: rgb($secondary-color);
   color: $text-color;
@@ -78,8 +86,11 @@ defineProps<{
 }
 
 .red {
-  background-color: #c6564c;
-  color: white;
+  border: 3px solid #c6564c;
+  margin: 3px;
+  border-radius: 15px;
+  background-color: transparent;
+  color: #c6564c;
 }
 
 .empty {

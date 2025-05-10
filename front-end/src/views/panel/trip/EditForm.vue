@@ -64,7 +64,7 @@ function handleSubmit(_formData: any, config: any) {
     <template #title>
       <HeaderSection
           title="Edytuj wycieczkę"
-          subtitle="Zmodyfikuj nazwę i daty wycieczki"
+          no-sub-title
           center
       />
     </template>

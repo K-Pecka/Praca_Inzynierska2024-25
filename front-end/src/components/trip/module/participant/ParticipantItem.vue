@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {User} from "@/types";
+import AppButton from "../../../AppButton.vue";
 
 const props = defineProps<{
   user: User;
@@ -66,14 +67,13 @@ const tags = [
               </v-col>
             </v-col>
             <v-col class="text-end">
-              <v-btn @click="handleRemoveClick" class="border-none">
-                <v-icon
-                    size="24"
-                    color="red"
-                >
-                  mdi-trash-can-outline
-                </v-icon>
-              </v-btn>
+              <AppButton
+                  color="red"
+                  @click="handleRemoveClick"
+                  font-auto
+                  max-width="190px"
+                  text="Usuń bilet"
+              />
             </v-col>
           </v-row>
         </v-card-text>

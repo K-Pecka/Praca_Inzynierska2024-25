@@ -49,38 +49,6 @@ defineProps<{
 
     <!-- Subtitle -->
     <v-col v-if="!noSubTitle">
-<!--      <v-row-->
-<!--          v-if="center"-->
-<!--          :class="center ? 'justify-center' : 'justify-space-between'"-->
-<!--          no-gutters-->
-<!--      >-->
-<!--        <v-col cols="12">-->
-<!--          <v-row justify="center" no-gutters>-->
-<!--            <span class="text-h4" v-if="subtitle">-->
-<!--              {{ subtitle }}-->
-<!--            </span>-->
-<!--            <span v-else>-->
-<!--              ...-->
-<!--            </span>-->
-<!--          </v-row>-->
-<!--        </v-col>-->
-<!--        <v-col-->
-<!--            cols="12"-->
-<!--        >-->
-<!--          <v-row justify="end" align="start" no-gutters>-->
-<!--            <AppButton-->
-<!--                v-if="button"-->
-<!--                color="primary"-->
-<!--                @click="buttonAction"-->
-<!--                dense-->
-<!--                font-auto-->
-<!--                :text="buttonText"-->
-<!--            />-->
-<!--          </v-row>-->
-<!--        </v-col>-->
-<!--      </v-row>-->
-
-
       <v-row
           :class="center ? 'justify-center' : 'justify-space-between'"
           no-gutters
