@@ -6,6 +6,10 @@ defineProps({
   tripId: {
     type: String,
     required: true
+  },
+  role:{
+    type:String,
+    required: true
   }
 })
 </script>

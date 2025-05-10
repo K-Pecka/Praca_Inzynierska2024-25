@@ -9,8 +9,8 @@ const tripRoutes = {
     component: ChooseRoleLayout,
     children: [
         {
-            path: "/choose-trip",
-            name: "Dashboard",
+            path: "/:role/choose-trip",
+            name: "ChooseTrip",
             history: createWebHistory(import.meta.env.BASE_URL),
             component: Dashboard,
             meta: {requiresAuth: true},

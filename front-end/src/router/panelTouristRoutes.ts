@@ -8,7 +8,7 @@ import {
 import PanelLayout from "@/layouts/PanelLayout.vue";
 
 const panelRoutes: RouteRecordRaw = {
-  path: "/panel/:tripId",
+  path: "/:role/panel/:tripId",
   component: PanelLayout,
   name: "panel",
   meta: { title: "Panel", requiresAuth: true },

@@ -1,53 +1,12 @@
 <script lang="ts" setup>
 import {useRouter} from "vue-router";
-
 import {onMounted, shallowRef} from "vue";
-
+import {usePagePanelStore} from "@/stores"
+usePagePanelStore().initialize();
+const {getSideNavItems} = usePagePanelStore();
 const router = useRouter();
 
-const side_nav_items = shallowRef([
-  {
-    title: 'Panel',
-    page: {name: 'tripDashboard'},
-    icon: 'mdi-home-outline'
-  },
-  {
-    title: 'Plany',
-    icon: 'mdi-note-text-outline',
-    children: [
-      {title: 'Utworzone', page: {name: 'tripPlans'}},
-      {title: 'Dodaj', page: {name: 'createPlan'}},
-    ]
-  },
-  {
-    title: 'Bilety',
-    page: {name: 'yourTickets'},
-    icon: 'mdi-ticket-confirmation-outline'
-  },
-  {
-    title: 'Budżet',
-    icon: 'mdi-currency-usd',
-    children: [
-      {title: 'Pokaż', page: {name: 'ExpenseTracker'}},
-      {title: 'Zmień budżet', page: {name: 'editBudget'}},
-    ]
-  },
-  {
-    title: 'Uczestnicy',
-    page: {name: 'tripParticipants'},
-    icon: 'mdi-account-multiple-outline'
-  },
-  {
-    title: 'Ustawienia',
-    icon: 'mdi-cog-outline',
-    children: [
-      {
-        title: 'Edycja wycieczki',
-        page: {name: 'editTrip'},
-      }
-    ]
-  },
-]);
+const side_nav_items = shallowRef(getSideNavItems());
 
 onMounted(() => {
   router.push({name: 'tripDashboard'})
@@ -92,8 +51,8 @@ onMounted(() => {
             v-else
             :title="item.title"
             :prepend-icon="item.icon"
-            :active="router.currentRoute.value.name === item.page.name"
-            @click="router.push(item.page)"
+            :active="router.currentRoute.value.name === item?.page?.name"
+            @click="router.push(item.page || '')"
             slim
             class="pl-3"
         />
