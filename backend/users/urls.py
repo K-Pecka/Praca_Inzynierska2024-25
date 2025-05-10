@@ -22,5 +22,5 @@ urlpatterns = [
     path('profile/<int:pk>/update/', UserProfileUpdateAPIView.as_view(), name='user-profile-update'),
 
     path('user/by-profile/<str:pk>/', UserByProfileRetrieveAPIView.as_view(), name='user-by-profile'),
-    path('profile/change-default/', ChangeDefaultUserProfileView.as_view(), name='change-default-user-profile'),
+    path('profile/<str:role>/change-default/', ChangeDefaultUserProfileView.as_view(), name='change-default-user-profile'),
 ]

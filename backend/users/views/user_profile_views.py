@@ -48,5 +48,9 @@ class ChangeDefaultUserProfileView(UpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return self.request.user.get_default_profile()
+        role_id = self.kwargs.get('role')
+        profile = UserProfile.objects.filter(user=self.request.user, type__code=role_id).first()
+        if not profile:
+            raise ValueError('Nie posiadasz profilu tego typu')
+        return profile
 
