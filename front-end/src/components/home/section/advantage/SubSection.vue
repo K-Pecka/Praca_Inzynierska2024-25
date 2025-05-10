@@ -44,7 +44,7 @@ img {
   &__title {
     margin-bottom: clamp(0.5rem, 5vw, 1.5rem);
     text-align: center;
-    font-size: clamp(2rem, 4vw, 30rem);
+    font-size: clamp(2rem, 4.5vw, 20rem);
   }
 
   &__content {

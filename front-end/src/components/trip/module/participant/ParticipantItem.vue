@@ -32,6 +32,7 @@ const tags = [
           :class="{ 'participant-item--noactive': user.is_guest }"
           class="w-100"
           rounded="lg"
+          elevation="0"
       >
         <v-card-text>
           <v-row align="center" no-gutters>

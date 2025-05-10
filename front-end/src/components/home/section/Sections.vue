@@ -19,7 +19,7 @@
           style="
           text-align: center;
             font-size: clamp(
-              1rem,
+              2rem,
               4.5vw,
               20rem
             );
