@@ -10,7 +10,8 @@ import {HeaderSection} from "@/components";
   <Section class="pb-10">
     <template #title>
     <HeaderSection
-        title="Wybierz plan"
+        title="Wybierz"
+        title-gradient-text="plan"
         subtitle="Wybierz plan, który najlepiej odpowiada Twoim potrzebom."
         center
     />

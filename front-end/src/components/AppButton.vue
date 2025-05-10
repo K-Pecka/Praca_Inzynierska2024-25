@@ -44,7 +44,7 @@ defineProps<{
 }
 
 .primary {
-  background-color: rgb($primary-color);
+  background: $background-primary;
   color: white;
 }
 

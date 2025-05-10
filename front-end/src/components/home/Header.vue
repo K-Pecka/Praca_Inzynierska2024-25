@@ -60,7 +60,7 @@
           :to="item.to"
           variant="text"
           class="px-3 rounded-lg"
-          :class="[item.title === 'Panel' || item.title === 'Zarejestruj się' ? 'panel-button' : '']"
+          :class="[item.title === 'Panel' || item.title === 'Zarejestruj się' ? 'panel-button gradient-bg' : '']"
         >
           {{ item.title }}
         </v-btn>

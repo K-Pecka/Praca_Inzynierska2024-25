@@ -47,3 +47,6 @@ class ChangeDefaultUserProfileView(UpdateAPIView):
     serializer_class = UserChangeProfileSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_object(self):
+        return self.request.user.get_default_profile()
+

@@ -17,7 +17,7 @@ const handleSubmit = async (formValue: any, config: any) => {
 </script>
 
 <template>
-  <Section class="logIn">
+  <Section class="logIn gradient-text">
     <template #title>
       <h1>{{ sectionTitle }}</h1>
     </template>
@@ -38,7 +38,6 @@ const handleSubmit = async (formValue: any, config: any) => {
 
 <style lang="scss" scoped>
 h1 {
-  color: rgb(var(--v-theme-primary));
   font-size: 2rem;
 }
 </style>
