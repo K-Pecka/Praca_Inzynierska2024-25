@@ -25,7 +25,7 @@ const form = ref({
   category: 1,
   note: "",
 });
-const emit = defineEmits(["cancelForm"]);
+const emit = defineEmits(["cancelForm", "submitted"]);
 
 const submitTicket = () => {
   createExpense.mutate({
@@ -37,8 +37,12 @@ const submitTicket = () => {
     user: form.value.user !== "" ? Number(form.value.user) : members[0].userId,
     category: form.value.category,
     note: form.value.note,
+  }, {
+    onSuccess: () => {
+      emit("submitted");
+    }
   });
-}
+};
 
 </script>
 

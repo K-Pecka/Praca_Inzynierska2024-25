@@ -20,9 +20,17 @@ const members = computed(() => membersStore);
 const { budget: budgetStore, trip: tripStore } = useTripStore();
 const { getExpensByTrip } = budgetStore;
 
+const onExpenseAdded = () => {
+  showForm.value = false;
+  refetchExpenses();
+};
+
 const { getTripDetails } = tripStore;
 const { trip } = getTripDetails();
-const { expensesByTrip: expenses } = getExpensByTrip();
+const {
+  expensesByTrip: expenses,
+  refetchExpenses
+} = getExpensByTrip();
 const budget = computed(() => Number(trip.value?.budget_amount) ?? 0);
 const budgetCurrency = computed(() => "PLN");
 
@@ -133,9 +141,10 @@ const ExpensesByUser = computed(() => {
           <v-col cols="12" v-if="showForm">
             <v-row>
               <ExpenseForm
-                :members="members"
-                @cancelForm="showForm = false"
-                class="form-container"
+                  :members="members"
+                  @cancelForm="showForm = false"
+                  @submitted="onExpenseAdded"
+                  class="form-container"
               />
             </v-row>
           </v-col>
