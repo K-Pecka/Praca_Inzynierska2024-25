@@ -1,12 +1,15 @@
 <script setup lang="ts">
 
 import router from "@/router";
-import { useTripStore,useAuthStore } from "@/stores";
-import { computed } from "vue";
-const { userData } = useAuthStore();
-const { isOwner } = userData;
+import {useTripStore, useAuthStore} from "@/stores";
+import {computed} from "vue";
+import AppButton from "../AppButton.vue";
+
+const {userData} = useAuthStore();
+const {isOwner} = userData;
 const {plan} = useTripStore()
-const {handleDeleteItinerary}=plan;
+const {handleDeleteItinerary} = plan;
+
 function formatPL(dateString: string): string {
   const dateObj = new Date(dateString);
   if (isNaN(dateObj.getTime())) return dateString;
@@ -14,11 +17,11 @@ function formatPL(dateString: string): string {
 }
 
 const props = defineProps<{
-  isOwner:boolean,
+  isOwner: boolean,
   plans: any;
   btn: any;
 }>();
-const btnValue = computed(()=> props.btn.filter((btn:{showIfOwner:boolean})=> btn.showIfOwner == props.isOwner))
+const btnValue = computed(() => props.btn.filter((btn: { showIfOwner: boolean }) => btn.showIfOwner == props.isOwner))
 </script>
 
 <template>
@@ -44,24 +47,28 @@ const btnValue = computed(()=> props.btn.filter((btn:{showIfOwner:boolean})=> bt
               </v-card-subtitle>
               <v-card-text class="pa-0 font-weight-medium">
                 {{ formatPL(trip.start_date) }} - {{ formatPL(trip.end_date) }}
-                <span class="color-accent ml-2">{{ trip.activity_count}} aktywności</span>
+                <span class="color-accent ml-2">{{ trip.activity_count }} aktywności</span>
               </v-card-text>
             </v-col>
 
             <!-- Buttons -->
             <v-col cols="12" sm="4" md="3" lg="2" class="d-flex flex-row justify-sm-end align-center">
-              <v-btn
-                  v-for="(action, i) in btnValue"
-                  :key="i"
-                  @click="action.onclick(String(trip.trip),String(trip.id))"
-                  variant="flat"
-                  :style="{'min-width': 'auto', 'background-color': 'transparent'}"
-                  class="px-2"
-              >
-                <v-icon size="32" contain :color="action.class">
-                  {{ action.icon }}
-                </v-icon>
-              </v-btn>
+              <v-row class="flex-column" align="end" no-gutters>
+                <AppButton
+                    color="primary-outline"
+                    @click="router.push({name: 'ActivityView', params: {tripId: trip.trip, planId: trip.id}})"
+                    font-auto
+                    max-width="190px"
+                    text="Zarządzaj planem"
+                />
+                <AppButton
+                    color="red"
+                    @click="handleDeleteItinerary(trip.trip, trip.id)"
+                    font-auto
+                    max-width="190px"
+                    text="Usuń plan"
+                />
+              </v-row>
             </v-col>
           </v-row>
         </v-card>
