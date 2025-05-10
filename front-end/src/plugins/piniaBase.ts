@@ -12,12 +12,12 @@ export function piniaBasePlugin({ store }: PiniaPluginContext) {
   store.reset = () => {
     store.$patch(initialState);
   };
-  // store.$subscribe((_, state) => {
-  //   localStorage.setItem(`store:${store.$id}`, JSON.stringify(state));
-  // });
+  store.$subscribe((_, state) => {
+    localStorage.setItem(`store:${store.$id}`, JSON.stringify(state));
+  });
 
-  // const saved = localStorage.getItem(`store:${store.$id}`);
-  // if (saved) {
-  //   store.$patch(JSON.parse(saved));
-  // }
+  const saved = localStorage.getItem(`store:${store.$id}`);
+  if (saved) {
+    store.$patch(JSON.parse(saved));
+  }
 }

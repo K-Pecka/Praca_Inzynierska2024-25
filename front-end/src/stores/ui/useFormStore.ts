@@ -77,6 +77,7 @@ export const useFormStore = defineStore("form", () => {
       try {
         await loginMutation.mutateAsync(formValue);
         formValue={}
+        formValues.value={}
         formType.value = FormType.REGISTER;
       } catch (error) {
        ////console.log("Brak danych")
