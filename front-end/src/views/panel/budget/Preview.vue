@@ -68,8 +68,6 @@ const filter = () => {
     dateFrom: dateFrom.value==null ? dayjs().format('DD.MM.YYYY') : dayjs((dateFrom.value)).format('DD.MM.YYYY'),
     dateTo: dateTo.value==null ? dayjs().format('DD.MM.YYYY') : dayjs((dateTo.value)).format('DD.MM.YYYY'),
   };
-  console.table([dateFrom.value, dateTo.value])
-  //console.log(appliedFilters);
   showFilters.value = false;
 };
 const ExpensesByUser = computed(() => {

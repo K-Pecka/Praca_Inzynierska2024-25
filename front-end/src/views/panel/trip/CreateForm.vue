@@ -30,8 +30,6 @@ const handleSubmit = (_formData: any, config: any) => {
     }
   }
 };
-//console.log('inputs', inputs.value);
-//console.log('formValues', formValues.value);
 
 </script>
 

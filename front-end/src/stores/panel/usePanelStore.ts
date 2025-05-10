@@ -11,7 +11,6 @@ export const usePanelStore = defineStore("panel", () => {
         try {
             await navigate();
         } catch (error) {
-            //console.error("Navigation failed", error);
         }
     };
 

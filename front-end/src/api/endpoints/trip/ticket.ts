@@ -20,7 +20,6 @@ export const createTicket = async (
   formData: FormData,params: Record<string, string>
 ): Promise<any> => {
   formData.forEach((value, key) => {
-    //console.log(`${key}: ${value}`);
   });
   const { getToken } = useAuthStore();
   const response = await fetch(setParam(apiEndpoints.ticket.create,params), {
@@ -30,16 +29,8 @@ export const createTicket = async (
     },
     body: formData,
   });
-  console.log('Response:', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${getToken()?.access}`
-    },
-    body: formData,
-  });
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    console.error('Error response:', errorData);
     throw new Error('Błąd podczas tworzenia biletu');
   }
 
@@ -60,7 +51,6 @@ export const deleteTicket = async (
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    console.error("Error deleting ticket:", errorData);
     throw new Error("Błąd podczas usuwania biletu");
   }
 };

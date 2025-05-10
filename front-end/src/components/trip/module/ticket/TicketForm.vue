@@ -33,8 +33,6 @@ function submitTicket() {
         : "",
   };
 
-  console.log("Wysyłany payload:", payload);
-
   emit("submitTicket", payload);
 
   form.value = {

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {Box, Section, HeaderSection, ExpensesList} from "@/components";
 import {useTripStore} from "@/stores/trip/useTripStore";
+import AppLoader from "@/components/common/AppLoader.vue"
 
 useTripStore().initialize();
 const {dashboard, budget} = useTripStore();

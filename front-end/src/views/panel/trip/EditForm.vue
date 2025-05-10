@@ -37,7 +37,6 @@ watch(
             min: trip?.value?.start_date ?? '',
             max: trip?.value?.end_date ?? '',
           };
-          ////console.log(tripDatesInput.config.min, tripDatesInput.config.max);
         }
       }
     },

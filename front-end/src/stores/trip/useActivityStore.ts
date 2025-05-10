@@ -96,9 +96,7 @@ export const useActivityStore = defineStore("activity", () => {
       queryClient.invalidateQueries({ queryKey: ["activities", variables.param.tripId, variables.param.planId] });
     },
     onError: () => {
-        ////console.log(activeError.value);
         setError(true);
-        ////console.log(activeError.value);
       setErrorCurrentMessage("Błąd podczas dodawania aktywności");
 
     },

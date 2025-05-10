@@ -36,7 +36,6 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         }
     }
     const getSideNavItems = (): SideNavItem[]=> {
-        //console.log(getRole());
         return selectRole[getRole()]() || [];
     }
     return {

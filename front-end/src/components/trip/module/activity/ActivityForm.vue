@@ -26,7 +26,6 @@ function submitActivity() {
     alert("Uzupełnij nazwę aktywności.");
     return;
   }
-  ////console.log(form.value)
   emit("submitActivity", { ...form.value });
   form.value = {
     type: 1,

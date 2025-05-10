@@ -23,14 +23,12 @@ export const fetchTrip = async ({ queryKey }: QueryFunctionContext<[string,numbe
     "GET"
   );
   if (error || !data) {
-    ////console.log('Error: ', error)
     throw new Error(error);
   }
 
   return data;
 };
 export const deleteTrip = async (param: Record<string, string>={}) => {
-  //console.log(setParam(apiEndpoints.trip.delete, param));
   const { data, error } = await fetchData(
     setParam(apiEndpoints.trip.delete, param),
     {},

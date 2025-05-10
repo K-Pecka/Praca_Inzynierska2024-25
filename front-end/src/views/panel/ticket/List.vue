@@ -54,14 +54,11 @@ async function handleAddTicket(newTicketData: {
     });
   }
 
-  formData.forEach((v, k) => console.log(`${k}:`, v));
-
   try {
     await createTicket(formData, { tripId: String(getTripId()) });
     showForm.value = false;
   } catch (error: any) {
     const res = await error?.response?.json?.().catch(() => null);
-    console.error("Błąd 400 → szczegóły:", res ?? error);
   }
 }
 
@@ -74,7 +71,6 @@ const handleDeleteTicket = async (ticketId: number) => {
 
     await refetchTickets();
   } catch (error) {
-    console.error("Błąd podczas usuwania biletu:", error);
   }
 };
 

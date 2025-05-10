@@ -67,7 +67,6 @@ export const useAuthStore = defineStore(
             }
             try {
                 const tokenRefresh: TOKEN = await fetchRefreshToken(token.value);
-                //console.warn("refreshToken", tokenRefresh);
                 if (tokenRefresh) {
                     saveToken(tokenRefresh);
                     return true;
@@ -84,7 +83,6 @@ export const useAuthStore = defineStore(
             token.value = data;
         };
         const saveUser = (data: User): void => {
-            //console.log(data);
             user.value = data;
         };
         const isOwner = (id: number) => id === (getUser()?.profiles?.[0]?.id ?? -1);

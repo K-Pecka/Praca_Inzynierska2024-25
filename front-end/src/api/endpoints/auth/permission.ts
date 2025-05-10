@@ -14,7 +14,6 @@ export const fetchPermission = async () => {
 
     return data || [1, 2, 3];
   } catch (error) {
-    //console.error("Error fetching permissions:", error);
     return [1, 2, 3];
   }
 };

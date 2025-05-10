@@ -11,7 +11,6 @@ const sectionTitle = getSectionTitle(FormType.LOGIN);
 const inputs = ref(initForm(FormType.LOGIN));
 const moreOptions = getMoreOptions();
 const handleSubmit = async (formValue: any, config: any) => {
-  //console.warn("SEND")
   sendForm(formValue, config);
 };
 </script>
