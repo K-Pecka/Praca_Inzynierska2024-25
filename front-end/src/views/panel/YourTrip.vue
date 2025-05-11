@@ -32,8 +32,6 @@ const isTripOwner = (trip: Trip) => isOwner(trip.creator.id);
 
         <AppButton
             color="empty"
-            height-auto
-            font-auto
             text="Dodaj wycieczkę"
         />
       </router-link>

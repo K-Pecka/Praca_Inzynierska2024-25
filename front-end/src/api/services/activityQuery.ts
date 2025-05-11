@@ -1,6 +1,5 @@
-import {fetchActivityDelete} from "@/api/endpoints/trip/activity"
-import { useMutation, useQuery } from "@tanstack/vue-query"
-import router from "@/router";
+import { useMutation } from "@tanstack/vue-query"
+import {fetchActivityDelete} from "@/api";
 
 export const getMutationDelete = (option: Record<string,any>) => useMutation({
     mutationFn: fetchActivityDelete,

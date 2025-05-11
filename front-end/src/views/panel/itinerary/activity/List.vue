@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
-import { useActivityStore } from "@/stores/trip/useActivityStore";
-import { useTripStore, useAuthStore } from "@/stores";
-import { useUtilsStore } from "@/stores/utils/useUtilsStore";
-import { Activity } from "@/types/interface";
+import {computed, onMounted, ref} from "vue";
+import {useRoute} from "vue-router";
+import {useActivityStore} from "@/stores/trip/useActivityStore";
+import {useTripStore, useAuthStore} from "@/stores";
+import {useUtilsStore} from "@/stores/utils/useUtilsStore";
+import {Activity} from "@/types/interface";
 import ActivityCard from "@/components/trip/module/activity/ActivityCard.vue";
 import ActivityForm from "@/components/trip/module/activity/ActivityForm.vue";
 import AppButton from "@/components/AppButton.vue";
 import HeaderSection from "@/components/common/HeaderSection.vue";
-import { Section } from "@/components";
+import {Section} from "@/components";
 
 const route = useRoute();
 const tripId = route.params.tripId as string;
 const planId = route.params.planId as string;
 
-const { trip: tripStore } = useTripStore();
-const { getTripDetails, getPlans } = useTripStore();
-const { userData } = useAuthStore();
-const { formatDatePolish } = useUtilsStore();
+const {trip: tripStore} = useTripStore();
+const {getTripDetails, getPlans} = useTripStore();
+const {userData} = useAuthStore();
+const {formatDatePolish} = useUtilsStore();
 const activityStore = useActivityStore();
 
-const { trip } = getTripDetails();
-const { data: plansData } = getPlans(tripId);
-const { data: activities, isSuccess } = activityStore.getActivity(tripId, planId);
+const {trip} = getTripDetails();
+const {data: plansData} = getPlans(tripId);
+const {data: activities, isSuccess} = activityStore.getActivity(tripId, planId);
 
 const isOwnerValue = computed(() => {
   const creatorId = trip.value?.creator?.id;
@@ -53,7 +53,7 @@ const activityByDate = computed(() => {
   return activities.value.reduce((acc, activity) => {
     const date = activity.date || "";
     if (!acc[date]) acc[date] = [];
-    acc[date].push({ ...activity, date });
+    acc[date].push({...activity, date});
     return acc;
   }, {} as Record<string, Activity[]>);
 });
@@ -61,22 +61,22 @@ const activityByDate = computed(() => {
 // Widoczne dni zależne od właściciela
 const days = computed(() => {
   return isOwnerValue.value
-    ? allDays.value
-    : Object.keys(activityByDate.value).filter((day) => activityByDate.value[day]?.length > 0);
+      ? allDays.value
+      : Object.keys(activityByDate.value).filter((day) => activityByDate.value[day]?.length > 0);
 });
 
 const showFormForDay = ref<string | null>(null);
 
 function addActivity(day: string, activityData: any) {
   activityStore.addActivity(
-    {
-      ...activityData,
-      date: day,
-    },
-    {
-      tripId,
-      planId,
-    }
+      {
+        ...activityData,
+        date: day,
+      },
+      {
+        tripId,
+        planId,
+      }
   );
   showFormForDay.value = null;
 }
@@ -89,17 +89,18 @@ onMounted(() => {
 <template>
   <Section>
     <template #title>
-      <HeaderSection subtitle="Zarządzaj aktywnościami" />
+      <HeaderSection subtitle="Zarządzaj aktywnościami"/>
     </template>
 
     <template #content>
       <v-col cols="12" v-for="day in days" :key="day">
         <v-card class="background-secondary rounded-lg" elevation="4">
-          <v-container>
-            <v-card-item>
-              <v-row class="justify-space-between align-center text-h6 pb-3" no-gutters>
-                <div class="font-weight-bold">{{ formatDatePolish(day) }}</div>
-                <AppButton
+          <v-card-item>
+
+            <!-- activity card header -->
+            <v-row class="justify-space-between align-center text-h6 pb-3" no-gutters>
+              <span class="font-weight-bold">{{ formatDatePolish(day) }}</span>
+              <AppButton
                   v-if="isOwnerValue"
                   color="primary"
                   @click="showFormForDay = day"
@@ -107,29 +108,29 @@ onMounted(() => {
                   height-auto
                   font-auto
                   text="Dodaj aktywność"
-                />
-              </v-row>
+              />
+            </v-row>
 
-              <ActivityForm
+            <!-- activity card body -->
+            <ActivityForm
                 v-if="showFormForDay === day"
                 @submitActivity="(data) => addActivity(day, data)"
                 @cancelForm="showFormForDay = null"
                 class="mb-2"
-              />
+            />
 
-              <span v-if="!isSuccess">Ładuję...</span>
+            <span v-if="!isSuccess">Ładuję...</span>
 
-              <v-row v-else no-gutters>
-                <ActivityCard
+            <v-row v-else no-gutters>
+              <ActivityCard
                   v-for="activityItem in activityByDate?.[day] ?? []"
                   :key="activityItem.id"
                   :activity="activityItem"
                   class="mb-3"
                   :isOwner="isOwnerValue"
-                />
-              </v-row>
-            </v-card-item>
-          </v-container>
+              />
+            </v-row>
+          </v-card-item>
         </v-card>
       </v-col>
     </template>

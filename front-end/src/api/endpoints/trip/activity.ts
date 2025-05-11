@@ -13,6 +13,7 @@ export const createActivity = async (newActivity: Activity, param: Record<string
     return data;
 };
 
+
 export const fetchActivity = async (param: Record<string, string> = {}): Promise<Activity[]> => {
     const url = setParam(apiEndpoints.activity.all, param);
 
@@ -24,10 +25,11 @@ export const fetchActivity = async (param: Record<string, string> = {}): Promise
 
     return Array.isArray(data) ? data : [];
 };
+
+
 export const fetchActivityDelete = async (param: Record<string, string> = {}) => {
     
     const url = setParam(apiEndpoints.activity.delete, param);
-console.log(param,url);
     const { error } = await fetchData(url, "DELETE");
 
     if (error) {
@@ -36,6 +38,7 @@ console.log(param,url);
 
     return param;
 };
+
 
 export const fetchActivityTypes = async (tripId: string): Promise<ActivityType[]> => {
     const url = setParam(apiEndpoints.activityType.all, { tripId });
