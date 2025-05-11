@@ -2,7 +2,6 @@
 
 import router from "@/router";
 import {useTripStore, useAuthStore} from "@/stores";
-import {computed} from "vue";
 import AppButton from "../AppButton.vue";
 
 const {userData} = useAuthStore();
@@ -21,69 +20,79 @@ const props = defineProps<{
   plans: any;
   btn: any;
 }>();
-const btnValue = computed(() => props.btn.filter((btn: { showIfOwner: boolean }) => btn.showIfOwner == props.isOwner))
 </script>
 
 <template>
-  <v-container fluid class="pa-3">
-    <v-row v-if="props.plans.length > 0">
-      <v-col
-          v-for="(trip, index) in plans"
-          :key="index"
-          cols="12"
-          sm="12"
-          md="12"
-          lg="12"
-          class="px-0"
+  <v-row v-if="props.plans.length > 0" no-gutters>
+    <v-col
+        v-for="(trip, index) in plans"
+        :key="index"
+        cols="12"
+        sm="12"
+        md="12"
+        lg="12"
+        class="px-0"
+    >
+      <v-card
+          class="trip-card background-secondary rounded-lg pa-8 flex-wrap"
+          elevation="4"
       >
-        <v-card
-            class="trip-card background-secondary rounded-lg pa-5 flex-wrap"
-            elevation="4"
-        >
-          <v-row>
-            <v-col
-                cols="12"
-                sm="8"
-                md="8"
-                lg="10"
-                :class="{'text-center': $vuetify.display.smAndDown}"
-            >
-              <v-card-title class="text-h5 font-weight-bold pa-0">
-                {{ trip.name }}
-              </v-card-title>
-              <v-card-subtitle class="px-0 pb-1 font-weight-medium">
-                {{ trip.country }} {{ trip?.description ?? "brak opisu" }}
-              </v-card-subtitle>
-              <v-card-text class="pa-0 font-weight-medium">
-                {{ formatPL(trip.start_date) }} - {{ formatPL(trip.end_date) }}
-                <span class="color-accent ml-2">{{ trip.activity_count }} aktywności</span>
-              </v-card-text>
-            </v-col>
+        <v-row no-gutters>
+          <v-col
+              cols="12"
+              sm="8"
+              md="8"
+              lg="10"
+              :class="{'text-center': $vuetify.display.smAndDown}"
+          >
+            <v-row align="center" no-gutters>
+              <v-icon size="64" color="primary" class="mr-3">
+                mdi-arrow-left
+              </v-icon>
+              <v-col>
+                <v-card-title class="text-h5 font-weight-bold pa-0 color-text">
+                  {{ trip.name }}
+                </v-card-title>
+                <v-card-subtitle class="px-0 pb-1 text-h6 font-weight-medium">
+                  {{ trip.country }} {{ trip?.description ?? "brak opisu" }}
+                </v-card-subtitle>
+                <v-card-text class="pa-0 text-h6 font-weight-medium">
+                  {{ formatPL(trip.start_date) }} - {{ formatPL(trip.end_date) }}
+                  <span class="color-accent ml-2">{{ trip.activity_count }} aktywności</span>
+                </v-card-text>
+              </v-col>
+            </v-row>
+          </v-col>
 
-            <!-- Buttons -->
-            <v-col cols="12" sm="4" md="4" lg="2">
-              <v-row no-gutters justify="center" justify-md="end" justify-lg="end">
-                <AppButton
-                    color="primary-outline"
-                    @click="router.push({name: 'ActivityView', params: {planId: trip.id}})"
-                    font-auto
-                    :class="{'w-100' :$vuetify.display.smAndDown}"
-                    max-width="190px"
-                    text="Zarządzaj planem"
-                />
-                <AppButton
-                    color="red"
-                    @click="handleDeleteItinerary(trip.trip, trip.id)"
-                    :class="{'w-100' :$vuetify.display.smAndDown}"
-                    font-auto
-                    max-width="190px"
-                    text="Usuń plan"
-                />
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+          <!-- Buttons -->
+          <v-col cols="12" sm="4" md="4" lg="2">
+            <v-row
+                no-gutters
+                justify="center"
+                justify-md="end"
+                justify-lg="end"
+                v-if="isOwner"
+            >
+              <AppButton
+                  color="primary-outline"
+                  @click="router.push({name: 'ActivityView', params: {planId: trip.id}})"
+                  font-auto
+                  :class="{'w-100' :$vuetify.display.smAndDown}"
+                  max-width="190px"
+                  text="Zarządzaj planem"
+              />
+              <AppButton
+                  color="red"
+                  @click="handleDeleteItinerary(trip.trip, trip.id)"
+                  :class="{'w-100' :$vuetify.display.smAndDown}"
+                  font-auto
+                  max-width="190px"
+                  text="Usuń plan"
+              />
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>

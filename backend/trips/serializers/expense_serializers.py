@@ -15,6 +15,15 @@ class ExpenseTypeRetrieveSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
+class ExpenseTypeListAPIView(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = ExpenseType
+        fields = ['id', 'name']
+
+
 class ExpenseRetrieveSerializer(serializers.ModelSerializer):
     title = serializers.CharField(read_only=True)
     amount = serializers.DecimalField(read_only=True, max_digits=10, decimal_places=2)
