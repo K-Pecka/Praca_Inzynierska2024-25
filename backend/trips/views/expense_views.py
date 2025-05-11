@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from server.permissions import IsTripParticipant
 from trips.models import Expense, ExpenseType
 from trips.serializers.expense_serializers import ExpenseCreateSerializer, ExpenseRetrieveSerializer, \
-    ExpenseListSerializer, ExpenseUpdateSerializer, ExpenseDeleteSerializer
+    ExpenseListSerializer, ExpenseUpdateSerializer, ExpenseDeleteSerializer, ExpenseTypeListAPIView
 
 
 @extend_schema(tags=['expense'])
