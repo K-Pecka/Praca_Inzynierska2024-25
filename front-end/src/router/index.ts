@@ -22,38 +22,45 @@ router.beforeEach(async (to, from, next) => {
   const siteName = import.meta.env.VITE_APP_SITE_TITLE;
   document.title = to.meta.title ? `${siteName} - ${to.meta.title}` : siteName;
 
-  const { validToken, checkPermission } = useAuthStore();
+  const auth = useAuthStore();
   const { setErrorCurrentMessage } = useNotificationStore();
 
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const goBack = to.matched.some((record) => record.meta.goBack);
-
   const routerName = typeof to.name === "string" ? to.name : undefined;
-  if (requiresAuth && !(await validToken())) {
-    setErrorCurrentMessage(
-      "Tylko zalogowani użytkownicy,\n posiadają dostępn do tej zawartości."
-    );
-    next({ name: "logIn" });
-  } else if (goBack && (await validToken())) {
-    setErrorCurrentMessage("Przed wejściem na tą stronę wyloguj się.");
-    next(from.name ? { name: from.name } : { name: "landing" });
-  } else if (!(await checkPermission(routerName, "path"))) {
-    setErrorCurrentMessage("Brak dostępu do tej zawartości");
-    const lastVisitedRoute = localStorage.getItem("routerPath");
-    if (Object.keys(to.params).length > 0) {
-      next(
-        lastVisitedRoute
-          ? { name: lastVisitedRoute, params: { ...from.params } }
-          : { name: "landing" }
-      );
-    } else {
-      next(lastVisitedRoute ? { name: lastVisitedRoute } : { name: "landing" });
-    }
-    return;
-  } else {
-    localStorage.setItem("routerPath", currentPath);
-    next();
+
+  const token = auth.getToken();
+
+  if (requiresAuth && !(await auth.validToken())) {
+    setErrorCurrentMessage("Tylko zalogowani użytkownicy,\n posiadają dostęp do tej zawartości.");
+    return next({ name: "logIn" });
   }
+
+  if (goBack && token?.access) {
+    setErrorCurrentMessage("Przed wejściem na tą stronę wyloguj się.");
+    return next(from.name ? { name: from.name } : { name: "landing" });
+  }
+
+  if (token?.access) {
+    const allowed = await auth.checkPermission(routerName, "path");
+    if (!allowed) {
+      setErrorCurrentMessage("Brak dostępu do tej zawartości");
+      const lastVisitedRoute = localStorage.getItem("routerPath");
+
+      if (Object.keys(to.params).length > 0) {
+        return next(
+            lastVisitedRoute
+                ? { name: lastVisitedRoute, params: { ...from.params } }
+                : { name: "landing" }
+        );
+      } else {
+        return next(lastVisitedRoute ? { name: lastVisitedRoute } : { name: "landing" });
+      }
+    }
+  }
+
+  localStorage.setItem("routerPath", currentPath);
+  next();
 });
 
 export default router;

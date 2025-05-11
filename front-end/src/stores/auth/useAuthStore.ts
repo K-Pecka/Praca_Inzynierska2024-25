@@ -40,25 +40,22 @@ export const useAuthStore = defineStore(
             return hasPermission(userPermission, name, type);
         };
         const validToken = async (): Promise<boolean> => {
-            if (token.value) {
+            const currentToken = getToken();
+            if (!currentToken?.access || !currentToken?.refresh) return false;
+
+            try {
+                await fetchVerify(currentToken);
+                return true;
+            } catch {
                 try {
-                    const verify = await fetchVerify(
-                        getToken() || {access: "", refresh: ""}
-                    );
+                    const refreshed = await refreshToken();
+                    if (!refreshed) return false;
+                    await fetchVerify(getToken()!);
                     return true;
-                } catch (error) {
-                    await refreshToken();
-                    try {
-                        const verify = await fetchVerify(
-                            getToken() || {access: "", refresh: ""}
-                        );
-                        return true;
-                    } catch (error) {
-                        return false;
-                    }
+                } catch {
+                    return false;
                 }
             }
-            return false;
         };
 
         const refreshToken = async (): Promise<Boolean> => {

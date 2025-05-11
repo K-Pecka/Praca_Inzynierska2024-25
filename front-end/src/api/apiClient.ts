@@ -17,7 +17,6 @@ apiClient.interceptors.request.use(
         if (token) {
             config.headers.set('Authorization', `Bearer ${token}`);
         }
-        console.log("Token in interceptor:", token);
         return config;
     },
     (error) => Promise.reject(error)
