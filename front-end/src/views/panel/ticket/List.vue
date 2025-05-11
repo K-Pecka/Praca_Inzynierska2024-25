@@ -3,13 +3,12 @@ import {computed, ref} from "vue";
 import {Section} from "@/components";
 import {deleteTicket} from "@/api";
 import {useTripStore} from "@/stores/trip/useTripStore";
-
-
 import TicketForm from "@/components/trip/module/ticket/TicketForm.vue";
 import AppButton from "@/components/AppButton.vue";
 import {useUtilsStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
 import {createTicket} from "@/api"
+import {images} from "@/data";
 import axios from "axios";
 
 const {getTripId} = useUtilsStore();
@@ -25,7 +24,7 @@ const {
 import {useMembersStore} from "@/stores/trip/useMembersStore"
 
 const {members: membersStore} = useMembersStore();
-const members = computed(() => membersStore.filter(e=>!e.is_owner))
+const members = computed(() => membersStore.filter(e => !e.is_owner))
 
 const showForm = ref(false);
 
@@ -75,7 +74,7 @@ const handleDeleteTicket = async (ticketId: number) => {
 
 const downloadItem = async (url: string) => {
   const response = await axios.get(url, {responseType: "blob"});
-  const blob = new Blob([response.data], { type: response.headers['content-type'] });
+  const blob = new Blob([response.data], {type: response.headers['content-type']});
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
   link.download = "Bilet.jpeg";
@@ -97,7 +96,7 @@ const toggleForm = () => {
 
 <template>
   <Section>
-    <template #title>
+    <template #title v-if="(tickets && tickets.length > 0) || showForm">
       <HeaderSection
           subtitle="Bilety"
           button
@@ -122,30 +121,31 @@ const toggleForm = () => {
       <v-col cols="12">
         <v-row>
           <!-- Empty state when no tickets are present -->
-          <v-card
-              v-if="!isLoading && tickets && tickets.length === 0"
-              class="background-secondary"
-          >
-            <v-card-text>
-              <v-row>
-                <v-col>
-                  <v-row justify="center" no-gutters>
-                    <v-icon size="48" color="black"
-                    >mdi-ticket-confirmation-outline
-                    </v-icon>
-                  </v-row>
-                </v-col>
-                <v-col>
-                  <v-row justify="center" no-gutters>
-                    <p>Brak dodanych biletów</p>
-                    <a class="color-primary" @click="showForm = true">
-                      Dodaj pierwszy bilet
-                    </a>
-                  </v-row>
-                </v-col>
+          <template v-if="!isLoading && tickets && tickets.length === 0 && !showForm">
+            <v-col cols="12" class="py-10">
+              <v-row justify="center" align="center" class="flex-column text-center">
+              <span class="empty-header font-weight-bold mb-8">
+              Nie masz jeszcze żadnych biletów
+              </span>
+                <v-img
+                    :src="images.emptyState.ticket.img"
+                    :alt="images.emptyState.ticket.alt"
+                    class="empty-plan-image mb-6"
+                    aspect-ratio="1"
+                    contain
+                />
+                <AppButton
+                    color="secondary"
+                    class="plan-button"
+                    width="300px"
+                    height="height-auto"
+                    fontSize="font-auto"
+                    text="Dodaj bilet"
+                    @click="showForm = true"
+                />
               </v-row>
-            </v-card-text>
-          </v-card>
+            </v-col>
+          </template>
 
 
           <!-- Ticket -->
@@ -232,7 +232,18 @@ const toggleForm = () => {
 </template>
 
 <style lang="scss">
+@use "@/assets/styles/variables" as *;
 .v-select .v-input__details {
   position: absolute;
+}
+
+.empty-header {
+  font-size: clamp(0.3em, 1.5vw + 0.5em, 1.5em);
+  color: rgb($primary-color);
+}
+
+.empty-plan-image {
+  width: clamp(15em, 15vw + 10em, 25em);
+  height: auto;
 }
 </style>
