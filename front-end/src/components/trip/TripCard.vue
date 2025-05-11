@@ -65,7 +65,7 @@ const btnValue = computed(() => props.btn.filter((btn: { showIfOwner: boolean })
               <v-row no-gutters justify="center" justify-md="end" justify-lg="end">
                 <AppButton
                     color="primary-outline"
-                    @click="router.push({name: 'ActivityView', params: {tripId: trip.trip, planId: trip.id, role: trip.role }})"
+                    @click="router.push({name: 'ActivityView', params: {planId: trip.id}})"
                     font-auto
                     :class="{'w-100' :$vuetify.display.smAndDown}"
                     max-width="190px"

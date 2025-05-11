@@ -1,13 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import homeRoutes from "./homeRoutes";
-import panelRoutes from "./panelTouristRoutes";
-import tripRoutes  from "@/router/tripRoutes";
-import panelGuideRoutes from "./panelGuideRoutes";
+import panelRoutes from "./panelRoutes";
+import tripRoutes from "@/router/tripRoutes";
 import authRoutes from "./authRoutes";
 import { useAuthStore, useNotificationStore } from "@/stores";
 
-const routes: RouteRecordRaw[] = [...authRoutes, ...homeRoutes, panelRoutes, panelGuideRoutes, tripRoutes];
+const routes: RouteRecordRaw[] = [
+  ...authRoutes,
+  ...homeRoutes,
+  panelRoutes,
+  tripRoutes,
+];
 const router = createRouter({
   history: createWebHistory(),
   routes,
