@@ -76,7 +76,9 @@ defineProps<{
             v-model="form.name"
             label="Nazwa"
             variant="outlined"
-            :rules="[(v) => (v && v.trim().length > 0) || 'Nazwa biletu jest wymagana']"
+            :rules="[
+            (v: string) => (!!v && v.trim().length > 0) ? true : 'Nazwa biletu jest wymagana'
+             ]"
             required
             bg-color="background"
             density="comfortable"
