@@ -58,9 +58,9 @@ export const useAuthStore = defineStore(
             }
         };
 
-        const refreshToken = async (): Promise<Boolean> => {
+        const refreshToken = async (): Promise<boolean> => {
             if (!token.value) {
-                setErrorCurrentMessage(unexpectedError());
+                setErrorCurrentMessage("Brak tokena — zaloguj się ponownie.");
                 return false;
             }
             try {
@@ -70,8 +70,9 @@ export const useAuthStore = defineStore(
                     return true;
                 }
             } catch (error: any) {
-                setErrorCurrentMessage(error.message);
+                setErrorCurrentMessage("Sesja wygasła — zaloguj się ponownie.");
                 token.value = null;
+                user.value = null;
                 return false;
             }
             return false;

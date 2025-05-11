@@ -1,7 +1,6 @@
 import apiClient from "@/api/apiClient";
 import { TOKEN } from "@/types/interface";
-import { apiEndpoints, backendNotification } from "@/api/apiEndpoints";
-import { useNotificationStore } from "@/stores";
+import { apiEndpoints } from "@/api/apiEndpoints";
 
 export const fetchRefreshToken = async (token: TOKEN) => {
   try {
@@ -11,11 +10,11 @@ export const fetchRefreshToken = async (token: TOKEN) => {
 
     return response.data;
   } catch (error: any) {
-    let errorData = null;
-    if (backendNotification && error.response?.data) {
-      errorData = error.response.data;
-    }
-    const { tokenError } = useNotificationStore();
-    throw new Error(errorData || tokenError());
+    const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Nie udało się odświeżyć tokena";
+
+    throw new Error(message);
   }
 };
