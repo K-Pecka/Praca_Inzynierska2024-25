@@ -10,6 +10,10 @@ export const useUtilsStore = defineStore("utils", () => {
     const id = route.params.tripId;
       return Number(Array.isArray(id) ? id[0] : id);
   }
+  const getPlanId = ()=>{
+    const id = route.params.getPlanId;
+      return Number(Array.isArray(id) ? id[0] : id);
+  }
   const getRole = ()=>{
     const role = route.params.role;
       return Number(Array.isArray(role) ? role[0] : role);
@@ -65,5 +69,5 @@ export const useUtilsStore = defineStore("utils", () => {
     }
     return (numerator / denominator).toFixed(2);
   };
-  return {getRole,safeDivision,combineDateAndTime,mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, formatDatePolish };
+  return {getPlanId,getRole,safeDivision,combineDateAndTime,mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, formatDatePolish };
 });

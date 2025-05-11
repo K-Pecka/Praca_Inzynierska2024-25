@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import {useActivityStore} from "@/stores/trip/useActivityStore";
+import { useUtilsStore } from "@/stores";
+const {getTripId,getPlanId} = useUtilsStore();
 defineProps({
   isOwner:Boolean,
   activity: {
@@ -8,11 +10,11 @@ defineProps({
   },
 });
 
-const store = useActivityStore();
+const {activityTypes,deleteActivity} = useActivityStore();
 
 const getTypeLabel = (type: number | string) => {
   const typeAsNumber = Number(type);
-  const found = store.activityTypes.find((t) => t.id === typeAsNumber);
+  const found = activityTypes.find((t) => t.id === typeAsNumber);
   return found ? found.name : String(type);
 };
 
@@ -77,7 +79,8 @@ const formatTime = (timeString: string) => {
           </v-col>
           <v-col cols="1" v-if="isOwner">
             <v-card-actions class="justify-end">
-              <v-btn icon variant="text" color="#E44A3E" class="delete-btn">
+              <v-btn icon variant="text" color="#E44A3E" class="delete-btn" 
+              @click="deleteActivity.mutate({activityId:String(activity.id),tripId:String(getTripId()),planId:String(getTripId())})">
                 <v-icon size="32">mdi-trash-can-outline</v-icon>
               </v-btn>
             </v-card-actions>

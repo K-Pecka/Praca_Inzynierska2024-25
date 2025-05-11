@@ -24,6 +24,18 @@ export const fetchActivity = async (param: Record<string, string> = {}): Promise
 
     return Array.isArray(data) ? data : [];
 };
+export const fetchActivityDelete = async (param: Record<string, string> = {}) => {
+    
+    const url = setParam(apiEndpoints.activity.delete, param);
+console.log(param,url);
+    const { error } = await fetchData(url, "DELETE");
+
+    if (error) {
+        throw new Error(error);
+    }
+
+    return param;
+};
 
 export const fetchActivityTypes = async (tripId: string): Promise<ActivityType[]> => {
     const url = setParam(apiEndpoints.activityType.all, { tripId });
