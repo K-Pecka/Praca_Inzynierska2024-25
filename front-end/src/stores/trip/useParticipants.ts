@@ -12,7 +12,7 @@ export const useParticipants = () => {
         }) => fetchAddParticipant(idTrip, participant),
         onSuccess: (idTrip) => {
             notifications.setSuccessCurrentMessage("Dodano uczestnika");
-            queryClient.invalidateQueries({queryKey: ["trip", String(idTrip)]});
+            queryClient.refetchQueries({ queryKey: ["trip", idTrip] });
         },
         onError: (err: any) =>
             notifications.setErrorCurrentMessage(err.message || "Błąd"),
@@ -24,7 +24,7 @@ export const useParticipants = () => {
         }) => fetchRemoveParticipant(idTrip, idParticipant),
         onSuccess: (idTrip) => {
             notifications.setSuccessCurrentMessage("Usunięto uczestnika");
-            queryClient.invalidateQueries({queryKey: ["trip", String(idTrip)]});
+            queryClient.refetchQueries({ queryKey: ["trip", idTrip] });
         },
         onError: (err: any) =>
             notifications.setErrorCurrentMessage(err.message || "Błąd"),

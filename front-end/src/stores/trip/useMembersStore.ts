@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { ref, watchEffect } from "vue";
+import { ref, watch } from "vue";
 import { fetchUserById } from "@/api";
-import { getTripDetailsQuery, getExpensesQuery } from "@/api/services";
+import { getTripDetailsQuery} from "@/api/services";
 import { useUtilsStore } from "@/stores";
 
 export const useMembersStore = defineStore("tripDetails", () => {
@@ -28,50 +28,61 @@ export const useMembersStore = defineStore("tripDetails", () => {
     };
   };
 
-  watchEffect(async () => {
-    if (!getTripId()) return;
+  watch(trip, async (newTrip) => {
+  if (!getTripId() || !newTrip) return;
+  const membersRaw = newTrip.members ?? ([] as { id: number }[]);
+  const pendingRaw = newTrip.pending_members ?? ([] as { id: number }[]);
 
-    const membersRaw = trip.value?.members ?? ([] as { id: number }[]);
-    const pendingRaw = trip.value?.pending_members ?? ([] as { id: number }[]);
+  const user = newTrip.creator?.id
+    ? await getUserById(newTrip.creator.id)
+    : null;
 
-    const user = trip?.value?.creator?.id
-      ? await getUserById(trip.value.creator.id)
-      : null;
+  const creator: Member = user
+    ? { ...user, email: user.email ?? "unknown@example.com", is_owner: true, is_guest: false }
+    : {
+        userId: -1,
+        name: "Unknown",
+        email: "unknown@example.com",
+        is_owner: true,
+        is_guest: false,
+      };
 
-    const creator: Member = user
-      ? { ...user, email: user.email ?? "unknown@example.com", is_owner: true, is_guest: false }
-      : {
-          userId: -1,
-          name: "Unknown",
-          email: "unknown@example.com",
-          is_owner: true,
-          is_guest: false,
-        };
-    const confirmed = await Promise.all(
-      membersRaw.map(async (entry) => {
-        const id =
-          typeof entry === "object" && entry !== null ? entry.id : entry;
-        const user = await getUserById(id);
-        return { ...user, email: user.email ?? "unknown@example.com", is_guest: false };
-      })
-    );
+  const confirmed = await Promise.all(
+    membersRaw.map(async (entry) => {
+      const id =
+        typeof entry === "object" && entry !== null ? entry.id : entry;
+      const user = await getUserById(id);
+      return {
+        ...user,
+        email: user.email ?? "unknown@example.com",
+        is_guest: false,
+      };
+    })
+  );
 
-    const pending = await Promise.all(
-      pendingRaw.map(async (entry) => {
-        const id =
-          typeof entry === "object" && entry !== null ? entry.id : entry;
-        const user = await getUserById(id);
-        return { ...user, email: user.email ?? "unknown@example.com", is_guest: true };
-      })
-    );
+  const pending = await Promise.all(
+    pendingRaw.map(async (entry) => {
+      const id =
+        typeof entry === "object" && entry !== null ? entry.id : entry;
+      const user = await getUserById(id);
+      return {
+        ...user,
+        email: user.email ?? "unknown@example.com",
+        is_guest: true,
+      };
+    })
+  );
 
-    const userMap = new Map<number, (typeof confirmed)[0]>();
-    for (const user of [creator, ...pending, ...confirmed]) {
-      userMap.set(user.userId, { ...user, is_guest: user.is_guest ?? false });
-    }
+  const userMap = new Map<number, Member>();
+  for (const user of [creator, ...pending, ...confirmed]) {
+    userMap.set(user.userId, {
+      ...user,
+      is_guest: user.is_guest ?? false,
+    });
+  }
 
-    members.value = Array.from(userMap.values());
-  });
+  members.value = Array.from(userMap.values());
+}, { immediate: true });
 
   return {
     members,

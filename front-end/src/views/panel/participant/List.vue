@@ -21,8 +21,7 @@ const {removeParticipant, addParticipant,} = useTripStore();
 
 import {useMembersStore} from "@/stores/trip/useMembersStore"
 
-const {members: membersStore} = useMembersStore();
-const members = computed(() => membersStore.filter(e=>!e.is_owner) || []);
+const members = computed(() => useMembersStore().members.filter(e=>!e.is_owner) || []);
 
 
 const maxParticipants = 5;
@@ -35,6 +34,7 @@ function inviteParticipant(participant: { name: string; email: string }) {
     return;
   }
   addParticipant(Number(tripId), participant);
+  showForm.value=false
 }
 
 function removeParticipantById(id: number) {
