@@ -2,6 +2,7 @@
 import {useActivityStore} from "@/stores/trip/useActivityStore";
 import {useAuthStore, useUtilsStore} from "@/stores";
 const {getTripId,getPlanId} = useUtilsStore();
+import AppButton from "../../../AppButton.vue";
 defineProps({
   isOwner:Boolean,
   activity: {
@@ -45,7 +46,7 @@ const formatTime = (timeString: string) => {
     <v-card class="activity-card w-100" elevation="0">
       <v-card-text>
         <v-row class="activity-header justify-space-between" no-gutters>
-          <v-col :cols="isOwner ? 11 : 12">
+          <v-col :cols="isOwner ? 10 : 12">
             <v-sheet class="bg-transparent">
               <v-row no-gutters>
                 <span class="activity-title font-weight-bold">{{ activity.name }}</span>
@@ -77,24 +78,24 @@ const formatTime = (timeString: string) => {
               </v-row>
             </v-sheet>
           </v-col>
-          <v-col cols="1" v-if="isOwner">
-            <v-card-actions class="justify-end">
-              <v-btn icon variant="text" color="#E44A3E" class="delete-btn"
-                     @click="() => {
-console.log('Deleting activity', {
-              token: useAuthStore().getToken(),
-              user: useAuthStore().getUser(),
-              activity,
-              });
-  deleteActivity.mutate({
-    activityId: String(activity.id),
-    tripId: String(getTripId()),
-    planId: String(getPlanId())
-  })
-}">
-                <v-icon size="32">mdi-trash-can-outline</v-icon>
-              </v-btn>
+          <v-col cols="2" v-if="isOwner">
+            <v-row no-gutters align="center" justify="end" class="h-100">
+              <v-card-actions class="justify-end">
+              <AppButton
+                  color="red"
+                  font-auto
+                  max-width="190px"
+                  text="Usuń Wydatek"
+                  @click="() => {
+                    deleteActivity.mutate({
+                    activityId: String(activity.id),
+                    tripId: String(getTripId()),
+                    planId: String(getPlanId())
+                  })}"
+              />
             </v-card-actions>
+            </v-row>
+
           </v-col>
         </v-row>
       </v-card-text>
