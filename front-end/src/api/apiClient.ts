@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useAuthStore } from '@/stores';
+import { useAuthStore } from '@/stores/auth/useAuthStore';
 
 const apiClient = axios.create({
     baseURL: 'https://api.plannder.com',
@@ -9,13 +9,18 @@ const apiClient = axios.create({
     timeout: 5000,
 });
 
-apiClient.interceptors.request.use((config) => {
-    const { getToken } = useAuthStore();
-    const token = getToken()?.access;
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
+apiClient.interceptors.request.use(
+    (config) => {
+        const authStore = useAuthStore();
+        const token = authStore.getToken()?.access;
+
+        if (token) {
+            config.headers.set('Authorization', `Bearer ${token}`);
+        }
+        console.log("Token in interceptor:", token);
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 export default apiClient;

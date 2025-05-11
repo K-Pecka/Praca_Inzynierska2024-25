@@ -67,7 +67,7 @@ export const apiEndpoints = {
   activity: {
     all: `/trip/:tripId/itinerary/:planId/activities/all/`,
     detail: `/trip/:tripId/activity/:activityId/`,
-    delete: `/trip/:tripId/activity/:activityId/delete/`,
+    delete: `/trip/:tripId/itinerary/:planId/activities/:activityId/delete/`,
     create: `/trip/:tripId/itinerary/:planId/activities/create/`,
   },
   activityType: {

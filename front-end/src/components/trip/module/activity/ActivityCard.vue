@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useActivityStore} from "@/stores/trip/useActivityStore";
-import { useUtilsStore } from "@/stores";
+import {useAuthStore, useUtilsStore} from "@/stores";
 const {getTripId,getPlanId} = useUtilsStore();
 defineProps({
   isOwner:Boolean,
@@ -79,8 +79,19 @@ const formatTime = (timeString: string) => {
           </v-col>
           <v-col cols="1" v-if="isOwner">
             <v-card-actions class="justify-end">
-              <v-btn icon variant="text" color="#E44A3E" class="delete-btn" 
-              @click="deleteActivity.mutate({activityId:String(activity.id),tripId:String(getTripId()),planId:String(getTripId())})">
+              <v-btn icon variant="text" color="#E44A3E" class="delete-btn"
+                     @click="() => {
+console.log('Deleting activity', {
+              token: useAuthStore().getToken(),
+              user: useAuthStore().getUser(),
+              activity,
+              });
+  deleteActivity.mutate({
+    activityId: String(activity.id),
+    tripId: String(getTripId()),
+    planId: String(getPlanId())
+  })
+}">
                 <v-icon size="32">mdi-trash-can-outline</v-icon>
               </v-btn>
             </v-card-actions>

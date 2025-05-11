@@ -11,7 +11,7 @@ export const useUtilsStore = defineStore("utils", () => {
       return Number(Array.isArray(id) ? id[0] : id);
   }
   const getPlanId = ()=>{
-    const id = route.params.getPlanId;
+    const id = route.params.planId;
       return Number(Array.isArray(id) ? id[0] : id);
   }
   const getRole = ()=>{
