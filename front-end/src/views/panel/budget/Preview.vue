@@ -8,25 +8,26 @@ import {
   AppButton,
   AppCard,
 } from "@/components";
-import { useTripStore } from "@/stores/trip/useTripStore";
-import { budget as budgetCategory } from "@/data/category/budget";
-import { computed, ref } from "vue";
-import { useMembersStore } from "@/stores/trip/useMembersStore";
-import { Expense } from "@/types";
-import { VDateInput } from "vuetify/labs/components";
+import {useTripStore} from "@/stores/trip/useTripStore";
+import {budget as budgetCategory} from "@/data/category/budget";
+import {computed, ref} from "vue";
+import {useMembersStore} from "@/stores/trip/useMembersStore";
+import {Expense} from "@/types";
+import {VDateInput} from "vuetify/labs/components";
 import dayjs from "dayjs";
-const { members: membersStore } = useMembersStore();
+
+const {members: membersStore} = useMembersStore();
 const members = computed(() => membersStore);
-const { budget: budgetStore, trip: tripStore } = useTripStore();
-const { getExpensByTrip } = budgetStore;
+const {budget: budgetStore, trip: tripStore} = useTripStore();
+const {getExpensByTrip} = budgetStore;
 
 const onExpenseAdded = () => {
   showForm.value = false;
   refetchExpenses();
 };
 
-const { getTripDetails } = tripStore;
-const { trip } = getTripDetails();
+const {getTripDetails} = tripStore;
+const {trip} = getTripDetails();
 const {
   expensesByTrip: expenses,
   refetchExpenses
@@ -36,10 +37,10 @@ const budgetCurrency = computed(() => "PLN");
 
 const spent = computed(() => {
   return (
-    expenses.value?.reduce(
-      (acc, expense) => Number(acc) + Number(expense.converted_amount),
-      0
-    ) ?? 0
+      expenses.value?.reduce(
+          (acc, expense) => Number(acc) + Number(expense.converted_amount),
+          0
+      ) ?? 0
   );
 });
 
@@ -73,18 +74,18 @@ const filter = () => {
   appliedFilters.value = {
     category: selectedCategory.value,
     participants: selectedParticipant.value,
-    dateFrom: dateFrom.value==null ? dayjs().format('DD.MM.YYYY') : dayjs((dateFrom.value)).format('DD.MM.YYYY'),
-    dateTo: dateTo.value==null ? dayjs().format('DD.MM.YYYY') : dayjs((dateTo.value)).format('DD.MM.YYYY'),
+    dateFrom: dateFrom.value == null ? dayjs().format('DD.MM.YYYY') : dayjs((dateFrom.value)).format('DD.MM.YYYY'),
+    dateTo: dateTo.value == null ? dayjs().format('DD.MM.YYYY') : dayjs((dateTo.value)).format('DD.MM.YYYY'),
   };
   showFilters.value = false;
 };
 const ExpensesByUser = computed(() => {
   return (
-    expenses?.value?.reduce((acc: Record<string, number>, item: Expense) => {
-      acc[item?.username || ""] =
-        (acc[item?.username || ""] || 0) + Number(item.amount);
-      return acc;
-    }, {} as Record<string, number>) || {}
+      expenses?.value?.reduce((acc: Record<string, number>, item: Expense) => {
+        acc[item?.username || ""] =
+            (acc[item?.username || ""] || 0) + Number(item.amount);
+        return acc;
+      }, {} as Record<string, number>) || {}
   );
 });
 </script>
@@ -93,10 +94,10 @@ const ExpensesByUser = computed(() => {
   <Section>
     <template #title>
       <HeaderSection
-        subtitle="Wydatki"
-        button
-        button-text="Dodaj"
-        :button-action="toggleForm"
+          subtitle="Wydatki"
+          button
+          button-text="Dodaj"
+          :button-action="toggleForm"
       />
     </template>
 
@@ -116,8 +117,8 @@ const ExpensesByUser = computed(() => {
           <AppCard>
             <span>Wydano</span>
             <BudgetContent
-              :showCurrency="false"
-              :content="{
+                :showCurrency="false"
+                :content="{
                 amount: budget,
                 currency: budgetCurrency,
                 expenses: spent,
@@ -129,9 +130,9 @@ const ExpensesByUser = computed(() => {
           <AppCard>
             <p class="mb-3">Pozostało</p>
             <p
-              class="text-h3 font-weight-bold"
-              :class="remaining > 0 ? 'remaining' : 'amount'"
-              :style="remaining <= 0 ? 'color:red' : ''"
+                class="text-h3 font-weight-bold"
+                :class="remaining > 0 ? 'remaining' : 'amount'"
+                :style="remaining <= 0 ? 'color:red' : ''"
             >
               {{ remaining <= 0 ? 0 : remaining }} {{ budgetCurrency }}
             </p>
@@ -155,19 +156,19 @@ const ExpensesByUser = computed(() => {
               <AppCard cols="12">
                 <!-- Header with title and filter button -->
                 <v-row
-                  justify="space-between"
-                  align="center"
-                  class="mb-4"
-                  no-gutters
+                    justify="space-between"
+                    align="center"
+                    class="mb-4"
+                    no-gutters
                 >
                   <span>Wydatki</span>
                   <AppButton
-                    color="primary"
-                    @click="showFilters = true"
-                    height-auto
-                    font-auto
-                    dense
-                    text="Filtruj"
+                      color="primary"
+                      @click="showFilters = true"
+                      height-auto
+                      font-auto
+                      dense
+                      text="Filtruj"
                   >
                     <v-icon start>mdi-filter</v-icon>
                   </AppButton>
@@ -175,9 +176,9 @@ const ExpensesByUser = computed(() => {
 
                 <!-- Expenses List -->
                 <ExpensesList
-                  variant="manage"
-                  :expenses="expenses"
-                  :config="appliedFilters"
+                    variant="manage"
+                    :expenses="expenses"
+                    :config="appliedFilters"
                 />
               </AppCard>
             </v-row>
@@ -190,8 +191,8 @@ const ExpensesByUser = computed(() => {
             <v-row no-gutters class="d-flex flex-column">
               <span>Wydatki - Uczestnicy</span>
               <v-col
-                v-if="ExpensesByUser"
-                v-for="(amount, username) in ExpensesByUser"
+                  v-if="ExpensesByUser"
+                  v-for="(amount, username) in ExpensesByUser"
               >
                 <p>
                   <span>
@@ -211,10 +212,9 @@ const ExpensesByUser = computed(() => {
         <v-card class="pa-3">
           <v-card-title class="text-h6">Filtry</v-card-title>
           <v-card-text>
-            <v-container>
-              <v-row dense>
-                <v-col cols="12">
-                  <v-select
+            <v-row dense>
+              <v-col cols="12">
+                <v-select
                     v-model="selectedCategory"
                     :items="budgetCategory"
                     item-title="name"
@@ -222,10 +222,10 @@ const ExpensesByUser = computed(() => {
                     label="Kategoria"
                     variant="outlined"
                     clearable
-                  />
-                </v-col>
-                <v-col cols="12">
-                  <v-select
+                />
+              </v-col>
+              <v-col cols="12">
+                <v-select
                     v-model="selectedParticipant"
                     :items="members"
                     item-title="name"
@@ -235,10 +235,10 @@ const ExpensesByUser = computed(() => {
                     variant="outlined"
                     bg-color="transparent"
                     clearable
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-date-input
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-date-input
                     v-model="dateFrom"
                     max-width="auto"
                     variant="outlined"
@@ -248,10 +248,10 @@ const ExpensesByUser = computed(() => {
                     label="Od"
                     :clearable="true"
                     header-color="primary"
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-date-input
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-date-input
                     v-model="dateTo"
                     max-width="auto"
                     variant="outlined"
@@ -261,23 +261,22 @@ const ExpensesByUser = computed(() => {
                     :clearable="true"
                     header-color="primary"
                     label="Do"
-                  />
-                </v-col>
-              </v-row>
-            </v-container>
+                />
+              </v-col>
+            </v-row>
+            <v-row justify="center">
+              <AppButton
+                  color="accent"
+                  text="Anuluj"
+                  @click="showFilters = false"
+              />
+              <AppButton
+                  color="primary"
+                  text="Zastosuj"
+                  @click="filter"
+              />
+            </v-row>
           </v-card-text>
-          <v-card-actions class="justify-end">
-            <AppButton
-              color="accent"
-              text="Anuluj"
-              @click="showFilters = false"
-            />
-            <AppButton
-                color="primary"
-                text="Zastosuj"
-                @click="filter"
-            />
-          </v-card-actions>
         </v-card>
       </v-dialog>
     </template>

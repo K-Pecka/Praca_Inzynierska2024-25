@@ -114,7 +114,7 @@ const submitTicket = () => {
                 v-model="form.currency"
                 label="Wybierz walute"
                 variant="outlined"
-                :items="['PLN', 'EUR']"
+                :items="['EUR', 'GBP', 'USD', 'PLN']"
                 clearable
                 prepend-inner-icon="mdi-wallet"
                 bg-color="background"
