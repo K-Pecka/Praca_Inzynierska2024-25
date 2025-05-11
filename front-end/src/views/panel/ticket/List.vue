@@ -25,7 +25,7 @@ const {
 import {useMembersStore} from "@/stores/trip/useMembersStore"
 
 const {members: membersStore} = useMembersStore();
-const members = computed(() => membersStore)
+const members = computed(() => membersStore.filter(e=>!e.is_owner))
 
 const showForm = ref(false);
 
