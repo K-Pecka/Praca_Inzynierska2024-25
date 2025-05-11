@@ -3,9 +3,9 @@ import {Expense} from "@/types";
 import AppCard from "@/components/AppCard.vue";
 import {useUtilsStore} from "@/stores";
 import {AppButton} from "@/components";
-import {getMutationDelete} from "@/api/services/expenseQuery";
+import {getMutationExpenseDelete} from "@/api/services/expenseQuery";
 
-const {mutate} = getMutationDelete(Option);
+const {mutate} = getMutationExpenseDelete(Option);
 
 const {mapCategoryBudget} = useUtilsStore();
 const {expense} = defineProps<{

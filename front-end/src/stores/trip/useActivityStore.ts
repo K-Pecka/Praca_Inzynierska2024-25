@@ -8,6 +8,7 @@ import { Activity, ActivityType } from "@/types/interface";
 import {getMutationDelete} from "@/api/services/activityQuery"
 
 export const useActivityStore = defineStore("activity", () => {
+  const notification = useNotificationStore();
   const activities = ref<Activity[]>([]);
   const activeError = ref<boolean>(false);
   const { setErrorCurrentMessage, setSuccessCurrentMessage } =
@@ -38,6 +39,7 @@ export const useActivityStore = defineStore("activity", () => {
   }
   const deleteActivity = getMutationDelete({
           queryClient,
+          notification,
           successMessage: "Pomyślnie usunięto aktywność",
           errorMessage: "Nie udało się usunąć aktywności",
       })

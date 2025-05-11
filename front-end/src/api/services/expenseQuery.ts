@@ -12,13 +12,9 @@ export const getExpensesQuery = (id: number) => {
     });
 };
 
-interface DeleteExpenseInput {
-  expenseId: number;
-  tripId: number;
-}
 
-export const getMutationDelete = (option: Record<string, any>) =>
-  useMutation<null, Error, DeleteExpenseInput>({
+export const getMutationExpenseDelete = (option: Record<string, any>) =>
+  useMutation({
     mutationFn: fetchExpenseDelete,
     onSuccess: (_data, variables) => {
       option.notifications.setSuccessCurrentMessage(option.successMessage);
