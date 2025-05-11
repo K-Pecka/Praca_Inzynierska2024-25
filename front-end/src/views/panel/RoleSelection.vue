@@ -1,9 +1,11 @@
 <script setup lang="ts">
   import {usePagePanelStore} from "@/stores/ui/usePagePanelStore";
   import { useDisplay } from "vuetify";
+  import {computed} from "vue";
+  import {RoleSelection} from "@/types";
 
   const pagePanelStore = usePagePanelStore();
-  const getRoleSelection = pagePanelStore.getRoleSelection;
+  const getRoleSelection = computed<RoleSelection>(() => pagePanelStore.getRoleSelection);
   const { smAndDown } = useDisplay();
 </script>
 
@@ -16,8 +18,8 @@
 
     <v-row justify="space-between" class="mt-6">
       <v-col
-        v-for="(role, index) in getRoleSelection.roles"
-        :key="index"
+        v-for="role in getRoleSelection.roles"
+        :key="role.title"
         class="py-12"
         :class="{ 'px-12': !smAndDown }"
         cols="12"
@@ -25,7 +27,12 @@
         md="6"
       >
         <router-link :to="role.path" class="text-decoration-none">
-          <v-card class="d-flex flex-column align-center py-4 role-card rounded-xl choose-profile-button" elevation="4" height="auto" width="auto">
+          <v-card
+              class="role-card d-flex flex-column align-center"
+              elevation="4"
+              height="auto"
+              width="auto"
+          >
             <v-img
               :src="role.image.img"
               :alt="role.image.alt"
@@ -34,7 +41,7 @@
               min-width="150"
               class="mb-4"
             />
-            <div style="height: auto; width: auto;" class="text-center pb-6" :class="{ 'px-2': smAndDown }">
+            <div class="text-center pb-6 w-auto h-auto" :class="{ 'px-2': smAndDown }">
               <div class="text-h4 font-weight-medium role-title pb-3">{{ role.title }}</div>
               <div class="text-body-1 text-grey-darken-1">{{ role.description }}</div>
             </div>
@@ -47,6 +54,11 @@
 
 <style scoped lang="scss">
 @use "@/assets/styles/variables" as *;
+
+.role-card {
+  padding-block: 1rem;
+  background-color: $background-secondary;
+}
 
 .text-h4 {
   color: rgb($primary-color);

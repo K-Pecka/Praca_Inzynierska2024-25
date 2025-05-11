@@ -3,7 +3,7 @@ import {ref} from "vue";
 import {useMutation} from "@tanstack/vue-query";
 import {useNotificationStore} from "@/stores/ui/useNotificationStore";
 import router from "@/router";
-import {TOKEN,User} from "@/types";
+import {TOKEN, User} from "@/types";
 import {usePermissionStore} from "@/stores";
 import {
     loginFetch,
@@ -13,7 +13,8 @@ import {
     fetchLogOut,
     fetchPermission,
 } from "@/api/endpoints/auth";
-
+import {nextTick} from "vue";
+import { queryClient } from "@/main";
 export const useAuthStore = defineStore(
     "auth",
     () => {
@@ -39,42 +40,39 @@ export const useAuthStore = defineStore(
             return hasPermission(userPermission, name, type);
         };
         const validToken = async (): Promise<boolean> => {
-            if (token.value) {
+            const currentToken = getToken();
+            if (!currentToken?.access || !currentToken?.refresh) return false;
+
+            try {
+                await fetchVerify(currentToken);
+                return true;
+            } catch {
                 try {
-                    const verify = await fetchVerify(
-                        getToken() || {access: "", refresh: ""}
-                    );
+                    const refreshed = await refreshToken();
+                    if (!refreshed) return false;
+                    await fetchVerify(getToken()!);
                     return true;
-                } catch (error) {
-                    await refreshToken();
-                    try {
-                        const verify = await fetchVerify(
-                            getToken() || {access: "", refresh: ""}
-                        );
-                        return true;
-                    } catch (error) {
-                        return false;
-                    }
+                } catch {
+                    return false;
                 }
             }
-            return false;
         };
 
-        const refreshToken = async (): Promise<Boolean> => {
+        const refreshToken = async (): Promise<boolean> => {
             if (!token.value) {
-                setErrorCurrentMessage(unexpectedError());
+                setErrorCurrentMessage("Brak tokena — zaloguj się ponownie.");
                 return false;
             }
             try {
                 const tokenRefresh: TOKEN = await fetchRefreshToken(token.value);
-                //console.warn("refreshToken", tokenRefresh);
                 if (tokenRefresh) {
                     saveToken(tokenRefresh);
                     return true;
                 }
             } catch (error: any) {
-                setErrorCurrentMessage(error.message);
+                setErrorCurrentMessage("Sesja wygasła — zaloguj się ponownie.");
                 token.value = null;
+                user.value = null;
                 return false;
             }
             return false;
@@ -84,16 +82,24 @@ export const useAuthStore = defineStore(
             token.value = data;
         };
         const saveUser = (data: User): void => {
-            //console.log(data);
             user.value = data;
         };
         const isOwner = (id: number) => id === (getUser()?.profiles?.[0]?.id ?? -1);
-        const getUser = () =>(user.value)
+        const getUser = () => (user.value)
         const getToken = () => {
             return token.value;
         };
-        const logout = () => {
-            logOutMutation.mutateAsync();
+        const logout = async () => {
+            try {
+                await logOutMutation.mutateAsync();
+            } catch (err: any) {
+                setErrorCurrentMessage(err?.message || "Nie można wylogować (token wygasł?)");
+            } finally {
+                token.value = null;
+                user.value = null;
+                queryClient.clear();
+                router.push({ name: "landing" });
+            }
         };
         const isLogin = async () => {
             try {
@@ -118,14 +124,18 @@ export const useAuthStore = defineStore(
         });
         const loginMutation = useMutation({
             mutationFn: loginFetch,
-            onSuccess: (data) => {
-                const {access, refresh, last_name, first_name,profile} = data;
-                setSuccessCurrentMessage(loginSuccess());
+            onSuccess: async (data) => {
+                const {access, refresh} = data;
+
                 saveToken({access, refresh});
                 saveUser(data);
-                router.push({name: "landing"});
+                setSuccessCurrentMessage(loginSuccess());
+
+                await nextTick();
+
+                await router.push({name: "landing"});
             },
-            onError: (err) => {
+            onError: (err: any) => {
                 setErrorCurrentMessage(err?.message || unexpectedError());
             },
         });
@@ -150,7 +160,7 @@ export const useAuthStore = defineStore(
                 return {
                     first_name: dto.first_name || user.value?.first_name || '',
                     last_name: dto.last_name || user.value?.last_name || '',
-                    userId:0
+                    userId: 0
                 };
             },
             onSuccess: (data) => {
@@ -171,7 +181,7 @@ export const useAuthStore = defineStore(
         };
 
         return {
-            userData:{
+            userData: {
                 getUser,
                 isOwner
             },

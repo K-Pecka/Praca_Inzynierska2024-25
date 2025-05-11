@@ -54,6 +54,7 @@ export interface Button {
   onclick: (id: string) => Promise<void> | void;
 }
 export interface Expense {
+  id?: number;
   trip?: number;
   title: string;
   amount: number;
@@ -158,8 +159,8 @@ export interface Image {
   caption?: string;
 }
 export interface Role {
-  title: String;
-  description: String;
+  title: string;
+  description: string;
   image: Image;
   path: string | { name: string; params?: Record<string, string> };
 }

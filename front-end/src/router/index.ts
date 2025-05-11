@@ -1,15 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import homeRoutes from "./homeRoutes";
-import panelRoutes from "./panelTouristRoutes";
-import tripRoutes  from "@/router/tripRoutes";
-import panelGuideRoutes from "./panelGuideRoutes";
+import panelRoutes from "./panelRoutes";
+import tripRoutes from "@/router/tripRoutes";
 import authRoutes from "./authRoutes";
 import { useAuthStore, useNotificationStore } from "@/stores";
 
-import {APP_MODE_DEV} from "@/config/envParams"
-
-const routes: RouteRecordRaw[] = [...authRoutes, ...homeRoutes, panelRoutes, panelGuideRoutes, tripRoutes];
+const routes: RouteRecordRaw[] = [
+  ...authRoutes,
+  ...homeRoutes,
+  panelRoutes,
+  tripRoutes,
+];
 const router = createRouter({
   history: createWebHistory(),
   routes,
@@ -20,41 +22,45 @@ router.beforeEach(async (to, from, next) => {
   const siteName = import.meta.env.VITE_APP_SITE_TITLE;
   document.title = to.meta.title ? `${siteName} - ${to.meta.title}` : siteName;
 
-  const { validToken, checkPermission } = useAuthStore();
+  const auth = useAuthStore();
   const { setErrorCurrentMessage } = useNotificationStore();
 
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const goBack = to.matched.some((record) => record.meta.goBack);
-
   const routerName = typeof to.name === "string" ? to.name : undefined;
-  if(APP_MODE_DEV == true){
-    document.title = "[Mockup]"
+
+  const token = auth.getToken();
+
+  if (requiresAuth && !(await auth.validToken())) {
+    setErrorCurrentMessage("Tylko zalogowani użytkownicy,\n posiadają dostęp do tej zawartości.");
+    return next({ name: "logIn" });
   }
-  if (requiresAuth && !(await validToken())) {
-    setErrorCurrentMessage(
-      "Tylko zalogowani użytkownicy,\n posiadają dostępn do tej zawartości."
-    );
-    next({ name: "logIn" });
-  } else if (goBack && (await validToken())) {
+
+  if (goBack && token?.access) {
     setErrorCurrentMessage("Przed wejściem na tą stronę wyloguj się.");
-    next(from.name ? { name: from.name } : { name: "landing" });
-  } else if (!(await checkPermission(routerName, "path"))) {
-    setErrorCurrentMessage("Brak dostępu do tej zawartości");
-    const lastVisitedRoute = localStorage.getItem("routerPath");
-    if (Object.keys(to.params).length > 0) {
-      next(
-        lastVisitedRoute
-          ? { name: lastVisitedRoute, params: { ...from.params } }
-          : { name: "landing" }
-      );
-    } else {
-      next(lastVisitedRoute ? { name: lastVisitedRoute } : { name: "landing" });
-    }
-    return;
-  } else {
-    localStorage.setItem("routerPath", currentPath);
-    next();
+    return next(from.name ? { name: from.name } : { name: "landing" });
   }
+
+  if (token?.access) {
+    const allowed = await auth.checkPermission(routerName, "path");
+    if (!allowed) {
+      setErrorCurrentMessage("Brak dostępu do tej zawartości");
+      const lastVisitedRoute = localStorage.getItem("routerPath");
+
+      if (Object.keys(to.params).length > 0) {
+        return next(
+            lastVisitedRoute
+                ? { name: lastVisitedRoute, params: { ...from.params } }
+                : { name: "landing" }
+        );
+      } else {
+        return next(lastVisitedRoute ? { name: lastVisitedRoute } : { name: "landing" });
+      }
+    }
+  }
+
+  localStorage.setItem("routerPath", currentPath);
+  next();
 });
 
 export default router;

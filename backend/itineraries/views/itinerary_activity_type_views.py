@@ -6,7 +6,7 @@ from itineraries.models import ItineraryActivityType
 from itineraries.serializers.itinerary_activity_type_serializers import ItineraryActivityTypeListSerializer
 
 
-@extend_schema(tags=['itinerary activity type'])
+@extend_schema(tags=['model_type'])
 class ItineraryActivityTypeListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ItineraryActivityTypeListSerializer

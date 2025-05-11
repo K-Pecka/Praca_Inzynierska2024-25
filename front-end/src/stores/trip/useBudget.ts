@@ -27,19 +27,25 @@ export const useBudget = (tripId:Function) => {
       notifications.setErrorCurrentMessage(err?.message || "Błąd");
     },
   });
-  const getExpensByTrip = (id?:number) => {
-    const { data: expensesByTrip, isLoading: isLoading_expenses,error:error_expenses } =
-      getExpensesQuery(id ?? tripId());
+  const getExpenseByTrip = (id?: number) => {
+    const {
+      data: expensesByTrip,
+      isLoading: isLoading_expenses,
+      error: error_expenses,
+      refetch: refetchExpenses,
+    } = getExpensesQuery(id ?? tripId());
+
     return {
       expensesByTrip,
       isLoading_expenses,
       error_expenses,
+      refetchExpenses,
     };
   };
 
   return {
     tripMutationBudget,
     createExpense,
-    getExpensByTrip,
+    getExpenseByTrip: getExpenseByTrip,
   };
 };

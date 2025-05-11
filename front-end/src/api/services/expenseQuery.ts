@@ -1,15 +1,28 @@
-import { Expense } from "@/types"
-import { useMutation, useQuery } from "@tanstack/vue-query"
-import { saveBudget,createExpenseMutation } from "@/api";
-import { fetchExpenses } from "@/api"
+import { Expense } from "@/types";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/vue-query";
+import {fetchExpenseDelete, fetchActivityDelete, fetchExpenses} from "@/api";
+
 export const getExpensesQuery = (id: number) => {
-    //console.log("getExpensesQuery", id)
-    return useQuery<Expense[], Error, Expense[] | [], [string, number]>({
+    return useQuery({
         queryKey: ["expense", id],
-        queryFn: async (context) => {
-            const result = await fetchExpenses(context.queryKey);
-            return Array.isArray(result) ? result.filter((item): item is Expense => item !== undefined) : [];
-        },
+        queryFn: () => fetchExpenses(["expense", id]),
         enabled: !!id,
-    })
-}
+        select: (data: Expense[] | undefined) =>
+            Array.isArray(data) ? data.filter((item): item is Expense => item !== undefined) : [],
+    });
+};
+
+
+export const getMutationExpenseDelete = (option: Record<string, any>) =>
+  useMutation({
+    mutationFn: fetchExpenseDelete,
+    onSuccess: (_data, variables) => {
+      option.notifications.setSuccessCurrentMessage(option.successMessage);
+      option.queryClient.invalidateQueries({
+        queryKey: ["expense", variables.tripId, variables.expenseId],
+      });
+    },
+    onError: (err) => {
+      option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);
+    },
+  });

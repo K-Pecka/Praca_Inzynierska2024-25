@@ -12,24 +12,25 @@ import piniaPersist from "pinia-plugin-persistedstate";
 import { piniaBasePlugin } from "./plugins/piniaBase";
 import { messages } from "./lib/messages";
 
-const app = createApp(App);
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000,
-    }
-  }
+    },
+  },
 });
+
+const app = createApp(App);
 const pinia = createPinia();
 pinia.use(piniaPersist);
 pinia.use(piniaBasePlugin);
 
-app.provide('messages', messages);
+app.provide("messages", messages);
 
 app
-  .use(Toast)
-  .use(pinia)
-  .use(vuetify)
-  .use(router)
-  .use(VueQueryPlugin, { queryClient })
-  .mount("#app");
+    .use(Toast)
+    .use(pinia)
+    .use(vuetify)
+    .use(router)
+    .use(VueQueryPlugin, { queryClient })
+    .mount("#app");

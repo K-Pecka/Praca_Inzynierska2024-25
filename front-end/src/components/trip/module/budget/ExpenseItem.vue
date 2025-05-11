@@ -2,6 +2,10 @@
 import {Expense} from "@/types";
 import AppCard from "@/components/AppCard.vue";
 import {useUtilsStore} from "@/stores";
+import {AppButton} from "@/components";
+import {getMutationExpenseDelete} from "@/api/services/expenseQuery";
+
+const {mutate} = getMutationExpenseDelete(Option);
 
 const {mapCategoryBudget} = useUtilsStore();
 const {expense} = defineProps<{
@@ -26,7 +30,7 @@ const currencyValue =
       <v-row justify="space-between" align="center">
 
         <!-- Expense Icon and Title -->
-        <v-col cols="auto">
+        <v-col>
           <v-row align="center">
             <v-sheet class="rounded-xl bg-red mr-4">
               <v-icon size="24" class="ma-1">
@@ -46,30 +50,35 @@ const currencyValue =
         </v-col>
 
         <!-- Expense Amount -->
-        <v-col class="text-h5" cols="auto">
+        <v-col class="text-h5 text-end" cols="12" sm="5" md="5" lg="5">
           <v-row class="justify-space-between" no-gutters>
-            <v-row class="flex-column justify-center">
-              <strong class="text-black-70 mr-2">
-                {{ expense.amount }} {{ expense.currency }}
-              </strong>
-              <span v-if="currencyValue" class="text-subtitle-1 text-grey-darken-1"
-                    style="line-height: 0.8">
-                {{ currencyValue }}
-              </span>
-              <span v-else class="text-subtitle-1" style="line-height: 0.8">
-                ({{ expense.amount }} {{ expense.currency }})
-              </span>
-            </v-row>
+            <v-col cols="auto" sm="12" md="6" lg="8" class="pb-2">
+              <v-row class="flex-column justify-center" no-gutters>
+                <strong class="text-black-70 mr-2">
+                  {{ expense.amount }} {{ expense.currency }}
+                </strong>
+                <span v-if="currencyValue" class="text-subtitle-1 text-grey-darken-1"
+                      style="line-height: 0.8">
+                  {{ currencyValue }}
+                </span>
+                <span v-else class="text-subtitle-1" style="line-height: 0.8">
+                  ({{ expense.amount }} {{ expense.currency }})
+                </span>
+              </v-row>
+            </v-col>
 
-            <v-btn variant="flat" class="bg-transparent px-0" v-if="!noIcon">
-              <v-icon
-                  v-if="!!variant && variant === 'manage'"
-                  size="28"
-                  class="amount"
-              >
-                mdi-trash-can-outline
-              </v-icon>
-            </v-btn>
+
+            <template v-if="expense && expense.trip">
+              <v-col cols="auto" sm="12" md="6" lg="4">
+                <AppButton
+                    color="red"
+                    font-auto
+                    max-width="190px"
+                    text="Usuń Wydatek"
+                    @click="mutate({ expenseId: Number(expense.id), tripId: Number(expense.trip) })"
+                />
+              </v-col>
+            </template>
           </v-row>
         </v-col>
       </v-row>

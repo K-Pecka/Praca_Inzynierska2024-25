@@ -11,7 +11,7 @@ const { getTripDetails } = tripStore;
 const { trip } = getTripDetails();
 const tripDateStart = computed(() => trip?.value?.end_date || "");
 const form = ref({
-  type: ticketCategory[0].text,
+  type: ticketCategory[0].value,
   name: "",
   date: null,
   time: "",
@@ -29,14 +29,14 @@ function submitTicket() {
   const payload = {
     ...form.value,
     date: form.value.date
-      ? formatDateToYYYYMMDD(form.value.date)
-      : new Date("YYYY-MM-DD").getDate(),
+        ? formatDateToYYYYMMDD(form.value.date)
+        : "",
   };
-  ////console.log("Payload", payload);
+
   emit("submitTicket", payload);
 
   form.value = {
-    type: ticketCategory[0].text,
+    type: ticketCategory[0].value,
     name: "",
     date: null,
     time: "",
@@ -76,7 +76,9 @@ defineProps<{
             v-model="form.name"
             label="Nazwa"
             variant="outlined"
-            :rules="[(v) => !!v || 'Nazwa biletu jest wymagana']"
+            :rules="[
+            (v: string) => (!!v && v.trim().length > 0) ? true : 'Nazwa biletu jest wymagana'
+             ]"
             required
             bg-color="background"
             density="comfortable"

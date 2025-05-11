@@ -7,17 +7,4 @@ export function piniaBasePlugin({ store }: PiniaPluginContext) {
     const { setRole } = useRoleStore();
     setRole(String(useRoute().params.role) || '');
   };
-
-  const initialState = JSON.parse(JSON.stringify(store.$state));
-  store.reset = () => {
-    store.$patch(initialState);
-  };
-  store.$subscribe((_, state) => {
-    localStorage.setItem(`store:${store.$id}`, JSON.stringify(state));
-  });
-
-  const saved = localStorage.getItem(`store:${store.$id}`);
-  if (saved) {
-    store.$patch(JSON.parse(saved));
-  }
 }

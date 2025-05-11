@@ -5,7 +5,7 @@ from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView,
 from rest_framework.permissions import IsAuthenticated
 
 from server.permissions import IsTripParticipant
-from trips.models import Expense
+from trips.models import Expense, ExpenseType
 from trips.serializers.expense_serializers import ExpenseCreateSerializer, ExpenseRetrieveSerializer, \
     ExpenseListSerializer, ExpenseUpdateSerializer, ExpenseDeleteSerializer
 
@@ -48,3 +48,17 @@ class ExpenseDestroyAPIView(DestroyAPIView):
     queryset = Expense.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = ExpenseDeleteSerializer
+
+
+@extend_schema(tags=['model_type'])
+class ExpenseTypeListAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ExpenseTypeListAPIView
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the itinerary activity types
+        for the currently authenticated user.
+        """
+        return ExpenseType.objects.all()
+

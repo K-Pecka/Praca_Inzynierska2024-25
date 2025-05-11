@@ -19,7 +19,8 @@
         variant="outlined"
         prepend-icon=""
         prepend-inner-icon="mdi-calendar"
-        bg-color="background"
+        bg-color="white"
+        rounded="lg"
         @update:modelValue="onRangeChange"
         color="primary"
         :clearable="true"
@@ -35,7 +36,7 @@
         :placeholder="inputData.placeholder"
         @input="updateModel"
         @blur="handleInput"
-        class="input background"
+        class="input"
         :class="{ error: inputData.error && inputData.error.length > 0 }"
       />
     </template>
@@ -63,7 +64,7 @@ const props = defineProps({
   },
   modelValue: {
     type: String,
-    required: true,
+    default: '',
   },
 });
 const emit = defineEmits(["update", "updateModel"]);
@@ -147,6 +148,7 @@ input[type="checkbox"] {
 .input {
   padding: 0.5rem;
   border-radius: 10px;
+  background-color: white;
   font-size: 1rem;
   border: 1px solid rgba(0, 0, 0, 0.5);
 }

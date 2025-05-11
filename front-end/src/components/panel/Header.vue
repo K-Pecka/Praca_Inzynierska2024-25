@@ -2,12 +2,18 @@
   import { images } from "@/data";
   import { usePanelStore} from "@/stores/panel/usePanelStore";
   import { useAuthStore } from "@/stores";
+  import { onMounted } from 'vue';
 
   const panelStore = usePanelStore();
   const authStore = useAuthStore();
 
   const userInitials = authStore.getUserInitials();
 
+  const emit = defineEmits(['toggle-drawer'])
+
+  onMounted(() => {
+    emit('toggle-drawer')
+  })
 </script>
 
 <template>
@@ -21,7 +27,11 @@
 
       <!-- Nav -->
       <template v-slot:append>
-        <v-menu>
+        <v-app-bar-nav-icon
+            v-if="$vuetify.display.mdAndDown"
+            @click="emit('toggle-drawer')"
+        />
+        <v-menu v-else>
           <template v-slot:activator="{ props }">
             <div v-bind="props" class="account-menu-trigger">
               <v-avatar color="red">
@@ -57,6 +67,7 @@
 
 .header {
   border-bottom: $panel-header-border-bottom;
+  z-index: 1008 !important;
 }
 
 .account-menu-trigger {

@@ -1,16 +1,13 @@
-import {Register} from "@/types/interface";
+import apiClient from "@/api/apiClient";
+import { Register } from "@/types/interface";
 import { apiEndpoints } from "@/api/apiEndpoints";
 
 export const registerFetch = async (userData: Register) => {
-    const response = await fetch(apiEndpoints.auth.register, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData || "unknow");
+    try {
+        const response = await apiClient.post(apiEndpoints.auth.register, userData);
+        return response.data;
+    } catch (error: any) {
+        const errorData = error.response?.data;
+        throw new Error(errorData || "unknown");
     }
-
-    return response.json();
-  };
+};

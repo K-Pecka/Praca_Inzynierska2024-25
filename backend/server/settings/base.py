@@ -220,5 +220,4 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'https://localhost.com').split('
 CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://plannder.com').split(',')
 CSRF_TRUSTED_ORIGINS = [
     "https://api.plannder.com"
-    "http://localhost:5173",
 ]

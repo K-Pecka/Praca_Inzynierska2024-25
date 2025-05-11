@@ -169,7 +169,7 @@ function handleSubmit() {
                     </span>
 
                     <span class="text-h6 contact-accent-color mb-1 contact-footer">
-                      plannder@kontakt.com
+                      kontakt@plannder.com
                     </span>
                   </v-row>
                 </v-col>
@@ -213,7 +213,7 @@ function handleSubmit() {
                     Pon-Pt od 9:00 do 18:00
                   </span>
                     <span class="text-h6 contact-accent-color mb-1 contact-footer">
-                      +48 883 777 767
+                      +48 000 000 000
                     </span>
                   </v-row>
                 </v-col>

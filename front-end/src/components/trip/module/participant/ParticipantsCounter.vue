@@ -7,46 +7,30 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="participants-counter-card">
-    <div class="counter-header">
-      <div class="left">
+  <v-col cols="12" class="background-secondary rounded-lg pa-6">
+    <v-row no-gutters>
+      <v-col class="pb-5">
         <v-icon size="24" color="primary">mdi-account-multiple-outline</v-icon>
         <span class="counter-title">Uczestnicy</span>
-      </div>
+      </v-col>
       <span class="counter-value">
         {{ props.current }}/{{ props.max }}
       </span>
-    </div>
+    </v-row>
     <v-progress-linear
         :model-value="(props.current / props.max) * 100"
-        color="primary"
         height="12"
         rounded
+        class="progress-color"
     />
-  </div>
+  </v-col>
 </template>
 
 <style scoped lang="scss">
-.participants-counter-card {
-  background-color: rgb(var(--v-theme-secondary), 0.5);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+@use "@/assets/styles/variables.scss" as *;
 
-.counter-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.left {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
+.progress-color {
+  color: $background-primary;
 }
 
 .counter-title {

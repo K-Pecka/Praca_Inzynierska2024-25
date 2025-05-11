@@ -71,7 +71,6 @@ export const useFormStore = defineStore("form", () => {
   };
   const isSend = ref(false);
   const sendForm =async (formValue: any, config: any)=>{
-    ////console.log(config?.send,isFormValid(FormType.LOGIN, formValue),!isSend.value)
     if (config?.send && isFormValid(FormType.LOGIN, formValue) && !isSend.value) {
       isSend.value = true;
       try {
@@ -80,7 +79,6 @@ export const useFormStore = defineStore("form", () => {
         formValues.value={}
         formType.value = FormType.REGISTER;
       } catch (error) {
-       ////console.log("Brak danych")
       }
       isSend.value = false
     }

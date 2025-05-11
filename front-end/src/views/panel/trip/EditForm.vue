@@ -17,33 +17,31 @@ const formValues = ref<Record<string, string>>(
 
 const { trip:tripStore } = useTripStore();
 const {updateTrip,getTripDetails}= tripStore
-const { trip, isLoading_trip, error_trip } = getTripDetails();
+const { isLoading_trip, error_trip } = getTripDetails();
 
+const trip = ref(tripStore.getTripDetails().trip);
 watch(
-    () => trip,
-    (trip) => {
+  () => trip?.value,
+  (newTrip) => {
+    if (newTrip) {
       const tripDatesInput = inputs.value.find(
-          (input) => input.name === "tripDates"
+        (input) => input.name === "tripDates"
       );
       if (tripDatesInput) {
-        formValues.value.tripName = trip?.value?.name ?? '';
-        formValues.value.start_date = trip?.value?.start_date ?? '';
-        formValues.value.end_date = trip?.value?.end_date ?? '';
-        if (tripDatesInput) {
-
-          tripDatesInput.config = {
-            ...tripDatesInput.config,
-            edit: true,
-            min: trip?.value?.start_date ?? '',
-            max: trip?.value?.end_date ?? '',
-          };
-          ////console.log(tripDatesInput.config.min, tripDatesInput.config.max);
-        }
+        formValues.value.tripName = newTrip?.name ?? '';
+        formValues.value.start_date = newTrip?.start_date ?? '';
+        formValues.value.end_date = newTrip?.end_date ?? '';
+        tripDatesInput.config = {
+          ...tripDatesInput.config,
+          edit: true,
+          min: newTrip?.start_date ?? '',
+          max: newTrip?.end_date ?? '',
+        };
       }
-    },
-    { immediate: true }
+    }
+  },
+  { immediate: true }
 );
-
 function handleSubmit(_formData: any, config: any) {
   if (config?.send && isFormValid(FormType.TRIP, formValues.value)) {
     const { tripName, tripDates } = formValues.value;
@@ -64,14 +62,14 @@ function handleSubmit(_formData: any, config: any) {
     <template #title>
       <HeaderSection
           title="Edytuj wycieczkę"
-          subtitle="Zmodyfikuj nazwę i daty wycieczki"
+          no-sub-title
           center
       />
     </template>
 
     <template #content>
       <p v-if="isLoading_trip">Ładowanie danych wycieczki...</p>
-      <p v-else-if="error_trip">Błąd: {{ error_trip.message }}</p>
+      <p v-else-if="error_trip && error_trip.message">Błąd: {{ error_trip.message }}</p>
 
       <Form
         v-else

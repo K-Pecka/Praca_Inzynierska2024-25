@@ -35,7 +35,6 @@ const handleSubmit = (_formData: any, config: any) => {
   if (config?.send && isFormValid(FormType.PLAN, formValues.value)) {
     const { tripName, city,tripDates } = formValues.value;
     const [start_date, end_date] = tripDates.split(' - ');
-    //console.log(trip?.value);
     const newPlan:Plan = {
       name: tripName,
       country: city,

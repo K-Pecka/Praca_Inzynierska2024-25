@@ -1,14 +1,18 @@
 <script lang="ts" setup>
 import {Box, Section, HeaderSection, ExpensesList} from "@/components";
 import {useTripStore} from "@/stores/trip/useTripStore";
+import AppLoader from "@/components/common/AppLoader.vue"
+import {onMounted} from "vue";
 
-useTripStore().initialize();
-const {dashboard, budget} = useTripStore();
-const {getDashboard, getSpecialSectionName} = dashboard;
-const {getExpensByTrip} = budget;
+const tripStore = useTripStore();
 
-const {boxes, isLoading_trip, error_trip} = getDashboard();
-const {expensesByTrip, isLoading_expenses} = getExpensByTrip();
+const { boxes, isLoading_trip, error_trip } = tripStore.dashboard.getDashboard();
+const { expensesByTrip, isLoading_expenses } = tripStore.budget.getExpensByTrip();
+const getSpecialSectionName = () => "Panel";
+
+onMounted(() => {
+  useTripStore().initialize();
+})
 </script>
 
 <template>
@@ -26,7 +30,7 @@ const {expensesByTrip, isLoading_expenses} = getExpensByTrip();
       <template v-else>
         <v-col cols="12">
           <v-row class="budget-overview-gap">
-            <v-col v-for="(box, index) in boxes" :key="index">
+            <v-col v-for="box in boxes" :key="box.title">
               <Box
                   :title="box.title"
                   :content="box.content"

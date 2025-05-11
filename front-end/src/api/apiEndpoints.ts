@@ -1,55 +1,22 @@
-import { useAuthStore } from "@/stores";
-export const hostName = "https://api.plannder.com";
 export const backendNotification = false;
-import {errorStatus} from "@/api/standardError";
-
-export const standardHeaders = () => {
-  const { getToken } = useAuthStore();
-  return {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${getToken()?.access}`,
-  };
-};
-let notificationTimeout: ReturnType<typeof setTimeout> | null = null;
+import apiClient from './apiClient';
 
 export const fetchData = async <T = unknown>(
-  url: string,
-  options: RequestInit = { body: undefined },
-  method: "GET" | "POST" | "DELETE" | "PATCH" | "PUT" = "GET"
+    url: string,
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
+    data?: any
 ): Promise<{ data?: T; error?: string }> => {
-  if (notificationTimeout = null)
-    return { error: "Jestem w trakcie wykonania\n poprzedniego zapytania..." };
-  
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 2000);
-
   try {
-    const response = await fetch(url, {
-      method: method,
-      headers: {
-        ...standardHeaders(),
-      },
-      signal: controller.signal,
-      ...options,
-      body: options.body ? options.body : undefined,
+    const response = await apiClient.request<T>({
+      url,
+      method,
+      data,
     });
-    //console.log(url, method, options.body, response.status);
-    clearTimeout(timeoutId);
-    const result = await response.json().catch(() => null);
-
-    notificationTimeout = setTimeout(() => {
-      notificationTimeout = null;
-    }, 3000);
-    if (!response.ok) {
-      errorStatus(response.status);
-      console.error("data:", options.body);
-      console.error("Error response:", result);
-      throw new Error(result?.message || `Błąd HTTP: ${response.status}`);
-    }
-    
-    return { data: result };
+    return { data: response.data };
   } catch (error: any) {
-    return { error: error.message || "Wystąpił błąd" };
+    return {
+      error: error.response?.data?.message || error.message || 'Wystąpił błąd',
+    };
   }
 };
 export const setParam = (
@@ -60,58 +27,58 @@ export const setParam = (
     if (acc.includes(`:${key}`)) {
       return acc.replace(`:${key}`, encodeURIComponent(params[key]));
     } else {
-      //console.warn(`Missing parameter: ${key}`);
       return acc;
     }
   }, url);
 };
 
 export const apiEndpoints = {
-  user:{
-    getUserById: `${hostName}/user/user/by-profile/:userId/`,
+  user: {
+    getUserById: `/user/user/by-profile/:userId/`,
   },
   auth: {
-    login: `${hostName}/user_auth/login/`,
-    register: `${hostName}/user/create/`,
-    refreshToken: `${hostName}/user_auth/token/refresh/`,
-    verify: `${hostName}/user_auth/token/verify/`,
-    profile: `${hostName}/user/profile/`,
-    logout: `${hostName}/user_auth/logout/`,
+    login: `/user_auth/login/`,
+    register: `/user/create/`,
+    refreshToken: `/user_auth/token/refresh/`,
+    verify: `/user_auth/token/verify/`,
+    profile: `/user/profile/`,
+    logout: `/user_auth/logout/`,
   },
   expense: {
-    all: `${hostName}/trip/:tripId/expense/all/`,
-    detail: `${hostName}/trip/:tripId/expense/:expenseId/`,
-    delete: `${hostName}/trip/:tripId/expense/:expenseId/delete/`,
-    create: `${hostName}/trip/:tripId/expense/create/`,
+    all: `/trip/:tripId/expense/all/`,
+    detail: `/trip/:tripId/expense/:expenseId/`,
+    delete: `/trip/:tripId/expense/:expenseId/delete/`,
+    create: `/trip/:tripId/expense/create/`,
   },
   trip: {
-    all: `${hostName}/trip/all/`,
-    detail: `${hostName}/trip/:tripId/`,
-    delete: `${hostName}/trip/:tripId/delete/`,
-    create: `${hostName}/trip/create/`,
-    update: `${hostName}/trip/:tripId/update/`,
-    invateUser: `${hostName}/trip/:tripId/participants/manage/`,
+    all: `/trip/all/`,
+    detail: `/trip/:tripId/`,
+    delete: `/trip/:tripId/delete/`,
+    create: `/trip/create/`,
+    update: `/trip/:tripId/update/`,
+    inviteUser: `/trip/:tripId/participants/manage/`,
   },
   plan: {
-    all: `${hostName}/trip/:tripId/itinerary/all/`,
-    detail: `${hostName}/trip/:tripId/itinerary/:planId/`,
-    delete: `${hostName}/trip/:tripId/itinerary/:planId/delete/`,
-    create: `${hostName}/trip/:tripId/itinerary/create/`,
+    all: `/trip/:tripId/itinerary/all/`,
+    detail: `/trip/:tripId/itinerary/:planId/`,
+    delete: `/trip/:tripId/itinerary/:planId/delete/`,
+    create: `/trip/:tripId/itinerary/create/`,
   },
   activity: {
-    all: `${hostName}/trip/:tripId/itinerary/:planId/activities/all/`,
-    detail: `${hostName}/trip/:tripId/activity/:activityId/`,
-    delete: `${hostName}/trip/:tripId/activity/:activityId/delete/`,
-    create: `${hostName}/trip/:tripId/itinerary/:planId/activities/create/`,
+    all: `/trip/:tripId/itinerary/:planId/activities/all/`,
+    detail: `/trip/:tripId/activity/:activityId/`,
+    delete: `/trip/:tripId/itinerary/:planId/activities/:activityId/delete/`,
+    create: `/trip/:tripId/itinerary/:planId/activities/create/`,
   },
   activityType: {
-    all: `${hostName}/trip/:tripId/itinerary/activity-types/all/`,
+    all: `/trip/:tripId/itinerary/activity-types/all/`,
   },
   ticket: {
-    create: `${hostName}/trip/:tripId/ticket/create/`,
-    all: `${hostName}/trip/:tripId/ticket/all/`,
+    create: `/trip/:tripId/ticket/create/`,
+    all: `/trip/:tripId/ticket/all/`,
+    delete: `/trip/:tripId/ticket/:ticketId/delete/`,
   },
   budget: {
-    update: `${hostName}/trip/:tripId/budget/update/`,
+    update: `/trip/:tripId/budget/update/`,
   },
 };

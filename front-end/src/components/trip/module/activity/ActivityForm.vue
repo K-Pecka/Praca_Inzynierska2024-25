@@ -12,7 +12,6 @@ const form = ref({
   start_time: "",
   duration: "",
   location: "",
-  assignedTo: "",
   description: "",
 });
 
@@ -27,7 +26,6 @@ function submitActivity() {
     alert("Uzupełnij nazwę aktywności.");
     return;
   }
-  ////console.log(form.value)
   emit("submitActivity", { ...form.value });
   form.value = {
     type: 1,
@@ -35,7 +33,6 @@ function submitActivity() {
     start_time: "",
     duration: "",
     location: "",
-    assignedTo: "",
     description: "",
   };
 }
@@ -123,7 +120,6 @@ const { activityTypes } = useActivityStore();
 
         <v-col cols="12" sm="6">
           <v-select
-            v-model="form.assignedTo"
             label="Wybierz bilet"
             variant="outlined"
             :items="['Bilet A', 'Bilet B', 'Bilet C']"

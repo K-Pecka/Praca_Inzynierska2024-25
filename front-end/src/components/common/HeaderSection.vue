@@ -49,43 +49,17 @@ defineProps<{
 
     <!-- Subtitle -->
     <v-col v-if="!noSubTitle">
-<!--      <v-row-->
-<!--          v-if="center"-->
-<!--          :class="center ? 'justify-center' : 'justify-space-between'"-->
-<!--          no-gutters-->
-<!--      >-->
-<!--        <v-col cols="12">-->
-<!--          <v-row justify="center" no-gutters>-->
-<!--            <span class="text-h4" v-if="subtitle">-->
-<!--              {{ subtitle }}-->
-<!--            </span>-->
-<!--            <span v-else>-->
-<!--              ...-->
-<!--            </span>-->
-<!--          </v-row>-->
-<!--        </v-col>-->
-<!--        <v-col-->
-<!--            cols="12"-->
-<!--        >-->
-<!--          <v-row justify="end" align="start" no-gutters>-->
-<!--            <AppButton-->
-<!--                v-if="button"-->
-<!--                color="primary"-->
-<!--                @click="buttonAction"-->
-<!--                dense-->
-<!--                font-auto-->
-<!--                :text="buttonText"-->
-<!--            />-->
-<!--          </v-row>-->
-<!--        </v-col>-->
-<!--      </v-row>-->
-
-
       <v-row
           :class="center ? 'justify-center' : 'justify-space-between'"
           no-gutters
       >
-        <v-col cols="12" sm="12" md="6" lg="6" xl="6">
+        <v-col
+            cols="12"
+            sm="12"
+            md="6"
+            lg="6"
+            class="header-subtext-container"
+        >
           <v-row
               :class="{ 'justify-center': $vuetify.display.smAndDown || center, 'mb-5': $vuetify.display.smAndDown}"
               no-gutters
@@ -103,18 +77,17 @@ defineProps<{
             sm="12"
             md="6"
             lg="6"
-            xl="6"
+            :class="{'text-end': !$vuetify.display.smAndDown}"
+            class="header-button-container"
+            v-if="button"
         >
-          <v-row justify="end" no-gutters>
             <AppButton
-                v-if="button"
                 color="primary"
                 @click="buttonAction"
                 dense
                 font-auto
                 :text="buttonText"
             />
-          </v-row>
         </v-col>
       </v-row>
     </v-col>
@@ -123,8 +96,20 @@ defineProps<{
 
 <style scoped lang="scss">
 @use "@/assets/styles/variables" as *;
+.header-subtext-container {
+  @media (max-width: 959px) {
+    width: 100%;
+  }
+}
+
+.header-button-container {
+  @media (max-width: 959px) {
+    width: 100%;
+  }
+}
 
 .title {
   font-size: $header-section-title-font-size;
 }
+
 </style>
