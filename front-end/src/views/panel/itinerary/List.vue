@@ -28,7 +28,11 @@ const { isOwner } = userData;
       <p v-if="isLoading">Ładowanie...</p>
       <p v-else-if="error">Błąd: {{ error.message }}</p>
       <template v-else-if="trip && rawPlans && rawPlans.length">
-        <TripCard :plans="rawPlans" :btn="yourPlans.btn ?? []" :isOwner = "isOwner(trip?.creator?.id)"/>
+        <TripCard
+            :plans="rawPlans"
+            :btn="yourPlans.btn ?? []"
+            :isOwner = "isOwner(trip?.creator?.id)"
+        />
       </template>
 
       <!-- Empty state -->

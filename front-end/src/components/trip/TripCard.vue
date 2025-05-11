@@ -31,7 +31,7 @@ const props = defineProps<{
         sm="12"
         md="12"
         lg="12"
-        class="px-0"
+        class="px-0 pb-6"
     >
       <v-card
           class="trip-card background-secondary rounded-lg pa-8 flex-wrap"

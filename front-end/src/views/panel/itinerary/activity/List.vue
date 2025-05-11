@@ -102,9 +102,10 @@ onMounted(() => {
               <span class="font-weight-bold">{{ formatDatePolish(day) }}</span>
               <AppButton
                   v-if="isOwnerValue"
-                  color="primary"
+                  color="primary-outline"
                   @click="showFormForDay = day"
                   v-show="showFormForDay !== day"
+                  max-width="170px"
                   height-auto
                   font-auto
                   text="Dodaj aktywność"

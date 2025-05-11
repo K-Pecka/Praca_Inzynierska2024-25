@@ -102,7 +102,7 @@ defineProps<{
 }
 
 .font-auto {
-  font-size: clamp(0.5em, 0.4vw + 0.4rem, 1.5em);
+  font-size: clamp(0.7rem, 0.4vw + 0.4rem, 1.5em);
 }
 
 .stretch {

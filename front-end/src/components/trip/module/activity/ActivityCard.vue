@@ -85,7 +85,7 @@ const formatTime = (timeString: string) => {
                     color="red"
                     font-auto
                     max-width="190px"
-                    style="min-width: 150px;"
+                    style="min-width: 130px;"
                     text="Usuń aktywność"
                     @click="() => {
                     deleteActivity.mutate({
