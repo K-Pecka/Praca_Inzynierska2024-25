@@ -24,6 +24,9 @@ dist-ssr
 *.sln
 *.sw?
 
+package-lock.json
+../package-lock.json
+
 # venv
 backend/.venv
 .venv
