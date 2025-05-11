@@ -14,7 +14,7 @@ import {
     fetchPermission,
 } from "@/api/endpoints/auth";
 import {nextTick} from "vue";
-
+import { queryClient } from "@/main";
 export const useAuthStore = defineStore(
     "auth",
     () => {
@@ -99,7 +99,8 @@ export const useAuthStore = defineStore(
             } finally {
                 token.value = null;
                 user.value = null;
-                router.push({name: "landing"});
+                queryClient.clear();
+                router.push({ name: "landing" });
             }
         };
         const isLogin = async () => {
