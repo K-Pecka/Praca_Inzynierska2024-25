@@ -1,19 +1,24 @@
-import {TOKEN} from "@/types/interface";
+import apiClient from "@/api/apiClient";
+import { TOKEN } from "@/types/interface";
 import { apiEndpoints } from "@/api/apiEndpoints";
 import { errorStatus } from "@/api/standardError";
 import { APP_MODE_DEV } from "@/config/envParams";
-export const fetchVerify = async (token:TOKEN) =>{
-  if (APP_MODE_DEV) {
-    
-    return {};
-  }  
-  const response = await fetch(apiEndpoints.auth.verify, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({token:token.access}),
-    });
-    if (!response.ok) {
-      throw new Error(errorStatus(response.status) || "Wystąpił błąd");
+
+export const fetchVerify = async (token: TOKEN) => {
+    if (APP_MODE_DEV) {
+        return {};
     }
-    return response.json();
-  }
+
+    try {
+        const response = await apiClient.post(apiEndpoints.auth.verify, {
+            token: token.access,
+        });
+
+        return response.data;
+    } catch (error: any) {
+        if (error.response?.status) {
+            throw new Error(errorStatus(error.response.status) || "Wystąpił błąd");
+        }
+        throw new Error("Wystąpił błąd");
+    }
+};

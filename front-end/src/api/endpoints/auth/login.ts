@@ -1,18 +1,17 @@
-import { apiEndpoints,backendNotification } from "@/api/apiEndpoints";
+import apiClient from "@/api/apiClient";
+import { apiEndpoints, backendNotification } from "@/api/apiEndpoints";
 import { useNotificationStore } from "@/stores";
+
 export const loginFetch = async (credentials: Record<string, string>) => {
-  const response = await fetch(apiEndpoints.auth.login, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(credentials),
-  });
-  if (!response.ok) {
+  try {
+    const response = await apiClient.post(apiEndpoints.auth.login, credentials);
+    return response.data;
+  } catch (error: any) {
     let errorData = null;
-    if(backendNotification){
-      errorData = await response.json();
+    if (backendNotification && error.response?.data) {
+      errorData = error.response.data;
     }
-    const {loginError} = useNotificationStore();
+    const { loginError } = useNotificationStore();
     throw new Error(errorData || loginError());
   }
-  return response.json();
 };

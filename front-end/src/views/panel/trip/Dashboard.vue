@@ -3,13 +3,12 @@ import {Box, Section, HeaderSection, ExpensesList} from "@/components";
 import {useTripStore} from "@/stores/trip/useTripStore";
 import AppLoader from "@/components/common/AppLoader.vue"
 import {onMounted} from "vue";
-import dashboard from "@/views/panel/trip/Dashboard.vue";
 
 const tripStore = useTripStore();
 
 const { boxes, isLoading_trip, error_trip } = tripStore.dashboard.getDashboard();
 const { expensesByTrip, isLoading_expenses } = tripStore.budget.getExpensByTrip();
-const { getSpecialSectionName } = dashboard;
+const getSpecialSectionName = () => "Panel";
 
 onMounted(() => {
   useTripStore().initialize();

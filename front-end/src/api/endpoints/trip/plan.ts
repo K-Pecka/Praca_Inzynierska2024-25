@@ -1,50 +1,48 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
 import { Plan, NewPlan } from "@/types/interface";
+
 export const fetchPlans = async (param: Record<string, string> = {}) => {
-  const { data, error } = await fetchData<Plan[]>(
-    setParam(apiEndpoints.plan.all, param),
-    {},
-    "GET"
-  );
+  const url = setParam(apiEndpoints.plan.all, param);
+
+  const { data, error } = await fetchData<Plan[]>(url, "GET");
+
   if (error) {
     throw new Error(error);
   }
 
   return data;
 };
+
 export const fetchPlan = async () => {
-  const { data, error } = await fetchData<Plan>(
-    apiEndpoints.plan.detail,
-    {},
-    "GET"
-  );
+  const { data, error } = await fetchData<Plan>(apiEndpoints.plan.detail, "GET");
+
   if (error) {
     throw new Error(error);
   }
 
   return data;
 };
+
 export const deleteItinerary = async (param: Record<string, string> = {}) => {
-  const { data, error } = await fetchData(
-    setParam(apiEndpoints.plan.delete, param),
-    {},
-    "DELETE"
-  );
+  const url = setParam(apiEndpoints.plan.delete, param);
+
+  const { data, error } = await fetchData(url, "DELETE");
+
   if (error) {
     throw new Error(error);
   }
 
   return param;
 };
+
 export const createPlan = async (
-  newPlan: Plan,
-  param: Record<string, string> = {}
+    newPlan: Plan,
+    param: Record<string, string> = {}
 ) => {
-  const { data, error } = await fetchData<NewPlan>(
-    setParam(apiEndpoints.plan.create, param),
-    { body: JSON.stringify(newPlan) },
-    "POST"
-  );
+  const url = setParam(apiEndpoints.plan.create, param);
+
+  const { data, error } = await fetchData<NewPlan>(url, "POST", newPlan);
+
   if (error) {
     throw new Error(error);
   }

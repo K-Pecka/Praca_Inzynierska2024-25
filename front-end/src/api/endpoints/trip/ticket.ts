@@ -1,14 +1,12 @@
-import { useAuthStore } from "@/stores";
-import { apiEndpoints, fetchData, setParam, standardHeaders } from "../../apiEndpoints";
-import { Ticket, TicketData } from "@/types/interface";
+import apiClient from "@/api/apiClient";
+import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
+import { TicketData } from "@/types/interface";
 
 export const fetchTicket = async (params: { [key: string]: string }) => {
-  
-  const { data, error } = await fetchData<TicketData[]>(
-    setParam(apiEndpoints.ticket.all,params),
-    {},
-    "GET"
-  );
+  const url = setParam(apiEndpoints.ticket.all, params);
+
+  const { data, error } = await fetchData<TicketData[]>(url, "GET");
+
   if (error) {
     throw new Error(error);
   }
@@ -17,40 +15,31 @@ export const fetchTicket = async (params: { [key: string]: string }) => {
 };
 
 export const createTicket = async (
-  formData: FormData,params: Record<string, string>
+    formData: FormData,
+    params: Record<string, string>
 ): Promise<any> => {
-  formData.forEach((value, key) => {
-  });
-  const { getToken } = useAuthStore();
-  const response = await fetch(setParam(apiEndpoints.ticket.create,params), {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${getToken()?.access}`
-    },
-    body: formData,
-  });
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error('Błąd podczas tworzenia biletu');
-  }
+  const url = setParam(apiEndpoints.ticket.create, params);
 
-  return await response.json();
+  try {
+    const response = await apiClient.post(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw new Error("Błąd podczas tworzenia biletu");
+  }
 };
 
 export const deleteTicket = async (
     params: Record<string, string>
 ): Promise<void> => {
-  const { getToken } = useAuthStore();
+  const url = setParam(apiEndpoints.ticket.delete, params);
 
-  const response = await fetch(setParam(apiEndpoints.ticket.delete, params), {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${getToken()?.access}`
-    },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
+  try {
+    await apiClient.delete(url);
+  } catch (error: any) {
     throw new Error("Błąd podczas usuwania biletu");
   }
 };
