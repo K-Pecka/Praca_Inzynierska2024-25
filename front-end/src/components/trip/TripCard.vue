@@ -47,7 +47,7 @@ const props = defineProps<{
           >
             <v-row align="center" no-gutters>
               <v-icon size="64" color="primary" class="mr-3">
-                mdi-arrow-left
+                mdi-calendar-check
               </v-icon>
               <v-col>
                 <v-card-title class="text-h5 font-weight-bold pa-0 color-text">
@@ -71,7 +71,9 @@ const props = defineProps<{
                 justify="center"
                 justify-md="end"
                 justify-lg="end"
+                align="center"
                 v-if="isOwner"
+                class="h-100"
             >
               <AppButton
                   color="primary-outline"

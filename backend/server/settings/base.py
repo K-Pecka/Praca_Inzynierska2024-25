@@ -190,9 +190,6 @@ USE_TZ = True
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_URL = 'user_auth/login/'
 
-# Database connection max age
-
-CONN_MAX_AGE = 0
 
 # Default primary key field type
 

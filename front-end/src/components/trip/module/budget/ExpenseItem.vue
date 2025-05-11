@@ -13,6 +13,7 @@ const {expense} = defineProps<{
   variant?: "manage" | "view";
   noIcon?: boolean;
 }>();
+
 const {icon, name: categoryName} = mapCategoryBudget(expense.category);
 const currencyValue =
     expense.currency != "PLN" ? `(${expense.converted_amount} PLN)` : "";
@@ -51,7 +52,10 @@ const currencyValue =
 
         <!-- Expense Amount -->
         <v-col class="text-h5 text-end" cols="12" sm="5" md="5" lg="5">
-          <v-row class="justify-space-between" no-gutters>
+          <v-row
+              :class="variant === 'manage' ? 'justify-space-between': 'justify-end'"
+              no-gutters
+          >
             <v-col cols="auto" sm="12" md="6" lg="8" class="pb-2">
               <v-row class="flex-column justify-center" no-gutters>
                 <strong class="text-black-70 mr-2">
@@ -68,8 +72,13 @@ const currencyValue =
             </v-col>
 
 
-            <template v-if="expense && expense.trip">
-              <v-col cols="auto" sm="12" md="6" lg="4">
+            <template v-if="expense && expense.trip && variant == 'manage'">
+              <v-col
+                  cols="auto"
+                  sm="12"
+                  md="6"
+                  lg="4"
+              >
                 <AppButton
                     color="red"
                     font-auto
