@@ -58,7 +58,7 @@ export const useActivityStore = defineStore("activity", () => {
     }) => createActivity(activityData, param),
     onSuccess: (_, variables) => {
       setSuccessCurrentMessage("Dodano aktywność");
-      queryClient.invalidateQueries({ queryKey: ["activities", Number(variables.param.tripId), Number(variables.param.planId)] });
+      queryClient.invalidateQueries({ queryKey: ["activities", variables.param.tripId, variables.param.planId] });
     },
     onError: () => {
         setError(true);
