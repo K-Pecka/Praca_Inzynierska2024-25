@@ -24,6 +24,7 @@ export default createVuetify({
           heroBg:'#ac6ed9',
           progressBarProgress:'#4caf50',
           progressBar:'#e0e0e0',
+          delete:"#c6564c"
         },
         variables: {
           borderRadius: '24px',

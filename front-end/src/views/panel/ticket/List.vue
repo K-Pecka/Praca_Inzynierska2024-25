@@ -91,7 +91,17 @@ const filteredTickets = () => {
 const toggleForm = () => {
   showForm.value = !showForm.value;
 };
-
+import {useSafeDelete} from "@/composables/useSafeDelete";
+const {confirmAndRun} = useSafeDelete();
+const handleDelete = (trip: number) => {
+  confirmAndRun(() => {
+    handleDeleteTicket(trip);
+  }, {
+    title: "Potwierdź usunięcie biletu",
+    message: "Czy na pewno chcesz usunąć ten bilet? Tego działania nie można cofnąć.",
+    wordToConfirm: "USUŃ"
+  });
+};
 </script>
 
 <template>
@@ -214,7 +224,7 @@ const toggleForm = () => {
                     <v-col cols="6" sm="6" md="12" lg="12" class="text-end">
                       <AppButton
                           color="red"
-                          @click="() => handleDeleteTicket(ticket.id)"
+                          @click="() => handleDelete(ticket.id)"
                           font-auto
                           max-width="190px"
                           text="Usuń bilet"

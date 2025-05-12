@@ -5,9 +5,9 @@ import {Section} from "@/components";
 import ParticipantList from "@/components/trip/module/participant/ParticipantList.vue";
 import ParticipantsCounter from "@/components/trip/module/participant/ParticipantsCounter.vue";
 import ParticipantAddForm from "@/components/trip/module/participant/ParticipantAddForm.vue";
-import {useTripStore, useNotificationStore,useAuthStore} from "@/stores";
+import {useTripStore, useNotificationStore,useAuthStore, useUtilsStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
-
+const {getTripId} = useUtilsStore()
 const {setErrorCurrentMessage} = useNotificationStore();
 const route = useRoute();
 const tripId = Number(route.params.tripId);
@@ -37,12 +37,20 @@ function inviteParticipant(participant: { name: string; email: string }) {
   showForm.value=false
 }
 
-function removeParticipantById(id: number) {
-  removeParticipant(Number(tripId), id);
-}
-
 const toggleForm = () => {
   showForm.value = !showForm.value;
+};
+
+import {useSafeDelete} from "@/composables/useSafeDelete";
+const {confirmAndRun} = useSafeDelete();
+const removeParticipantById = (id: number) => {
+  confirmAndRun(() => {
+    removeParticipant(Number(getTripId()), id);
+  }, {
+    title: "Potwierdź usunięcie uczestnika",
+    message: "Czy na pewno chcesz usunąć tego uczestnika? Tego działania nie można cofnąć.",
+    wordToConfirm: "USUŃ"
+  });
 };
 </script>
 

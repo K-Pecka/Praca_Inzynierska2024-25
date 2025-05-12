@@ -19,7 +19,6 @@ export const fetchExpenseCreate = async (newExpense: Expense, param: Record<stri
   const url = setParam(apiEndpoints.expense.create, {tripId:String(newExpense.trip)});
   
   const { data, error } = await fetchData(url, "POST", newExpense);
-console.log(url,error)
   if (error) {
     throw new Error(error);
   }
