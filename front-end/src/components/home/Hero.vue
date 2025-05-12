@@ -40,13 +40,16 @@ const props = defineProps({
 </template>
 <style scoped lang="scss">
 @use "@/assets/styles/style" as *;
-.hero__image{
+
+.hero__image {
   fill: rgb(var(--v-theme-hero-bg));
 }
+
 .hero {
   padding-top: 5%;
   margin-bottom: 20%;
   width: 70%;
+
   &__text {
     font-weight: 700;
     text-transform: uppercase;
@@ -59,14 +62,15 @@ const props = defineProps({
     transition: transform 0.3s ease;
     padding: 2rem 0;
 
-    &__word {
-      @include gradient-text;
-    }
     font-size: clamp(2rem, 4.5vw, 30rem);
     line-height: 1;
 
     @media (max-width: 959px) {
       font-size: 10vw;
+    }
+
+    &__word {
+      @include gradient-text;
     }
   }
 
@@ -75,4 +79,5 @@ const props = defineProps({
     justify-content: flex-end;
   }
 }
+
 </style>
