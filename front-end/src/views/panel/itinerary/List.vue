@@ -51,7 +51,7 @@ const { isOwner } = userData;
             />
             <router-link :to="{ name: 'createPlan', params: { tripId: String(getTripId()) } }">
               <AppButton
-                  color="secondary"
+                  color="primary"
                   class="plan-button"
                   width="300px"
                   height="height-auto"

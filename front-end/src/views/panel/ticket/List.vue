@@ -135,7 +135,7 @@ const toggleForm = () => {
                     contain
                 />
                 <AppButton
-                    color="secondary"
+                    color="primary"
                     class="plan-button"
                     width="300px"
                     height="height-auto"
