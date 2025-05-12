@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   text?: string;
   color?: "primary" | "secondary" | "accent" | "empty" | "orange" | "red" | "primary-outline";
   width?: string;
@@ -12,9 +12,8 @@ defineProps<{
   fontAuto?: boolean | string;
   dense?: boolean | string;
   stretch?: boolean | string;
-  onClick?: () => any
+  onClick?: () => any;
 }>();
-
 </script>
 
 <template>

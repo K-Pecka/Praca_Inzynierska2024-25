@@ -3,9 +3,10 @@ import {Expense} from "@/types";
 import AppCard from "@/components/AppCard.vue";
 import {useUtilsStore} from "@/stores";
 import {AppButton} from "@/components";
-import {getMutationExpenseDelete} from "@/api/services/expenseQuery";
+import { useTripStore } from "@/stores";
 
-const {mutate} = getMutationExpenseDelete(Option);
+const {budget} = useTripStore();
+const {deleteExpense} = budget;
 
 const {mapCategoryBudget} = useUtilsStore();
 const {expense} = defineProps<{
@@ -84,7 +85,7 @@ const currencyValue =
                     font-auto
                     max-width="190px"
                     text="Usuń Wydatek"
-                    @click="mutate({ expenseId: Number(expense.id), tripId: Number(expense.trip) })"
+                    @click="deleteExpense.mutate({ expenseId: String(expense.id), tripId: String(expense.trip) })"
                 />
               </v-col>
             </template>

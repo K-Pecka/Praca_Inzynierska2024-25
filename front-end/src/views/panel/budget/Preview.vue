@@ -23,14 +23,12 @@ const {getExpensByTrip} = budgetStore;
 
 const onExpenseAdded = () => {
   showForm.value = false;
-  refetchExpenses();
 };
 
 const {getTripDetails} = tripStore;
 const {trip} = getTripDetails();
 const {
   expensesByTrip: expenses,
-  refetchExpenses
 } = getExpensByTrip();
 const budget = computed(() => Number(trip.value?.budget_amount) ?? 0);
 const budgetCurrency = computed(() => "PLN");
@@ -88,6 +86,7 @@ const ExpensesByUser = computed(() => {
       }, {} as Record<string, number>) || {}
   );
 });
+const membersItem = computed(() => useMembersStore().members.filter(e=>!e.is_guest) || []);
 </script>
 
 <template>
@@ -142,7 +141,7 @@ const ExpensesByUser = computed(() => {
           <v-col cols="12" v-if="showForm">
             <v-row>
               <ExpenseForm
-                  :members="members"
+                  :members="membersItem"
                   @cancelForm="showForm = false"
                   @submitted="onExpenseAdded"
                   class="form-container"

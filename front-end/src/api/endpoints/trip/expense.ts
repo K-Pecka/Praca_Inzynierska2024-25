@@ -15,22 +15,22 @@ export const fetchExpenses = async (queryKey: [string, number]) => {
 
   return data;
 };
+export const fetchExpenseCreate = async (newExpense: Expense, param: Record<string, string> = {}) => {
+  const url = setParam(apiEndpoints.expense.create, {tripId:String(newExpense.trip)});
+  
+  const { data, error } = await fetchData(url, "POST", newExpense);
+console.log(url,error)
+  if (error) {
+    throw new Error(error);
+  }
 
+  return {tripId:String(newExpense.trip)};
+};
+export const fetchExpenseDelete = async (param: Record<string, string> = {}) => {
 
-interface DeleteExpenseInput {
-  expenseId: number;
-  tripId: number;
-}
-
-//@ts-ignore
-export const fetchExpenseDelete: MutationFunction<null, DeleteExpenseInput> = async ({
-  expenseId,
-  tripId,
-}) => {
-  const param = { tripId: String(tripId), expenseId: String(expenseId) };
   const url = setParam(`${apiEndpoints.expense.delete}`, param);
   const { data, error } = await fetchData<null>(url, 'DELETE');
 
   if (error) throw new Error(error);
-  return data;
+  return param;
 };

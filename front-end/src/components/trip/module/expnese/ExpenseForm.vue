@@ -7,11 +7,11 @@ const categoryBudget = budget;
 import {useTripStore} from "@/stores/trip/useTripStore";
 import { User } from "@/types";
 import { useUtilsStore } from "@/stores";
-const {trip:tripStore,createExpense} = useTripStore();
+const {trip:tripStore,budget:budgetStore} = useTripStore();
 const {getTripDetails} = tripStore;
+const {createExpense} = budgetStore;
 const {trip} = getTripDetails();
 const tripDateStart = computed(()=>trip?.value?.end_date || '')
-
 const {getTripId} = useUtilsStore();
 const {members} = defineProps<{
   members: User[]
@@ -21,12 +21,11 @@ const form = ref({
   amount: 0,
   currency: "PLN",
   date: "",
-  user: "",
+  user: members[0],
   category: 1,
   note: "",
 });
 const emit = defineEmits(["cancelForm", "submitted"]);
-
 const submitTicket = () => {
   createExpense.mutate({
     trip: getTripId(),
@@ -34,7 +33,7 @@ const submitTicket = () => {
     amount: form.value.amount,
     currency: form.value.currency,
     date: new Intl.DateTimeFormat('pl-PL').format(new Date(form.value.date)),
-    user: form.value.user !== "" ? Number(form.value.user) : members[0].userId,
+    user: typeof form.value.user === 'object' && 'userId' in form.value.user ? form.value.user.userId : form.value.user,
     category: form.value.category,
     note: form.value.note,
   }, {
