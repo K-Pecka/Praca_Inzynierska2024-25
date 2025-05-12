@@ -23,7 +23,7 @@ const activityStore = useActivityStore();
 
 const {trip} = getTripDetails();
 const {data: plansData} = getPlans(tripId);
-const {data: activities, isSuccess} = activityStore.getActivity(tripId, planId);
+const {data: activities, isSuccess} = activityStore.getActivity();
 
 const isOwnerValue = computed(() => {
   const creatorId = trip.value?.creator?.id;

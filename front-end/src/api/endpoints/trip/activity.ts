@@ -30,7 +30,6 @@ export const fetchActivityDelete = async (param: Record<string, string> = {}) =>
     
     const url = setParam(apiEndpoints.activity.delete, param);
     const { error } = await fetchData(url, "DELETE");
-
     if (error) {
         throw new Error(error);
     }
