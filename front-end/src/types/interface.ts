@@ -230,6 +230,7 @@ export interface Activity {
   location?: string;
   assignedTo?: string;
   description?: string;
+  ticekt?:string;
 }
 export interface User {
   userId: number;

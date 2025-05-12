@@ -3,7 +3,6 @@ import { Activity, ActivityType } from "@/types";
 
 export const createActivity = async (newActivity: Activity, param: Record<string, string> = {}) => {
     const url = setParam(apiEndpoints.activity.create, param);
-
     const { data, error } = await fetchData<Activity>(url, "POST", newActivity);
 
     if (error) {
