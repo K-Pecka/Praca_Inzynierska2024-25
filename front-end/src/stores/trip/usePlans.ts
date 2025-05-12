@@ -12,9 +12,9 @@ export const usePlans = (tripId:Function) => {
     const deleteItineraryMutation = useMutation({
         mutationFn: ({ tripId, planId }: { tripId: string; planId: string }) =>
             deleteItinerary({ tripId, planId }),
-        onSuccess: (data) => {
+        onSuccess: ({tripId}) => {
             notifications.setSuccessCurrentMessage("Pomyślnie usunięto plan");
-            queryClient.invalidateQueries({ queryKey: ["plans", data?.tripId] });
+            queryClient.invalidateQueries({ queryKey: ["plans", Number(tripId)] });
         },
         onError: (err) => notifications.setErrorCurrentMessage(err.message),
     });
@@ -28,9 +28,10 @@ export const usePlans = (tripId:Function) => {
     const planMutationAdd = useMutation({
         mutationFn: ({ data, tripId }: { data: Plan; tripId: number }) =>
             createPlan(data, { tripId: String(tripId) }),
-        onSuccess: () => {
+        onSuccess: ({tripId}) => {
             router.back();
             notifications.setSuccessCurrentMessage("Dodano plan");
+            queryClient.invalidateQueries({ queryKey: ["plans", Number(tripId)] });
         },
         onError: () => {
             notifications.setErrorCurrentMessage("Błąd");
@@ -39,7 +40,7 @@ export const usePlans = (tripId:Function) => {
 
     const getPlans = (id?: string) =>
         useQuery({
-            queryKey: ["plans", id ?? tripId()],
+            queryKey: ["plans", Number(id ?? tripId())],
             queryFn: () => fetchPlans({ tripId: id ?? tripId() }),
         });
 
