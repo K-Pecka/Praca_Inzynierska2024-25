@@ -84,6 +84,12 @@ class _ExpenseTileState extends State<ExpenseTile> {
                 "Kwota: ${widget.expense.amount.toStringAsFixed(2)} ${widget.expense.currency}",
                 style: TextStyles.subtitle,
               ),
+              if (widget.expense.currency != 'PLN')
+                const SizedBox(height: 8),
+                Text(
+                  "Kwota w PLN: ${widget.expense.convertedAmount.toStringAsFixed(2)} PLN",
+                  style: TextStyles.subtitle,
+                ),
               const SizedBox(height: 8),
               Text(
                 "Data: ${DateFormat('dd.MM.yyyy').format(widget.expense.date)}",
@@ -202,13 +208,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
   String? _selectedCategoryLabel = 'Jedzenie';
 
   final List<String> _currencies = ['PLN', 'USD', 'EUR', 'GBP'];
-
-  final List<String> _categoryLabels = [
-    'Jedzenie',
-    'Transport',
-    'Atrakcja',
-    'Inne',
-  ];
+  final List<String> _categoryLabels = ['Jedzenie', 'Transport', 'Atrakcja', 'Inne'];
 
   final border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(16),
@@ -216,7 +216,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
   );
 
   Future<void> _pickDate() async {
-    final DateTime? picked = await showDatePicker(
+    final picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       locale: const Locale('pl', 'PL'),
@@ -233,18 +233,13 @@ class _ExpenseFormState extends State<ExpenseForm> {
   }
 
   Future<void> _submitForm() async {
-    if (!_formKey.currentState!.validate() ||
-        _selectedDate == null ||
-        _selectedCurrency == null) {
-      return;
-    }
+    if (!_formKey.currentState!.validate() || _selectedDate == null) return;
 
-    final String title = _titleController.text.trim();
-    final double amount = double.parse(_amountController.text);
-    final String date = DateFormat('dd.MM.yyyy').format(_selectedDate!);
-    final String currency = _selectedCurrency!;
-    final String category =
-        (_categoryLabels.indexOf(_selectedCategoryLabel!) + 1).toString();
+    final title = _titleController.text.trim();
+    final amount = double.parse(_amountController.text);
+    final date = DateFormat('dd.MM.yyyy').format(_selectedDate!);
+    final currency = _selectedCurrency!;
+    final category = (_categoryLabels.indexOf(_selectedCategoryLabel!) + 1).toString();
 
     widget.onSaved();
 
@@ -259,12 +254,8 @@ class _ExpenseFormState extends State<ExpenseForm> {
         note: '',
         category: category,
       );
-
       widget.onAdded();
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Wydatek dodany')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wydatek dodany')));
     } catch (e) {
       handleError(context, e, userMessage: 'Nie udało się dodać elementu.');
     }
@@ -281,19 +272,17 @@ class _ExpenseFormState extends State<ExpenseForm> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Form(
-        key: _formKey,
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          color: const Color(0xFFF4F2FF),
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Dodaj wydatek', style: TextStyles.subtitle),
+                const Center(child: Text('Dodaj wydatek', style: TextStyles.cardTitleHeading)),
                 const SizedBox(height: 16),
 
                 buildInputField(
@@ -302,16 +291,13 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   keyboardType: TextInputType.text,
                   style: TextStyles.cardTitleHeading,
                   border: border,
-                  validator:
-                      (val) =>
-                          val == null || val.isEmpty ? 'Podaj tytuł' : null,
+                  validator: (val) => val == null || val.isEmpty ? 'Podaj tytuł' : null,
                 ),
-                const SizedBox(height: 12),
 
+                const SizedBox(height: 12),
                 Row(
                   children: [
                     Expanded(
-                      flex: 1,
                       child: buildInputField(
                         controller: _amountController,
                         label: 'Kwota',
@@ -320,38 +306,24 @@ class _ExpenseFormState extends State<ExpenseForm> {
                         border: border,
                         validator: (val) {
                           if (val == null || val.isEmpty) return 'Podaj kwotę';
-                          if (double.tryParse(val) == null) {
-                            return 'Niepoprawna liczba';
-                          }
+                          if (double.tryParse(val) == null) return 'Niepoprawna liczba';
                           return null;
                         },
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      flex: 1,
                       child: CustomDropdown<String>(
                         items: _currencies,
                         initialItem: _selectedCurrency,
-                        hintText: '',
-                        onChanged: (String? newCurrency) {
-                          if (newCurrency != null) {
-                            setState(() => _selectedCurrency = newCurrency);
-                          }
-                        },
+                        onChanged: (val) => setState(() => _selectedCurrency = val),
                         decoration: CustomDropdownDecoration(
                           closedFillColor: AppColors.cardsBackground,
-                          closedBorder: Border.all(
-                            color: Colors.black38,
-                            width: 1.2,
-                          ),
+                          closedBorder: Border.all(color: Colors.black38, width: 1.2),
                           closedBorderRadius: BorderRadius.circular(16),
-                          closedSuffixIcon: const Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                          ),
+                          closedSuffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
                           headerStyle: TextStyles.cardTitleHeading,
-                          hintStyle: TextStyles.subtitle,
-                          listItemStyle: TextStyles.subtitle,
+                          listItemStyle: TextStyles.subtitle
                         ),
                       ),
                     ),
@@ -359,7 +331,6 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 ),
 
                 const SizedBox(height: 12),
-
                 buildInputField(
                   controller: _dateController,
                   label: 'Data',
@@ -368,52 +339,38 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   keyboardType: TextInputType.text,
                   style: TextStyles.cardTitleHeading,
                   border: border,
-                  validator:
-                      (_) => _selectedDate == null ? 'Wybierz datę' : null,
+                  validator: (_) => _selectedDate == null ? 'Wybierz datę' : null,
                 ),
 
                 const SizedBox(height: 12),
-
                 CustomDropdown<String>(
                   items: _categoryLabels,
                   initialItem: _selectedCategoryLabel,
-                  hintText: 'Wybierz kategorię',
-                  onChanged: (String? newLabel) {
-                    if (newLabel != null) {
-                      setState(() => _selectedCategoryLabel = newLabel);
-                    }
-                  },
+                  onChanged: (val) => setState(() => _selectedCategoryLabel = val),
                   decoration: CustomDropdownDecoration(
-                    closedFillColor: const Color(0xFFF4F2FF),
+                    closedFillColor: AppColors.cardsBackground,
                     closedBorder: Border.all(color: Colors.black38, width: 1.2),
                     closedBorderRadius: BorderRadius.circular(16),
-                    closedSuffixIcon: const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                    ),
+                    closedSuffixIcon: const Icon(Icons.keyboard_arrow_down_rounded),
                     headerStyle: TextStyles.cardTitleHeading,
-                    hintStyle: TextStyles.subtitle,
-                    listItemStyle: TextStyles.subtitle,
+                      listItemStyle: TextStyles.subtitle
                   ),
                 ),
 
-                const SizedBox(height: 16),
-
-                Align(
-                  alignment: Alignment.centerRight,
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _submitForm,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF6C55ED),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    child: const Text(
-                      'Zapisz',
-                      style: TextStyles.whiteSubtitle,
-                    ),
+                    child: const Text('Zapisz', style: TextStyles.whiteSubtitle),
                   ),
                 ),
+                SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 24),
               ],
             ),
           ),

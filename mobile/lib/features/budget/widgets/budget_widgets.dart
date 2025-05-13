@@ -94,27 +94,54 @@ class _BudgetOverviewCardState extends State<BudgetOverviewCard> {
 }
 
 
-class ToggleExpenseFormButton extends StatelessWidget {
+class BudgetActionsRow extends StatelessWidget {
   final bool showForm;
-  final VoidCallback onToggle;
+  final VoidCallback onToggleForm;
+  final VoidCallback onFilter;
 
-  const ToggleExpenseFormButton({
+  const BudgetActionsRow({
     super.key,
     required this.showForm,
-    required this.onToggle,
+    required this.onToggleForm,
+    required this.onFilter,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: IconButton(
-        icon: Icon(
-          showForm ? Icons.remove_circle_outline : Icons.add_circle_outline,
-          size: 48,
-          color: AppColors.primary,
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton(
+            onPressed: onToggleForm,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(
+              showForm ? 'Anuluj' : 'Dodaj',
+              style: TextStyles.whiteSubtitle,
+            ),
+          ),
         ),
-        onPressed: onToggle,
-      ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: onFilter,
+            icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+            label: const Text('Filtruj', style: TextStyles.whiteSubtitle),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
