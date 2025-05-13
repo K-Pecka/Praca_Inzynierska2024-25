@@ -1,5 +1,5 @@
 import django_filters
-from trips.models import Trip
+from trips.models import Expense, Trip
 
 class TripFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(field_name="name", lookup_expr="icontains")
@@ -24,3 +24,26 @@ class TripFilter(django_filters.FilterSet):
         if value:
             return queryset.filter(creator=profile)
         return queryset.exclude(creator=profile)
+
+
+class ExpenseFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(lookup_expr='icontains', label="Tytuł")
+    amount_min = django_filters.NumberFilter(field_name="amount", lookup_expr='gte', label="Kwota od")
+    amount_max = django_filters.NumberFilter(field_name="amount", lookup_expr='lte', label="Kwota do")
+    currency = django_filters.CharFilter(field_name="currency", label="Waluta")
+    date = django_filters.DateFilter(field_name="date", label="Dokładna data")
+    date_from = django_filters.DateFilter(field_name="date", lookup_expr='gte', label="Data od")
+    date_to = django_filters.DateFilter(field_name="date", lookup_expr='lte', label="Data do")
+
+    class Meta:
+        model = Expense
+        fields = [
+            "title",
+            "amount_min",
+            "amount_max",
+            "currency",
+            "date",
+            "date_from",
+            "date_to"
+        ]
+
