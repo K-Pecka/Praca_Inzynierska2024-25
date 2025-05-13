@@ -195,6 +195,10 @@ class UserProfile(BaseModel):
     def trips(self):
         return self.trips_as_member.all()
 
+    @property
+    def is_guide(self):
+        return self.
+
     @classmethod
     def get_profile_by_email(cls, email):
         """

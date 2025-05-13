@@ -255,3 +255,21 @@ class IsTicketOwner(BasePermission):
         if not profile:
             return False
         return obj.owner == profile or profile in obj.profiles.all()
+
+
+class IsExpenseOwnerOrTripCreator(BasePermission):
+    """
+    Permission class to check if the user is the owner of an expense.
+
+    This permission ensures that only the owner of a specific expense has the
+    rights to access or modify it. It performs a validation by cross-checking
+    the user associated with the request against the owner of the expense
+    instance being accessed.
+
+    Attributes:
+        None
+    """
+    message = "Tylko właściciel wydatku lub przewodnik wycieczki może wykonać tę akcję."
+
+    def has_object_permission(self, request, view, obj):
+        return request.user.get_default_profile() in [obj.user, obj.trip.creator]
