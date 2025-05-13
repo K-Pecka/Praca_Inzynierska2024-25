@@ -72,6 +72,7 @@ class UserAPITestCase(TestCase):
         data = {
             'email': 'newuser@example.com',
             'password': 'NewPassword123',
+            'password_confirm': 'NewPassword123',
             'first_name': 'New',
             'last_name': 'User',
         }
