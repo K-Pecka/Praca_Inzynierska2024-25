@@ -102,9 +102,40 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    email = serializers.EmailField(required=False)
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
+    password = serializers.CharField(write_only=True, required=False)
+    password_confirm = serializers.CharField(write_only=True, required=False)
+
+    def validate(self, data):
+        password = data.get('password')
+        password_confirm = data.get('password_confirm')
+
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            raise serializers.ValidationError(e.messages)
+
+        if password or password_confirm:
+            if password != password_confirm:
+                raise serializers.ValidationError("Hasła muszą być takie same.")
+            if password and len(password) < 8:
+                raise serializers.ValidationError("Hasło musi mieć co najmniej 8 znaków.")
+
+        return data
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        if password:
+            instance.set_password(password)
+
+        return super().update(instance, validated_data)
+
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'first_name', 'last_name']
+        fields = ['id', 'email', 'first_name', 'last_name', 'password', 'password_confirm']
         read_only_fields = ['id']
 
 
