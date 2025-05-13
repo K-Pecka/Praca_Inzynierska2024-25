@@ -15,11 +15,11 @@ class ChatService {
     final url = Uri.parse('$baseUrl/trip/$tripId/chat/chatroom/all/');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${AuthService.accessToken}',
-      'accept': 'application/json',
+      'accept': 'application/json; charset=utf-8',
     });
 
     if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
+      final List data = jsonDecode(utf8.decode(response.bodyBytes));
       return data.map((e) => ChatroomModel.fromJson(e)).toList();
     } else {
       throw Exception("Błąd ładowania pokojów: ${response.body}");
@@ -31,11 +31,11 @@ class ChatService {
 
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${AuthService.accessToken}',
-      'accept': 'application/json',
+      'accept': 'application/json; charset=utf-8',
     });
 
     if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
+      final List data = jsonDecode(utf8.decode(response.bodyBytes));
       return data.map((e) => MessageModel.fromJson(e)).toList();
     } else {
       throw Exception("Błąd ładowania wiadomości: ${response.statusCode}");
@@ -54,7 +54,6 @@ class ChatService {
     }
 
     final uri = Uri.parse('wss://api.plannder.com/ws/chat/$chatroomId/?token=$token');
-
     return WebSocketChannel.connect(uri);
   }
 
@@ -64,7 +63,8 @@ class ChatService {
   }) {
     channel.stream.listen(
           (data) {
-        final msg = MessageModel.fromJson(jsonDecode(data));
+        final decoded = data is String ? data : utf8.decode(data);
+        final msg = MessageModel.fromJson(jsonDecode(decoded));
         onMessage(msg);
       },
     );

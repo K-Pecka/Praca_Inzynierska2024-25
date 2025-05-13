@@ -14,7 +14,7 @@ class TripService {
       headers: {
         'Authorization': 'Bearer ${AuthService.accessToken}',
         'Content-Type': 'application/json',
-        'accept': 'application/json',
+        'accept': 'application/json; charset=utf-8',
       },
     );
 
@@ -26,7 +26,7 @@ class TripService {
           headers: {
             'Authorization': 'Bearer ${AuthService.accessToken}',
             'Content-Type': 'application/json',
-            'accept': 'application/json',
+            'accept': 'application/json; charset=utf-8',
           },
         );
       }
@@ -39,7 +39,7 @@ class TripService {
     final response = await _authorizedGet('/trip/all/');
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
+      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
       return data.map((e) => TripModel.fromJson(e)).toList();
     } else {
       throw Exception('Błąd podczas pobierania wycieczek');
@@ -50,21 +50,20 @@ class TripService {
     final trips = await getAllTrips();
 
     return trips.firstWhere(
-      (trip) => trip.id == tripId,
-      orElse:
-          () =>
-              trips.isNotEmpty
-                  ? trips.first
-                  : TripModel(
-                    id: -1,
-                    name: 'Brak',
-                    creator: Member(id: 0, email: 'brak@brak.pl'),
-                    members: [],
-                    startDate: DateTime.now(),
-                    endDate: DateTime.now(),
-                    isCreator: false,
-                    budgetAmount: 0.0,
-                  ),
+          (trip) => trip.id == tripId,
+      orElse: () =>
+      trips.isNotEmpty
+          ? trips.first
+          : TripModel(
+        id: -1,
+        name: 'Brak',
+        creator: Member(id: 0, email: 'brak@brak.pl'),
+        members: [],
+        startDate: DateTime.now(),
+        endDate: DateTime.now(),
+        isCreator: false,
+        budgetAmount: 0.0,
+      ),
     );
   }
 }

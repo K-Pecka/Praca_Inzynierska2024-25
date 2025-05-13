@@ -14,7 +14,7 @@ class ItineraryService {
       url,
       headers: {
         'Authorization': 'Bearer ${AuthService.accessToken}',
-        'accept': 'application/json',
+        'accept': 'application/json; charset=utf-8',
         'Content-Type': 'application/json',
       },
     );
@@ -26,7 +26,7 @@ class ItineraryService {
           url,
           headers: {
             'Authorization': 'Bearer ${AuthService.accessToken}',
-            'accept': 'application/json',
+            'accept': 'application/json; charset=utf-8',
             'Content-Type': 'application/json',
           },
         );

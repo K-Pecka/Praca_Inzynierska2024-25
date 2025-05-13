@@ -13,7 +13,7 @@ class TicketService {
       url,
       headers: {
         'Authorization': 'Bearer ${AuthService.accessToken}',
-        'accept': 'application/json',
+        'accept': 'application/json; charset=utf-8',
       },
     );
 
@@ -27,7 +27,7 @@ class TicketService {
     }
 
     if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
+      final List data = jsonDecode(utf8.decode(response.bodyBytes));
       return data.map((e) => TicketModel.fromJson(e)).toList();
     } else {
       throw Exception('Błąd pobierania biletów: ${response.body}');
