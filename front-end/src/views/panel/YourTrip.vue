@@ -128,7 +128,8 @@ const handleDelete = (tripId: string) => {
             />
             <router-link :to="{ name: 'createTrip' }">
               <AppButton
-                  color="secondary"
+                  width="300px"
+                  color="primary"
                   text="Dodaj wycieczkę"
               />
             </router-link>
