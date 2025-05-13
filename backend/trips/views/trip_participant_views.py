@@ -207,12 +207,6 @@ class JoinTripAPIView(RetrieveAPIView):
             return Response({"error": f"{_('Nie udało się dodać użytkownika do wycieczki:')} {str(e)}"},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            login(request, user)
-        except Exception as e:
-            return Response({'error': f"{_('Nie udało się zalogować użytkownika:')} {str(e)}"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
         return HttpResponseRedirect(settings.TRIP_JOINING_PAGE)
 
     def get_trip_access_token(self, token):
