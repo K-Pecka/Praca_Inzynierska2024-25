@@ -4,7 +4,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from server.permissions import IsTripParticipant
+from server.permissions import IsTripParticipant, IsExpenseOwnerOrTripCreator
 from trips.models import Expense, ExpenseType
 from trips.serializers.expense_serializers import ExpenseCreateSerializer, ExpenseRetrieveSerializer, \
     ExpenseListSerializer, ExpenseUpdateSerializer, ExpenseDeleteSerializer, ExpenseTypeListAPIView
@@ -46,7 +46,7 @@ class ExpenseUpdateAPIView(UpdateAPIView):
 @extend_schema(tags=['expense'])
 class ExpenseDestroyAPIView(DestroyAPIView):
     queryset = Expense.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsExpenseOwnerOrTripCreator]
     serializer_class = ExpenseDeleteSerializer
 
 
