@@ -63,13 +63,18 @@ class _PrivateChatScreenState extends State<PrivateChatScreen> {
       String fullName = 'Nieznany użytkownik';
 
       if (otherId != null) {
-        final localMember = widget.trip.members.firstWhere(
-              (m) => m.id == otherId,
-          orElse: () => Member(id: otherId, email: ''),
-        );
+        Member member;
 
-        fullName = '${localMember.firstName ?? ''} ${localMember.lastName ?? ''}'.trim();
-        if (fullName.isEmpty) fullName = localMember.email;
+        try {
+          member = widget.trip.members.firstWhere((m) => m.id == otherId);
+        } catch (_) {
+          member = widget.trip.creator.id == otherId
+              ? widget.trip.creator
+              : Member(id: otherId, email: '');
+        }
+
+        fullName = '${member.firstName ?? ''} ${member.lastName ?? ''}'.trim();
+        if (fullName.isEmpty) fullName = member.email;
       }
 
       setState(() {

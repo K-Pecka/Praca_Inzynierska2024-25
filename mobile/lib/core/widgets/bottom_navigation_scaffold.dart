@@ -68,7 +68,14 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
       body: screens[_currentIndex],
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        trip: _currentTrip,
+        onTap: (index) {
+          final isChatTab = index == 4;
+          final isGuide = _currentTrip.creator.type == 2;
+
+          if (isChatTab && !isGuide) return;
+          setState(() => _currentIndex = index);
+        },
       ),
     );
   }

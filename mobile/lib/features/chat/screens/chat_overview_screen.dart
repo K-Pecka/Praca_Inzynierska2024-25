@@ -63,10 +63,15 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
       orElse: () => room.creatorId,
     );
 
-    final member = widget.trip.members.firstWhere(
-          (m) => m.id == otherId,
-      orElse: () => Member(id: otherId, email: ''),
-    );
+    Member member;
+
+    try {
+      member = widget.trip.members.firstWhere((m) => m.id == otherId);
+    } catch (_) {
+      member = widget.trip.creator.id == otherId
+          ? widget.trip.creator
+          : Member(id: otherId, email: '');
+    }
 
     final name = '${member.firstName ?? ''} ${member.lastName ?? ''}'.trim();
     return name.isNotEmpty ? name : member.email;
@@ -78,15 +83,21 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
       orElse: () => room.creatorId,
     );
 
-    final member = widget.trip.members.firstWhere(
-          (m) => m.id == otherId,
-      orElse: () => Member(id: otherId, email: ''),
-    );
+    Member member;
+
+    try {
+      member = widget.trip.members.firstWhere((m) => m.id == otherId);
+    } catch (_) {
+      member = widget.trip.creator.id == otherId
+          ? widget.trip.creator
+          : Member(id: otherId, email: '');
+    }
 
     final first = (member.firstName?.isNotEmpty ?? false) ? member.firstName![0] : '';
     final last = (member.lastName?.isNotEmpty ?? false) ? member.lastName![0] : '';
 
-    return (first + last).toUpperCase();
+    final initials = (first + last).toUpperCase();
+    return initials.isNotEmpty ? initials : member.email.characters.first.toUpperCase();
   }
 
   @override
