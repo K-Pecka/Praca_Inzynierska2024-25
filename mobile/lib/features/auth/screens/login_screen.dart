@@ -82,37 +82,33 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 60),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  buildLogo(),
-                  buildTitle(widget.title),
-                  const SizedBox(height: 24),
-                  buildLoginForm(
-                    emailController: _emailController,
-                    passwordController: _passwordController,
-                    isLoading: _isLoading,
-                    onLogin: _handleLogin,
-                    borderColor: widget.borderColor,
-                  ),
-                  const SizedBox(height: 16),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      'powrót',
-                      style: TextStyles.loginReturnButton,
-                    ),
-                  ),
-                ],
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 60),
+              buildLogo(),
+              buildTitle(widget.title),
+              const SizedBox(height: 24),
+              buildLoginForm(
+                emailController: _emailController,
+                passwordController: _passwordController,
+                isLoading: _isLoading,
+                onLogin: _handleLogin,
+                borderColor: widget.borderColor,
               ),
-            ),
-            const Spacer(),
-          ],
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  'powrót',
+                  style: TextStyles.loginReturnButton,
+                ),
+              ),
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
