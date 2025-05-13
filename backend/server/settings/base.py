@@ -143,6 +143,9 @@ SPECTACULAR_SETTINGS = {
     'REDOC_DIST': 'SIDECAR',
     'DISABLE_DEFAULT_SCHEMA_GROUPING': True,
     'COMPONENT_SPLIT_REQUEST': True,
+    'FILTER_INSPECTORS': [
+        'drf_spectacular.contrib.django_filters.DjangoFilterInspector',
+    ],
     'TAGS': [
         {'name': 'trip', 'description': 'Endpoints for managing trips.'},
         {'name': 'ticket', 'description': 'Endpoints for managing tickets.'},
