@@ -49,10 +49,9 @@ def handle_remove(trip, data):
     })
 
 
-def send_invitation_email(name, email, trip, invitation_link):
+def send_invitation_email(email, trip, invitation_link):
     subject = f"{_('Zaproszenie do wycieczki')} {trip.name}"
     html_message = render_to_string('emails/trip_invitation_email.html', {
-        'name': name,
         'trip_name': trip.name,
         'start_date': trip.start_date,
         'end_date': trip.end_date,
@@ -128,7 +127,6 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         if not CustomUser.objects.filter(email=data['email']).exists():
             try:
                 user = CustomUser.create_guest_account(
-                        data['name'],
                         data['email']
                 )
             except Exception as e:
@@ -150,7 +148,6 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         invitation_link = self.create_invitation_link(trip, profile.user)
 
         send_invitation_email(
-            name=data.get('name', profile.user.full_name),
             email=data.get('email', profile.user.email),
             trip=trip,
             invitation_link=invitation_link

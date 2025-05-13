@@ -21,6 +21,7 @@ class CustomUser(AbstractBaseUser, BaseModel):
     first_name = models.CharField(
         max_length=32,
         blank=True,
+        null=True,
         validators=[validate_only_alphabetic],
         verbose_name=_("Imię"),
         help_text=_("Imię użytkownika")
@@ -28,6 +29,7 @@ class CustomUser(AbstractBaseUser, BaseModel):
     last_name = models.CharField(
         max_length=32,
         blank=True,
+        null=True,
         validators=[validate_only_alphabetic],
         verbose_name=_("Nazwisko"),
         help_text=_("Nazwisko użytkownika")
@@ -95,12 +97,10 @@ class CustomUser(AbstractBaseUser, BaseModel):
         return self
 
     @classmethod
-    def create_guest_account(cls, name, email):
+    def create_guest_account(cls, email):
         try:
             user = cls.objects.create(
                 email=email,
-                first_name=f"{name}",
-                last_name="",
                 is_active=True,
                 is_guest=True
             )
