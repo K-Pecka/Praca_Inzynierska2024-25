@@ -3,8 +3,10 @@ from django.views.decorators.csrf import csrf_exempt
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
 from server.permissions import IsTripParticipant, IsExpenseOwnerOrTripCreator
+from trips.filters import ExpenseFilter
 from trips.models import Expense, ExpenseType
 from trips.serializers.expense_serializers import ExpenseCreateSerializer, ExpenseRetrieveSerializer, \
     ExpenseListSerializer, ExpenseUpdateSerializer, ExpenseDeleteSerializer, ExpenseTypeListAPIView
@@ -27,6 +29,8 @@ class ExpenseRetrieveAPIView(RetrieveAPIView):
 class ExpenseListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ExpenseListSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ExpenseFilter
 
     def get_queryset(self):
         return (Expense.objects
