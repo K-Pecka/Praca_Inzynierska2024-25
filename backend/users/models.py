@@ -22,7 +22,6 @@ class CustomUser(AbstractBaseUser, BaseModel):
         max_length=32,
         blank=True,
         null=True,
-        required=False,
         validators=[validate_only_alphabetic],
         verbose_name=_("Imię"),
         help_text=_("Imię użytkownika")
@@ -31,7 +30,6 @@ class CustomUser(AbstractBaseUser, BaseModel):
         max_length=32,
         blank=True,
         null=True,
-        required=False,
         validators=[validate_only_alphabetic],
         verbose_name=_("Nazwisko"),
         help_text=_("Nazwisko użytkownika")
