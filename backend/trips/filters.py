@@ -1,16 +1,16 @@
-import django_filters
+from django_filters import rest_framework as filters
 from trips.models import Expense, Trip
 
-class TripFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(field_name="name", lookup_expr="icontains")
+class TripFilter(filters.FilterSet):
+    name = filters.CharFilter(field_name="name", lookup_expr="icontains")
 
-    start_date_after = django_filters.DateFilter(field_name="start_date", lookup_expr="gte")
-    start_date_before = django_filters.DateFilter(field_name="start_date", lookup_expr="lte")
+    start_date_after = filters.DateFilter(field_name="start_date", lookup_expr="gte")
+    start_date_before = filters.DateFilter(field_name="start_date", lookup_expr="lte")
 
-    end_date_after = django_filters.DateFilter(field_name="end_date", lookup_expr="gte")
-    end_date_before = django_filters.DateFilter(field_name="end_date", lookup_expr="lte")
+    end_date_after = filters.DateFilter(field_name="end_date", lookup_expr="gte")
+    end_date_before = filters.DateFilter(field_name="end_date", lookup_expr="lte")
 
-    is_creator = django_filters.BooleanFilter(method="filter_is_creator")
+    is_creator = filters.BooleanFilter(method="filter_is_creator")
 
     class Meta:
         model = Trip
@@ -26,14 +26,14 @@ class TripFilter(django_filters.FilterSet):
         return queryset.exclude(creator=profile)
 
 
-class ExpenseFilter(django_filters.FilterSet):
-    title = django_filters.CharFilter(lookup_expr='icontains', label="Tytuł")
-    amount_min = django_filters.NumberFilter(field_name="amount", lookup_expr='gte', label="Kwota od")
-    amount_max = django_filters.NumberFilter(field_name="amount", lookup_expr='lte', label="Kwota do")
-    currency = django_filters.CharFilter(field_name="currency", label="Waluta")
-    date = django_filters.DateFilter(field_name="date", label="Dokładna data")
-    date_from = django_filters.DateFilter(field_name="date", lookup_expr='gte', label="Data od")
-    date_to = django_filters.DateFilter(field_name="date", lookup_expr='lte', label="Data do")
+class ExpenseFilter(filters.FilterSet):
+    title = filters.CharFilter(lookup_expr='icontains', label="Tytuł")
+    amount_min = filters.NumberFilter(field_name="amount", lookup_expr='gte', label="Kwota od")
+    amount_max = filters.NumberFilter(field_name="amount", lookup_expr='lte', label="Kwota do")
+    currency = filters.CharFilter(field_name="currency", label="Waluta")
+    date = filters.DateFilter(field_name="date", label="Dokładna data")
+    date_from = filters.DateFilter(field_name="date", lookup_expr='gte', label="Data od")
+    date_to = filters.DateFilter(field_name="date", lookup_expr='lte', label="Data do")
 
     class Meta:
         model = Expense
@@ -44,6 +44,6 @@ class ExpenseFilter(django_filters.FilterSet):
             "currency",
             "date",
             "date_from",
-            "date_to"
+            "date_to",
         ]
 
