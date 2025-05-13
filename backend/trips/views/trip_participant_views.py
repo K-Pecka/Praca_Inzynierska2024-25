@@ -213,4 +213,4 @@ class JoinTripAPIView(RetrieveAPIView):
             return Response({"error": f"{_('Nie udało się dodać użytkownika do wycieczki:')} {str(e)}"},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        return HttpResponseRedirect(settings.TRIP_JOINING_PAGE)
+        return HttpResponseRedirect(f"{settings.TRIP_JOINING_PAGE}?token={token}")
