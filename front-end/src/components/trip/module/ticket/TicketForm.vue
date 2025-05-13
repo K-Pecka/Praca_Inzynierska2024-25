@@ -5,6 +5,7 @@ import { VTimePicker } from "vuetify/labs/VTimePicker";
 import { VDateInput } from "vuetify/labs/components";
 import { ticketCategory } from "@/data/category/ticket";
 import { useTripStore } from "@/stores";
+import {User} from "@/types"
 const emit = defineEmits(["submitTicket", "cancelForm"]);
 const { trip: tripStore } = useTripStore();
 const { getTripDetails } = tripStore;
@@ -48,7 +49,7 @@ function submitTicket() {
 const timeMenu = ref(false);
 
 defineProps<{
-  members: { name: string; userId: number }[];
+  members: User[];
 }>();
 </script>
 

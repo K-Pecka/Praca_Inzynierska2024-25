@@ -1,36 +1,40 @@
 <script setup lang="ts">
-import {Expense} from "@/types";
+import { Expense } from "@/types";
 import AppCard from "@/components/AppCard.vue";
-import {useUtilsStore} from "@/stores";
-import {AppButton} from "@/components";
+import { useAuthStore, useUtilsStore } from "@/stores";
+import { AppButton } from "@/components";
 import { useTripStore } from "@/stores";
 
-const {budget} = useTripStore();
-const {deleteExpense} = budget;
+const { budget } = useTripStore();
+const { deleteExpense } = budget;
 
-const {mapCategoryBudget} = useUtilsStore();
-const {expense} = defineProps<{
+const { mapCategoryBudget } = useUtilsStore();
+const { expense, isOwnerTrip } = defineProps<{
+  isOwnerTrip: boolean;
   expense: Expense;
   variant?: "manage" | "view";
   noIcon?: boolean;
 }>();
 
-const {icon, name: categoryName} = mapCategoryBudget(expense.category);
+const { icon, name: categoryName } = mapCategoryBudget(expense.category);
 const currencyValue =
-    expense.currency != "PLN" ? `(${expense.converted_amount} PLN)` : "";
+  expense.currency != "PLN" ? `(${expense.converted_amount} PLN)` : "";
+const { getUser } = useAuthStore();
+const hasPermissionToDelete = (userId: number) => {
+  return isOwnerTrip || getUser()?.profiles?.[0]?.id == userId;
+};
 </script>
 
 <template>
   <AppCard
-      class="background-card"
-      no-padding
-      bg-transparent
-      :elevation="0"
-      cols="12"
+    class="background-card"
+    no-padding
+    bg-transparent
+    :elevation="0"
+    cols="12"
   >
     <v-card-text class="text-h6 font-weight-bold">
       <v-row justify="space-between" align="center">
-
         <!-- Expense Icon and Title -->
         <v-col>
           <v-row align="center">
@@ -54,16 +58,21 @@ const currencyValue =
         <!-- Expense Amount -->
         <v-col class="text-h5 text-end" cols="12" sm="5" md="5" lg="5">
           <v-row
-              :class="variant === 'manage' ? 'justify-space-between': 'justify-end'"
-              no-gutters
+            :class="
+              variant === 'manage' ? 'justify-space-between' : 'justify-end'
+            "
+            no-gutters
           >
             <v-col cols="auto" sm="12" md="6" lg="8" class="pb-2">
               <v-row class="flex-column justify-center" no-gutters>
                 <strong class="text-black-70 mr-2">
                   {{ expense.amount }} {{ expense.currency }}
                 </strong>
-                <span v-if="currencyValue" class="text-subtitle-1 text-grey-darken-1"
-                      style="line-height: 0.8">
+                <span
+                  v-if="currencyValue"
+                  class="text-subtitle-1 text-grey-darken-1"
+                  style="line-height: 0.8"
+                >
                   {{ currencyValue }}
                 </span>
                 <span v-else class="text-subtitle-1" style="line-height: 0.8">
@@ -71,21 +80,22 @@ const currencyValue =
                 </span>
               </v-row>
             </v-col>
-
-
             <template v-if="expense && expense.trip && variant == 'manage'">
-              <v-col
-                  cols="auto"
-                  sm="12"
-                  md="6"
-                  lg="4"
-              >
-                <AppButton
-                    color="red"
-                    font-auto
-                    max-width="190px"
-                    text="Usuń Wydatek"
-                    @click="deleteExpense.mutate({ expenseId: String(expense.id), tripId: String(expense.trip) })"
+              <v-col cols="auto" sm="12" md="6" lg="4"
+                ><AppButton
+                  color="red"
+                  font-auto
+                  max-width="190px"
+                  text="Usuń Wydatek"
+                  @click="
+                    hasPermissionToDelete(expense.user)
+                      ? deleteExpense.mutate({
+                          expenseId: String(expense.id),
+                          tripId: String(expense.trip),
+                        })
+                      : () => {}
+                  "
+                  :disabled="!hasPermissionToDelete(expense.user)"
                 />
               </v-col>
             </template>

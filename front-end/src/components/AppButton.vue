@@ -1,7 +1,14 @@
 <script setup lang="ts">
 const props = defineProps<{
   text?: string;
-  color?: "primary" | "secondary" | "accent" | "empty" | "orange" | "red" | "primary-outline";
+  color?:
+    | "primary"
+    | "secondary"
+    | "accent"
+    | "empty"
+    | "orange"
+    | "red"
+    | "primary-outline";
   width?: string;
   maxWidth?: string;
   minHeight?: string;
@@ -12,37 +19,35 @@ const props = defineProps<{
   fontAuto?: boolean | string;
   dense?: boolean | string;
   stretch?: boolean | string;
+  disabled?: boolean;
   onClick?: () => any;
 }>();
 </script>
 
 <template>
   <v-btn
-      class="button-media font-weight-bold text-none w-100"
-      v-bind="$attrs"
-      :style="{
-        maxWidth: maxWidth || '200px',
-        width: width,
-        minHeight: minHeight
-      }"
-      :class="[
-       color,
-       heightAuto ? 'height-auto' : '',
-       fontAuto ? 'font-auto' : '',
-       dense ? 'dense' : '',
-       stretch ? 'stretch' : ''
-      ]"
-      :onClick = onClick
+    class="button-media font-weight-bold text-none w-100"
+    v-bind="$attrs"
+    :disabled="disabled"
+    :style="{
+      maxWidth: maxWidth || '200px',
+      width: width,
+      minHeight: minHeight,
+    }"
+    :class="[
+      color,
+      heightAuto ? 'height-auto' : '',
+      fontAuto ? 'font-auto' : '',
+      dense ? 'dense' : '',
+      stretch ? 'stretch' : '',
+    ]"
+    :onClick="onClick"
   >
     <span v-if="text">
-      {{text}}
+      {{ text }}
     </span>
-    <v-icon
-        v-if="icon"
-        :size="iconSize || '24px'"
-        :class="{ 'ml-3': text }"
-    >
-      {{ iconName || 'mdi-send'}}
+    <v-icon v-if="icon" :size="iconSize || '24px'" :class="{ 'ml-3': text }">
+      {{ iconName || "mdi-send" }}
     </v-icon>
   </v-btn>
 </template>
@@ -51,13 +56,14 @@ const props = defineProps<{
 @use "@/assets/styles/variables" as *;
 
 .dense {
-  @media(max-width: 700px) {
+  @media (max-width: 700px) {
     max-width: 100% !important;
   }
 }
 
 .primary {
   background: $background-primary;
+  border-color: transparent;
   color: white;
 }
 
@@ -80,7 +86,7 @@ const props = defineProps<{
 }
 
 .orange {
-  background-color: #F57F17;
+  background-color: #f57f17;
   color: white;
 }
 
@@ -105,9 +111,8 @@ const props = defineProps<{
 }
 
 .stretch {
-  @media(max-width: 700px) {
+  @media (max-width: 700px) {
     max-width: 1200px !important;
   }
 }
-
 </style>

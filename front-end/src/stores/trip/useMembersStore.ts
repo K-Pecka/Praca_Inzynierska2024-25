@@ -3,6 +3,7 @@ import { ref, watch } from "vue";
 import { fetchUserById } from "@/api";
 import { getTripDetailsQuery} from "@/api/services";
 import { useUtilsStore } from "@/stores";
+import { User } from "@/types";
 
 export const useMembersStore = defineStore("tripDetails", () => {
   const { getTripId } = useUtilsStore();
@@ -10,19 +11,12 @@ export const useMembersStore = defineStore("tripDetails", () => {
   const { data: trip, isLoading: isLoadingTrip } = getTripDetailsQuery(
     getTripId()
   );
-  interface Member {
-    name: string;
-    userId: number;
-    is_guest?: boolean;
-    is_owner?: boolean;
-    email: string;
-  }
-  const members = ref<Member[]>([]);
+  const members = ref<User[]>([]);
 
   const getUserById = async (id: number) => {
     const user = await fetchUserById(id);
     return {
-      name: `${user.first_name} ${user.last_name}`,
+      name: user.first_name ? `${user.first_name} ${user.last_name}` : null,
       email: user.email,
       userId: id,
     };
@@ -37,7 +31,7 @@ export const useMembersStore = defineStore("tripDetails", () => {
     ? await getUserById(newTrip.creator.id)
     : null;
 
-  const creator: Member = user
+  const creator: User = user
     ? { ...user, email: user.email ?? "unknown@example.com", is_owner: true, is_guest: false }
     : {
         userId: -1,
@@ -67,13 +61,14 @@ export const useMembersStore = defineStore("tripDetails", () => {
       const user = await getUserById(id);
       return {
         ...user,
+        name: user.name ?? "Gość",
         email: user.email ?? "unknown@example.com",
         is_guest: true,
       };
     })
   );
 
-  const userMap = new Map<number, Member>();
+  const userMap = new Map<number, User>();
   for (const user of [creator, ...pending, ...confirmed]) {
     userMap.set(user.userId, {
       ...user,

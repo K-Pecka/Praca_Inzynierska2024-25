@@ -28,7 +28,7 @@ const maxParticipants = 5;
 
 const showForm = ref(false);
 
-function inviteParticipant(participant: { name: string; email: string }) {
+function inviteParticipant(participant: { email: string }) {
   if (members.value.length == maxParticipants) {
     setErrorCurrentMessage("Osiągnięto limit");
     return;

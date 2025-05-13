@@ -8,7 +8,7 @@ export const useParticipants = () => {
 
     const addParticipantMutation = useMutation({
         mutationFn: ({idTrip, participant}: {
-            idTrip: number, participant: { name: string, email: string }
+            idTrip: number, participant: { email: string }
         }) => fetchAddParticipant(idTrip, participant),
         onSuccess: (idTrip) => {
             notifications.setSuccessCurrentMessage("Dodano uczestnika");
@@ -32,7 +32,7 @@ export const useParticipants = () => {
 
     const addParticipant = (
         idTrip: number,
-        participant: { name: string; email: string }
+        participant: { email: string }
     ) => addParticipantMutation.mutateAsync({idTrip, participant});
 
     const removeParticipant = (idTrip: number, idParticipant: number) =>

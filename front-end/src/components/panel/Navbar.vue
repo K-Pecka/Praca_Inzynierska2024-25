@@ -18,10 +18,6 @@ const drawer = computed({
   get: () => props.modelValue,
   set: val => emit('update:modelValue', val)
 })
-
-onMounted(() => {
-  router.push({name: 'tripDashboard'})
-})
 </script>
 
 <template>
@@ -82,7 +78,7 @@ onMounted(() => {
         prepend-icon="mdi-arrow-left"
         slim
         class="pl-3"
-        @click="router.back()"
+        @click="router.push({ name: 'ChooseTrip' })"
     />
   </v-navigation-drawer>
 </template>

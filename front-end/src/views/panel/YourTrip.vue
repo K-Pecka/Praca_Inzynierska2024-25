@@ -82,7 +82,7 @@ const handleDelete = (tripId: string) => {
 
                   <!-- Buttons -->
                   <AppButton
-                      :to="{ name: 'panel', params: { tripId: trip.id} }"
+                      :to="{ name: 'tripDashboard', params: { tripId: trip.id} }"
                       color="primary"
                       height-auto
                       stretch

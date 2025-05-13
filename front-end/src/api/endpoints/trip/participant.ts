@@ -2,7 +2,7 @@ import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
 
 export const fetchAddParticipant = async (
     idTrip: number,
-    participant: { name: string; email: string }
+    participant: { email: string }
 ) => {
   const url = setParam(`${apiEndpoints.trip.inviteUser}?action=invite`, {
     tripId: String(idTrip),

@@ -15,7 +15,7 @@ import { useMembersStore } from "@/stores/trip/useMembersStore";
 import { Expense } from "@/types";
 import { VDateInput } from "vuetify/labs/components";
 import dayjs from "dayjs";
-import { useUtilsStore } from "@/stores";
+import { useAuthStore, useUtilsStore } from "@/stores";
 
 const { members: membersStore } = useMembersStore();
 const members = computed(() => membersStore);
@@ -132,6 +132,8 @@ const expensesByCategory = computed(() => {
 const membersItem = computed(
   () => useMembersStore().members.filter((e) => !e.is_guest) || []
 );
+const {userData} = useAuthStore();
+const {isOwner} = userData;
 </script>
 
 <template>
@@ -172,13 +174,12 @@ const membersItem = computed(
 
           <!-- Remaining Budget Card -->
           <AppCard>
-            <p class="mb-3">Pozostało</p>
+            <p class="mb-3">{{remaining>=0?"Pozostało":"Debet"}}</p>
             <p
               class="text-h3 font-weight-bold"
-              :class="remaining > 0 ? 'remaining' : 'amount'"
-              :style="remaining <= 0 ? 'color:red' : ''"
+              :class="remaining >= 0 ? 'difference-positive' : 'difference-negative'"
             >
-              {{ remaining <= 0 ? 0 : remaining }} {{ budgetCurrency }}
+              {{ remaining.toFixed(2) }} {{ budgetCurrency }}
             </p>
           </AppCard>
 
@@ -186,6 +187,7 @@ const membersItem = computed(
           <v-col cols="12" v-if="showForm">
             <v-row>
               <ExpenseForm
+                :isOwnerTrip = "isOwner(trip?.creator?.id || 0)"
                 :members="membersItem"
                 @cancelForm="showForm = false"
                 @submitted="onExpenseAdded"
@@ -220,6 +222,7 @@ const membersItem = computed(
 
                 <!-- Expenses List -->
                 <ExpensesList
+                  :isOwnerTrip = "isOwner(trip?.creator?.id || 0)"
                   variant="manage"
                   :expenses="expenses"
                   :config="appliedFilters"
@@ -236,10 +239,10 @@ const membersItem = computed(
                   :key="index"
                   class="mb-2"
                 >
-                  <v-col cols="6" class="text-subtitle-2">
+                  <v-col cols="6" class="text-subtitle-1">
                     {{ user.name }}
                   </v-col>
-                  <v-col cols="6" class="text-right text-subtitle-2">
+                  <v-col cols="6" class="text-right text-subtitle-1">
                     {{ user.percent }}%
                   </v-col>
                   <v-col cols="12">
@@ -262,10 +265,10 @@ const membersItem = computed(
                   :key="index"
                   class="mb-2"
                 >
-                  <v-col cols="6" class="text-subtitle-2">
+                  <v-col cols="6" class="text-subtitle-1">
                     {{ user.name }}
                   </v-col>
-                  <v-col cols="6" class="text-right text-subtitle-2">
+                  <v-col cols="6" class="text-right text-subtitle-1">
                     {{ user.percent }}%
                   </v-col>
                   <v-col cols="12">
@@ -356,7 +359,12 @@ const membersItem = computed(
 </template>
 
 <style scoped lang="scss">
-.remaining {
+.difference-positive {
   color: rgba(22, 163, 74, 0.75);
 }
+.difference-negative
+{
+  color:rgb(var(--v-theme-delete));
+}
+
 </style>

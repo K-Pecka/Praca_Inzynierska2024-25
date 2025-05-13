@@ -9,7 +9,6 @@ const props = defineProps<{
 
 const emit = defineEmits(["submitForm", "update:dialog"]);
 
-const nameInput = ref("");
 const emailInput = ref("");
 
 // Resetuj pola po zamknięciu dialogu
@@ -17,14 +16,13 @@ watch(
   () => props.dialog,
   (val) => {
     if (!val) {
-      nameInput.value = "";
       emailInput.value = "";
     }
   }
 );
 
 function handleSubmit() {
-  emit("submitForm", { name: nameInput.value, email: emailInput.value });
+  emit("submitForm", { email: emailInput.value });
 }
 
 function handleCancel() {
@@ -41,15 +39,6 @@ function handleCancel() {
       <v-card-text>
         <v-container>
           <v-row dense no-gutters>
-            <v-col cols="12">
-              <v-text-field
-                v-model="nameInput"
-                variant="outlined"
-                label="Imię i nazwisko"
-                placeholder="Jan Kowalski"
-                required
-              />
-            </v-col>
             <v-col cols="12">
               <v-text-field
                 v-model="emailInput"
