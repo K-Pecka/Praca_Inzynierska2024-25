@@ -1,4 +1,3 @@
-from django.contrib.auth import login
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.http.response import HttpResponseRedirect
@@ -21,6 +20,56 @@ from trips.serializers.trip_participant_serializers import TripParticipantsUpdat
 from users.models import CustomUser, UserProfile
 
 
+def delete_access_token(trip, profile):
+    token = TripAccessToken.objects.filter(trip=trip, user_profile=profile).first()
+
+    if token:
+        token.delete()
+
+
+def handle_remove(trip, data):
+    profile = data.get('profile')
+    if not profile:
+        raise ValidationError(_("Nie podano profilu użytkownika do usunięcia"))
+
+    if trip.check_if_is_member(profile) or trip.check_if_is_pending(profile):
+        if profile.type.code == 'guest':
+            with transaction.atomic():
+                profile.user.delete()
+        else:
+            with transaction.atomic():
+                trip.members.remove(profile)
+        delete_access_token(trip, profile)
+
+        if not trip.check_if_is_member(profile) or trip.check_if_is_pending(profile):
+            return Response({"message": _("Użytkownik został pomyślnie usunięty z wycieczki")})
+
+    return Response({
+        "message": _("Użytkownik nie był przypisany do tej wycieczki lub już został usunięty."),
+    })
+
+
+def send_invitation_email(name, email, trip, invitation_link):
+    subject = f"{_('Zaproszenie do wycieczki')} {trip.name}"
+    html_message = render_to_string('emails/trip_invitation_email.html', {
+        'name': name,
+        'trip_name': trip.name,
+        'start_date': trip.start_date,
+        'end_date': trip.end_date,
+        'trip_link': invitation_link
+    })
+    sent_count = send_mail(
+        subject=subject,
+        message=strip_tags(html_message),
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[email],
+        html_message=html_message
+    )
+
+    if sent_count == 0:
+        raise Exception("Nie udało się wysłać e-maila z zaproszeniem.")
+
+
 @extend_schema(
     tags=['trip invitation'],
     parameters=[
@@ -30,7 +79,7 @@ from users.models import CustomUser, UserProfile
             required=True,
             type=str,
             enum=['invite', 'remove'],
-            location=OpenApiParameter.QUERY
+            location="query"
         )
     ],
     responses={
@@ -59,7 +108,8 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             if action == 'invite':
                 return self.handle_invite(trip, data)
             elif action== 'remove':
-                return self.handle_remove(trip, data)
+                return handle_remove(trip, data)
+            return None
         except Exception as e:
             return Response(
                 {"error": e},
@@ -99,7 +149,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
 
         invitation_link = self.create_invitation_link(trip, profile.user)
 
-        self.send_invitation_email(
+        send_invitation_email(
             name=data.get('name', profile.user.full_name),
             email=data.get('email', profile.user.email),
             trip=trip,
@@ -112,35 +162,6 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             "is_guest": 'profile' not in data
         })
 
-    def handle_remove(self, trip, data):
-        profile = data.get('profile')
-        if not profile:
-            raise ValidationError(_("Nie podano profilu użytkownika do usunięcia"))
-
-        if trip.check_if_is_member(profile) or trip.check_if_is_pending(profile):
-            if profile.type.code == 'guest':
-                with transaction.atomic():
-                    profile.user.delete()
-            else:
-                with transaction.atomic():
-                    trip.members.remove(profile)
-            self.delete_access_token(trip, profile)
-
-            if not trip.check_if_is_member(profile) or trip.check_if_is_pending(profile):
-                return Response({"message": _("Użytkownik został pomyślnie usunięty z wycieczki")})
-
-        return Response({
-            "message": _("Użytkownik nie był przypisany do tej wycieczki lub już został usunięty."),
-        })
-
-
-    def delete_access_token(self, trip, profile):
-        token = TripAccessToken.objects.filter(trip=trip, user_profile=profile).first()
-
-        if token:
-            token.delete()
-
-
     def create_invitation_link(self, trip, user):
         token = TripAccessToken.generate_token()
         token_instance, _ = TripAccessToken.objects.update_or_create(
@@ -151,25 +172,10 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         endpoint_path = reverse('trip_join')
         return f"{self.request.build_absolute_uri(endpoint_path)}?token={token}"
 
-    def send_invitation_email(self, name, email, trip, invitation_link):
-        subject = f"{_('Zaproszenie do wycieczki')} {trip.name}"
-        html_message = render_to_string('emails/trip_invitation_email.html', {
-            'name': name,
-            'trip_name': trip.name,
-            'start_date': trip.start_date,
-            'end_date': trip.end_date,
-            'trip_link': invitation_link
-        })
-        sent_count = send_mail(
-            subject=subject,
-            message=strip_tags(html_message),
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[email],
-            html_message=html_message
-        )
 
-        if sent_count == 0:
-            raise Exception("Nie udało się wysłać e-maila z zaproszeniem.")
+def get_trip_access_token(token):
+    return TripAccessToken.objects.filter(token=token).get()
+
 
 @extend_schema(
     tags=['trip invitation'],
@@ -191,7 +197,7 @@ class JoinTripAPIView(RetrieveAPIView):
         if not token:
             return Response({'error': f'{_()}Brak tokenu w linku.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        trip_access_token = self.get_trip_access_token(token)
+        trip_access_token = get_trip_access_token(token)
         if not trip_access_token:
             return Response({'error': f'{_()}Podany token nie istnieje.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -208,6 +214,3 @@ class JoinTripAPIView(RetrieveAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
         return HttpResponseRedirect(settings.TRIP_JOINING_PAGE)
-
-    def get_trip_access_token(self, token):
-        return TripAccessToken.objects.filter(token=token).get()
