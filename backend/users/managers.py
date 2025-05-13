@@ -31,5 +31,11 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class CustomProfileManager(models.Manager):
+class UserProfileManager(models.Manager):
+    pass
+
+class UserProfileTypeManage(models.Manager):
+    pass
+
+class UserPermissionManager(models.Manager):
     pass

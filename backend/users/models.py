@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, User
+from django.contrib.auth.models import AbstractBaseUser
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db import models, IntegrityError
@@ -6,7 +6,7 @@ from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 
 from permissions.models import CustomPermission
-from .managers import CustomUserManager
+from .managers import CustomUserManager, UserProfileManager, UserProfileTypeManage, UserPermissionManager
 from dicts.models import BaseModel
 from dicts.validators import validate_only_alphabetic
 
@@ -127,7 +127,7 @@ class CustomUser(AbstractBaseUser, BaseModel):
     def get_default_profile(self):
         try:
             return UserProfile.objects.get(user=self, is_default=True)
-        except UserProfile.DoesNotExist:
+        except UserProfile.objects.DoesNotExist:
             raise ValueError("Nie znaleziono domyślnego profilu użytkownika.")
 
     class Meta:
@@ -150,6 +150,8 @@ class UserProfileType(BaseModel):
         verbose_name=_("Nazwa"),
         help_text=_("Nazwa typu profilu")
     )
+
+    objects = UserProfileTypeManage()
 
     def __str__(self):
         return self.name
@@ -184,6 +186,8 @@ class UserProfile(BaseModel):
         help_text=_("Czy jest podstawowym profilem")
     )
 
+    objects = UserProfileManager()
+
     def __str__(self):
         return f"{self.user}({str(self.type.name).upper()})"
 
@@ -195,10 +199,6 @@ class UserProfile(BaseModel):
     def trips(self):
         return self.trips_as_member.all()
 
-    @property
-    def is_guide(self):
-        return self.
-
     @classmethod
     def get_profile_by_email(cls, email):
         """
@@ -207,7 +207,7 @@ class UserProfile(BaseModel):
         try:
             user = CustomUser.objects.get(email=email)
             return cls.objects.filter(user=user).first()
-        except CustomUser.DoesNotExist:
+        except CustomUser.objects.DoesNotExist:
             return None
         except IntegrityError:
             raise ValueError("Niepoprawny adres email.")
@@ -248,7 +248,10 @@ class UserPermission(BaseModel):
         on_delete=models.PROTECT,
         null=True,
         verbose_name=_("Uprawnienia"),
-        help_text=_("Uprawnienia"))
+        help_text=_("Uprawnienia")
+    )
+
+    objects = UserPermissionManager()
 
     @classmethod
     def check_permission(cls, user_profile, perm_code, perm_action):
