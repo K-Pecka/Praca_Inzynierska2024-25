@@ -16,14 +16,11 @@ const links = [
     <v-row justify="center">
       <v-col
           cols="8"
-          class="d-flex flex-column"
       >
         <!-- Top section -->
         <v-row
             class="pb-5"
             :class="{ 'justify-center': smAndDown, 'justify-space-between': !smAndDown }"
-            align="end"
-
         >
           <!-- Logo -->
           <v-img

@@ -20,7 +20,7 @@ const footerData = computed(() => useStore.getFooterData());
 
   <Footer :footerData="footerData">
     <template #logo>
-      <img
+      <v-img
           :src="images.logo.img"
           :alt="images.logo.alt"
           lazy-src="/images/placeholder.jpg"
