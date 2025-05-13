@@ -4,7 +4,10 @@ from django.db.models import Count
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated\
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from server.permissions import IsTripParticipant, IsTripCreator
+from trips.filters import TripFilter
 from trips.models import Trip
 from trips.serializers.trip_serializers import TripListSerializer, TripRetrieveSerializer, TripCreateSerializer, \
     TripUpdateSerializer, TripDestroySerializer
@@ -33,9 +36,12 @@ class TripRetrieveAPIView(RetrieveAPIView):
 class TripListAPIView(ListAPIView):
     permission_classes = [IsAuthenticated, IsTripParticipant]
     serializer_class = TripListSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TripFilter
 
     def get_queryset(self):
-        return (Trip.objects
+        return (
+            Trip.objects
             .by_user_profile(self.request.user.get_default_profile())
             .select_related('creator')
             .prefetch_related('members')
