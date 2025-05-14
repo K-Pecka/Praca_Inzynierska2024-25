@@ -66,10 +66,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
                 defaults=validated_data
             )
 
-            if not created and user.is_guest:
-                return user.register_guest_account(validated_data)
-
-
             uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
 
@@ -130,6 +126,11 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password', None)
         if password:
             instance.set_password(password)
+
+        if instance.is_guest:
+            if not password:
+                raise serializers.ValidationError("Podanie hasła jest wymagane.")
+            instance.register_guest_account(validated_data)
 
         return super().update(instance, validated_data)
 
