@@ -3,9 +3,8 @@
 @use "../styles/variables.scss" as *;
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
-html {
-  /*overflow-y: hidden;*/
-}
+//.v-application__wrap {
+//}
 
 .bg-app {
   background-color: rgb(var(--v-theme-background));

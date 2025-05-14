@@ -5,9 +5,9 @@ import {Section} from "@/components";
 import ParticipantList from "@/components/trip/module/participant/ParticipantList.vue";
 import ParticipantsCounter from "@/components/trip/module/participant/ParticipantsCounter.vue";
 import ParticipantAddForm from "@/components/trip/module/participant/ParticipantAddForm.vue";
-import {useTripStore, useNotificationStore,useAuthStore} from "@/stores";
+import {useTripStore, useNotificationStore,useAuthStore, useUtilsStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
-
+const {getTripId} = useUtilsStore()
 const {setErrorCurrentMessage} = useNotificationStore();
 const route = useRoute();
 const tripId = Number(route.params.tripId);
@@ -21,28 +21,36 @@ const {removeParticipant, addParticipant,} = useTripStore();
 
 import {useMembersStore} from "@/stores/trip/useMembersStore"
 
-const {members: membersStore} = useMembersStore();
-const members = computed(() => membersStore.filter(e=>!e.is_owner) || []);
+const members = computed(() => useMembersStore().members.filter(e=>!e.is_owner) || []);
 
 
 const maxParticipants = 5;
 
 const showForm = ref(false);
 
-function inviteParticipant(participant: { name: string; email: string }) {
+function inviteParticipant(participant: { email: string }) {
   if (members.value.length == maxParticipants) {
     setErrorCurrentMessage("Osiągnięto limit");
     return;
   }
   addParticipant(Number(tripId), participant);
-}
-
-function removeParticipantById(id: number) {
-  removeParticipant(Number(tripId), id);
+  showForm.value=false
 }
 
 const toggleForm = () => {
   showForm.value = !showForm.value;
+};
+
+import {useSafeDelete} from "@/composables/useSafeDelete";
+const {confirmAndRun} = useSafeDelete();
+const removeParticipantById = (id: number) => {
+  confirmAndRun(() => {
+    removeParticipant(Number(getTripId()), id);
+  }, {
+    title: "Potwierdź usunięcie uczestnika",
+    message: "Czy na pewno chcesz usunąć tego uczestnika? Tego działania nie można cofnąć.",
+    wordToConfirm: "USUŃ"
+  });
 };
 </script>
 

@@ -230,15 +230,18 @@ export interface Activity {
   location?: string;
   assignedTo?: string;
   description?: string;
+  ticekt?:string;
 }
 export interface User {
   userId: number;
   first_name?: string;
   last_name?: string;
   email?: string;
-  name?: string;
+  name?: string | null;
   is_guest?: boolean;
-  profiles?:{id?:number}[]
+  is_owner?: boolean;
+  profiles?:{id?:number}[];
+  fullname?:string;
 }
 
 export interface ActivityType {

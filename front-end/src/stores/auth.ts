@@ -16,7 +16,6 @@ export function useAuth() {
     const data = await response.json()
     if (response.ok) {
       token.value = data.access
-      console.log(token.value)
       localStorage.setItem('token', data.access)
     } else {
       throw new Error(data.message || 'Login failed')

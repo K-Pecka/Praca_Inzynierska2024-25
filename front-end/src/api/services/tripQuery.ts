@@ -21,6 +21,7 @@ export const getMutationCreate = (option: Record<string,any>) => useMutation({
     onSuccess: () => {
         router.back();
         option.notifications.setSuccessCurrentMessage(option.successMessage);
+        option.queryClient.invalidateQueries({queryKey: ["trips"]});
     },
     onError: (err: any) => {
         option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);

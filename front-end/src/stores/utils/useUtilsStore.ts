@@ -62,7 +62,7 @@ export const useUtilsStore = defineStore("utils", () => {
   }
   const safeDivision = (numerator: number, denominator: number, percent: boolean) => {
     if (denominator === 0) {
-      return percent ? 100 : 0;
+      return 0;
     }
     if(percent) {
       return ((numerator / denominator) * 100).toFixed(2);

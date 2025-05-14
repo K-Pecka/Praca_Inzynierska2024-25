@@ -1,13 +1,16 @@
 """
 Permission configuration for server project.
 """
-from rest_framework.exceptions import NotFound, PermissionDenied
+from django.utils.crypto import constant_time_compare
+from django.core.exceptions import ValidationError
+
+from rest_framework.exceptions import NotFound, PermissionDenied, AuthenticationFailed
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import BasePermission
-from chats.models import Chatroom, Message
-from trips.models import Trip, Ticket, Expense
-from itineraries.models import Itinerary, ItineraryActivity
 
+from chats.models import Chatroom, Message
+from trips.models import Trip, Ticket, Expense, TripAccessToken
+from itineraries.models import Itinerary, ItineraryActivity
 
 ##################################################################################
 # Chat permissions
@@ -273,3 +276,30 @@ class IsExpenseOwnerOrTripCreator(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return request.user.get_default_profile() in [obj.user, obj.trip.creator]
+
+
+class IsAuthenticatedOrValidTripToken(BasePermission):
+    """
+    Pozwala użytkownikowi jeśli jest zalogowany
+    LUB posiada poprawny token do wycieczki w URL-u (?trip_token=...)
+    """
+
+    def has_permission(self, request, view):
+        if request.user and request.user.is_authenticated:
+            return True
+
+        auth_header = request.headers.get('Authorization')
+        if not auth_header:
+            return False
+
+        parts = auth_header.split()
+        if len(parts) != 2 or parts[0].lower() != 'bearer':
+            raise AuthenticationFailed('Niepoprawny format tokenu.')
+
+        token = parts[1]
+
+        trip_token = TripAccessToken.objects.filter(token=token).first()
+        if trip_token:
+            return True
+
+        return False

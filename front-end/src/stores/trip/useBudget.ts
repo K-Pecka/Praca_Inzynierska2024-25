@@ -1,45 +1,46 @@
 import { useMutation } from "@tanstack/vue-query";
-import { saveBudget, createExpenseMutation } from "@/api";
+import { saveBudget } from "@/api";
 import { useQueryClient } from "@tanstack/vue-query";
 import router from "@/router";
 import { useNotificationStore } from "@/stores";
-import { getExpensesQuery } from "@/api/services/expenseQuery";
+import { getExpensesQuery, getMutationExpenseCreate } from "@/api/services/expenseQuery";
+import {getMutationExpenseDelete} from "@/api/services/expenseQuery"
 export const useBudget = (tripId:Function) => {
-  const notifications = useNotificationStore();
+  const notification = useNotificationStore();
   const queryClient = useQueryClient();
   const tripMutationBudget = useMutation({
     mutationFn: saveBudget,
     onSuccess: () => {
-      notifications.setSuccessCurrentMessage("Zapisano");
+      notification.setSuccessCurrentMessage("Zapisano");
       router.push({ name: "Dashboard" });
     },
     onError: (err: any) => {
-      notifications.setErrorCurrentMessage(err?.message || "Błąd");
+      notification.setErrorCurrentMessage(err?.message || "Błąd");
     },
   });
-  const createExpense = useMutation({
-    mutationFn: createExpenseMutation,
-    onSuccess: (data) => {
-      notifications.setSuccessCurrentMessage("Wydatek został zapisany");
-      queryClient.invalidateQueries({ queryKey: ["expense", data?.tripId] });
-    },
-    onError: (err: any) => {
-      notifications.setErrorCurrentMessage(err?.message || "Błąd");
-    },
+  const createExpense = getMutationExpenseCreate({
+          notification,
+          queryClient,
+          successMessage: "Pomyślnie usunięto wydatek",
+          errorMessage: "Nie udało się usunąć wydatek",
   });
+  const deleteExpense = getMutationExpenseDelete({
+          notification,
+          queryClient,
+          successMessage: "Pomyślnie usunięto wydatek",
+          errorMessage: "Nie udało się usunąć wydatek",
+      })
   const getExpenseByTrip = (id?: number) => {
     const {
       data: expensesByTrip,
       isLoading: isLoading_expenses,
       error: error_expenses,
-      refetch: refetchExpenses,
     } = getExpensesQuery(id ?? tripId());
 
     return {
       expensesByTrip,
       isLoading_expenses,
-      error_expenses,
-      refetchExpenses,
+      error_expenses
     };
   };
 
@@ -47,5 +48,6 @@ export const useBudget = (tripId:Function) => {
     tripMutationBudget,
     createExpense,
     getExpenseByTrip: getExpenseByTrip,
+    deleteExpense
   };
 };

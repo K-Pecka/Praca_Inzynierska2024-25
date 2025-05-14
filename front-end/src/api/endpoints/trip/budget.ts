@@ -12,15 +12,3 @@ export const saveBudget = async (newBudget: Budget, param: Record<string, string
 
   return data;
 };
-
-export const createExpenseMutation = async (newExpense: Expense, param: Record<string, string> = {}) => {
-  const url = setParam(apiEndpoints.expense.create, { tripId: String(newExpense.trip) });
-
-  const { data, error } = await fetchData(url, "POST", newExpense);
-
-  if (error) {
-    throw new Error(error);
-  }
-
-  return { tripId: String(newExpense.trip) };
-};

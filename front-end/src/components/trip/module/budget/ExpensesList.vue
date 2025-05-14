@@ -7,12 +7,13 @@ import { Expense } from "@/types";
 
 dayjs.extend(isSameOrBefore);
 
-const { expenses, variant, config, limit, noIcon } = defineProps<{
+const { expenses, variant, config, limit, noIcon,isOwnerTrip } = defineProps<{
   expenses?: Expense[];
   variant?: "manage" | "view";
   config?: Record<string, any>;
   limit?: number;
   noIcon?: boolean;
+  isOwnerTrip?: boolean;
 }>();
 
 const visibleExpenses = computed(() => {
@@ -54,6 +55,7 @@ const visibleExpenses = computed(() => {
     <ExpenseItem
       v-for="(expense, index) in visibleExpenses"
       :key="index"
+      :isOwnerTrip=isOwnerTrip
       :no-icon="noIcon"
       :expense="expense"
       :variant="variant"

@@ -47,5 +47,5 @@ export const createPlan = async (
     throw new Error(error);
   }
 
-  return data;
+  return param;
 };

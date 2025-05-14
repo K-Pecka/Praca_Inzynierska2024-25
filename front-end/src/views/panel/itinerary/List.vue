@@ -28,7 +28,11 @@ const { isOwner } = userData;
       <p v-if="isLoading">Ładowanie...</p>
       <p v-else-if="error">Błąd: {{ error.message }}</p>
       <template v-else-if="trip && rawPlans && rawPlans.length">
-        <TripCard :plans="rawPlans" :btn="yourPlans.btn ?? []" :isOwner = "isOwner(trip?.creator?.id)"/>
+        <TripCard
+            :plans="rawPlans"
+            :btn="yourPlans.btn ?? []"
+            :isOwner = "isOwner(trip?.creator?.id)"
+        />
       </template>
 
       <!-- Empty state -->
@@ -47,7 +51,7 @@ const { isOwner } = userData;
             />
             <router-link :to="{ name: 'createPlan', params: { tripId: String(getTripId()) } }">
               <AppButton
-                  color="secondary"
+                  color="primary"
                   class="plan-button"
                   width="300px"
                   height="height-auto"

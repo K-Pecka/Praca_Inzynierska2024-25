@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 import {useActivityStore} from "@/stores/trip/useActivityStore";
 import AppButton from "@/components/AppButton.vue";
 import { VTimePicker } from "vuetify/labs/VTimePicker";
+import { useTicketStore } from "@/stores";
 
 const emit = defineEmits(["submitActivity", "cancelForm"]);
 
@@ -13,6 +14,7 @@ const form = ref({
   duration: "",
   location: "",
   description: "",
+  ticket:""
 });
 
 const timeMenu = ref(false);
@@ -26,7 +28,10 @@ function submitActivity() {
     alert("Uzupełnij nazwę aktywności.");
     return;
   }
-  emit("submitActivity", { ...form.value });
+ const payload = Object.fromEntries(
+    Object.entries(form.value).filter(([key, value]) => !(key === 'ticket' && value === ''))
+  );
+  emit("submitActivity", { ...payload });
   form.value = {
     type: 1,
     name: "",
@@ -34,10 +39,21 @@ function submitActivity() {
     duration: "",
     location: "",
     description: "",
+    ticket:""
   };
 }
-
 const { activityTypes } = useActivityStore();
+
+const {getTickets} = useTicketStore()
+const {data:tickets} = getTickets();
+
+const ticketsItems = computed(() =>{
+  return (tickets.value || []).map((t) => ({
+    title: t.name,
+    value: t.id,
+  }))
+});
+  
 </script>
 
 <template>
@@ -120,9 +136,10 @@ const { activityTypes } = useActivityStore();
 
         <v-col cols="12" sm="6">
           <v-select
+            v-model="form.ticket"
             label="Wybierz bilet"
             variant="outlined"
-            :items="['Bilet A', 'Bilet B', 'Bilet C']"
+            :items="ticketsItems"
             bg-color="background"
           />
         </v-col>

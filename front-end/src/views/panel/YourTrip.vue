@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import {useTripStore, useUtilsStore, useAuthStore} from "@/stores";
+import {useSafeDelete} from "@/composables/useSafeDelete";
 import AppButton from "@/components/AppButton.vue";
 import Loader from "@/components/common/AppLoader.vue"
 import {images} from "@/data";
 import {Trip} from "@/types";
 
+const {confirmAndRun} = useSafeDelete();
 const tripStore = useTripStore();
 tripStore.initialize();
 const {trip} = tripStore;
@@ -15,6 +17,16 @@ const {getTrips, deleteTrip} = trip
 const {trips, isLoading_trips} = getTrips();
 
 const isTripOwner = (trip: Trip) => isOwner(trip.creator.id);
+
+const handleDelete = (tripId: string) => {
+  confirmAndRun(() => {
+    deleteTrip.mutate({ tripId });
+  }, {
+    title: "Potwierdź usunięcie wycieczki",
+    message: "Czy na pewno chcesz usunąć tę wycieczkę? Tego działania nie można cofnąć.",
+    wordToConfirm: "USUŃ"
+  });
+};
 </script>
 
 <template>
@@ -70,7 +82,7 @@ const isTripOwner = (trip: Trip) => isOwner(trip.creator.id);
 
                   <!-- Buttons -->
                   <AppButton
-                      :to="{ name: 'panel', params: { tripId: trip.id} }"
+                      :to="{ name: 'tripDashboard', params: { tripId: trip.id} }"
                       color="primary"
                       height-auto
                       stretch
@@ -91,7 +103,7 @@ const isTripOwner = (trip: Trip) => isOwner(trip.creator.id);
                       height-auto
                       stretch
                       text="Usuń wycieczkę"
-                      :onClick="()=> deleteTrip.mutate({tripId:String(trip.id)})"
+                      :onClick="()=> handleDelete(String(trip.id))"
                   />
 
                 </v-card-actions>
@@ -116,7 +128,8 @@ const isTripOwner = (trip: Trip) => isOwner(trip.creator.id);
             />
             <router-link :to="{ name: 'createTrip' }">
               <AppButton
-                  color="secondary"
+                  width="300px"
+                  color="primary"
                   text="Dodaj wycieczkę"
               />
             </router-link>

@@ -14,7 +14,17 @@ function formatPL(dateString: string): string {
   if (isNaN(dateObj.getTime())) return dateString;
   return new Intl.DateTimeFormat('pl-PL').format(dateObj);
 }
-
+import {useSafeDelete} from "@/composables/useSafeDelete";
+const {confirmAndRun} = useSafeDelete();
+const handleDelete = (tripId: string,planId:string) => {
+  confirmAndRun(() => {
+    handleDeleteItinerary(tripId, planId);
+  }, {
+    title: "Potwierdź usunięcie wycieczki",
+    message: "Czy na pewno chcesz usunąć tę wycieczkę? Tego działania nie można cofnąć.",
+    wordToConfirm: "USUŃ"
+  });
+};
 const props = defineProps<{
   isOwner: boolean,
   plans: any;
@@ -31,7 +41,7 @@ const props = defineProps<{
         sm="12"
         md="12"
         lg="12"
-        class="px-0"
+        class="px-0 pb-6"
     >
       <v-card
           class="trip-card background-secondary rounded-lg pa-8 flex-wrap"
@@ -47,7 +57,7 @@ const props = defineProps<{
           >
             <v-row align="center" no-gutters>
               <v-icon size="64" color="primary" class="mr-3">
-                mdi-arrow-left
+                mdi-calendar-check
               </v-icon>
               <v-col>
                 <v-card-title class="text-h5 font-weight-bold pa-0 color-text">
@@ -71,7 +81,9 @@ const props = defineProps<{
                 justify="center"
                 justify-md="end"
                 justify-lg="end"
+                align="center"
                 v-if="isOwner"
+                class="h-100"
             >
               <AppButton
                   color="primary-outline"
@@ -83,7 +95,7 @@ const props = defineProps<{
               />
               <AppButton
                   color="red"
-                  @click="handleDeleteItinerary(trip.trip, trip.id)"
+                  @click="()=> handleDelete(trip.trip, trip.id)"
                   :class="{'w-100' :$vuetify.display.smAndDown}"
                   font-auto
                   max-width="190px"

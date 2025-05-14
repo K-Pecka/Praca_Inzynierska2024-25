@@ -6,27 +6,29 @@ import { budget } from "@/data/category/budget";
 const categoryBudget = budget;
 import {useTripStore} from "@/stores/trip/useTripStore";
 import { User } from "@/types";
-import { useUtilsStore } from "@/stores";
-const {trip:tripStore,createExpense} = useTripStore();
+import { useAuthStore, useUtilsStore } from "@/stores";
+const {trip:tripStore,budget:budgetStore} = useTripStore();
 const {getTripDetails} = tripStore;
+const {createExpense} = budgetStore;
 const {trip} = getTripDetails();
 const tripDateStart = computed(()=>trip?.value?.end_date || '')
-
 const {getTripId} = useUtilsStore();
-const {members} = defineProps<{
+const {members,isOwnerTrip} = defineProps<{
+  isOwnerTrip:boolean,
   members: User[]
 }>();
+const {getUser} = useAuthStore()
+const user=getUser();
 const form = ref({
   title: "",
   amount: 0,
   currency: "PLN",
   date: "",
-  user: "",
+  user: isOwnerTrip ? members[0] : user?.profiles?.[0]?.id,
   category: 1,
   note: "",
 });
 const emit = defineEmits(["cancelForm", "submitted"]);
-
 const submitTicket = () => {
   createExpense.mutate({
     trip: getTripId(),
@@ -34,7 +36,9 @@ const submitTicket = () => {
     amount: form.value.amount,
     currency: form.value.currency,
     date: new Intl.DateTimeFormat('pl-PL').format(new Date(form.value.date)),
-    user: form.value.user !== "" ? Number(form.value.user) : members[0].userId,
+    user: typeof form.value.user === 'object' && 'userId' in form.value.user 
+      ? form.value.user.userId 
+      : (form.value.user as number | undefined) ?? 0,
     category: form.value.category,
     note: form.value.note,
   }, {
@@ -43,7 +47,6 @@ const submitTicket = () => {
     }
   });
 };
-
 </script>
 
 <template>
@@ -55,6 +58,7 @@ const submitTicket = () => {
         <v-row>
           <v-col cols="12" lg="6" md="6" class="tight-col">
             <v-select
+                v-if="isOwnerTrip"
                 v-model="form.user"
                 :items="members"
                 item-title="name"
@@ -64,6 +68,15 @@ const submitTicket = () => {
                 bg-color="background"
                 density="comfortable"
                 :disabled="members.length === 0"
+            />
+            <v-text-field
+                v-else
+                :model-value="user?.fullname"
+                label="Uczestnik"
+                variant="outlined"
+                bg-color="background"
+                density="comfortable"
+                readonly
             />
           </v-col>
 
@@ -114,7 +127,7 @@ const submitTicket = () => {
                 v-model="form.currency"
                 label="Wybierz walute"
                 variant="outlined"
-                :items="['PLN', 'EUR']"
+                :items="['EUR', 'GBP', 'USD', 'PLN']"
                 clearable
                 prepend-inner-icon="mdi-wallet"
                 bg-color="background"

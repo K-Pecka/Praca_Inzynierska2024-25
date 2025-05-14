@@ -2,12 +2,13 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { createActivity } from "@/api/endpoints/trip/activity";
-import { useNotificationStore } from "@/stores";
+import { useNotificationStore, useUtilsStore } from "@/stores";
 import { fetchActivity, fetchActivityTypes } from "@/api/endpoints/trip/activity";
 import { Activity, ActivityType } from "@/types/interface";
 import {getMutationDelete} from "@/api/services/activityQuery"
 
 export const useActivityStore = defineStore("activity", () => {
+  const {getPlanId,getTripId} = useUtilsStore()
   const notification = useNotificationStore();
   const activities = ref<Activity[]>([]);
   const activeError = ref<boolean>(false);
@@ -16,10 +17,10 @@ export const useActivityStore = defineStore("activity", () => {
   const queryClient = useQueryClient();
   const activityTypes = ref<ActivityType[]>([]);
 
-  const getActivity = (tripId: string, itineraryId: string) => {
+  const getActivity = (tripId?: number, planId?: number) => {
     return useQuery<Activity[], Error>({
-      queryKey: ["activities", tripId, itineraryId],
-      queryFn: () => fetchActivity({ tripId: tripId, planId: itineraryId }),
+      queryKey: ["activities", (tripId || getTripId()), (planId || getPlanId())],
+      queryFn: () => fetchActivity({ tripId: String(tripId || getTripId()), planId: String(planId || getPlanId()) }),
     });
   };
 
@@ -60,7 +61,7 @@ export const useActivityStore = defineStore("activity", () => {
     }) => createActivity(activityData, param),
     onSuccess: (_, variables) => {
       setSuccessCurrentMessage("Dodano aktywność");
-      queryClient.invalidateQueries({ queryKey: ["activities", variables.param.tripId, variables.param.planId] });
+      queryClient.invalidateQueries({ queryKey: ["activities", Number(variables.param.tripId), Number(variables.param.planId)] });
     },
     onError: () => {
         setError(true);

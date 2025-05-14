@@ -15,6 +15,8 @@ import { useMembersStore } from "@/stores/trip/useMembersStore";
 import { Expense } from "@/types";
 import { VDateInput } from "vuetify/labs/components";
 import dayjs from "dayjs";
+import { useAuthStore, useUtilsStore } from "@/stores";
+
 const { members: membersStore } = useMembersStore();
 const members = computed(() => membersStore);
 const { budget: budgetStore, trip: tripStore } = useTripStore();
@@ -22,15 +24,11 @@ const { getExpensByTrip } = budgetStore;
 
 const onExpenseAdded = () => {
   showForm.value = false;
-  refetchExpenses();
 };
 
 const { getTripDetails } = tripStore;
 const { trip } = getTripDetails();
-const {
-  expensesByTrip: expenses,
-  refetchExpenses
-} = getExpensByTrip();
+const { expensesByTrip: expenses } = getExpensByTrip();
 const budget = computed(() => Number(trip.value?.budget_amount) ?? 0);
 const budgetCurrency = computed(() => "PLN");
 
@@ -73,20 +71,69 @@ const filter = () => {
   appliedFilters.value = {
     category: selectedCategory.value,
     participants: selectedParticipant.value,
-    dateFrom: dateFrom.value==null ? dayjs().format('DD.MM.YYYY') : dayjs((dateFrom.value)).format('DD.MM.YYYY'),
-    dateTo: dateTo.value==null ? dayjs().format('DD.MM.YYYY') : dayjs((dateTo.value)).format('DD.MM.YYYY'),
+    dateFrom:
+      dateFrom.value == null
+        ? dayjs().format("DD.MM.YYYY")
+        : dayjs(dateFrom.value).format("DD.MM.YYYY"),
+    dateTo:
+      dateTo.value == null
+        ? dayjs().format("DD.MM.YYYY")
+        : dayjs(dateTo.value).format("DD.MM.YYYY"),
   };
   showFilters.value = false;
 };
-const ExpensesByUser = computed(() => {
-  return (
-    expenses?.value?.reduce((acc: Record<string, number>, item: Expense) => {
-      acc[item?.username || ""] =
-        (acc[item?.username || ""] || 0) + Number(item.amount);
-      return acc;
-    }, {} as Record<string, number>) || {}
+const { mapCategoryBudget } = useUtilsStore();
+
+function aggregateExpenses<T extends string>(
+  expenses: Expense[] | undefined,
+  keyGetter: (item: Expense) => T,
+  total: number,
+  nameMapper?: (key: T) => string
+) {
+  const aggregated = (expenses || []).reduce((acc: Record<T, number>, item) => {
+    const key = keyGetter(item);
+    acc[key] = (acc[key] || 0) + Number(item.converted_amount);
+    return acc;
+  }, {} as Record<T, number>);
+
+  const result: Record<
+    T,
+    { name: string; value: number; percent: string }
+  > = {} as Record<T, { name: string; value: number; percent: string }>;
+
+  for (const [key, value] of Object.entries(aggregated) as [T, number][]) {
+    const name = nameMapper ? nameMapper(key) : key;
+    result[key] = {
+      name,
+      value,
+      percent: total > 0 ? ((value / total) * 100).toFixed(2) : "0.00",
+    };
+  }
+
+  return result;
+}
+
+const expensesByUser = computed(() => {
+  const total = spent.value || 0;
+  return aggregateExpenses(expenses.value, item => item.username || "", total);
+});
+
+const expensesByCategory = computed(() => {
+  const total = spent.value || 0;
+  return aggregateExpenses(
+    expenses.value,
+    item => String(item.category || "Inne"),
+    total,
+    key => mapCategoryBudget(Number(key)).name
   );
 });
+
+
+const membersItem = computed(
+  () => useMembersStore().members.filter((e) => !e.is_guest) || []
+);
+const {userData} = useAuthStore();
+const {isOwner} = userData;
 </script>
 
 <template>
@@ -127,13 +174,12 @@ const ExpensesByUser = computed(() => {
 
           <!-- Remaining Budget Card -->
           <AppCard>
-            <p class="mb-3">Pozostało</p>
+            <p class="mb-3">{{remaining>=0?"Pozostało":"Debet"}}</p>
             <p
               class="text-h3 font-weight-bold"
-              :class="remaining > 0 ? 'remaining' : 'amount'"
-              :style="remaining <= 0 ? 'color:red' : ''"
+              :class="remaining >= 0 ? 'difference-positive' : 'difference-negative'"
             >
-              {{ remaining <= 0 ? 0 : remaining }} {{ budgetCurrency }}
+              {{ remaining.toFixed(2) }} {{ budgetCurrency }}
             </p>
           </AppCard>
 
@@ -141,10 +187,11 @@ const ExpensesByUser = computed(() => {
           <v-col cols="12" v-if="showForm">
             <v-row>
               <ExpenseForm
-                  :members="members"
-                  @cancelForm="showForm = false"
-                  @submitted="onExpenseAdded"
-                  class="form-container"
+                :isOwnerTrip = "isOwner(trip?.creator?.id || 0)"
+                :members="membersItem"
+                @cancelForm="showForm = false"
+                @submitted="onExpenseAdded"
+                class="form-container"
               />
             </v-row>
           </v-col>
@@ -175,6 +222,7 @@ const ExpensesByUser = computed(() => {
 
                 <!-- Expenses List -->
                 <ExpensesList
+                  :isOwnerTrip = "isOwner(trip?.creator?.id || 0)"
                   variant="manage"
                   :expenses="expenses"
                   :config="appliedFilters"
@@ -182,28 +230,60 @@ const ExpensesByUser = computed(() => {
               </AppCard>
             </v-row>
           </v-col>
-
-          <AppCard cols="6">
-            <span>Wydatki - Kategorie</span>
-          </AppCard>
-          <AppCard cols="6">
-            <v-row no-gutters class="d-flex flex-column">
-              <span>Wydatki - Uczestnicy</span>
-              <v-col
-                v-if="ExpensesByUser"
-                v-for="(amount, username) in ExpensesByUser"
-              >
-                <p>
-                  <span>
-                    {{ username }}
-                  </span>
-                  <span>
-                    {{ amount }}
-                  </span>
-                </p>
-              </v-col>
-            </v-row>
-          </AppCard>
+          <v-row>
+            <v-col cols="12" sm="6">
+              <AppCard>
+                <span>Wydatki - Kategorie</span>
+                <v-row
+                  v-for="(user, index) in expensesByCategory"
+                  :key="index"
+                  class="mb-2"
+                >
+                  <v-col cols="6" class="text-subtitle-1">
+                    {{ user.name }}
+                  </v-col>
+                  <v-col cols="6" class="text-right text-subtitle-1">
+                    {{ user.percent }}%
+                  </v-col>
+                  <v-col cols="12">
+                    <v-progress-linear
+                      :model-value="Number(user.percent)"
+                      color="success"
+                      height="6"
+                      rounded
+                      bg-color="grey-lighten"
+                    />
+                  </v-col>
+                </v-row>
+              </AppCard>
+            </v-col>
+            <v-col cols="12" sm="6">
+              <AppCard>
+                <span>Wydatki - Uczestnicy</span>
+                <v-row
+                  v-for="(user, index) in expensesByUser"
+                  :key="index"
+                  class="mb-2"
+                >
+                  <v-col cols="6" class="text-subtitle-1">
+                    {{ user.name }}
+                  </v-col>
+                  <v-col cols="6" class="text-right text-subtitle-1">
+                    {{ user.percent }}%
+                  </v-col>
+                  <v-col cols="12">
+                    <v-progress-linear
+                      :model-value="Number(user.percent)"
+                      color="success"
+                      height="6"
+                      rounded
+                      bg-color="grey-lighten"
+                    />
+                  </v-col>
+                </v-row>
+              </AppCard>
+            </v-col>
+          </v-row>
         </v-row>
       </v-col>
 
@@ -211,73 +291,67 @@ const ExpensesByUser = computed(() => {
         <v-card class="pa-3">
           <v-card-title class="text-h6">Filtry</v-card-title>
           <v-card-text>
-            <v-container>
-              <v-row dense>
-                <v-col cols="12">
-                  <v-select
-                    v-model="selectedCategory"
-                    :items="budgetCategory"
-                    item-title="name"
-                    item-value="id"
-                    label="Kategoria"
-                    variant="outlined"
-                    clearable
-                  />
-                </v-col>
-                <v-col cols="12">
-                  <v-select
-                    v-model="selectedParticipant"
-                    :items="members"
-                    item-title="name"
-                    item-value="userId"
-                    label="Uczestnik"
-                    :disabled="members.length === 0"
-                    variant="outlined"
-                    bg-color="transparent"
-                    clearable
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-date-input
-                    v-model="dateFrom"
-                    max-width="auto"
-                    variant="outlined"
-                    prepend-icon=""
-                    prepend-inner-icon="mdi-calendar"
-                    color="primary"
-                    label="Od"
-                    :clearable="true"
-                    header-color="primary"
-                  />
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-date-input
-                    v-model="dateTo"
-                    max-width="auto"
-                    variant="outlined"
-                    prepend-icon=""
-                    prepend-inner-icon="mdi-calendar"
-                    color="primary"
-                    :clearable="true"
-                    header-color="primary"
-                    label="Do"
-                  />
-                </v-col>
-              </v-row>
-            </v-container>
+            <v-row dense>
+              <v-col cols="12">
+                <v-select
+                  v-model="selectedCategory"
+                  :items="budgetCategory"
+                  item-title="name"
+                  item-value="id"
+                  label="Kategoria"
+                  variant="outlined"
+                  clearable
+                />
+              </v-col>
+              <v-col cols="12">
+                <v-select
+                  v-model="selectedParticipant"
+                  :items="members"
+                  item-title="name"
+                  item-value="userId"
+                  label="Uczestnik"
+                  :disabled="members.length === 0"
+                  variant="outlined"
+                  bg-color="transparent"
+                  clearable
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-date-input
+                  v-model="dateFrom"
+                  max-width="auto"
+                  variant="outlined"
+                  prepend-icon=""
+                  prepend-inner-icon="mdi-calendar"
+                  color="primary"
+                  label="Od"
+                  :clearable="true"
+                  header-color="primary"
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-date-input
+                  v-model="dateTo"
+                  max-width="auto"
+                  variant="outlined"
+                  prepend-icon=""
+                  prepend-inner-icon="mdi-calendar"
+                  color="primary"
+                  :clearable="true"
+                  header-color="primary"
+                  label="Do"
+                />
+              </v-col>
+            </v-row>
+            <v-row justify="center">
+              <AppButton
+                color="accent"
+                text="Anuluj"
+                @click="showFilters = false"
+              />
+              <AppButton color="primary" text="Zastosuj" @click="filter" />
+            </v-row>
           </v-card-text>
-          <v-card-actions class="justify-end">
-            <AppButton
-              color="accent"
-              text="Anuluj"
-              @click="showFilters = false"
-            />
-            <AppButton
-                color="primary"
-                text="Zastosuj"
-                @click="filter"
-            />
-          </v-card-actions>
         </v-card>
       </v-dialog>
     </template>
@@ -285,7 +359,12 @@ const ExpensesByUser = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.remaining {
+.difference-positive {
   color: rgba(22, 163, 74, 0.75);
 }
+.difference-negative
+{
+  color:rgb(var(--v-theme-delete));
+}
+
 </style>

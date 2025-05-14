@@ -3,7 +3,6 @@ import { Activity, ActivityType } from "@/types";
 
 export const createActivity = async (newActivity: Activity, param: Record<string, string> = {}) => {
     const url = setParam(apiEndpoints.activity.create, param);
-
     const { data, error } = await fetchData<Activity>(url, "POST", newActivity);
 
     if (error) {
@@ -31,7 +30,6 @@ export const fetchActivityDelete = async (param: Record<string, string> = {}) =>
     
     const url = setParam(apiEndpoints.activity.delete, param);
     const { error } = await fetchData(url, "DELETE");
-
     if (error) {
         throw new Error(error);
     }
