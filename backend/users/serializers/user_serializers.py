@@ -107,7 +107,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         password = data.get('password')
-        password_confirm = data.get('password_confirm')
+        password_confirm = self.initial_data.get('password_confirm')
 
         try:
             validate_password(password)
@@ -120,6 +120,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             if password and len(password) < 8:
                 raise serializers.ValidationError("Hasło musi mieć co najmniej 8 znaków.")
 
+        data.pop('password_confirm', None)
+
         return data
 
     def update(self, instance, validated_data):
@@ -130,6 +132,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         if instance.is_guest:
             if not password:
                 raise serializers.ValidationError("Podanie hasła jest wymagane.")
+            if not instance.first_name:
+                raise serializers.ValidationError("Podanie imienia jest wymagane.")
             instance.register_guest_account(validated_data)
 
         return super().update(instance, validated_data)

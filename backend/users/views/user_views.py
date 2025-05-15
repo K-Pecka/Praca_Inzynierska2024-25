@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from server.authentication import TripTokenAuthentication
 from server.permissions import IsAuthenticatedOrValidTripToken
 from users.serializers.user_serializers import UserCreateSerializer, UserUpdateSerializer, UserUpdatePasswordSerializer, \
     ConfirmEmailSerializer, CheckAccessSerializer, UserRetrieveSerializer
@@ -37,6 +38,7 @@ class UserByProfileRetrieveAPIView(RetrieveAPIView):
 
 
 class UserUpdateAPIView(UpdateAPIView):
+    authentication_classes = [TripTokenAuthentication]
     permission_classes = [IsAuthenticatedOrValidTripToken]
     serializer_class = UserUpdateSerializer
 
