@@ -99,13 +99,15 @@ class CustomUser(AbstractBaseUser, BaseModel):
     @classmethod
     def create_guest_account(cls, email):
         try:
+            print('email', email)
             user = cls.objects.create(
                 email=email,
                 is_active=True,
                 is_guest=True
             )
+            print('user', user)
             return user
-        except IntegrityError:
+        except IntegrityError as e:
             raise ValueError("Użytkownik z tym adresem email już istnieje.")
         except ValidationError:
             raise ValueError("Niepoprawny adres email.")
