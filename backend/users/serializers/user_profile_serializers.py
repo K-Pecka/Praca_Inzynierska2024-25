@@ -63,7 +63,7 @@ class UserProfileCreateSerializer(serializers.ModelSerializer):
         if not user:
             raise serializers.ValidationError("Użytkownik nie istnieje.")
 
-        if len(user.profiles) == 2:
+        if len(user.profiles.all()) == 2:
             raise serializers.ValidationError("Użytkownik nie może stworzyć więcej profili.")
 
         if user.is_guest:

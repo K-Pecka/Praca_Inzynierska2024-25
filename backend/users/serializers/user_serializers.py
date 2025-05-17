@@ -99,7 +99,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    email = serializers.EmailField(required=False)
     first_name = serializers.CharField(required=False)
     last_name = serializers.CharField(required=False)
     password = serializers.CharField(write_only=True, required=False)
@@ -108,39 +107,37 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         password = data.get('password')
         password_confirm = self.initial_data.get('password_confirm')
-
-        try:
-            validate_password(password)
-        except ValidationError as e:
-            raise serializers.ValidationError(e.messages)
-
+        if password:
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                raise serializers.ValidationError(e.messages)
         if password or password_confirm:
             if password != password_confirm:
                 raise serializers.ValidationError("Hasła muszą być takie same.")
             if password and len(password) < 8:
                 raise serializers.ValidationError("Hasło musi mieć co najmniej 8 znaków.")
-
         data.pop('password_confirm', None)
-
         return data
 
     def update(self, instance, validated_data):
-        password = validated_data.pop('password', None)
-        if password:
-            instance.set_password(password)
-
         if instance.is_guest:
+            password = validated_data.get('password', None)
             if not password:
                 raise serializers.ValidationError("Podanie hasła jest wymagane.")
-            if not instance.first_name:
+            if not validated_data.get("first_name"):
                 raise serializers.ValidationError("Podanie imienia jest wymagane.")
             return instance.register_guest_account(validated_data)
 
+        password = validated_data.pop('password', None)
+
+        if password:
+            instance.set_password(password)
         return super().update(instance, validated_data)
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'first_name', 'last_name', 'password', 'password_confirm']
+        fields = ['id', 'first_name', 'last_name', 'password', 'password_confirm']
         read_only_fields = ['id']
 
 

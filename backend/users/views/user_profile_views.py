@@ -1,7 +1,6 @@
-from django.db import transaction
+from django.core.exceptions import ValidationError
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
-from rest_framework import serializers
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
@@ -51,6 +50,6 @@ class ChangeDefaultUserProfileView(UpdateAPIView):
         role_id = self.kwargs.get('role')
         profile = UserProfile.objects.filter(user=self.request.user, type__code=role_id).first()
         if not profile:
-            raise ValueError('Nie posiadasz profilu tego typu')
+            raise ValidationError('Nie posiadasz profilu tego typu')
         return profile
 
