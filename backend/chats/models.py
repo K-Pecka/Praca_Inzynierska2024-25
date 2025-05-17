@@ -42,6 +42,10 @@ class Chatroom(BaseModel):
         blank=True,
         verbose_name=_("Turysta"), help_text=_("Turyści")
     )
+    settings = models.JSONField(
+        default=dict,
+        verbose_name=_("Ustawienia"), help_text=_("Ustawienia")
+    )
 
     objects = ChatroomManager()
 

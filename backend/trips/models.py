@@ -59,13 +59,10 @@ class Trip(BaseModel):
     end_date = models.DateField(
         verbose_name=_("Data zakończenia"), help_text=_("Data zakończenia")
     )
-<<<<<<< Updated upstream
     settings = models.JSONField(
         default=dict,
         verbose_name=_("Ustawienia"), help_text=_("Ustawienia")
     )
-=======
->>>>>>> Stashed changes
 
     objects = TripManager()
 
