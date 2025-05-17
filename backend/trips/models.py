@@ -319,7 +319,6 @@ class Expense(BaseModel):
                 params={'from': self.currency, 'to': 'PLN'}
             )
             data = response.json()
-            print('data', data)
 
             if 'rates' not in data:
                 return round(self.amount, 2)
