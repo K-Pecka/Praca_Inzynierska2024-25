@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.db import models, IntegrityError
+from django.db import models, IntegrityError, transaction
 from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 
@@ -83,6 +83,7 @@ class CustomUser(AbstractBaseUser, BaseModel):
         """
         if not self.is_guest:
             raise ValueError("Nieprawidłowy typ konta.")
+
         self.password = data["password"]
         self.is_guest = False
 
@@ -91,9 +92,12 @@ class CustomUser(AbstractBaseUser, BaseModel):
             defaults={'name': "Turysta"}
         )[0]
 
-        self.get_default_profile().type = new_profile_type
-        self.save()
+        with transaction.atomic():
+            profile = self.get_default_profile()
+            profile.type = new_profile_type
 
+            self.save()
+            profile.save()
         return self
 
     @classmethod

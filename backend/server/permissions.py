@@ -288,16 +288,25 @@ class IsAuthenticatedOrValidTripToken(BasePermission):
         auth_header = request.headers.get('Authorization')
 
         if auth_header:
+            print('xd0')
             parts = auth_header.split()
+            if not parts:
+                print('xd1')
+                raise ValidationError('Niepoprawny format tokenu.')
+
             if len(parts) != 2 or parts[0].lower() != 'bearer':
+                print('xd2')
                 raise AuthenticationFailed('Niepoprawny format tokenu.')
 
             token = parts[1]
             trip_token = TripAccessToken.objects.filter(token=token).first()
             if trip_token:
+                print('xd3')
                 return True
 
         user = getattr(request, 'user', None)
         if user and getattr(user, 'is_authenticated', False):
+            print('xd4')
             return True
+        print('xd5')
         return False

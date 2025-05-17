@@ -9,6 +9,7 @@ from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIVie
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from server.authentication import TripTokenAuthentication
 from server.permissions import IsAuthenticatedOrValidTripToken
@@ -38,7 +39,7 @@ class UserByProfileRetrieveAPIView(RetrieveAPIView):
 
 
 class UserUpdateAPIView(UpdateAPIView):
-    authentication_classes = [TripTokenAuthentication]
+    authentication_classes = [TripTokenAuthentication, JWTAuthentication]
     permission_classes = [IsAuthenticatedOrValidTripToken]
     serializer_class = UserUpdateSerializer
 
