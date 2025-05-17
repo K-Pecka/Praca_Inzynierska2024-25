@@ -96,4 +96,4 @@ class UserAPITestCase(TestCase):
         view = UserUpdateAPIView.as_view()
         request = self.factory.post('/user/', data)
         response = view(request)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
