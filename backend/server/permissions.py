@@ -289,6 +289,9 @@ class IsAuthenticatedOrValidTripToken(BasePermission):
 
         if auth_header:
             parts = auth_header.split()
+            if not parts:
+                raise ValidationError('Niepoprawny format tokenu.')
+
             if len(parts) != 2 or parts[0].lower() != 'bearer':
                 raise AuthenticationFailed('Niepoprawny format tokenu.')
 

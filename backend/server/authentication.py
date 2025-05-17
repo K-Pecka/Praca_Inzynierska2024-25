@@ -9,6 +9,9 @@ class TripTokenAuthentication(BaseAuthentication):
             return None
 
         parts = auth_header.split()
+        if not parts:
+            return None
+
         if len(parts) != 2 or parts[0].lower() != 'bearer':
             raise AuthenticationFailed('Niepoprawny format tokenu.')
 
@@ -17,4 +20,4 @@ class TripTokenAuthentication(BaseAuthentication):
         if not trip_token:
             raise AuthenticationFailed('Niepoprawny token.')
 
-        return (None, None)
+        return None, None

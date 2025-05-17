@@ -60,6 +60,9 @@ class UserProfileCreateSerializer(serializers.ModelSerializer):
         request = self.context['request']
         user = request.user
 
+        if not user:
+            raise serializers.ValidationError("Użytkownik nie istnieje.")
+
         if len(user.profiles) == 2:
             raise serializers.ValidationError("Użytkownik nie może stworzyć więcej profili.")
 
@@ -109,7 +112,7 @@ class UserChangeProfileSerializer(serializers.ModelSerializer):
             type=exclude_profile_type
         ).exclude(pk=instance.pk)
 
-        if len(profiles) > 0:
+        if profiles and len(profiles) > 0:
             with transaction.atomic():
                 for profile in profiles:
                     profile.is_default = False
