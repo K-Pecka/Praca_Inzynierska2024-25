@@ -134,7 +134,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Podanie hasła jest wymagane.")
             if not instance.first_name:
                 raise serializers.ValidationError("Podanie imienia jest wymagane.")
-            instance.register_guest_account(validated_data)
+            return instance.register_guest_account(validated_data)
 
         return super().update(instance, validated_data)
 
