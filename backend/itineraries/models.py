@@ -1,8 +1,11 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from dicts.models import BaseModel
+<<<<<<< Updated upstream
 from django.utils.translation import gettext_lazy as _
 
+=======
+>>>>>>> Stashed changes
 from trips.models import Trip, Ticket
 from itineraries.managers import ItineraryManager, ItineraryActivityManager
 
@@ -36,6 +39,7 @@ class ItineraryActivityType(BaseModel):
         verbose_name_plural = _("Typy aktywności planu")
 
 class ItineraryActivity(BaseModel):
+<<<<<<< Updated upstream
     name = models.CharField(
         max_length=255,
         verbose_name=_("Nazwa"), help_text=_("Nazwa")
@@ -85,6 +89,21 @@ class ItineraryActivity(BaseModel):
         verbose_name=_("Plan"),
         help_text=_("Plan")
     )
+=======
+    CHOICES = [
+        ("test1", "test1"),
+        ("test2", "test2"),
+        ("test3", "test3")
+    ]
+    name = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, choices=CHOICES)
+    description = models.TextField(max_length=5120)
+    location = models.CharField(max_length=255)
+    start_time = models.TimeField()
+    duration = models.IntegerField()
+    itinerary = models.ForeignKey(Itinerary, on_delete=models.CASCADE, related_name="activities")
+    tickets = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name="activities")
+>>>>>>> Stashed changes
 
     objects = ItineraryActivityManager()
 

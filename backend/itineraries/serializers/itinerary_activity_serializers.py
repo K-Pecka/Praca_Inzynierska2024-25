@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+<<<<<<< Updated upstream
 from itineraries.models import Itinerary, ItineraryActivity, ItineraryActivityType
 from trips.models import Ticket
 
@@ -36,6 +37,25 @@ class ItineraryActivityListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItineraryActivity
         fields = ['id', 'name', 'type', 'ticket', 'description', 'location', 'date', 'start_time', 'duration', 'itinerary']
+=======
+from itineraries.models import Itinerary, ItineraryActivity
+from trips.models import Ticket
+
+
+class BaseItineraryActivitySerializer(serializers.ModelSerializer):
+    name = serializers.CharField(max_length=100)
+    type = serializers.CharField(max_length=100)
+    description = serializers.CharField(max_length=5120)
+    location = serializers.CharField(max_length=100)
+    start_time = serializers.TimeField()
+    duration = serializers.IntegerField()
+    itinerary = serializers.PrimaryKeyRelatedField(required=False, queryset=Itinerary.objects.all())
+    tickets = serializers.PrimaryKeyRelatedField(required=False, queryset=Ticket.objects.all())
+
+    class Meta:
+        model = ItineraryActivity
+        fields = ['id', 'name', 'type', 'description', 'location', 'start_time', 'duration', 'itinerary', 'tickets']
+>>>>>>> Stashed changes
 
 
 class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
@@ -54,6 +74,7 @@ class ItineraryActivityCreateSerializer(serializers.ModelSerializer):
         validated_data['itinerary'] = Itinerary.objects.get(pk=itinerary_id)
         return ItineraryActivity.objects.create(**validated_data)
 
+<<<<<<< Updated upstream
     class Meta:
         model = ItineraryActivity
         fields = ["name", "ticket", "type", "description", "location", "date", "start_time", "duration"]
@@ -78,3 +99,11 @@ class ItineraryActivityDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItineraryActivity
         fields = ['id']
+=======
+
+class ItineraryActivityUpdateSerializer(BaseItineraryActivitySerializer):
+    pass
+
+class ItineraryActivityDeleteSerializer(BaseItineraryActivitySerializer):
+    pass
+>>>>>>> Stashed changes
