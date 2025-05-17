@@ -4,6 +4,7 @@ import homeRoutes from "./homeRoutes";
 import panelRoutes from "./panelRoutes";
 import tripRoutes from "@/router/tripRoutes";
 import authRoutes from "./authRoutes";
+import inviteRouters from "./inviteRouters"
 import { useAuthStore, useNotificationStore } from "@/stores";
 
 const routes: RouteRecordRaw[] = [
@@ -11,7 +12,9 @@ const routes: RouteRecordRaw[] = [
   ...homeRoutes,
   panelRoutes,
   tripRoutes,
+  inviteRouters
 ];
+
 const router = createRouter({
   history: createWebHistory(),
   routes,

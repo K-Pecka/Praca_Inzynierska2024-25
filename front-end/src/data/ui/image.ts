@@ -1,69 +1,91 @@
+import heroImg from '@/assets/images/hero/hero-section.svg';
+import logoImg from '@/assets/images/logo/page.svg';
+
+import touristRoleImg from '@/assets/images/roles/tourist.svg';
+import guideRoleImg from '@/assets/images/roles/guide.svg';
+
+import tripBackgroundImg from '@/assets/images/backgrounds/trip-background.svg';
+
+import touristExpenseControlImg from '@/assets/images/benefits/tourist/expense-control.svg';
+import touristFlexiblePlannerImg from '@/assets/images/benefits/tourist/flexible-planner.svg';
+import touristTicketStorageImg from '@/assets/images/benefits/tourist/ticket-storage.svg';
+
+import guideCommunicationImg from '@/assets/images/benefits/guide/communication.svg';
+import guideCommunicationChannelImg from '@/assets/images/benefits/guide/communication-channel.svg';
+import guideFlexiblePlannerImg from '@/assets/images/benefits/guide/flexible-planner.svg';
+
+import emptyTripImg from '@/assets/images/emptyState/empty-state-trip.svg';
+import emptyPlanImg from '@/assets/images/emptyState/empty-state-plan.svg';
+import emptyTicketImg from '@/assets/images/emptyState/empty-state-ticket.svg';
+
+import myAccountImg from '@/assets/images/icons/my-account.svg';
+
 export const images = {
   hero: {
-    img: '/src/assets/images/hero/hero-section.svg',
+    img: heroImg,
     alt: 'hero banner',
   },
   logo: {
-    img: '/src/assets/images/logo/page.svg',
+    img: logoImg,
     alt: 'logo',
   },
   role: {
     tourist: {
-      img: '/src/assets/images/roles/tourist.svg',
+      img: touristRoleImg,
       alt: 'tourist',
     },
     guide: {
-      img: '/src/assets/images/roles/guide.svg',
+      img: guideRoleImg,
       alt: 'guide',
     },
   },
   backgrounds: {
     trip: {
-      img: '/src/assets/images/backgrounds/trip-background.svg',
+      img: tripBackgroundImg,
       alt: 'trip background',
     },
   },
   benefits: {
     tourist: {
       expenseControl: {
-        img: '/src/assets/images/benefits/tourist/expense-control.svg',
+        img: touristExpenseControlImg,
         alt: 'expense control',
       },
       flexiblePlanner: {
-        img: '/src/assets/images/benefits/tourist/flexible-planner.svg',
+        img: touristFlexiblePlannerImg,
         alt: 'flexible planner',
       },
       ticketStorage: {
-        img: '/src/assets/images/benefits/tourist/ticket-storage.svg',
+        img: touristTicketStorageImg,
         alt: 'ticket storage',
       },
     },
     guide: {
       communication: {
-        img: '/src/assets/images/benefits/guide/communication.svg',
+        img: guideCommunicationImg,
         alt: 'communication',
       },
       communicationChannel: {
-        img: '/src/assets/images/benefits/guide/communication-channel.svg',
+        img: guideCommunicationChannelImg,
         alt: 'communication channel',
       },
       flexiblePlanner: {
-        img: '/src/assets/images/benefits/guide/flexible-planner.svg',
+        img: guideFlexiblePlannerImg,
         alt: 'flexible planner',
       },
     },
   },
   emptyState: {
     trip: {
-      img: '/src/assets/images/emptyState/empty-state-trip.svg',
+      img: emptyTripImg,
       alt: 'empty trip',
     },
     plan: {
-      img: '/src/assets/images/emptyState/empty-state-plan.svg',
+      img: emptyPlanImg,
       alt: 'empty plan',
     },
     ticket: {
-      img: '/src/assets/images/emptyState/empty-state-ticket.svg',
+      img: emptyTicketImg,
       alt: 'empty ticket',
     },
   },
@@ -79,7 +101,7 @@ export const images = {
       myAccount: 'mdi-account-circle-outline',
     },
     myAccount: {
-      img: '/src/assets/images/icons/my-account.svg',
+      img: myAccountImg,
       alt: 'my account',
     },
   },
