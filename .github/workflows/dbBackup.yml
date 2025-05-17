@@ -2,7 +2,7 @@ name: Backup Heroku Postgres
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "* */12 * * *"
   workflow_dispatch:
 
 jobs:
