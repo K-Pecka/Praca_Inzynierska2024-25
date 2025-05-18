@@ -34,7 +34,9 @@ export const setParam = (
 
 export const apiEndpoints = {
   user: {
+    update:`/user/update/`,
     getUserById: `/user/user/by-profile/:userId/`,
+    role: `/user/profile/:role/change-default/`,
   },
   auth: {
     login: `/user_auth/login/`,

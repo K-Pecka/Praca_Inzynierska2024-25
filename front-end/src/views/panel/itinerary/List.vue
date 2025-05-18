@@ -5,6 +5,7 @@ import HeaderSection from "@/components/common/HeaderSection.vue";
 import AppButton from "@/components/AppButton.vue";
 import {images} from "@/data";
 import { useUtilsStore,useAuthStore } from "@/stores";
+import { useRouter } from "vue-router";
 const {getTripId} = useUtilsStore();
 const {yourPlans} = useTripStore();
 const {data: rawPlans, isLoading, error} = yourPlans.plans();
@@ -15,7 +16,12 @@ const {trip} = getTripDetails();
 
 const { userData } = useAuthStore();
 const { isOwner } = userData;
-
+const router = useRouter();
+const goToCreatePlan = () => {
+  if (isOwner(trip.value?.creator?.id ?? 0)) {
+    router.push({ name: 'createPlan', params: { tripId: String(getTripId()) } });
+  }
+}
 </script>
 
 <template>
@@ -38,10 +44,10 @@ const { isOwner } = userData;
       <!-- Empty state -->
       <template v-else>
         <v-col cols="12" class="text-center py-10">
-          <v-row class="flex-column">
-        <span class="empty-header font-weight-bold mb-8">
-            Nie masz jeszcze żadnych planów podróży
-        </span>
+          <v-row class="flex-column align-center">
+          <span class="empty-header font-weight-bold mb-8">
+              Nie masz jeszcze żadnych planów podróży
+          </span>
             <v-img
                 :src="images.emptyState.plan.img"
                 :alt="images.emptyState.plan.alt"
@@ -49,17 +55,16 @@ const { isOwner } = userData;
                 aspect-ratio="1"
                 contain
             />
-            <router-link :to="{ name: 'createPlan', params: { tripId: String(getTripId()) } }">
-              <AppButton
-                  color="primary"
-                  class="plan-button"
-                  width="300px"
-                  height="height-auto"
-                  fontSize="font-auto"
-                  text="Dodaj plan podróży"
-              >
-              </AppButton>
-            </router-link>
+            <AppButton
+                color="primary"
+                class="plan-button"
+                width="300px"
+                height="height-auto"
+                fontSize="font-auto"
+                text="Dodaj plan podróży"
+                :disabled="!isOwner(trip?.creator?.id ?? 0)"
+                @click="goToCreatePlan"
+              />
           </v-row>
         </v-col>
       </template>

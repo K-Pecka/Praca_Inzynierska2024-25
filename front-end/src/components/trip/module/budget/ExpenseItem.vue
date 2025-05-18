@@ -21,7 +21,7 @@ const currencyValue =
   expense.currency != "PLN" ? `(${expense.converted_amount} PLN)` : "";
 const { getUser } = useAuthStore();
 const hasPermissionToDelete = (userId: number) => {
-  return isOwnerTrip || getUser()?.profiles?.[0]?.id == userId;
+  return isOwnerTrip || getUser()?.profiles?.some(p => p.id === userId);
 };
 </script>
 

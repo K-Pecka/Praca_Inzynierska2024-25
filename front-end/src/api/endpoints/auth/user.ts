@@ -12,3 +12,24 @@ export const fetchUserById = async (id: number) => {
 
   return data as User;
 };
+export const updateUser = async (dto: { first_name?: string; last_name?: string; current_password?: string; password?: string;password_confirm?: string }) => {
+
+  const { data, error } = await fetchData<User>(apiEndpoints.user.update, "PATCH",dto);
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  return data as User;
+};
+export const fetchUserRole = async (role: string) => {
+  const url = setParam(apiEndpoints.user.role, { role });
+
+  const { data, error } = await fetchData<User>(url, "PATCH");
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  return data as User;
+};

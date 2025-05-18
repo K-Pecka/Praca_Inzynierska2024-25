@@ -19,8 +19,12 @@ const {
   isLoading,
   refetch: refetchTickets
 } = getTickets(String(getTripId()));
+import {useAuthStore} from "@/stores"
+const {userData} = useAuthStore();
+const {isOwner} = userData;
 
-
+const {getTripDetails} = tripStore;
+const {trip} = getTripDetails();
 import {useMembersStore} from "@/stores/trip/useMembersStore"
 
 const {members: membersStore} = useMembersStore();
@@ -102,6 +106,9 @@ const handleDelete = (trip: number) => {
     wordToConfirm: "USUŃ"
   });
 };
+const hasPermissionToDelete = () => {
+  return isOwner(trip.value?.creator?.id ?? 0);
+};
 </script>
 
 <template>
@@ -109,7 +116,7 @@ const handleDelete = (trip: number) => {
     <template #title v-if="(tickets && tickets.length > 0) || showForm">
       <HeaderSection
           subtitle="Bilety"
-          button
+          :button="isOwner(trip?.creator?.id ?? 0)"
           button-text="Dodaj Bilet"
           :button-action="toggleForm"
       />
@@ -224,7 +231,10 @@ const handleDelete = (trip: number) => {
                     <v-col cols="6" sm="6" md="12" lg="12" class="text-end">
                       <AppButton
                           color="red"
-                          @click="() => handleDelete(ticket.id)"
+                          @click="hasPermissionToDelete()
+                            ? handleDelete(ticket.id)
+                            : () => {}"
+                          :disabled="!hasPermissionToDelete()"
                           font-auto
                           max-width="190px"
                           text="Usuń bilet"
