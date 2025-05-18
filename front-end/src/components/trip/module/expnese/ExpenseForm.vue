@@ -24,7 +24,7 @@ const form = ref({
   amount: 0,
   currency: "PLN",
   date: "",
-  user: isOwnerTrip ? members[0] : user?.profiles?.[0]?.id,
+  user: isOwnerTrip ? members[0] : user?.profiles?.find(e => e.is_default)?.id,
   category: 1,
   note: "",
 });

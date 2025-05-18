@@ -94,6 +94,13 @@ export const useAuthStore = defineStore(
     const getToken = () => {
       return token.value;
     };
+    function setActiveProfile(profileId: number) {
+      if (!user.value || !user.value.profiles) return;
+      user.value.profiles = user.value.profiles.map(p => ({
+        ...p,
+        is_default: p.id === profileId,
+      }));
+    }
     const logout = async () => {
       try {
         await logOutMutation.mutateAsync();
@@ -198,6 +205,7 @@ export const useAuthStore = defineStore(
     };
 
     return {
+      setActiveProfile,
       userData: {
         getUser,
         isOwner,

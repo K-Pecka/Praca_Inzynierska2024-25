@@ -240,7 +240,9 @@ export interface User {
   name?: string | null;
   is_guest?: boolean;
   is_owner?: boolean;
-  profiles?:{id?:number}[];
+  profiles?:{
+    type: number;id?:number;is_default:boolean;
+}[];
   fullname?:string;
 }
 

@@ -74,14 +74,19 @@ router.beforeEach(async (to, from, next) => {
   const roleParam = to.params.role as string | undefined;
   const roleStore = useRoleStore();
   const queryClient = useQueryClient();
-
+  const authStore = useAuthStore();
   if (!roleParam) return next();
   if (roleParam === roleStore.getRole()) return next();
 
   try {
-    await fetchUserRole(roleParam);
+    const user = await fetchUserRole(roleParam);
     roleStore.setRole(roleParam);
+    const profileType = roleParam === 'tourist' ? 1 : 2;
+    const activeProfile = user.profiles?.find(p => p.type === profileType);
 
+    if (activeProfile && typeof activeProfile.id === 'number') {
+      authStore.setActiveProfile(activeProfile.id);
+    }
     await queryClient.removeQueries({ queryKey: ['trips'] });
     await queryClient.fetchQuery(tripsQueryReload());
 
