@@ -2,13 +2,15 @@ import { useMutation, useQuery } from "@tanstack/vue-query"
 import type { Trip } from "@/types";
 import {fetchTrips, fetchTrip, deleteTrip, createTrip, updateTrip} from "@/api";
 import router from "@/router";
-
-export const getTripQuery = () => {
-    return useQuery<Trip[], Error>({
-        queryKey: ["trips"],
-        queryFn: fetchTrips,
-    })
+const query = {
+    queryKey: ["trips"],
+    queryFn: fetchTrips,
 }
+export const getTripQuery = () => {
+    return useQuery<Trip[], Error>(query)
+}
+export const tripsQueryReload = () => query
+
 export const getTripDetailsQuery = (id: number) => {
     return useQuery<Trip, Error, Trip, [string, number]>({
         queryKey: ["trip", id],

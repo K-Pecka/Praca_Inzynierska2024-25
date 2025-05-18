@@ -6,7 +6,11 @@ import tripRoutes from "@/router/tripRoutes";
 import authRoutes from "./authRoutes";
 import inviteRouters from "./inviteRouters"
 import { useAuthStore, useNotificationStore } from "@/stores";
+import { useRoleStore } from "@/stores/auth/useRoleStore";
 
+import { useQueryClient } from "@tanstack/vue-query";
+import { tripsQueryReload } from "@/api/services/tripQuery";
+import { fetchUserRole } from "@/api/endpoints/auth";
 const routes: RouteRecordRaw[] = [
   ...authRoutes,
   ...homeRoutes,
@@ -65,5 +69,28 @@ router.beforeEach(async (to, from, next) => {
   localStorage.setItem("routerPath", currentPath);
   next();
 });
+
+router.beforeEach(async (to, from, next) => {
+  const roleParam = to.params.role as string | undefined;
+  const roleStore = useRoleStore();
+  const queryClient = useQueryClient();
+
+  if (!roleParam) return next();
+  if (roleParam === roleStore.getRole()) return next();
+
+  try {
+    await fetchUserRole(roleParam);
+    roleStore.setRole(roleParam);
+
+    await queryClient.removeQueries({ queryKey: ['trips'] });
+    await queryClient.fetchQuery(tripsQueryReload());
+
+    next();
+  } catch (err) {
+    console.error('Błąd przy zmianie roli w beforeEach', err);
+    next('/unauthorized');
+  }
+});
+
 
 export default router;

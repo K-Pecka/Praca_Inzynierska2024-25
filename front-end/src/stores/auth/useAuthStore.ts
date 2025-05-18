@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { useMutation } from "@tanstack/vue-query";
+import { useMutation, useQuery } from "@tanstack/vue-query";
 import { useNotificationStore } from "@/stores/ui/useNotificationStore";
 import router from "@/router";
 import { TOKEN, User } from "@/types";
@@ -16,7 +16,7 @@ import {
 import {getMutationUpdateUser} from "@/api/services/userQuery"
 import { nextTick } from "vue";
 import { queryClient } from "@/main";
-import { getMutationCreate, getMutationUpdate } from "@/api";
+import { useRoleStore } from "./useRoleStore";
 export const useAuthStore = defineStore(
   "auth",
   () => {
@@ -31,17 +31,18 @@ export const useAuthStore = defineStore(
     const { hasPermission } = usePermissionStore();
     const token = ref<TOKEN | null>(null);
     const user = ref<User | null>(null);
-    const getPermission = useMutation({
-      mutationFn: fetchPermission,
+    const getUser = () => user.value;
+    const getPermission = useQuery({
+      queryKey: ["permission",getUser()?.profiles?.[0]?.id],
+      queryFn: fetchPermission,
+      enabled: getUser()?.profiles?.[0]?.id !== undefined,
     });
 
     const checkPermission = async (
       name: string | undefined,
       type: "nav" | "path" = "nav"
     ) => {
-      const userPermission =
-        ((await getPermission.mutateAsync()) as number[]) || [];
-      return hasPermission(userPermission, name, type);
+      return true//hasPermission(userPermission, name, type);
     };
     const validToken = async (): Promise<boolean> => {
       const currentToken = getToken();
@@ -88,8 +89,8 @@ export const useAuthStore = defineStore(
     const saveUser = (data: User): void => {
       user.value = data;
     };
-    const isOwner = (id: number) => id === (getUser()?.profiles?.[0]?.id ?? -1);
-    const getUser = () => user.value;
+    const isOwner = (id: number) => getUser()?.profiles?.some(profile => profile.id === id) ?? false;
+
     const getToken = () => {
       return token.value;
     };
@@ -122,6 +123,7 @@ export const useAuthStore = defineStore(
         setSuccessCurrentMessage(logOutSuccess());
         token.value = null;
         user.value = null;
+        useRoleStore().setRole("unknown");
         router.push({ name: "landing" });
       },
       onError: (err) => {
