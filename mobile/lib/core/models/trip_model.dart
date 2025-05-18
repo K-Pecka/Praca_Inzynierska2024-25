@@ -27,9 +27,9 @@ class TripModel {
       id: json['id'],
       name: json['name'],
       creator: Member.fromJson(json['creator']),
-      members: (json['members'] as List)
-          .map((m) => Member.fromJson(m))
-          .toList(),
+      members: json['members'] != null
+          ? (json['members'] as List).map((m) => Member.fromJson(m)).toList()
+          : [],
       startDate: DateTime.parse(json['start_date']),
       endDate: DateTime.parse(json['end_date']),
       isCreator: json['is_creator'],
