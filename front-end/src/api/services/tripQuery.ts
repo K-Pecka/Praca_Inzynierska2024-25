@@ -72,7 +72,22 @@ export const getMutationUpdateBudget = (option: Record<string,any>)=>useMutation
     mutationFn: ({newBudget, param}: { newBudget: Budget; param: Record<string,string> }) =>
         saveBudget(newBudget, param),
     onSuccess: ({tripId}) => {
+    onSuccess: ({tripId}) => {
         option.notifications.setSuccessCurrentMessage(option.successMessage);
+        option.queryClient.invalidateQueries({queryKey: ["trip",Number(tripId)]});
+        router.push({name: "tripDashboard"});
+    },
+    onError: (err: any) => {
+        option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);
+    },
+});
+export const getMutationUpdateBudget = (option: Record<string,any>)=>useMutation({
+    mutationFn: ({newBudget, param}: { newBudget: Budget; param: Record<string,string> }) =>
+        saveBudget(newBudget, param),
+    onSuccess: ({tripId}) => {
+        option.notifications.setSuccessCurrentMessage(option.successMessage);
+        option.queryClient.invalidateQueries({queryKey: ["trip",Number(tripId)]});
+        router.push({name: "tripDashboard"});
         option.queryClient.invalidateQueries({queryKey: ["trip",Number(tripId)]});
         router.push({name: "tripDashboard"});
     },
