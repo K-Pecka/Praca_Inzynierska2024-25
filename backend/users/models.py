@@ -86,6 +86,8 @@ class CustomUser(AbstractBaseUser, BaseModel):
 
         self.set_password(data["password"])
         self.is_guest = False
+        self.first_name = data["first_name"]
+        self.last_name = data["last_name"]
 
         new_profile_type = UserProfileType.objects.get_or_create(
             code="tourist",
