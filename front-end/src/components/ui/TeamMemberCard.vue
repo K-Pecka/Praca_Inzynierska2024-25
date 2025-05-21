@@ -4,7 +4,10 @@ defineProps<{
     name: string;
     role: string;
     description: string;
-    photo: string;
+    photo: {
+      src: string;
+      alt: string;
+    };
     github: string;
   }[];
 }>();
@@ -23,10 +26,10 @@ defineProps<{
       >
         <v-card class="team-card elevation-4 w-100 d-flex flex-column">
           <v-img
-              :src="member.photo"
+              :src="member.photo.src"
               class="team-image"
               cover
-              alt="Zdjęcie członka zespołu"
+              :alt="member.photo.alt"
           />
 
           <div class="card-bottom pa-4 d-flex flex-column flex-grow-1 bottom-card">
