@@ -84,7 +84,7 @@ class CustomUser(AbstractBaseUser, BaseModel):
         if not self.is_guest:
             raise ValueError("Nieprawidłowy typ konta.")
 
-        self.password = data["password"]
+        self.set_password(data["password"])
         self.is_guest = False
 
         new_profile_type = UserProfileType.objects.get_or_create(
