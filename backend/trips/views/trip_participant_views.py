@@ -133,6 +133,8 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
                 raise ValidationError(_("Nie udało się utworzyć konta gościa. Sprawdź poprawność danych. {e}".format(e=str(e))))
 
             profile = user.get_default_profile()
+        elif CustomUser.objects.filter(email=data['email'], type__code='guest').exists():
+            pass
         else:
             profile = UserProfile.objects.filter(user=user, type__code='tourist').first()
 

@@ -112,7 +112,7 @@ class TripUpdateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Data rozpoczęcia nie może być późniejsza niż data zakończenia.")
             if data["start_date"] < timezone.now().date():
                 raise serializers.ValidationError("Data rozpoczęcia nie może być wcześniejsza niż dzisiaj.")
-            return data
+        return data
 
     class Meta:
         model = Trip
