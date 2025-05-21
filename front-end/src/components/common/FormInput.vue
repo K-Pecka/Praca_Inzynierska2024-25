@@ -10,9 +10,9 @@
     <template v-if="inputData.type === 'date_range'">
       <v-date-input
         :min="inputData.config?.min"
-        :max="inputData.config?.edit ?? inputData.config?.max"
+        :max="inputData.config?.max"
         v-model="localRange"
-        :label="inputData.config?.edit ? `${inputData.config?.min} - ${inputData.config?.max}` : inputData.placeholder"
+        :label="inputData.config?.edit ? `${inputData.config?.min} - ${inputData.config?.maxDate}` : inputData.placeholder"
         :multiple="inputData.config?.multiple ? 'range' : false"
         :placeholder="inputData.placeholder"
         max-width="auto"
@@ -68,6 +68,7 @@ const props = defineProps({
     default: '',
   },
 });
+console.log("inputData", props.inputData);
 const emit = defineEmits(["update", "updateModel"]);
 
 const localRange = ref<string[]>(

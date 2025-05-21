@@ -8,16 +8,6 @@ import {getMutationExpenseDelete} from "@/api/services/expenseQuery"
 export const useBudget = (tripId:Function) => {
   const notification = useNotificationStore();
   const queryClient = useQueryClient();
-  const tripMutationBudget = useMutation({
-    mutationFn: saveBudget,
-    onSuccess: () => {
-      notification.setSuccessCurrentMessage("Zapisano");
-      router.push({ name: "Dashboard" });
-    },
-    onError: (err: any) => {
-      notification.setErrorCurrentMessage(err?.message || "Błąd");
-    },
-  });
   const createExpense = getMutationExpenseCreate({
           notification,
           queryClient,
@@ -45,7 +35,6 @@ export const useBudget = (tripId:Function) => {
   };
 
   return {
-    tripMutationBudget,
     createExpense,
     getExpenseByTrip: getExpenseByTrip,
     deleteExpense

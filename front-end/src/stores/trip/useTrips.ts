@@ -36,6 +36,11 @@ export const useTrips = (tripId:Function) => {
         successMessage: "Zaktualizowano wycieczkę",
         errorMessage: "Nie udało się zaktualizować wycieczki",
     })
-
-    return {getTrips, getTripDetails, deleteTrip, updateTrip, createTrip};
+    const updateTripBudget = getMutationUpdateBudget({
+        notifications,
+        queryClient,
+        successMessage: "Budżet został zaktualizowany",
+        errorMessage: "Nie udało się zaktualizować budżetu",
+      });
+    return {getTrips, getTripDetails, deleteTrip, updateTrip, createTrip,updateTripBudget};
 };

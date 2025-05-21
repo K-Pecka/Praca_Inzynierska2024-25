@@ -49,6 +49,7 @@ export const useMembersStore = defineStore("tripDetails", () => {
       return {
         ...user,
         email: user.email ?? "unknown@example.com",
+        name: user.name ?? "Turysta",
         is_guest: false,
       };
     })

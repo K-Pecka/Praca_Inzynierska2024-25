@@ -59,9 +59,22 @@ export const getMutationDelete = (option: Record<string,any>) => useMutation({
 export const getMutationUpdate = (option: Record<string,any>)=>useMutation({
     mutationFn: ({tripId, newData}: { tripId: string; newData: any }) =>
         updateTrip({tripId}, newData),
-    onSuccess: () => {
+    onSuccess: ({tripId}) => {
         option.notifications.setSuccessCurrentMessage(option.successMessage);
-        option.queryClient.invalidateQueries({queryKey: ["trips"]});
+        option.queryClient.invalidateQueries({queryKey: ["trip",Number(tripId)]});
+        router.push({name: "tripDashboard"});
+    },
+    onError: (err: any) => {
+        option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);
+    },
+});
+export const getMutationUpdateBudget = (option: Record<string,any>)=>useMutation({
+    mutationFn: ({newBudget, param}: { newBudget: Budget; param: Record<string,string> }) =>
+        saveBudget(newBudget, param),
+    onSuccess: ({tripId}) => {
+        option.notifications.setSuccessCurrentMessage(option.successMessage);
+        option.queryClient.invalidateQueries({queryKey: ["trip",Number(tripId)]});
+        router.push({name: "tripDashboard"});
     },
     onError: (err: any) => {
         option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);

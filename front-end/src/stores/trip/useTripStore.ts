@@ -15,8 +15,9 @@ export const useTripStore = defineStore("trip", () => {
     deleteTrip,
     createTrip,
     updateTrip,
+    updateTripBudget
   } = useTrips(getTripId);
-  const { tripMutationBudget, createExpense, getExpenseByTrip,deleteExpense } =
+  const {createExpense, getExpenseByTrip,deleteExpense } =
     useBudget(getTripId);
   const { getPlans, yourPlans, planMutationAdd, handleDeleteItinerary } = usePlans(getTripId);
 
@@ -38,7 +39,8 @@ export const useTripStore = defineStore("trip", () => {
       getTripDetails,
       deleteTrip,
       createTrip,
-      updateTrip
+      updateTrip,
+      updateTripBudget
     },
     plan:{
       handleDeleteItinerary
@@ -46,7 +48,6 @@ export const useTripStore = defineStore("trip", () => {
     yourPlans,
     getPlans,
     getTripDetails,
-    tripMutationBudget,
     planMutationAdd,
     removeParticipant,
     addParticipant,
