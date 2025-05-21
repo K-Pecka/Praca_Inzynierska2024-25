@@ -134,7 +134,14 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
 
             profile = user.get_default_profile()
         elif CustomUser.objects.filter(email=data['email'], type__code='guest').exists():
-            pass
+            profile = UserProfile.objects.filter(user=user, type__code='tourist').first()
+
+            if not profile:
+                raise ValidationError(_("Użytkownik o podanym mailu nie posiada konta turysty"))
+
+            if profile.type.code == 'guide':
+                raise ValidationError(_("Nie można dodać przewodnika do wycieczki."))
+
         else:
             profile = UserProfile.objects.filter(user=user, type__code='tourist').first()
 
