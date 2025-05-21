@@ -119,29 +119,52 @@ export const aboutTeam = {
             name: "Mateusz Wiśniewski",
             role: "Team Leader",
             description: "Koordynowanie zespołu, zarządzanie sprintami, kontrolowanie realizacji zadań, tworzenie dokumentacji, projektowanie interfejsu, regularne testowanie aplikacji webowej,  programista aplikacji mobilnej i backendu.",
-            photo: "/src/assets/images/avatar/MW_avatar.png",
+            photo: images.teamMembers.MateuszWisniewski,
             github: "https://github.com/s24893-pj"
         },
         {
             name: "Jakub Pobłocki",
             role: "Główny Backend Developer",
             description: "Główny programista backendu, zarządzenie strukturą bazy danych, dokumentacja API, wspieranie frontendu",
-            photo: "/src/assets/images/avatar/JP_avatar.png",
+            photo: images.teamMembers.JakubPoblocki,
             github: "https://github.com/s25770-pj"
         },
         {
             name: "Andrzej Ebertowski",
             role: "Specjalista ds. Dokumentacji",
             description: "Tworzenie dokumentacji, testowanie funkcjonalności, wspieranie frontendu.",
-            photo: "/src/assets/images/avatar/AE_avatar.png",
+            photo: images.teamMembers.AndrzejEbertowski,
             github: "https://github.com/AndrzejjE"
         },
         {
             name: "Kacper Pecka",
             role: "Główny Frontend Developer",
             description: "Główny programista frontendu, wdrażanie responsywności, integracja z API.",
-            photo: "/src/assets/images/avatar/KP_avatar.png",
+            photo: images.teamMembers.KacperPecka,
             github: "https://github.com/K-Pecka"
         },
     ],
 };
+export const contacts = [
+  {
+    icon: 'mdi-email-outline',
+    bgClass: 'contact-accent-bg',
+    title: 'Wyślij nam maila',
+    content: 'Odpowiemy w ciągu 24 godzin',
+    footer: 'kontakt@plannder.com',
+  },
+  {
+    icon: 'mdi-phone-outline',
+    bgClass: 'contact-orange-bg',
+    title: 'Zadzwoń do nas',
+    content: 'Pon-Pt od 9:00 do 18:00',
+    footer: '+48 000 000 000',
+  },
+  {
+    icon: 'mdi-map-marker-outline',
+    bgClass: 'contact-cyan-bg',
+    title: 'Odwiedź nas',
+    content: 'Przywitaj się z nami osobiście w naszym biurze',
+    footer: 'Targ drzewny 14, Gdańsk, PL',
+  },
+]
