@@ -1,6 +1,6 @@
 import {useMutation, useQueryClient} from "@tanstack/vue-query";
 import {useNotificationStore} from "@/stores";
-import { getTripQuery,getTripDetailsQuery, getMutationCreate, getMutationDelete,getMutationUpdate } from "@/api/services/tripQuery";
+import { getTripQuery,getTripDetailsQuery, getMutationCreate, getMutationDelete,getMutationUpdate, getMutationUpdateBudget } from "@/api/services/tripQuery";
 export const useTrips = (tripId:Function) => {
     const queryClient = useQueryClient();
     const notifications = useNotificationStore();
@@ -35,6 +35,11 @@ export const useTrips = (tripId:Function) => {
         successMessage: "Zaktualizowano wycieczkę",
         errorMessage: "Nie udało się zaktualizować wycieczki",
     })
-
-    return {getTrips, getTripDetails, deleteTrip, updateTrip, createTrip};
+    const updateTripBudget = getMutationUpdateBudget({
+        notifications,
+        queryClient,
+        successMessage: "Budżet został zaktualizowany",
+        errorMessage: "Nie udało się zaktualizować budżetu",
+      });
+    return {getTrips, getTripDetails, deleteTrip, updateTrip, createTrip,updateTripBudget};
 };

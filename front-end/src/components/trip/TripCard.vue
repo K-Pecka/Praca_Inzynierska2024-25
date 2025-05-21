@@ -17,6 +17,7 @@ function formatPL(dateString: string): string {
 import {useSafeDelete} from "@/composables/useSafeDelete";
 const {confirmAndRun} = useSafeDelete();
 const handleDelete = (tripId: string,planId:string) => {
+  if(!props.isOwner) return;
   confirmAndRun(() => {
     handleDeleteItinerary(tripId, planId);
   }, {
@@ -91,12 +92,13 @@ const props = defineProps<{
                   font-auto
                   :class="{'w-100' :$vuetify.display.smAndDown}"
                   max-width="190px"
-                  text="Zarządzaj planem"
+                  :text="props.isOwner ? 'Zarządzaj planem' : 'Podglądaj plan'"
               />
               <AppButton
                   color="red"
                   @click="()=> handleDelete(trip.trip, trip.id)"
                   :class="{'w-100' :$vuetify.display.smAndDown}"
+                  :disabled="!props.isOwner"
                   font-auto
                   max-width="190px"
                   text="Usuń plan"

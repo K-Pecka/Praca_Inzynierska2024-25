@@ -7,19 +7,11 @@ const getValidator = (errorMessage: Record<string, string>): Validator => {
 
 export const budgetInput = (errorMessage: Record<string, string>) => [
       {
-        name: "amount",
+        name: "budget_amount",
         label: "Kwota:",
         type: InputType.TEXT,
         placeholder: "np. 6000",
         validation: getValidator(errorMessage).minValue(0),
         error: [],
-      },
-      {
-        name: "currency",
-        label: "Waluta:",
-        type: InputType.TEXT,
-        placeholder: "PLN",
-        validation: getValidator(errorMessage).isEmpty(),
-        error: [],
-      },
+      }
     ];

@@ -12,6 +12,8 @@ interface Config {
   min?: Date | string;
   max?: Date | string;
   edit?: boolean;
+  maxDate?: Date | string;
+  label?: string;
 }
 
 export interface Input {
@@ -98,9 +100,7 @@ export interface Memebers {
   email: string;
 }
 export interface Budget {
-  amount: string;
-  currency: string;
-  trip: number;
+  budget_amount: number;
 }
 export interface Btn {
   type: TypeOfButton;

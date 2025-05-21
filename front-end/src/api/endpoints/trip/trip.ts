@@ -1,6 +1,8 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
 import { Trip, NewTrip } from "@/types/interface";
 import { QueryFunctionContext } from "@tanstack/vue-query";
+import { Budget, Expense } from "@/types/interface";
+
 
 export const fetchTrips = async () => {
     const { data, error } = await fetchData<Trip[]>(apiEndpoints.trip.all, "GET");
@@ -59,11 +61,22 @@ export const updateTrip = async (
 ) => {
     const url = setParam(apiEndpoints.trip.update, param);
 
-    const { data, error } = await fetchData<Trip>(url, "PATCH", tripData);
+    const { error } = await fetchData<Trip>(url, "PATCH", tripData);
 
     if (error) {
         throw new Error(error);
     }
 
-    return data;
+    return param;
+};
+export const saveBudget = async (newBudget: Budget, param: Record<string, string> = {}) => {
+  const url = setParam(apiEndpoints.trip.update, param);
+
+  const { error } = await fetchData(url, "PATCH", newBudget);
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  return param;
 };

@@ -5,7 +5,8 @@ import { useFormStore,useTripStore } from "@/stores";
 import { FormType } from "@/types/enum";
 import { useRoute } from "vue-router";
 const { getFormInputs, isFormValid } = useFormStore();
-const {tripMutationBudget} = useTripStore();
+const {trip} = useTripStore();
+const {updateTripBudget} = trip;
 const inputs = ref(getFormInputs(FormType.BUDGET));
 
 const formValues = ref<Record<string, string>>(
@@ -15,13 +16,11 @@ const route = useRoute();
 
 const handleSubmit = (_formData: any, config: any) => {
   if (config?.send && isFormValid(FormType.BUDGET, formValues.value)) {
-    const data = {
-        amount: formValues.value?.amount,
-        currency: formValues.value?.currency,
-        trip: Number(route?.params?.tripId)
-      }
       try {
-        tripMutationBudget.mutateAsync(data);
+        updateTripBudget.mutateAsync({
+          newBudget: { budget_amount: Number(formValues.value?.budget_amount) },
+          param: { tripId: route.params.tripId as string }
+        });
       } catch (error) {
       
     }
