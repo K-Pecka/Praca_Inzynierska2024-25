@@ -2,7 +2,7 @@ import { Role } from "@/types/enum";
 
 export const sectionDashboard = (role:Role) => {
     switch (role) {
-        case Role.TURIST:
+        case Role.TOURIST:
             return "Twoje ostatnie wydatki";
         case Role.GUIDE:
             return "Ostatnie zaległości uczestników";

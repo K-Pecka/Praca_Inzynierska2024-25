@@ -1,12 +1,13 @@
 import {useMutation, useQueryClient} from "@tanstack/vue-query";
 import {useNotificationStore} from "@/stores";
-import { getTripQuery,getTripDetailsQuery, getMutationCreate, getMutationDelete,getMutationUpdate } from "@/api/services/tripQuery";
+import { useRoleStore } from "@/stores/auth/useRoleStore";
+import { getTripQuery,getTripDetailsQuery, getMutationCreate, getMutationDelete,getMutationUpdate, getMutationUpdateBudget } from "@/api/services/tripQuery";
 export const useTrips = (tripId:Function) => {
     const queryClient = useQueryClient();
     const notifications = useNotificationStore();
-
-    const getTrips = () => {
-        const {data:trips,isLoading:isLoading_trips,error:error_trips} =  getTripQuery()
+    const roleStore = useRoleStore();
+    const getTrips = (role?:string) => {
+        const {data:trips,isLoading:isLoading_trips,error:error_trips} =  getTripQuery(role || roleStore.getRole())
         return {trips,isLoading_trips,error_trips}
      }
 

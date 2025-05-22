@@ -24,7 +24,7 @@ export const updateUser = async (dto: { first_name?: string; last_name?: string;
 };
 export const fetchUserRole = async (role: string) => {
   const url = setParam(apiEndpoints.user.role, { role });
-
+  console.log("Fetching user role:", url);
   const { data, error } = await fetchData<User>(url, "PATCH");
 
   if (error) {

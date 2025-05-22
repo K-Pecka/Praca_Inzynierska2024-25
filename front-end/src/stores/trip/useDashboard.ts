@@ -37,9 +37,9 @@ export const useDashboard = (tripId: Function) => {
         );
 
         const activityCount = computed(() => ({
-            icon: getRole() == Role.TURIST ? "mdi-clock-outline" : "mdi-email",
-            title: getRole() == Role.TURIST ? "Aktywności" : "Wiadomości",
-            content: getRole() === Role.TURIST
+            icon: getRole() == Role.TOURIST ? "mdi-clock-outline" : "mdi-email",
+            title: getRole() == Role.TOURIST ? "Aktywności" : "Wiadomości",
+            content: getRole() === Role.TOURIST
                 ? `${trip.value?.activity_count ?? 0} Aktywności`
                 : "Wiadomości",
         }));

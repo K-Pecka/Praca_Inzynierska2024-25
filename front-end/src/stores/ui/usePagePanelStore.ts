@@ -27,7 +27,7 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
     };
     const selectRole:Record<Role, () => SideNavItem[]>={
         [Role.GUIDE]: getGudieNav,
-        [Role.TURIST]: getTouristNav,
+        [Role.TOURIST]: getTouristNav,
         [Role.UNKNOWN]: function (): SideNavItem[] {
             throw new Error("Function not implemented.");
         },
