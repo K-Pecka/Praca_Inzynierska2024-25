@@ -32,7 +32,7 @@ export const usePageHomeStore = defineStore("pagHome", () => {
       return;
     }
 
-    isLoggedIn.value = await auth.validToken();
+    isLoggedIn.value = useAuthStore().getToken()?.access !== undefined;
     navigationLinks.value = [
       ...defaultNavLinks,
       ...(isLoggedIn.value ? loggedInNavLinks : guestNavLinks),

@@ -18,7 +18,7 @@ export const useRoleStore = defineStore('roleStore', () => {
     if (newRole.toLowerCase().includes(Role.GUIDE.toLowerCase())) {
       roleValue = Role.GUIDE;
     } else {
-      roleValue = Role.TURIST;
+      roleValue = Role.TOURIST;
     }
 
     if (role.value !== roleValue) {

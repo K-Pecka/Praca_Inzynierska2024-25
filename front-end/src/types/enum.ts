@@ -16,7 +16,7 @@ export enum FormType {
 }
 export enum Role {
   UNKNOWN = "unknown",
-  TURIST = "turist",
+  TOURIST = "tourist",
   GUIDE = "guide",
   ADMIN = "admin",
 }

@@ -53,8 +53,8 @@ export const useAuthStore = defineStore(
         return true;
       } catch {
         try {
-          const refreshed = await refreshToken();
-          if (!refreshed) return false;
+         // const refreshed = await refreshToken();
+          //if (!refreshed) return false;
           await fetchVerify(getToken()!);
           return true;
         } catch {
@@ -63,25 +63,6 @@ export const useAuthStore = defineStore(
       }
     };
 
-    const refreshToken = async (): Promise<boolean> => {
-      if (!token.value) {
-        setErrorCurrentMessage("Brak tokena — zaloguj się ponownie.");
-        return false;
-      }
-      try {
-        const tokenRefresh: TOKEN = await fetchRefreshToken(token.value);
-        if (tokenRefresh) {
-          saveToken(tokenRefresh);
-          return true;
-        }
-      } catch (error: any) {
-        setErrorCurrentMessage("Sesja wygasła — zaloguj się ponownie.");
-        token.value = null;
-        user.value = null;
-        return false;
-      }
-      return false;
-    };
 
     const saveToken = (data: TOKEN) => {
       token.value = data;
@@ -220,7 +201,6 @@ export const useAuthStore = defineStore(
       isLogin,
       validToken,
       getToken,
-      refreshToken,
       checkPermission,
       updateProfileMutation,
       getUserInitials,

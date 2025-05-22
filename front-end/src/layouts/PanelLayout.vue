@@ -22,7 +22,7 @@ defineProps({
   }
 })
 
-const drawer = ref(false)
+const drawer = ref(true)
 </script>
 
 <template>

@@ -1,11 +1,10 @@
 import apiClient from "@/api/apiClient";
-import { TOKEN } from "@/types/interface";
 import { apiEndpoints } from "@/api/apiEndpoints";
 
-export const fetchRefreshToken = async (token: TOKEN) => {
+export const fetchRefreshToken = async (refresh: string) => {
   try {
     const response = await apiClient.post(apiEndpoints.auth.refreshToken, {
-      refresh: token.refresh,
+      refresh: refresh,
     });
 
     return response.data;
