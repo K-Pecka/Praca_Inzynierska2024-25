@@ -49,6 +49,7 @@ OWN_ADDITIONAL_APPS = [
     'itineraries',
     'chats.apps.ChatsConfig',
     'channels',
+    'payments',
 ]
 
 INSTALLED_APPS = [
@@ -221,3 +222,9 @@ CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://plannder.
 CSRF_TRUSTED_ORIGINS = [
     "https://api.plannder.com"
 ]
+
+# Stripe config
+
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', "sk_test_your_key")
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY', "pk_test_your_key")
+STRIPE_ENDPOINT_SECRET = os.environ.get('STRIPE_ENDPOINT_SECRET', "whsec_your_key")

@@ -35,7 +35,7 @@ urlpatterns = [
     path('dict/', include('dicts.urls')),
     path('trip/', include('trips.urls')),
     path('apis/', include('apis.urls')),
-
+    path('payment/', include('payments.urls')),
     path('download/<str:filename>/', views.download_ticket, name='download_ticket'),
 ]
 
