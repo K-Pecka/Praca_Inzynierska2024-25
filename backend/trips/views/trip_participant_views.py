@@ -133,6 +133,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
                 raise ValidationError(_("Nie udało się utworzyć konta gościa. Sprawdź poprawność danych. {e}".format(e=str(e))))
 
             profile = user.get_default_profile()
+
         elif UserProfile.objects.filter(user__email=data['email'], type__code='guest').exists():
             profile = UserProfile.objects.filter(user=user, type__code='guest').first()
             if not profile:
@@ -140,6 +141,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
 
             if TripAccessToken.objects.filter(trip=trip, user_profile=profile, is_pending=True).exists():
                 raise ValidationError(_("Użytkownik posiada już aktywne zaproszenie do tej wycieczki"))
+
         else:
             profile = UserProfile.objects.filter(user=user, type__code='tourist').first()
 
