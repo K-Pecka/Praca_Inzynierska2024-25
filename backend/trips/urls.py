@@ -1,7 +1,6 @@
 from django.urls import path, include
-from trips.views.expense_views import ExpenseCreateAPIView, ExpenseRetrieveAPIView, ExpenseListAPIView, \
-    ExpenseUpdateAPIView, ExpenseDestroyAPIView, DetailedExpenseViewSet
-from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketListAPIView, TicketUpdateAPIView, \
+from trips.views.expense_views import DetailedExpenseViewSet, ExpenseViewSet
+from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketUpdateAPIView, \
     TicketDestroyAPIView, TicketListByTripAPIView
 from trips.views.trip_participant_views import JoinTripAPIView, TripParticipantsUpdateAPIView
 from trips.views.trip_views import TripCreateAPIView, TripRetrieveAPIView, TripListAPIView, TripUpdateAPIView, \
@@ -12,6 +11,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'', DetailedExpenseViewSet, basename='detailed-expense')
+router.register(r'', ExpenseViewSet, basename='trip-expense')
 
 urlpatterns = [
     # Trip URLs
@@ -34,11 +34,6 @@ urlpatterns = [
     path('<int:trip_pk>/ticket/all/', TicketListByTripAPIView.as_view(), name='ticket-list-by-trip'),
 
     # Expense URLs
-    path('<int:trip_pk>/expense/create/', ExpenseCreateAPIView.as_view(), name='expense-create'),
-    path('<int:trip_pk>/expense/<int:pk>/', ExpenseRetrieveAPIView.as_view(), name='expense-retrieve'),
-    path('<int:trip_pk>/expense/all/', ExpenseListAPIView.as_view(), name='expense-list'),
-    path('<int:trip_pk>/expense/<int:pk>/update/', ExpenseUpdateAPIView.as_view(), name='expense-update'),
-    path('<int:trip_pk>/expense/<int:pk>/delete/', ExpenseDestroyAPIView.as_view(), name='expense-delete'),
-
+    path('<int:trip_pk>/expenses/', include(router.urls)),
     path('<int:trip_pk>/detailed-expenses/', include(router.urls)),
 ]
