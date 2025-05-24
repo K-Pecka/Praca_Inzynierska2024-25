@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 from rest_framework import serializers
 
@@ -140,14 +141,15 @@ class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
         user = request.user
         members = validated_data.pop('members')
 
-        expense = DetailedExpense(**validated_data)
-        expense.creator = user.get_default_profile()
-        expense.save()
+        with transaction.atomic():
+            expense = DetailedExpense(**validated_data)
+            expense.creator = user.get_default_profile()
+            expense.save()
 
-        expense.members.set(members)
+            expense.members.set(members)
 
-        expense.calculate_shares()
-        expense.save()
+            expense.calculate_shares()
+            expense.save()
 
         return expense
 
