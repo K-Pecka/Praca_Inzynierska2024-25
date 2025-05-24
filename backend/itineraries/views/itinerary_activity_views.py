@@ -1,5 +1,8 @@
+from django.shortcuts import get_object_or_404
+
 from drf_spectacular.utils import extend_schema
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView, ListAPIView
+
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
 from itineraries.serializers.itinerary_activity_serializers import ItineraryActivityCreateSerializer, \
@@ -10,38 +13,33 @@ from itineraries.models import ItineraryActivity, Itinerary
 from server.permissions import IsTripCreator, IsTripParticipant
 
 
-@extend_schema(tags=['itinerary activity'])
-class ItineraryActivityCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated, IsTripCreator]
-    serializer_class = ItineraryActivityCreateSerializer
-
-
-@extend_schema(tags=['itinerary activity'])
-class ItineraryActivityRetrieveAPIView(RetrieveAPIView):
-    queryset = ItineraryActivity.objects.all()
-    permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = ItineraryActivityRetrieveSerializer
-
-
-@extend_schema(tags=['itinerary activity'])
-class ItineraryActivityListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = ItineraryActivityListSerializer
+@extend_schema(tags=["itinerary activity"])
+class ItineraryActivityViewSet(ModelViewSet):
     lookup_url_kwarg = "itinerary_pk"
 
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            return [IsAuthenticated(), IsTripCreator()]
+        return [IsAuthenticated(), IsTripParticipant()]
+
     def get_queryset(self):
-        return ItineraryActivity.objects.by_itinerary(self.kwargs[self.lookup_url_kwarg])
+        itinerary_pk = self.kwargs.get(self.lookup_url_kwarg)
+        return ItineraryActivity.objects.by_itinerary(itinerary_pk)
 
+    def get_object(self):
+        return get_object_or_404(
+            self.get_queryset(), pk=self.kwargs['pk']
+        )
 
-@extend_schema(tags=['itinerary activity'])
-class ItineraryActivityUpdateAPIView(UpdateAPIView):
-    queryset = ItineraryActivity.objects.all()
-    permission_classes = [IsAuthenticated, IsTripCreator]
-    serializer_class = ItineraryActivityUpdateSerializer
-
-
-@extend_schema(tags=['itinerary activity'])
-class ItineraryActivityDestroyAPIView(DestroyAPIView):
-    queryset = ItineraryActivity.objects.all()
-    permission_classes = [IsAuthenticated, IsTripCreator]
-    serializer_class = ItineraryActivityDeleteSerializer
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return ItineraryActivityCreateSerializer
+        elif self.action == 'retrieve':
+            return ItineraryActivityRetrieveSerializer
+        elif self.action == 'list':
+            return ItineraryActivityListSerializer
+        elif self.action in ['update', 'partial_update']:
+            return ItineraryActivityUpdateSerializer
+        elif self.action == 'destroy':
+            return ItineraryActivityDeleteSerializer
+        return ItineraryActivityRetrieveSerializer

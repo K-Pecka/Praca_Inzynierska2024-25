@@ -1,31 +1,30 @@
-from drf_spectacular.utils import extend_schema
-from rest_framework.generics import UpdateAPIView, ListAPIView, DestroyAPIView, RetrieveAPIView, CreateAPIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import MultiPartParser
+from django.shortcuts import get_object_or_404
 
-from server.permissions import IsTripParticipant, IsTicketOwner
+from drf_spectacular.utils import extend_schema
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
+from rest_framework.viewsets import ModelViewSet
+
+from server.permissions import IsTripParticipant, IsTicketOwner, IsTripCreator
 from trips.models import Ticket
 from trips.serializers.ticket_serializers import TicketCreateSerializer, TicketRetrieveSerializer, TicketListSerializer, \
     TicketUpdateSerializer, TicketDestroySerializer
 
 
 @extend_schema(tags=['ticket'])
-class TicketCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = TicketCreateSerializer
+class TicketViewSet(ModelViewSet):
     parser_classes = (MultiPartParser,)
 
-
-@extend_schema(tags=['ticket'])
-class TicketRetrieveAPIView(RetrieveAPIView):
-    queryset = Ticket.objects.all()
-    permission_classes = [IsAuthenticated, IsTripParticipant, IsTicketOwner]
-    serializer_class = TicketRetrieveSerializer
-
-@extend_schema(tags=['ticket'])
-class TicketListByTripAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = TicketListSerializer
+    def get_permissions(self):
+        base = [IsAuthenticated(), IsTripParticipant()]
+        if self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+            base.append(IsTicketOwner())
+        elif self.action == 'list_all_for_trip':
+            base.append(IsTripCreator())
+        return base
 
     def get_queryset(self):
         trip_id = self.kwargs['trip_pk']
@@ -36,29 +35,24 @@ class TicketListByTripAPIView(ListAPIView):
             .select_related('owner', 'trip')
         )
 
+    def get_object(self):
+        return get_object_or_404(self.get_queryset(), pk=self.kwargs['pk'])
 
-@extend_schema(tags=['ticket'])
-class TicketListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = TicketListSerializer
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return TicketCreateSerializer
+        elif self.action == 'retrieve':
+            return TicketRetrieveSerializer
+        elif self.action == 'list':
+            return TicketListSerializer
+        elif self.action in ['update', 'partial_update']:
+            return TicketUpdateSerializer
+        elif self.action == 'destroy':
+            return TicketDestroySerializer
+        return TicketRetrieveSerializer
 
-    def get_queryset(self):
-        return (Ticket.objects
-            .by_user(self.request.user.get_default_profile())
-            .select_related('profile', 'trip')
-        )
-
-
-@extend_schema(tags=['ticket'])
-class TicketUpdateAPIView(UpdateAPIView):
-    queryset = Ticket.objects.all()
-    permission_classes = [IsAuthenticated, IsTripParticipant, IsTicketOwner]
-    serializer_class = TicketUpdateSerializer
-    parser_classes = (MultiPartParser,)
-
-
-@extend_schema(tags=['ticket'])
-class TicketDestroyAPIView(DestroyAPIView):
-    queryset = Ticket.objects.all()
-    permission_classes = [IsAuthenticated, IsTripParticipant, IsTicketOwner]
-    serializer_class = TicketDestroySerializer
+    @action(detail=False, methods=['get'], url_path='all')
+    def by_trip(self, request, trip_pk=None):
+        tickets = Ticket.objects.filter(trip_id=trip_pk).select_related('owner', 'trip')
+        serializer = TicketListSerializer(tickets, many=True)
+        return Response(serializer.data)
