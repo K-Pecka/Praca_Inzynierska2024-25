@@ -134,7 +134,7 @@ class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DetailedExpense
-        fields = ['name', 'creator', 'price', 'currency', 'members']
+        fields = ['name', 'price', 'currency', 'members']
 
     def create(self, validated_data):
         request = self.context['request']

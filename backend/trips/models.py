@@ -407,7 +407,6 @@ class DetailedExpense(models.Model):
             self.price_per_member_in_pln = self.price_in_pln / member_count
 
     def save(self, *args, **kwargs):
-        self.calculate_shares()
         super().save(*args, **kwargs)
 
     def __str__(self):

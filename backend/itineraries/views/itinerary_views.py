@@ -14,16 +14,13 @@ from server.permissions import IsTripCreator, IsTripParticipant
 
 @extend_schema(tags=["itinerary"])
 class ItineraryViewSet(ModelViewSet):
-    lookup_url_kwarg = "pk"
-
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
             return [IsAuthenticated(), IsTripCreator()]
         return [IsAuthenticated(), IsTripParticipant()]
 
     def get_queryset(self):
-        trip_pk = self.kwargs.get(self.lookup_url_kwarg)
-        return Itinerary.objects.filter(trip_id=trip_pk)
+        return Itinerary.objects.filter(trip_id=self.kwargs['trip_pk'])
 
     def get_object(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs['pk'])
