@@ -13,11 +13,11 @@ class TripTokenAuthentication(BaseAuthentication):
             return None
 
         if len(parts) != 2 or parts[0].lower() != 'bearer':
-            raise AuthenticationFailed('Niepoprawny format tokenu.')
+            return None
         token = parts[1]
         trip_token = TripAccessToken.objects.filter(token=token).first()
         if not trip_token:
-            raise AuthenticationFailed('Niepoprawny token.')
+            return None
         token_owner = trip_token.user_profile.user
 
         return token_owner, None
