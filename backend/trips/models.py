@@ -342,7 +342,7 @@ class DetailedExpense(models.Model):
         help_text=_("NAME")
     )
     creator = models.ForeignKey(
-        'UserProfile',
+        'users.UserProfile',
         on_delete=models.CASCADE,
         related_name='created_detailed_expenses',
         verbose_name=_("Twórca wydatku"),
@@ -370,7 +370,7 @@ class DetailedExpense(models.Model):
         help_text=_("PRICE IN PLN")
     )
     members = models.ManyToManyField(
-        'UserProfile',
+        'users.UserProfile',
         related_name='detailed_expenses',
         verbose_name=_("Uczestnicy"),
         help_text=_("MEMBERS")

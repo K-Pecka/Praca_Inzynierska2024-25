@@ -148,11 +148,11 @@ class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
 
 class DetailedExpenseRetrieveSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True)
-    creator = serializers.PrimaryKeyRelatedField(read_only=True, queryset=UserProfile.objects.all())
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
     price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     currency = serializers.CharField(read_only=True, max_length=3)
     price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True, queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     price_per_member = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     price_per_member_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
@@ -165,11 +165,11 @@ class DetailedExpenseRetrieveSerializer(serializers.ModelSerializer):
 class DetailedExpenseListSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
-    creator = serializers.PrimaryKeyRelatedField(read_only=True, queryset=UserProfile.objects.all())
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
     price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     currency = serializers.CharField(read_only=True, max_length=3)
     price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True, queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     price_per_member = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     price_per_member_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
