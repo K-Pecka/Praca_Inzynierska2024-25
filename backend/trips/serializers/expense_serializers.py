@@ -130,12 +130,11 @@ class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
     creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
     currency = serializers.CharField(max_length=3)
-    price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2)
     members = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), many=True)
 
     class Meta:
         model = DetailedExpense
-        fields = ['name', 'creator', 'price', 'currency', 'price_in_pln', 'members']
+        fields = ['name', 'creator', 'price', 'currency', 'members']
 
     def create(self, validated_data):
         members = validated_data.pop('members')
