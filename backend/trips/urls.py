@@ -35,5 +35,5 @@ urlpatterns = [
 
     # Expense URLs
     path('<int:trip_pk>/expenses/', include(router.urls)),
-    path('<int:trip_pk>/detailed-expenses/', include(router.urls)),
+    path('<int:trip_pk>/debt/', include(router.urls)),
 ]

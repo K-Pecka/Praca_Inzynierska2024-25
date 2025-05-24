@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -142,3 +142,21 @@ class CheckAccountTypeAPIView(APIView):
             raise ValueError("Profil użytkownika nie ma przypisanego typu.")
 
         return Response({"profile_type": profile_type}, status=status.HTTP_200_OK)
+
+
+@extend_schema(tags=['user'])
+class UserDeleteAPIView(DestroyAPIView):
+    """
+    View for handling deletion of user accounts.
+
+    This API view is responsible for deleting user accounts. It extends the
+    DestroyAPIView from Django REST framework, providing a simple way to delete a
+    user account by their ID. Appropriate permissions should be used to restrict
+    access to this view to authorized users only.
+
+    @extend_schema(tags=['user'])
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
