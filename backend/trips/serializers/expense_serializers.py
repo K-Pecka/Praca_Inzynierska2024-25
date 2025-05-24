@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import serializers
 
-from trips.models import Trip, Expense, ExpenseType
+from trips.models import Trip, Expense, ExpenseType, DetailedExpense
 from users.models import UserProfile
 
 
@@ -123,3 +123,82 @@ class ExpenseDeleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = ['id']
+
+
+class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=True)
+    creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
+    price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    currency = serializers.CharField(max_length=3)
+    price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2)
+    members = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), many=True)
+
+    class Meta:
+        model = DetailedExpense
+        fields = ['name', 'creator', 'price', 'currency', 'price_in_pln', 'members']
+
+    def create(self, validated_data):
+        members = validated_data.pop('members')
+        expense = DetailedExpense.objects.create(**validated_data)
+        expense.members.set(members)
+        expense.calculate_shares()
+        expense.save()
+        return expense
+
+
+class DetailedExpenseRetrieveSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True, queryset=UserProfile.objects.all())
+    price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    currency = serializers.CharField(read_only=True, max_length=3)
+    price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True, queryset=UserProfile.objects.all())
+    price_per_member = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    price_per_member_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+
+    class Meta:
+        model = DetailedExpense
+        fields = ['name', 'creator', 'price', 'currency', 'price_in_pln', 'members', 'price_per_member',
+                  'price_per_member_in_pln']
+
+
+class DetailedExpenseListSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    creator = serializers.PrimaryKeyRelatedField(read_only=True, queryset=UserProfile.objects.all())
+    price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    currency = serializers.CharField(read_only=True, max_length=3)
+    price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True, queryset=UserProfile.objects.all())
+    price_per_member = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    price_per_member_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+
+    class Meta:
+        model = DetailedExpense
+        fields = ['id', 'name', 'creator', 'price', 'currency', 'price_in_pln', 'members', 'price_per_member',
+                  'price_per_member_in_pln']
+
+
+class DetailedExpenseUpdateSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=False)
+    price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    currency = serializers.CharField(max_length=3, required=False)
+    price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    members = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), many=True, required=False)
+
+    class Meta:
+        model = DetailedExpense
+        fields = ['name', 'price', 'currency', 'price_in_pln', 'members']
+
+    def update(self, instance, validated_data):
+        members = validated_data.pop('members', None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if members is not None:
+            instance.members.set(members)
+
+        instance.calculate_shares()
+        instance.save()
+        return instance

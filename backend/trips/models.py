@@ -333,3 +333,76 @@ class Expense(BaseModel):
         db_table = "expenses"
         verbose_name = "Wydatek"
         verbose_name_plural = "Wydatki"
+
+
+class DetailedExpense(models.Model):
+    name = models.CharField(
+        max_length=255,
+        verbose_name=_("Nazwa wydatku"),
+        help_text=_("NAME")
+    )
+    creator = models.ForeignKey(
+        'UserProfile',
+        on_delete=models.CASCADE,
+        related_name='created_detailed_expenses',
+        verbose_name=_("Twórca wydatku"),
+        help_text=_("CREATOR")
+    )
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal('0.01'))],
+        verbose_name=_("Kwota"),
+        help_text=_("PRICE")
+    )
+    currency = models.CharField(
+        max_length=3,
+        choices=[(c.alpha_3, c.name) for c in pycountry.currencies],
+        default="PLN",
+        verbose_name=_("Waluta"),
+        help_text=_("CURRENCY")
+    )
+    price_in_pln = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        verbose_name=_("Kwota w PLN"),
+        help_text=_("PRICE IN PLN")
+    )
+    members = models.ManyToManyField(
+        'UserProfile',
+        related_name='detailed_expenses',
+        verbose_name=_("Uczestnicy"),
+        help_text=_("MEMBERS")
+    )
+    price_per_member = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        verbose_name=_("Kwota na osobę"),
+        help_text=_("PRICE PER MEMBER")
+    )
+    price_per_member_in_pln = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        verbose_name=_("Kwota na osobę w PLN"),
+        help_text=_("PRICE PER MEMBER IN PLN")
+    )
+
+
+    def calculate_shares(self):
+        member_count = self.members.count()
+        if member_count == 0:
+            self.price_per_member = Decimal('0')
+            self.price_per_member_in_pln = Decimal('0')
+        else:
+            self.price_per_member = self.price / member_count
+            self.price_per_member_in_pln = self.price_in_pln / member_count
+
+    def save(self, *args, **kwargs):
+        self.calculate_shares()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.name} ({self.price} {self.currency})"
