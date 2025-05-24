@@ -44,6 +44,12 @@ class ExpenseViewSet(ModelViewSet):
             return [IsAuthenticated(), IsExpenseOwnerOrTripCreator()]
         return [IsAuthenticated()]
 
+    def perform_create(self, serializer):
+        serializer.save(
+            trip_id=self.kwargs['trip_pk'],
+            user=self.request.user.get_default_profile()
+        )
+
 
 @extend_schema(tags=['model_type'])
 class ExpenseTypeListAPIView(ListAPIView):

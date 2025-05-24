@@ -122,14 +122,14 @@ class IsTripParticipant(BasePermission):
     message = "Tylko uczestnicy wycieczki mogą wykonać tę akcję."
 
     def has_permission(self, request, view):
-        if isinstance(view, (ListAPIView, CreateAPIView)):
+        if isinstance(view, (ListAPIView, CreateAPIView)) or hasattr(view, 'action') and view.action in ['list', 'create']:
             return True
 
         try:
             obj = view.get_object()
         except NotFound:
             raise
-        except Exception as e:
+        except Exception:
             raise NotFound("Nie znaleziono obiektu")
 
         profile = request.user.get_default_profile()
