@@ -15,9 +15,9 @@ from django.utils.decorators import method_decorator
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 SUBSCRIPTION_MAP = {
-    'prod_SMiD43Ponu9enH': 'Podstawowy',
-    'prod_SLBNtcXwVv0mvV': 'Turysta',
-    'prod_SLdnNHfZFFu0Sj': 'Podróżnik',
+    'price_1RRymmB3a037ikFEaqDq2J8N': 'Podstawowy',
+    'price_1RQV0aB3a037ikFEAEbdKvqx': 'Turysta',
+    'price_1RQwW7B3a037ikFEidRPP1SS': 'Przewodnik',
 }
 
 @extend_schema(
