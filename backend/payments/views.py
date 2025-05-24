@@ -18,6 +18,7 @@ SUBSCRIPTION_MAP = {
     'price_1RRymmB3a037ikFEaqDq2J8N': 'Podstawowy',
     'price_1RQV0aB3a037ikFEAEbdKvqx': 'Turysta',
     'price_1RQwW7B3a037ikFEidRPP1SS': 'Przewodnik',
+    'price_1RSRkBB3a037ikFE3FNMd1ub': ':)',
 }
 
 @extend_schema(
