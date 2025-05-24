@@ -19,18 +19,18 @@ trips_router.register(r'debt', DetailedExpenseViewSet, basename='detailed-expens
 
 urlpatterns = [
     # Trip participants URLs
-    path('<int:trip_pk>/participants/manage/', TripParticipantsUpdateAPIView.as_view(),
+    path('trip/<int:trip_pk>/participants/manage/', TripParticipantsUpdateAPIView.as_view(),
          name='trip-participants-manage-no-account'),
     path('join/', JoinTripAPIView.as_view(), name='trip_join'),
 
     # Ticket URLs
-    path('<int:trip_pk>/ticket/', TicketViewSet.as_view({
+    path('trip/<int:trip_pk>/ticket/', TicketViewSet.as_view({
         'post': 'create',
         'get': 'list'
     }), name='ticket-list-all-create'),
 
     # retrieve + update + delete
-    path('<int:trip_pk>/ticket/<int:pk>/', TicketViewSet.as_view({
+    path('trip/<int:trip_pk>/ticket/<int:pk>/', TicketViewSet.as_view({
         'get': 'retrieve',
         'put': 'update',
         'patch': 'partial_update',
