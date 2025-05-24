@@ -10,8 +10,8 @@ from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter()
-router.register(r'', DetailedExpenseViewSet, basename='detailed-expense')
-router.register(r'', ExpenseViewSet, basename='trip-expense')
+router.register(r'expenses', ExpenseViewSet, basename='trip-expense')
+router.register(r'debt', DetailedExpenseViewSet, basename='detailed-expense')
 
 urlpatterns = [
     # Trip URLs
@@ -34,6 +34,5 @@ urlpatterns = [
     path('<int:trip_pk>/ticket/all/', TicketListByTripAPIView.as_view(), name='ticket-list-by-trip'),
 
     # Expense URLs
-    path('<int:trip_pk>/expenses/', include(router.urls)),
-    path('<int:trip_pk>/debt/', include(router.urls)),
+    path('<int:trip_pk>/', include(router.urls)),
 ]
