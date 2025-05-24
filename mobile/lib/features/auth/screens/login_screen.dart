@@ -63,7 +63,17 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } catch (e) {
       if (mounted) {
-        handleError(context, e, userMessage: 'Błąd logowania. Spróbuj ponownie.');
+        final String userMessage;
+
+        if (e is Exception) {
+          userMessage = e.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+        } else if (e is Error) {
+          userMessage = e.toString().split('\n').first;
+        } else {
+          userMessage = "$e";
+        }
+
+        handleError(context, e, userMessage: userMessage);
       }
     } finally {
       setState(() => _isLoading = false);

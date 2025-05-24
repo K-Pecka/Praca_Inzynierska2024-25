@@ -11,9 +11,13 @@ class AuthService {
   static String? _email;
 
   static String? get accessToken => _accessToken;
+
   static String? get refreshToken => _refreshToken;
+
   static String? get firstName => _firstName;
+
   static String? get lastName => _lastName;
+
   static String? get email => _email;
 
   static void logout() {
@@ -91,6 +95,30 @@ class AuthService {
       throw Exception(
         'Nie udało się ustawić profilu jako domyślny: ${response.body}',
       );
+    }
+  }
+
+  static Future<void> changePassword({
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    final url = Uri.parse('$_baseUrl/user/update/');
+    final headers = {
+      'Authorization': 'Bearer $_accessToken',
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode({
+      'password': newPassword,
+      'password_confirm': confirmPassword,
+    });
+
+    final response = await http.put(url, headers: headers, body: body);
+
+    if (response.statusCode != 200) {
+      print(response.body);
+      throw Exception('Nie udało się zmienić hasła.');
+
     }
   }
 }

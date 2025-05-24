@@ -1,50 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:mobile/core/utils/http_handler.dart';
 import '../models/expense_model.dart';
-import 'auth_service.dart';
 
 class BudgetService {
   static final String _baseUrl = 'https://api.plannder.com';
 
-  static Future<http.Response> _authorizedRequest(
-      Uri url, {
-        String method = 'GET',
-        Map<String, String>? headers,
-        dynamic body,
-      }) async {
-    headers ??= {};
-    headers['Authorization'] = 'Bearer ${AuthService.accessToken}';
-    headers['accept'] ??= 'application/json';
-    if (method == 'POST') headers['Content-Type'] = 'application/json';
-
-    late http.Response response;
-
-    if (method == 'GET') {
-      response = await http.get(url, headers: headers);
-    } else if (method == 'POST') {
-      response = await http.post(url, headers: headers, body: body);
-    }
-
-    if (response.statusCode == 401) {
-      final refreshed = await AuthService.refreshAccessToken();
-      if (refreshed) {
-        headers['Authorization'] = 'Bearer ${AuthService.accessToken}';
-        if (method == 'GET') {
-          response = await http.get(url, headers: headers);
-        } else if (method == 'POST') {
-          response = await http.post(url, headers: headers, body: body);
-        }
-      }
-    }
-
-    return response;
-  }
-
   static Future<List<ExpenseModel>> fetchExpenses({
     required int tripId,
   }) async {
-    final url = Uri.parse('$_baseUrl/trip/$tripId/expense/all/');
-    final response = await _authorizedRequest(url);
+    final url = Uri.parse('$_baseUrl/trip/$tripId/expenses/');
+    final response = await HttpHandler.request(url);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
@@ -64,7 +30,7 @@ class BudgetService {
     required String currency,
     required String category,
   }) async {
-    final url = Uri.parse('$_baseUrl/trip/$tripId/expense/create/');
+    final url = Uri.parse('$_baseUrl/trip/$tripId/expenses/');
     final body = jsonEncode({
       'title': title,
       'amount': amount.toStringAsFixed(2),
@@ -76,7 +42,7 @@ class BudgetService {
       'category': category,
     });
 
-    final response = await _authorizedRequest(
+    final response = await HttpHandler.request(
       url,
       method: 'POST',
       body: body,
@@ -87,18 +53,22 @@ class BudgetService {
     }
   }
 
-  static Future<double> getExchangeRate({
-    required String from,
-    required String to,
+  static Future<void> updateExpense({
+    required int tripId,
+    required int expenseId,
+    required Map<String, dynamic> updates,
   }) async {
-    final url = Uri.parse('$_baseUrl/apis/currency/?from=$from&to=$to');
-    final response = await _authorizedRequest(url);
+    final url = Uri.parse('$_baseUrl/trip/$tripId/expenses/$expenseId/');
+    final body = jsonEncode(updates);
 
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      return double.parse(json['rate'].toString());
-    } else {
-      throw Exception('Błąd pobierania kursu: ${response.body}');
+    final response = await HttpHandler.request(
+      url,
+      method: 'PUT',
+      body: body,
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Nie udało się zaktualizować wydatku: ${response.body}');
     }
   }
 
@@ -106,13 +76,11 @@ class BudgetService {
     required int tripId,
     required int expenseId,
   }) async {
-    final url = Uri.parse('$_baseUrl/trip/$tripId/expense/$expenseId/delete/');
-    final headers = {
-      'Authorization': 'Bearer ${AuthService.accessToken}',
-      'accept': 'application/json',
-    };
-
-    final response = await http.delete(url, headers: headers);
+    final url = Uri.parse('$_baseUrl/trip/$tripId/expenses/$expenseId/');
+    final response = await HttpHandler.request(
+      url,
+      method: 'DELETE',
+    );
 
     if (response.statusCode != 204) {
       throw Exception('Nie udało się usunąć wydatku: ${response.body}');

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:mobile/core/utils/http_handler.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../models/chat_message_model.dart';
 import '../models/chatroom_model.dart';
@@ -12,11 +13,8 @@ class ChatService {
   static WebSocketChannel? _channel;
 
   static Future<List<ChatroomModel>> getUserChatrooms(int tripId) async {
-    final url = Uri.parse('$baseUrl/trip/$tripId/chat/chatroom/all/');
-    final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${AuthService.accessToken}',
-      'accept': 'application/json; charset=utf-8',
-    });
+    final url = Uri.parse('$baseUrl/trip/$tripId/chat/');
+    final response = await HttpHandler.request(url);
 
     if (response.statusCode == 200) {
       final List data = jsonDecode(utf8.decode(response.bodyBytes));
@@ -26,19 +24,34 @@ class ChatService {
     }
   }
 
-  static Future<List<MessageModel>> getMessages(int tripId, int chatroomId) async {
-    final url = Uri.parse('$baseUrl/trip/$tripId/chat/$chatroomId/chat-message/all/');
-
-    final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${AuthService.accessToken}',
-      'accept': 'application/json; charset=utf-8',
-    });
+  static Future<List<MessageModel>> getMessages(int tripId, int roomId) async {
+    final url = Uri.parse('$baseUrl/trip/$tripId/chat/$roomId/chat-message/');
+    final response = await HttpHandler.request(url);
 
     if (response.statusCode == 200) {
       final List data = jsonDecode(utf8.decode(response.bodyBytes));
       return data.map((e) => MessageModel.fromJson(e)).toList();
     } else {
       throw Exception("Błąd ładowania wiadomości: ${response.statusCode}");
+    }
+  }
+
+  static Future<void> sendHttpMessage({
+    required int tripId,
+    required int roomId,
+    required String content,
+  }) async {
+    final url = Uri.parse('$baseUrl/trip/$tripId/chat/$roomId/chat-message/');
+    final body = jsonEncode({'content': content});
+
+    final response = await HttpHandler.request(
+      url,
+      method: 'POST',
+      body: body,
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception("Błąd wysyłania wiadomości: ${response.body}");
     }
   }
 
@@ -49,11 +62,8 @@ class ChatService {
 
   static WebSocketChannel? connectToWebSocket(int chatroomId) {
     final token = AuthService.accessToken;
-    if (token == null) {
-      return null;
-    }
-
-    final uri = Uri.parse('wss://api.plannder.com/ws/chat/$chatroomId/?token=$token');
+    if (token == null) return null;
+    final uri = Uri.parse('$wsBaseUrl/$chatroomId/?token=$token');
     return WebSocketChannel.connect(uri);
   }
 

@@ -48,7 +48,7 @@ class _ReportIssueScreenState extends State<ReportIssueScreen> {
               TextFormField(
                 controller: _messageController,
                 decoration: const InputDecoration(labelText: 'Wiadomość'),
-                maxLines: 5,
+                maxLines: 3,
                 validator: (val) => val == null || val.isEmpty ? 'Wpisz wiadomość' : null,
               ),
               const SizedBox(height: 24),

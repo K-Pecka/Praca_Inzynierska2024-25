@@ -108,7 +108,7 @@ class ProfileMenuScreen extends StatelessWidget {
   }) {
     return ListTile(
       leading: Icon(icon, color: color),
-      title: Text(label, style: TextStyle(color: color)),
+      title: Text(label, style: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.w600)),
       trailing: const Icon(Icons.chevron_right, color: Colors.white),
       onTap: onTap,
     );
