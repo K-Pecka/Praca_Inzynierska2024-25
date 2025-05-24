@@ -369,6 +369,12 @@ class DetailedExpense(models.Model):
         verbose_name=_("Kwota w PLN"),
         help_text=_("PRICE IN PLN")
     )
+    trip = models.ForeignKey(
+        Trip,
+        on_delete=models.CASCADE,
+        related_name="detailed_expenses",
+        verbose_name=_("Wycieczka"), help_text=_("Wycieczka")
+    )
     members = models.ManyToManyField(
         'users.UserProfile',
         related_name='detailed_expenses',
