@@ -4,12 +4,15 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from django_filters import rest_framework as filters
+from rest_framework.viewsets import ModelViewSet
 
 from server.permissions import IsTripParticipant, IsExpenseOwnerOrTripCreator
 from trips.filters import ExpenseFilter
-from trips.models import Expense, ExpenseType
+from trips.models import Expense, ExpenseType, DetailedExpense
 from trips.serializers.expense_serializers import ExpenseCreateSerializer, ExpenseRetrieveSerializer, \
-    ExpenseListSerializer, ExpenseUpdateSerializer, ExpenseDeleteSerializer, ExpenseTypeListAPIView
+    ExpenseListSerializer, ExpenseUpdateSerializer, ExpenseDeleteSerializer, ExpenseTypeListAPIView, \
+    DetailedExpenseCreateSerializer, DetailedExpenseRetrieveSerializer, DetailedExpenseListSerializer, \
+    DetailedExpenseUpdateSerializer
 
 
 @extend_schema(tags=['expense'])
@@ -84,3 +87,26 @@ class ExpenseTypeListAPIView(ListAPIView):
         """
         return ExpenseType.objects.all()
 
+
+
+class DetailedExpenseViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        trip_pk = self.kwargs.get('trip_pk')
+        return DetailedExpense.objects.filter(trip_id=trip_pk)
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return DetailedExpenseCreateSerializer
+        elif self.action == 'retrieve':
+            return DetailedExpenseRetrieveSerializer
+        elif self.action == 'list':
+            return DetailedExpenseListSerializer
+        elif self.action in ['update', 'partial_update']:
+            return DetailedExpenseUpdateSerializer
+        return DetailedExpenseRetrieveSerializer
+
+    def perform_create(self, serializer):
+        trip_pk = self.kwargs.get('trip_pk')
+        serializer.save(trip_id=trip_pk, creator=self.request.user.get_default_profile())
