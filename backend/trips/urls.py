@@ -21,7 +21,7 @@ urlpatterns = [
     # Trip participants URLs
     path('trip/<int:trip_pk>/participants/manage/', TripParticipantsUpdateAPIView.as_view(),
          name='trip-participants-manage-no-account'),
-    path('join/', JoinTripAPIView.as_view(), name='trip_join'),
+    path('trip/join/', JoinTripAPIView.as_view(), name='trip_join'),
 
     # Ticket URLs
     path('trip/<int:trip_pk>/ticket/', TicketViewSet.as_view({
