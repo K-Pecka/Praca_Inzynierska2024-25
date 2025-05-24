@@ -29,7 +29,7 @@ export class Validator {
 
   isEmpty(): this {
     return this.addRule("isEmpty", (value: string) => {
-      return value.trim() === "" ? this.errorMessage.required : null;
+      return (value || '').trim().length == 0 ? this.errorMessage.required : null;
     });
   }
 
@@ -40,7 +40,7 @@ export class Validator {
         : null;
     });
   }
-
+  
   maxLength(length: number): this {
     return this.addRule("maxLength", (value: string) => {
       return value.length > length
@@ -48,6 +48,7 @@ export class Validator {
         : null;
     });
   }
+
   minValue(minValue: number): this {
     return this.addRule("minValue", (value: string) => {
       return Number(value) <= Number(minValue)

@@ -14,6 +14,7 @@ interface Config {
   edit?: boolean;
   maxDate?: Date | string;
   label?: string;
+  maxLength?: number;
 }
 
 export interface Input {
@@ -240,13 +241,14 @@ export interface User {
   name?: string | null;
   is_guest?: boolean;
   is_owner?: boolean;
-  profiles?:{
-    type: number;id?:number;is_default:boolean;
-}[];
+  profiles?:Profile[];
   fullname?:string;
 }
 
 export interface ActivityType {
   id: number;
   name: string;
+}
+export interface Profile{
+  type: number;id:number;is_default:boolean;
 }

@@ -15,7 +15,7 @@ export const fetchData = async <T = unknown>(
     return { data: response.data };
   } catch (error: any) {
     return {
-      error: error.response?.data?.message || error.message || 'Wystąpił błąd',
+      error: error.response.data || 'Wystąpił błąd',
     };
   }
 };

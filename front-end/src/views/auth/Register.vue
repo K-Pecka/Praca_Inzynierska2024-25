@@ -7,26 +7,21 @@ import { useAuthStore,useFormStore,usePageHomeStore } from "@/stores";
 
 const { getSectionTitle } = usePageHomeStore();
 const { registerMutation } = useAuthStore();
-const { getFormInputs, isFormValid } = useFormStore();
+const { initForm,sendForm } = useFormStore();
 
 const sectionTitle = getSectionTitle(FormType.REGISTER);
-const inputs = ref<Input[]>(getFormInputs(FormType.REGISTER));
-const formValues = ref<Record<string, string>>(
-  Object.fromEntries(
-    inputs.value.map((input: { name: string }) => [input.name, ""])
-  )
-);
+const init = initForm(FormType.REGISTER);
+const inputs = ref(init.inputs);
+const formValues = ref(init.values);
 
-const handleSubmit = async (_: any, config: any) => {
-  if (config?.send && isFormValid(FormType.REGISTER, formValues.value)) {
-    const { pass_2, ...registrationData } = formValues.value;
-    try {
-      await registerMutation.mutateAsync(registrationData as unknown as Register);
-    } catch (error) {
-      
+const handleSubmit = async () => {
+  await sendForm({
+    data: formValues.value,
+    send: async (data) => {
+      const { pass_2, ...registrationData } = data;
+      await registerMutation.mutateAsync(registrationData as Register);
     }
-    formValues.value={};
-  }
+  });
 };
 </script>
 

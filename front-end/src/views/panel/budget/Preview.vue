@@ -10,17 +10,33 @@ import {
 } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
 import { budget as budgetCategory } from "@/data/category/budget";
-import { computed, ref } from "vue";
+import { computed, ref,watch } from "vue";
 import { useMembersStore } from "@/stores/trip/useMembersStore";
 import { Expense } from "@/types";
 import { VDateInput } from "vuetify/labs/components";
 import dayjs from "dayjs";
 import { useAuthStore, useUtilsStore } from "@/stores";
+const appliedFilters = ref<{
+  category: string | null;
+  participants: string | null;
+  date_from: string | null;
+  date_to: string | null;
+}>({
+  category: null,
+  participants: null,
+  date_from: null,
+  date_to: null,
+});
+
+const toggleForm = () => {
+  showForm.value = !showForm.value;
+};
+
 
 const { members: membersStore } = useMembersStore();
 const members = computed(() => membersStore);
 const { budget: budgetStore, trip: tripStore } = useTripStore();
-const { getExpensByTrip } = budgetStore;
+const { getExpensByTrip,setFilters } = budgetStore;
 
 const onExpenseAdded = () => {
   showForm.value = false;
@@ -28,10 +44,22 @@ const onExpenseAdded = () => {
 
 const { getTripDetails } = tripStore;
 const { trip } = getTripDetails();
-const { expensesByTrip: expenses } = getExpensByTrip();
+const { expensesByTrip: expenses, isLoading_expenses,refetch_expenses } = getExpensByTrip();
+
 const budget = computed(() => Number(trip.value?.budget_amount) ?? 0);
 const budgetCurrency = computed(() => "PLN");
-
+const formatDate = (date?: string | Date | null) =>
+  date ? dayjs(date).format("YYYY-MM-DD") : null;
+const filter = () => {
+  showFilters.value = false;
+  budgetStore.setFilters({
+    category: appliedFilters.value.category ?? null,
+    participants: appliedFilters.value.participants ?? null,
+    date_from: formatDate(appliedFilters.value.date_from),
+    date_to: formatDate(appliedFilters.value.date_to)
+  });
+  refetch_expenses();
+};
 const spent = computed(() => {
   return (
     expenses.value?.reduce(
@@ -46,42 +74,6 @@ const remaining = computed(() => Number(budget.value) - spent.value);
 const showForm = ref(false);
 const showFilters = ref(false);
 
-const selectedCategory = ref<string | null>(null);
-const selectedParticipant = ref<string | null>(null);
-const dateFrom = ref<string | null>(null);
-const dateTo = ref<string | null>(null);
-
-const appliedFilters = ref<{
-  category: string | null;
-  participants: string | null;
-  dateFrom: string | null;
-  dateTo: string | null;
-}>({
-  category: null,
-  participants: null,
-  dateFrom: null,
-  dateTo: null,
-});
-
-const toggleForm = () => {
-  showForm.value = !showForm.value;
-};
-
-const filter = () => {
-  appliedFilters.value = {
-    category: selectedCategory.value,
-    participants: selectedParticipant.value,
-    dateFrom:
-      dateFrom.value == null
-        ? dayjs().format("DD.MM.YYYY")
-        : dayjs(dateFrom.value).format("DD.MM.YYYY"),
-    dateTo:
-      dateTo.value == null
-        ? dayjs().format("DD.MM.YYYY")
-        : dayjs(dateTo.value).format("DD.MM.YYYY"),
-  };
-  showFilters.value = false;
-};
 const { mapCategoryBudget } = useUtilsStore();
 
 function aggregateExpenses<T extends string>(
@@ -221,12 +213,22 @@ const {isOwner} = userData;
                 </v-row>
 
                 <!-- Expenses List -->
-                <ExpensesList
+                <ExpensesList v-if="!isLoading_expenses"
                   :isOwnerTrip = "isOwner(trip?.creator?.id || 0)"
                   variant="manage"
                   :expenses="expenses"
-                  :config="appliedFilters"
                 />
+                <template v-else>
+                  <v-row justify="center">
+                    <v-col cols="auto">
+                      <v-progress-circular
+                        indeterminate
+                        color="primary"
+                        size="64"
+                      />
+                    </v-col>
+                  </v-row>
+                </template>
               </AppCard>
             </v-row>
           </v-col>
@@ -294,7 +296,7 @@ const {isOwner} = userData;
             <v-row dense>
               <v-col cols="12">
                 <v-select
-                  v-model="selectedCategory"
+                  v-model="appliedFilters.category"
                   :items="budgetCategory"
                   item-title="name"
                   item-value="id"
@@ -305,7 +307,7 @@ const {isOwner} = userData;
               </v-col>
               <v-col cols="12">
                 <v-select
-                  v-model="selectedParticipant"
+                  v-model="appliedFilters.participants"
                   :items="members"
                   item-title="name"
                   item-value="userId"
@@ -318,7 +320,9 @@ const {isOwner} = userData;
               </v-col>
               <v-col cols="12" md="6">
                 <v-date-input
-                  v-model="dateFrom"
+                  v-model="appliedFilters.date_from"
+                  :min="trip?.start_date"
+                  :max = "appliedFilters.date_to ?? trip?.end_date"
                   max-width="auto"
                   variant="outlined"
                   prepend-icon=""
@@ -331,7 +335,9 @@ const {isOwner} = userData;
               </v-col>
               <v-col cols="12" md="6">
                 <v-date-input
-                  v-model="dateTo"
+                  v-model="appliedFilters.date_to"
+                  :min="appliedFilters.date_from ?? trip?.start_date"
+                  :max="trip?.end_date"
                   max-width="auto"
                   variant="outlined"
                   prepend-icon=""

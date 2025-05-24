@@ -5,18 +5,20 @@ import { fetchUserRole } from "@/api/endpoints/auth";
 import router from "@/router";
 import { useQueryClient } from "@tanstack/vue-query";
 import { useRoleStore } from "@/stores/auth/useRoleStore";
-
+import { useAuthStore } from "@/stores";
+import { getRandomValues } from "crypto";
 export const getTripQuery = (role: string) => {
   return useQuery<Trip[], Error, Trip[]>({
     queryKey: ['trips', role],
     queryFn: async () => {
         const queryClient = useQueryClient();
-        console.log("Fetching trips for role:", ['trips', role]);
       const roleStore = useRoleStore();
+      const authStore = useAuthStore();
       const cached = queryClient.getQueryData(['trips', role]);
 
       if (!cached) {
-        await fetchUserRole(role);
+        let profile = await fetchUserRole(role);
+        authStore.setActiveProfile(profile.id);
         roleStore.setRole(role);
       }
 
@@ -40,17 +42,18 @@ export const getMutationCreate = (option: Record<string,any>) => useMutation({
     onSuccess: () => {
         router.back();
         option.notifications.setSuccessCurrentMessage(option.successMessage);
-        option.queryClient.invalidateQueries({queryKey: ["trips"]});
+        option.queryClient.invalidateQueries({queryKey: ["trips",String(option.getRole())]});
     },
     onError: (err: any) => {
-        option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);
+        console.error("Error deleting trip:", err);
+        option.notifications.setErrorCurrentMessage(err?.['non_field_errors'][0] || option.errorMessage);
     },
 });
 export const getMutationDelete = (option: Record<string,any>) => useMutation({
     mutationFn: deleteTrip,
     onSuccess: () => {
         option.notifications.setSuccessCurrentMessage(option.successMessage);
-        option.queryClient.invalidateQueries({queryKey: ["trips"]});
+        option.queryClient.invalidateQueries({queryKey: ["trips",String(option.getRole())]});
     },
     onError: (err) => {
         option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);

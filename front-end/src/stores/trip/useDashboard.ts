@@ -23,7 +23,7 @@ export const useDashboard = (tripId: Function) => {
     const getDashboard = () => {
 
         const {trip, isLoading_trip, error_trip} = getTripDetails(tripId());
-        const {expensesByTrip} = getExpenseByTrip(tripId());
+        const {expensesByTrip} = getExpenseByTrip();
         const tripTime = computed(() => {
             if (!trip.value) return "...";
             return `${formatPL(trip.value.start_date)} - ${formatPL(

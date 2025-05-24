@@ -9,7 +9,6 @@ const props = defineProps<{
 const emit = defineEmits(["remove"]);
 
 function handleRemoveClick() {
-  console.log("handleRemoveClick", props.user.userId);
   emit("remove", props.user.userId);
 }
 

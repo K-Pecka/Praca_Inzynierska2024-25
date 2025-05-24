@@ -9,7 +9,7 @@
   })
 </script>
 <template>
-  <div>
+  <div class="list-link">
     <div v-for="link in links" :key="link.label">
       <router-link :to="link.href">{{ link.label }}</router-link>
     </div>
@@ -22,5 +22,10 @@
   }
   a{
     color:rgb(var(--v-theme-text));
+  }
+  .list-link {
+    display: flex;
+    flex-direction: column;
+    margin: 0rem;
   }
 </style>

@@ -5,7 +5,7 @@ import {VDateInput} from "vuetify/labs/components";
 import { budget } from "@/data/category/budget";
 const categoryBudget = budget;
 import {useTripStore} from "@/stores/trip/useTripStore";
-import { User } from "@/types";
+import { User,Profile } from "@/types";
 import { useAuthStore, useUtilsStore } from "@/stores";
 const {trip:tripStore,budget:budgetStore} = useTripStore();
 const {getTripDetails} = tripStore;
@@ -17,14 +17,15 @@ const {members,isOwnerTrip} = defineProps<{
   isOwnerTrip:boolean,
   members: User[]
 }>();
-const {getUser} = useAuthStore()
+const {userData} = useAuthStore()
+const {getUser} = userData;
 const user=getUser();
 const form = ref({
   title: "",
   amount: 0,
   currency: "PLN",
   date: "",
-  user: isOwnerTrip ? members[0] : user?.profiles?.find(e => e.is_default)?.id,
+  user: isOwnerTrip ? members[0] : user?.profiles?.find((e:Profile) => e.is_default)?.id,
   category: 1,
   note: "",
 });

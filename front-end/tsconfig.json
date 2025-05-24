@@ -5,7 +5,11 @@
     "lib": ["dom", "esnext"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@api": ["src/api/index.ts"],
+      "@api/*": ["src/api/*"],
+      "@components/*": ["src/components/*"],
+      "@stores/*": ["src/stores/*"]
     },
     "moduleResolution": "node",
     "esModuleInterop": true,

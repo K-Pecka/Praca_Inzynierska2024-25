@@ -15,8 +15,10 @@ defineProps<{
   buttonText?: string;
   titleGradientText?: string;
   buttonAction?: () => void;
+  goBackAction?: () => void;
   title?: string;
   center?: boolean;
+  btnGoBack?: boolean;
 }>();
 </script>
 
@@ -25,14 +27,26 @@ defineProps<{
 
     <!-- Title -->
     <v-col cols="12">
-      <v-row :class="{ 'justify-center': center || $vuetify.display.smAndDown }" class="title color-text" no-gutters>
+      <v-row :class="{ 'justify-center': center || $vuetify.display.smAndDown }" class="title color-text w-100" no-gutters>
         <span v-if="!isLoading_trip && !error_trip && !title">
           {{ trip?.name }}
         </span>
         <span
             v-else-if="!isLoading_trip && !error_trip"
-            class="color-primary text-h3 font-weight-bold"
+            class="d-flex align-center color-primary text-h3 font-weight-bold w-100"
+            :class="{ 'justify-center': center || $vuetify.display.smAndDown }"
         >
+          <AppButton
+                v-if="btnGoBack"
+                color="primary"
+                @click="goBackAction"
+                maxWidth="40px"
+                iconSize="24px"
+                icon
+                dense
+                iconName="mdi-arrow-left"
+                font-auto
+            />
           {{ title }}
         </span>
         <span v-else>

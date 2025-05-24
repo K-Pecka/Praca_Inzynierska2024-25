@@ -3,7 +3,7 @@ import Header from "@/components/panel/Header.vue";
 </script>
 
 <template>
-  <Header/>
+  <Header :hamburgerIcon="false"/>
 
   <v-container>
     <v-col cols="12">

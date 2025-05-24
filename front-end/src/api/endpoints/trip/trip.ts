@@ -33,7 +33,7 @@ export const deleteTrip = async (param: Record<string, string> = {}) => {
     const { data, error } = await fetchData(url, "DELETE");
 
     if (error) {
-        throw new Error(error);
+        throw error;
     }
 
     return data;
@@ -45,11 +45,10 @@ export const createTrip = async (newTrip: NewTrip, param: Record<string, string>
     const { data, error } = await fetchData<NewTrip>(
         url,
         "POST",
-        { ...newTrip, budget_amount: 1 }
+        { ...newTrip, budget_amount: 0 }
     );
-
     if (error) {
-        throw new Error(error);
+        throw error;
     }
 
     return data;

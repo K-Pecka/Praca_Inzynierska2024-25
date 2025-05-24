@@ -22,12 +22,12 @@ const confirmPasswordRules = [
   (v: string) => !!v || "Powtórz hasło",
   (v: string) => v === password.value || "Hasła muszą się zgadzać",
 ];
-const {saveToken,userUpdate} = useAuthStore()
+const {saveToken,userUpdateMutation} = useAuthStore()
 
 function goToLogin() {
   formRef.value?.validate().then((isValid: boolean) => {
     if (isValid && confirmPassword.value == password.value) {
-      userUpdate.mutate({
+      userUpdateMutation.mutate({
         first_name: name.value,
         last_name: surname.value,
         password: password.value,

@@ -17,6 +17,7 @@ export const useTrips = (tripId:Function) => {
     }
 
     const deleteTrip = getMutationDelete({
+        getRole: () => roleStore.getRole(),
         notifications,
         queryClient,
         successMessage: "Pomyślnie usunięto wycieczkę",
@@ -24,6 +25,7 @@ export const useTrips = (tripId:Function) => {
     })
 
     const createTrip = getMutationCreate({
+        getRole: () => roleStore.getRole(),
         notifications,
         queryClient,
         successMessage: "Dodano wycieczkę",
