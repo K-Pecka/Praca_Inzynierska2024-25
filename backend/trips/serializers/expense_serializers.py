@@ -127,7 +127,6 @@ class ExpenseDeleteSerializer(serializers.ModelSerializer):
 
 class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
-    creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
     currency = serializers.CharField(max_length=3)
     members = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), many=True)
@@ -137,11 +136,19 @@ class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
         fields = ['name', 'creator', 'price', 'currency', 'members']
 
     def create(self, validated_data):
+        request = self.context['request']
+        user = request.user
         members = validated_data.pop('members')
-        expense = DetailedExpense.objects.create(**validated_data)
+
+        expense = DetailedExpense(**validated_data)
+        expense.creator = user.get_default_profile()
+        expense.save()
+
         expense.members.set(members)
+
         expense.calculate_shares()
         expense.save()
+
         return expense
 
 
