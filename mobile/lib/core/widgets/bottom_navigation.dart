@@ -21,7 +21,7 @@ class CustomBottomNavBar extends StatelessWidget {
 
   Color _getColorForIcon(int index) {
     if (index == 4 && trip.creator.type != 2) {
-      return Colors.grey.shade700; // ciemnoszary dla zablokowanego czatu
+      return Colors.grey.shade700;
     }
     return currentIndex == index ? _selectedColor : _unselectedColor;
   }

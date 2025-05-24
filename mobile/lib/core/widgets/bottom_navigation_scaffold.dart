@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../core/models/trip_model.dart';
-import '../../features/dashboard/screens/tourist_dashboard_screen.dart';
+import '../../features/dashboard/screens/dashboard_screen.dart';
 import '../../features/itineraries/screens/itinerary_screen.dart';
 import '../../features/budget/screens/budget_screen.dart';
 import '../../core/widgets/bottom_navigation.dart';
-import '../../features/tickets/screens/tourist_tickets_screen.dart';
+import '../../features/tickets/screens/tickets_screen.dart';
 import '../../features/chat/screens/chat_overview_screen.dart';
 
 class BottomNavScaffold extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/models/ticket_model.dart';
 import '../../../../core/services/ticket_service.dart';
-import '../../../../core/widgets/base_screen.dart';
+import '../../../core/screens/base_screen.dart';
 import '../../../../core/models/trip_model.dart';
 import '../widgets/tickets_widgets.dart';
 

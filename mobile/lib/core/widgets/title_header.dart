@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/text_styles.dart';
 import '../services/auth_service.dart';
 import '../theme/themes.dart';
-import 'menu_screen.dart';
+import '../screens/user_menu.dart';
 
 class TripTitleHeader extends StatelessWidget {
   final String title;

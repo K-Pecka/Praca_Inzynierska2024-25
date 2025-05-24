@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/core/screens/profile_screen.dart';
+import 'package:mobile/core/screens/report_issue_screen.dart';
+import 'package:mobile/core/screens/settings_screen.dart';
 import 'package:mobile/core/theme/themes.dart';
 import '../../features/auth/screens/start_screen.dart';
 import '../services/auth_service.dart';
@@ -16,8 +19,14 @@ class ProfileMenuScreen extends StatelessWidget {
   }
 
   String _getInitials() {
-    final f = AuthService.firstName?.isNotEmpty == true ? AuthService.firstName![0] : '';
-    final l = AuthService.lastName?.isNotEmpty == true ? AuthService.lastName![0] : '';
+    final f =
+        AuthService.firstName?.isNotEmpty == true
+            ? AuthService.firstName![0]
+            : '';
+    final l =
+        AuthService.lastName?.isNotEmpty == true
+            ? AuthService.lastName![0]
+            : '';
     return (f + l).toUpperCase();
   }
 
@@ -39,15 +48,12 @@ class ProfileMenuScreen extends StatelessWidget {
                 CircleAvatar(
                   radius: 40,
                   backgroundColor: AppColors.cardsBackground,
-                  child: Text(
-                    initials,
-                    style: TextStyles.menuInitials
-                  ),
+                  child: Text(initials, style: TextStyles.menuInitials),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   "${AuthService.firstName ?? ''} ${AuthService.lastName ?? ''}",
-                  style: TextStyles.sectionHeading
+                  style: TextStyles.sectionHeading,
                 ),
                 const SizedBox(height: 12),
               ],
@@ -59,19 +65,28 @@ class ProfileMenuScreen extends StatelessWidget {
           _buildMenuItem(
             Icons.person,
             "Profil",
-            () => _logout(context),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ProfileScreen()),
+            ),
             color: AppColors.titleText,
           ),
           _buildMenuItem(
             Icons.settings,
             "Ustawienia",
-            () => _logout(context),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const SettingsScreen()),
+            ),
             color: AppColors.titleText,
           ),
           _buildMenuItem(
             Icons.report_problem,
             "Zgłoś problem",
-            () => _logout(context),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ReportIssueScreen()),
+            ),
             color: AppColors.titleText,
           ),
           _buildMenuItem(

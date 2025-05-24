@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/theme/text_styles.dart';
-import '../../../core/widgets/base_screen.dart';
+import '../../../core/screens/base_screen.dart';
 import '/core/models/itinerary_model.dart';
 import '/core/models/activity_model.dart';
 import '/core/models/trip_model.dart';

@@ -6,7 +6,7 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/theme/themes.dart';
 import '../widgets/expense_widgets.dart';
 import '../widgets/budget_widgets.dart';
-import '../../../../core/widgets/base_screen.dart';
+import '../../../core/screens/base_screen.dart';
 
 class BudgetScreen extends StatefulWidget {
   final TripModel trip;

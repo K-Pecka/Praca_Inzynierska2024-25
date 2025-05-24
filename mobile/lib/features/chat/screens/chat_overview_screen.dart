@@ -4,7 +4,7 @@ import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/services/chat_service.dart';
 import '../../../core/utils/error_handler.dart';
-import '../../../core/widgets/base_screen.dart';
+import '../../../core/screens/base_screen.dart';
 import 'announcement_channel_screen.dart';
 import '../widgets/chat_tile.dart';
 

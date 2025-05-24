@@ -8,17 +8,20 @@ class AuthService {
   static String? _refreshToken;
   static String? _firstName;
   static String? _lastName;
+  static String? _email;
 
   static String? get accessToken => _accessToken;
   static String? get refreshToken => _refreshToken;
   static String? get firstName => _firstName;
   static String? get lastName => _lastName;
+  static String? get email => _email;
 
   static void logout() {
     _accessToken = null;
     _refreshToken = null;
     _firstName = null;
     _lastName = null;
+    _email = null;
   }
 
   static Future<AuthResponseModel> login({
@@ -41,6 +44,7 @@ class AuthService {
       _refreshToken = data['refresh'];
       _firstName = data['first_name'];
       _lastName = data['last_name'];
+      _email = data['email'];
 
       return AuthResponseModel.fromJson(data);
     } else {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/trip_model.dart';
-import 'title_header.dart';
+import '../widgets/title_header.dart';
 
 class BaseScreen extends StatelessWidget {
   final TripModel trip;

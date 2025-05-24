@@ -3,7 +3,7 @@ import '../../../core/services/auth_service.dart';
 import '../../../core/services/trip_service.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/theme/themes.dart';
-import '../../../core/widgets/menu_screen.dart';
+import '../../../core/screens/user_menu.dart';
 import '/core/models/trip_model.dart';
 import '../widgets/dashboard_widgets.dart';
 import 'package:mobile/core/utils/error_handler.dart';
