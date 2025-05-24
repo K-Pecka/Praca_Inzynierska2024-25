@@ -24,6 +24,9 @@ class ExpenseViewSet(ModelViewSet):
         return Expense.objects.filter(trip__pk=self.kwargs['trip_pk']) \
                               .select_related('trip', 'user', 'category')
 
+    def get_object(self):
+        return Expense.objects.filter(pk=self.kwargs['pk']).first()
+
     def get_serializer_class(self):
         if self.action == 'create':
             return ExpenseCreateSerializer
