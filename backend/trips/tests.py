@@ -4,8 +4,8 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 from django.core.files.storage import FileSystemStorage
 from django.test.utils import override_settings
-from trips.views.expense_views import ExpenseCreateAPIView, ExpenseRetrieveAPIView, ExpenseUpdateAPIView, \
-    ExpenseDestroyAPIView
+
+from trips.views.expense_views import ExpenseViewSet
 from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketDestroyAPIView, \
     TicketUpdateAPIView
 from users.models import CustomUser, UserProfile, UserProfileType
@@ -62,7 +62,7 @@ class ExpenseAPITestCase(TestCase):
             'date': "06.06.2025",
             'category': self.expense_category.id
         }
-        view = ExpenseCreateAPIView.as_view()
+        view = ExpenseViewSet.as_view({'post': 'create'})
         request = self.factory.post(f'/trips/{self.trip.id}/expense/', data)
         force_authenticate(request, user=self.user)
         response = view(request, trip_pk=self.trip.id)
@@ -72,10 +72,10 @@ class ExpenseAPITestCase(TestCase):
         """
         Test retrieving an expense.
         """
-        view = ExpenseRetrieveAPIView.as_view()
+        view = ExpenseViewSet.as_view({'get': 'retrieve'})
         request = self.factory.get(f'/trips/{self.trip.id}/expense/{self.expense.id}/')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.expense.id)
+        response = view(request, trip_pk=self.trip.id, pk=self.expense.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['amount'], "200.00")
         self.assertEqual(response.data['title'], "Obiad w restauracji")
@@ -90,10 +90,10 @@ class ExpenseAPITestCase(TestCase):
             'note': "Obiad w jakimś dobrym barze",
             'category': self.expense_category.id
         }
-        view = ExpenseUpdateAPIView.as_view()
+        view = ExpenseViewSet.as_view({'patch': 'partial_update'})
         request = self.factory.patch(f'/trips/{self.trip.id}/expense/{self.expense.id}/update/', data)
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.expense.id)
+        response = view(request, trip_pk=self.trip.id, pk=self.expense.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.expense.refresh_from_db()
         self.assertEqual(str(self.expense.amount), "250.00")
@@ -103,10 +103,10 @@ class ExpenseAPITestCase(TestCase):
         """
         Test deleting an expense.
         """
-        view = ExpenseDestroyAPIView.as_view()
+        view = ExpenseViewSet.as_view({'delete': 'destroy'})
         request = self.factory.delete(f'/trips/{self.trip.id}/expense/{self.expense.id}/delete/')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.expense.id)
+        response = view(request, trip_pk=self.trip.id, pk=self.expense.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Expense.objects.filter(id=self.expense.id).exists())
 
@@ -124,7 +124,7 @@ class ExpenseAPITestCase(TestCase):
             'note': "Bilet do muzeum w paryżu",
             'category': self.expense_category.id
         }
-        view = ExpenseCreateAPIView.as_view()
+        view = ExpenseViewSet.as_view({'post': 'create'})
         request = self.factory.post(f'/trips/{self.trip.id}/expense/', data)
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -239,5 +239,4 @@ class TicketAPITestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def tearDown(self):
-        # Czyści lokalne pliki po testach
         self.ticket.file.delete(save=False)
