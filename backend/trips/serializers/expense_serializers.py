@@ -138,16 +138,19 @@ class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context['request']
-        user = request.user
+        view = self.context['view']
+        trip_pk = view.kwargs.get('trip_pk')
+        trip = get_object_or_404(Trip, pk=trip_pk)
+
         members = validated_data.pop('members')
 
         with transaction.atomic():
             expense = DetailedExpense(**validated_data)
-            expense.creator = user.get_default_profile()
+            expense.creator = request.user.get_default_profile()
+            expense.trip = trip
             expense.save()
 
             expense.members.set(members)
-
             expense.calculate_shares()
             expense.save()
 

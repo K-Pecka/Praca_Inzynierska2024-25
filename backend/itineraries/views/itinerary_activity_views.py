@@ -15,16 +15,13 @@ from server.permissions import IsTripCreator, IsTripParticipant
 
 @extend_schema(tags=["itinerary activity"])
 class ItineraryActivityViewSet(ModelViewSet):
-    lookup_url_kwarg = "itinerary_pk"
-
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
             return [IsAuthenticated(), IsTripCreator()]
         return [IsAuthenticated(), IsTripParticipant()]
 
     def get_queryset(self):
-        itinerary_pk = self.kwargs.get(self.lookup_url_kwarg)
-        return ItineraryActivity.objects.by_itinerary(itinerary_pk)
+        return ItineraryActivity.objects.by_itinerary(self.kwargs['itinerary_pk'])
 
     def get_object(self):
         return get_object_or_404(
