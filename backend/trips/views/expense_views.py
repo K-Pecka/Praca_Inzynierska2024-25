@@ -44,12 +44,6 @@ class ExpenseViewSet(ModelViewSet):
             return [IsAuthenticated(), IsExpenseOwnerOrTripCreator()]
         return [IsAuthenticated()]
 
-    def perform_create(self, serializer):
-        serializer.save(
-            trip_id=self.kwargs['trip_pk'],
-            user=self.request.user.get_default_profile()
-        )
-
 
 @extend_schema(tags=['model_type'])
 class ExpenseTypeListAPIView(ListAPIView):
@@ -68,7 +62,7 @@ class ExpenseTypeListAPIView(ListAPIView):
 class DetailedExpenseViewSet(ModelViewSet):
     def get_queryset(self):
         trip_pk = self.kwargs.get('trip_pk')
-        return DetailedExpense.objects.filter(trip_id=trip_pk)
+        return DetailedExpense.objects.filter(trip__id=trip_pk)
 
     def get_permissions(self):
         if self.action == 'create':
@@ -87,7 +81,3 @@ class DetailedExpenseViewSet(ModelViewSet):
         elif self.action in ['update', 'partial_update']:
             return DetailedExpenseUpdateSerializer
         return DetailedExpenseRetrieveSerializer
-
-    def perform_create(self, serializer):
-        trip_pk = self.kwargs.get('trip_pk')
-        serializer.save(trip_id=trip_pk, creator=self.request.user.get_default_profile())
