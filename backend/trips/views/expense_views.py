@@ -1,10 +1,8 @@
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
+from drf_spectacular.utils import extend_schema
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
-from django_filters import rest_framework as filters
 from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
 
 from server.permissions import IsTripParticipant, IsExpenseOwnerOrTripCreator
 from trips.filters import ExpenseFilter
@@ -16,63 +14,35 @@ from trips.serializers.expense_serializers import ExpenseCreateSerializer, Expen
 
 
 @extend_schema(tags=['expense'])
-class ExpenseCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = ExpenseCreateSerializer
-
-
-@extend_schema(tags=['expense'])
-class ExpenseRetrieveAPIView(RetrieveAPIView):
-    queryset = Expense.objects.all()
+class ExpenseViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = ExpenseRetrieveSerializer
 
-
-@extend_schema(
-    tags=['expense'],
-    filters=True,
-    parameters=[
-        OpenApiParameter(name="title", type=OpenApiTypes.STR, location='query',
-                         description="Tytuł (zawiera)"),
-        OpenApiParameter(name="amount_min", type=OpenApiTypes.NUMBER, location='query',
-                         description="Kwota od"),
-        OpenApiParameter(name="amount_max", type=OpenApiTypes.NUMBER, location='query',
-                         description="Kwota do"),
-        OpenApiParameter(name="currency", type=OpenApiTypes.STR, location='query', description="Waluta"),
-        OpenApiParameter(name="date", type=OpenApiTypes.DATE, location='query',
-                         description="Dokładna data"),
-        OpenApiParameter(name="date_from", type=OpenApiTypes.DATE, location='query',
-                         description="Data od"),
-        OpenApiParameter(name="date_to", type=OpenApiTypes.DATE, location='query',
-                         description="Data do"),
-    ]
-)
-class ExpenseListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = ExpenseListSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = [DjangoFilterBackend]
     filterset_class = ExpenseFilter
 
     def get_queryset(self):
-        return (Expense.objects
-                .filter(trip=self.kwargs['trip_pk'])
-                .select_related('trip', 'user', 'category')
-                )
+        return Expense.objects.filter(trip_id=self.kwargs['trip_pk']) \
+                              .select_related('trip', 'user', 'category')
 
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return ExpenseCreateSerializer
+        elif self.action == 'retrieve':
+            return ExpenseRetrieveSerializer
+        elif self.action == 'list':
+            return ExpenseListSerializer
+        elif self.action in ['update', 'partial_update']:
+            return ExpenseUpdateSerializer
+        elif self.action == 'destroy':
+            return ExpenseDeleteSerializer
+        return ExpenseRetrieveSerializer
 
-@extend_schema(tags=['expense'])
-class ExpenseUpdateAPIView(UpdateAPIView):
-    queryset = Expense.objects.all()
-    permission_classes = [IsAuthenticated]
-    serializer_class = ExpenseUpdateSerializer
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-@extend_schema(tags=['expense'])
-class ExpenseDestroyAPIView(DestroyAPIView):
-    queryset = Expense.objects.all()
-    permission_classes = [IsAuthenticated, IsExpenseOwnerOrTripCreator]
-    serializer_class = ExpenseDeleteSerializer
+    def get_permissions(self):
+        if self.action == 'create' or self.action == 'list' or self.action == 'retrieve':
+            return [IsAuthenticated(), IsTripParticipant()]
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            return [IsAuthenticated(), IsExpenseOwnerOrTripCreator()]
+        return [IsAuthenticated()]
 
 
 @extend_schema(tags=['model_type'])
@@ -88,13 +58,18 @@ class ExpenseTypeListAPIView(ListAPIView):
         return ExpenseType.objects.all()
 
 
-
+@extend_schema(tags=['expense'])
 class DetailedExpenseViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated]
-
     def get_queryset(self):
         trip_pk = self.kwargs.get('trip_pk')
         return DetailedExpense.objects.filter(trip_id=trip_pk)
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [IsAuthenticated(), IsTripParticipant()]
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            return [IsAuthenticated(), IsTripParticipant(), IsExpenseOwnerOrTripCreator()]
+        return [IsAuthenticated(), IsTripParticipant()]
 
     def get_serializer_class(self):
         if self.action == 'create':
