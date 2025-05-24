@@ -21,7 +21,7 @@ class ExpenseViewSet(ModelViewSet):
     filterset_class = ExpenseFilter
 
     def get_queryset(self):
-        return Expense.objects.filter(trip_id=self.kwargs['trip_pk']) \
+        return Expense.objects.filter(trip__pk=self.kwargs['trip_pk']) \
                               .select_related('trip', 'user', 'category')
 
     def get_serializer_class(self):
