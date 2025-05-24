@@ -25,9 +25,9 @@ urlpatterns = [
 
     # Ticket URLs
     path('<int:trip_pk>/ticket/', TicketViewSet.as_view({
-        'get': 'list',
-        'post': 'create'
-    }), name='ticket-list-create'),
+        'post': 'create',
+        'get': 'list'
+    }), name='ticket-list-all-create'),
 
     # retrieve + update + delete
     path('<int:trip_pk>/ticket/<int:pk>/', TicketViewSet.as_view({
@@ -36,11 +36,6 @@ urlpatterns = [
         'patch': 'partial_update',
         'delete': 'destroy'
     }), name='ticket-detail'),
-
-    # all (dla trip creatora)
-    path('<int:trip_pk>/ticket/all/', TicketViewSet.as_view({
-        'get': 'by_trip'
-    }), name='ticket-list-all'),
 
     # Expense URLs
     path('', include(router.urls)),
