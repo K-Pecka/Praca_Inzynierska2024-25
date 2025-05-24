@@ -6,7 +6,7 @@ from chats.views.chatroom_views import ChatroomViewSet
 from chats.views.message_views import MessageViewSet
 
 router = DefaultRouter()
-router.register(r'chatrooms', ChatroomViewSet, basename='chatroom')
+router.register(r'', ChatroomViewSet, basename='chatroom')
 
 urlpatterns = [
     path('', include(router.urls)),
