@@ -32,9 +32,6 @@ class MessageViewSet(ModelViewSet):
             .prefetch_related('chatroom__members')
         )
 
-    def get_object(self):
-        return Message.objects.by_chatroom_pk(self.kwargs['room_pk'])
-
     def get_serializer_class(self):
         if self.action == 'create':
             return MessageCreateSerializer

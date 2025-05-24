@@ -19,7 +19,6 @@ urlpatterns = [
 
     # retrieve, update, partial_update, destroy
     path('<int:room_pk>/chat-message/<int:pk>/', MessageViewSet.as_view({
-        'get': 'retrieve',
         'put': 'update',
         'patch': 'partial_update',
         'delete': 'destroy'
