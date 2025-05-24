@@ -11,7 +11,7 @@ from trips.views.trip_views import TripViewSet
 
 
 router = DefaultRouter()
-router.register(r'trips', TripViewSet, basename='trip')
+router.register(r'', TripViewSet, basename='trip')
 
 trips_router = NestedDefaultRouter(router, r'trips', lookup='trip')
 trips_router.register(r'expenses', ExpenseViewSet, basename='trip-expense')

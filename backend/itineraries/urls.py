@@ -8,7 +8,7 @@ from itineraries.views.itinerary_views import ItineraryViewSet
 
 
 router = DefaultRouter()
-router.register(r'itineraries', ItineraryViewSet, basename='itinerary')
+router.register(r'', ItineraryViewSet, basename='itinerary')
 
 urlpatterns = [
     # Itineraries

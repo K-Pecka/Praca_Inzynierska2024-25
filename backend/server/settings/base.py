@@ -150,7 +150,6 @@ SPECTACULAR_SETTINGS = {
     'TAGS': [
         {'name': 'trip', 'description': 'Endpoints for managing trips.'},
         {'name': 'ticket', 'description': 'Endpoints for managing tickets.'},
-        {'name': 'budget', 'description': 'Endpoints for managing budgets.'},
         {'name': 'expense', 'description': 'Endpoints for managing expenses.'},
         {'name': 'itinerary', 'description': 'Endpoints for managing itineraries.'},
         {'name': 'itinerary activity', 'description': 'Endpoints for managing itinerary activities.'},
