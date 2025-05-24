@@ -14,7 +14,7 @@ from server.permissions import IsTripCreator, IsTripParticipant
 
 @extend_schema(tags=["itinerary"])
 class ItineraryViewSet(ModelViewSet):
-    lookup_url_kwarg = "trip_pk"
+    lookup_url_kwarg = "pk"
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:

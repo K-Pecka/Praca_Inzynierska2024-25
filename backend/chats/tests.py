@@ -3,11 +3,10 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 
 from chats.models import Chatroom, Message
-from chats.views.message_views import MessageCreateAPIView, MessageUpdateAPIView, \
-    MessageRetrieveAPIView, MessageDestroyAPIView, MessageListAPIView
-from chats.views.chatroom_views import ChatroomDestroyAPIView, ChatroomListAPIView, ChatroomRetrieveAPIView, \
-    ChatroomUpdateAPIView, ChatroomCreateAPIView
-from users.models import CustomUser, UserProfile, UserProfileType
+from chats.views.chatroom_views import ChatroomViewSet
+from chats.views.message_views import MessageViewSet
+
+from users.models import CustomUser, UserProfileType
 
 from trips.models import Trip
 
@@ -89,7 +88,7 @@ class ChatAPITestCase(TestCase):
             'members': [self.user_profile.id],
             'settings': {'currency': 'USD'}
         }
-        view = ChatroomCreateAPIView.as_view()
+        view = ChatroomViewSet.as_view({'post': 'create'})
         request = self.factory.post(f'trip/1/chat/', data, format='json')
         force_authenticate(request, user=self.user)
         response = view(request, trip_pk=1, itinerary_pk=1)
@@ -107,7 +106,7 @@ class ChatAPITestCase(TestCase):
             'settings': {'currency': 'USD'}
         }
 
-        view = ChatroomCreateAPIView.as_view()
+        view = ChatroomViewSet.as_view({'post': 'create'})
         request = self.factory.post('chat/', data, format='json')
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -125,7 +124,7 @@ class ChatAPITestCase(TestCase):
             'settings': {'currency': 'USD'}
         }
 
-        view = ChatroomCreateAPIView.as_view()
+        view = ChatroomViewSet.as_view({'post': 'create'})
         request = self.factory.post('chat/', data, format='json')
         force_authenticate(request, user=self.user)
         response = view(request)
@@ -144,7 +143,7 @@ class ChatAPITestCase(TestCase):
             'settings': {'currency': 'USD'}
         }
 
-        view = ChatroomUpdateAPIView.as_view()
+        view = ChatroomViewSet.as_view({'patch': 'partial_update'})
         request = self.factory.patch(f'{self.chatroom.id}/', data, format='json')
         force_authenticate(request, user=self.user)
         response = view(request, pk=self.chatroom.id)
@@ -163,7 +162,7 @@ class ChatAPITestCase(TestCase):
             'settings': {'currency': 'USD'}
         }
 
-        view = ChatroomUpdateAPIView.as_view()
+        view = ChatroomViewSet.as_view({'patch': 'partial_update'})
         request = self.factory.patch(f'{self.chatroom2.id}/', data, format='json')
         force_authenticate(request, user=self.user)
         response = view(request, pk=self.chatroom2.id)
@@ -182,7 +181,7 @@ class ChatAPITestCase(TestCase):
             'settings': {'currency': 'USD'}
         }
 
-        view = ChatroomUpdateAPIView.as_view()
+        view = ChatroomViewSet.as_view({'patch': 'partial_update'})
         request = self.factory.patch(f'{self.chatroom.id}/', data, format='json')
         response = view(request, pk=self.chatroom.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -191,7 +190,7 @@ class ChatAPITestCase(TestCase):
         """
         Test deleting the chatroom.
         """
-        view = ChatroomDestroyAPIView.as_view()
+        view = ChatroomViewSet.as_view({'delete': 'destroy'})
         request = self.factory.delete(f'{self.chatroom.id}/', format='json')
         force_authenticate(request, user=self.user)
         response = view(request, pk=self.chatroom.id)
@@ -201,7 +200,7 @@ class ChatAPITestCase(TestCase):
         """
         Test deleting the chatroom as a non-creator.
         """
-        view = ChatroomDestroyAPIView.as_view()
+        view = ChatroomViewSet.as_view({'delete': 'destroy'})
         request = self.factory.delete(f'{self.chatroom2.id}/', format='json')
         force_authenticate(request, user=self.user)
         response = view(request, pk=self.chatroom2.id)
@@ -211,7 +210,7 @@ class ChatAPITestCase(TestCase):
         """
         Test deleting the chatroom when the user is not authenticated.
         """
-        view = ChatroomDestroyAPIView.as_view()
+        view = ChatroomViewSet.as_view({'delete': 'destroy'})
         request = self.factory.delete(f'{self.chatroom.id}/', format='json')
         response = view(request, pk=self.chatroom.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -220,7 +219,7 @@ class ChatAPITestCase(TestCase):
         """
         Test retrieving the chatroom.
         """
-        view = ChatroomRetrieveAPIView.as_view()
+        view = ChatroomViewSet.as_view({'get': 'retrieve'})
         request = self.factory.get(f'{self.chatroom.id}/', format='json')
         force_authenticate(request, user=self.user)
         response = view(request, pk=self.chatroom.id)
@@ -230,7 +229,7 @@ class ChatAPITestCase(TestCase):
         """
         Test retrieving the chatroom as a non-member.
         """
-        view = ChatroomRetrieveAPIView.as_view()
+        view = ChatroomViewSet.as_view({'get': 'retrieve'})
         request = self.factory.get(f'{self.chatroom2.id}/', format='json')
         force_authenticate(request, user=self.user)
         response = view(request, pk=self.chatroom2.id)
@@ -240,7 +239,7 @@ class ChatAPITestCase(TestCase):
         """
         Test retrieving the chatroom when the user is not authenticated.
         """
-        view = ChatroomRetrieveAPIView.as_view()
+        view = ChatroomViewSet.as_view({'get': 'retrieve'})
         request = self.factory.get(f'{self.chatroom.id}/', format='json')
         response = view(request, pk=self.chatroom.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -249,7 +248,7 @@ class ChatAPITestCase(TestCase):
         """
         Test retrieving list of the chatrooms.
         """
-        view = ChatroomListAPIView.as_view()
+        view = ChatroomViewSet.as_view({'get': 'list'})
         request = self.factory.get(f'all/', format='json')
         force_authenticate(request, user=self.user)
         response = view(request, pk=self.chatroom.id)
@@ -259,7 +258,7 @@ class ChatAPITestCase(TestCase):
         """
         Test retrieving list of the chatrooms when the user is not authenticated.
         """
-        view = ChatroomListAPIView.as_view()
+        view = ChatroomViewSet.as_view({'get': 'list'})
         request = self.factory.get(f'all/', format='json')
         response = view(request, pk=self.chatroom.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -276,7 +275,7 @@ class ChatAPITestCase(TestCase):
             'chatroom': self.chatroom.id
         }
 
-        view = MessageCreateAPIView.as_view()
+        view = MessageViewSet.as_view({'post': 'create'})
         request = self.factory.post(f'chat/{self.chatroom.id}/chat-message/', data, format='json')
         force_authenticate(request, user=self.user)
         response = view(request, room_pk=self.chatroom.id)
@@ -292,7 +291,7 @@ class ChatAPITestCase(TestCase):
             'chatroom': self.chatroom.id,
         }
 
-        view = MessageCreateAPIView.as_view()
+        view = MessageViewSet.as_view({'post': 'create'})
         request = self.factory.post('chat/chat-message/', data, format='json')
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -307,7 +306,7 @@ class ChatAPITestCase(TestCase):
             'chatroom': self.chatroom.id,
         }
 
-        view = MessageUpdateAPIView.as_view()
+        view = MessageViewSet.as_view({'patch': 'partial_update'})
         request = self.factory.patch(f'chat/{self.message.id}/', data, format='json')
         force_authenticate(request, user=self.user)
         response = view(request, room_pk=self.chatroom.id, pk=self.message.id)
@@ -323,7 +322,7 @@ class ChatAPITestCase(TestCase):
             'chatroom': self.chatroom.id,
         }
 
-        view = MessageUpdateAPIView.as_view()
+        view = MessageViewSet.as_view({'patch': 'partial_update'})
         path = f'chat/{self.chatroom.id}/chat-message/{self.message.id}/'
         request = self.factory.patch(path, data, format='json')
         response = view(request, room_pk=self.chatroom.id, pk=self.message.id)
@@ -333,7 +332,7 @@ class ChatAPITestCase(TestCase):
         """
         Test deleting the message.
         """
-        view = ChatroomDestroyAPIView.as_view()
+        view = MessageViewSet.as_view({'delete': 'destroy'})
         path = f'chat/{self.chatroom.id}/chat-message/{self.message.id}/'
         request = self.factory.delete(path, format='json')
         force_authenticate(request, user=self.user)
@@ -344,7 +343,7 @@ class ChatAPITestCase(TestCase):
         """
         Test deleting the message when the user is not authenticated.
         """
-        view = MessageDestroyAPIView.as_view()
+        view = MessageViewSet.as_view({'delete': 'destroy'})
         path = f'chat/{self.chatroom.id}/chat-message/{self.message.id}/'
         request = self.factory.delete(path, format='json')
         response = view(request, room_pk=self.chatroom.id, pk=self.message.id)
@@ -354,7 +353,7 @@ class ChatAPITestCase(TestCase):
         """
         Test retrieving the message.
         """
-        view = MessageRetrieveAPIView.as_view()
+        view = MessageViewSet.as_view({'get': 'retrieve'})
         path = f'chat/{self.chatroom.id}/chat-message/{self.message.id}/'
         request = self.factory.get(path, format='json')
         force_authenticate(request, user=self.user)
@@ -365,7 +364,7 @@ class ChatAPITestCase(TestCase):
         """
         Test retrieving the chatmessage when the user is not authenticated.
         """
-        view = MessageRetrieveAPIView.as_view()
+        view = MessageViewSet.as_view({'get': 'retrieve'})
         path = f'chat/{self.chatroom.id}/chat-message/{self.message.id}/'
         request = self.factory.get(path, format='json')
         response = view(request, room_pk=self.chatroom.id, pk=self.message.id)
@@ -375,7 +374,7 @@ class ChatAPITestCase(TestCase):
         """
         Test retrieving list of the chatmessages.
         """
-        view = MessageListAPIView.as_view()
+        view = MessageViewSet.as_view({'get': 'list'})
         path = f'chat/{self.chatroom.id}/chat-message/all/'
         request = self.factory.get(path, format='json')
         force_authenticate(request, user=self.user)
@@ -386,7 +385,7 @@ class ChatAPITestCase(TestCase):
         """
         Test retrieving list of the chatmessages when the user is not authenticated.
         """
-        view = MessageListAPIView.as_view()
+        view = MessageViewSet.as_view({'get': 'list'})
         path = f'chat/{self.chatroom.id}/chat-message/all/'
         request = self.factory.get(path, format='json')
         response = view(request, room_pk=self.chatroom.id)

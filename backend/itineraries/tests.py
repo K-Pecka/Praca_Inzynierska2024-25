@@ -3,10 +3,8 @@ from rest_framework.test import APIRequestFactory
 from rest_framework import status
 from rest_framework.test import force_authenticate
 
-from itineraries.views.itinerary_activity_views import ItineraryActivityRetrieveAPIView, ItineraryActivityCreateAPIView, \
-    ItineraryActivityUpdateAPIView, ItineraryActivityDestroyAPIView, ItineraryActivityListAPIView
-from itineraries.views.itinerary_views import ItineraryCreateAPIView, ItineraryRetrieveAPIView, ItineraryUpdateAPIView, \
-    ItineraryDestroyAPIView, ItineraryListAPIView
+from itineraries.views.itinerary_activity_views import ItineraryActivityViewSet
+from itineraries.views.itinerary_views import ItineraryViewSet
 from users.models import CustomUser, UserProfile, UserProfileType
 from trips.models import Trip
 from itineraries.models import Itinerary, ItineraryActivity, ItineraryActivityType
@@ -58,7 +56,7 @@ class ItineraryAPITestCase(TestCase):
             'end_date': '2025-07-10',
             'trip': self.trip.id
         }
-        view = ItineraryCreateAPIView.as_view()
+        view = ItineraryViewSet.as_view({'post': 'create'})
         request = self.factory.post('/itineraries/', data)
         force_authenticate(request, user=self.user)
         response = view(request, trip_pk=self.trip.id)
@@ -68,10 +66,10 @@ class ItineraryAPITestCase(TestCase):
         """
         Test retrieving an itinerary.
         """
-        view = ItineraryRetrieveAPIView.as_view()
+        view = ItineraryViewSet.as_view({'get': 'retrieve'})
         request = self.factory.get(f'/itineraries/{self.itinerary.id}/')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.itinerary.id)
+        response = view(request, trip_pk=self.trip.id, pk=self.itinerary.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], self.itinerary.name)
 
@@ -86,10 +84,10 @@ class ItineraryAPITestCase(TestCase):
             'end_date': '2025-06-20',
             'trip': self.trip.id
         }
-        view = ItineraryUpdateAPIView.as_view()
+        view = ItineraryViewSet.as_view({'patch': 'partial_update'})
         request = self.factory.patch(f'/itineraries/{self.itinerary.id}/', data)
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.itinerary.id)
+        response = view(request, trip_pk=self.trip.id, pk=self.itinerary.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.itinerary.refresh_from_db()
         self.assertEqual(self.itinerary.name, data['name'])
@@ -98,10 +96,10 @@ class ItineraryAPITestCase(TestCase):
         """
         Test deleting an itinerary.
         """
-        view = ItineraryDestroyAPIView.as_view()
+        view = ItineraryViewSet.as_view({'delete': 'destroy'})
         request = self.factory.delete(f'/itineraries/{self.itinerary.id}/')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.itinerary.id)
+        response = view(request, trip_pk=self.trip.id, pk=self.itinerary.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Itinerary.objects.filter(id=self.itinerary.id).exists())
 
@@ -109,10 +107,10 @@ class ItineraryAPITestCase(TestCase):
         """
         Test listing all itineraries when the user is authenticated.
         """
-        view = ItineraryListAPIView.as_view()
+        view = ItineraryViewSet.as_view({'get': 'list'})
         request = self.factory.get('/itineraries/all')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.itinerary.id, trip_pk=self.trip.id)
+        response = view(request, trip_pk=self.trip.id, pk=self.itinerary.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_itinerary_create_unauthenticated(self):
@@ -126,9 +124,9 @@ class ItineraryAPITestCase(TestCase):
             'end_date': '2025-08-10',
             'trip': self.trip.id
         }
-        view = ItineraryCreateAPIView.as_view()
+        view = ItineraryViewSet.as_view({'post': 'create'})
         request = self.factory.post('/itineraries/', data)
-        response = view(request)
+        response = view(request, trip_pk=self.trip.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_itinerary_update_unauthenticated(self):
@@ -142,27 +140,27 @@ class ItineraryAPITestCase(TestCase):
             'end_date': '2025-08-15',
             'trip': self.trip.id
         }
-        view = ItineraryUpdateAPIView.as_view()
+        view = ItineraryViewSet.as_view({'patch': 'partial_update'})
         request = self.factory.patch(f'/itineraries/{self.itinerary.id}/', data)
-        response = view(request, pk=self.itinerary.id)
+        response = view(request, trip_pk=self.trip.id, pk=self.itinerary.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_itinerary_destroy_unauthenticated(self):
         """
         Test deleting an itinerary without authentication.
         """
-        view = ItineraryDestroyAPIView.as_view()
+        view = ItineraryViewSet.as_view({'delete': 'destroy'})
         request = self.factory.delete(f'/itineraries/{self.itinerary.id}/')
-        response = view(request, pk=self.itinerary.id)
+        response = view(request, trip_pk=self.trip.id, pk=self.itinerary.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_itinerary_list_unauthenticated(self):
         """
         Test listing itineraries without authentication.
         """
-        view = ItineraryListAPIView.as_view()
+        view = ItineraryViewSet.as_view({'get': 'list'})
         request = self.factory.get('/itineraries/')
-        response = view(request)
+        response = view(request, trip_pk=self.trip.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
@@ -229,7 +227,7 @@ class ItineraryActivityAPITestCase(TestCase):
             'duration': 90,
             'itinerary': self.itinerary.id
         }
-        view = ItineraryActivityCreateAPIView.as_view()
+        view = ItineraryActivityViewSet.as_view({'post': 'create'})
         url = f'/itineraries/{self.itinerary.id}/activities/create/'
         request = self.factory.post(url, data)
         force_authenticate(request, user=self.user)
@@ -240,10 +238,10 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         Test retrieving an itinerary activity.
         """
-        view = ItineraryActivityRetrieveAPIView.as_view()
+        view = ItineraryActivityViewSet.as_view({'get': 'retrieve'})
         request = self.factory.get(f'/activities/{self.activity.id}/')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.activity.id)
+        response = view(request, itinerary_pk=self.itinerary.pk, pk=self.activity.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], self.activity.name)
 
@@ -261,10 +259,10 @@ class ItineraryActivityAPITestCase(TestCase):
             'duration': 150,
             'itinerary': self.itinerary.id
         }
-        view = ItineraryActivityUpdateAPIView.as_view()
+        view = ItineraryActivityViewSet.as_view({'patch': 'partial_update'})
         request = self.factory.patch(f'/activities/{self.activity.id}/', data)
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.activity.id)
+        response = view(request, itinerary_pk=self.itinerary.pk, pk=self.activity.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.activity.refresh_from_db()
         self.assertEqual(self.activity.name, data['name'])
@@ -273,7 +271,7 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         Test deleting an itinerary activity.
         """
-        view = ItineraryActivityDestroyAPIView.as_view()
+        view = ItineraryActivityViewSet.as_view({'delete': 'destroy'})
         request = self.factory.delete(f'/activities/{self.activity.id}/')
         force_authenticate(request, user=self.user)
         response = view(
@@ -289,7 +287,7 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         Test listing all itinerary activities when the user is authenticated.
         """
-        view = ItineraryActivityListAPIView.as_view()
+        view = ItineraryActivityViewSet.as_view({'get': 'list'})
         request = self.factory.get(f'/itineraries/{self.itinerary.id}/activities/all/')
         force_authenticate(request, user=self.user)
         response = view(request, itinerary_pk=self.itinerary.id)
@@ -310,9 +308,9 @@ class ItineraryActivityAPITestCase(TestCase):
             'duration': 60,
             'itinerary': self.itinerary.id
         }
-        view = ItineraryActivityCreateAPIView.as_view()
+        view = ItineraryActivityViewSet.as_view({'post': 'create'})
         request = self.factory.post('/activities/', data)
-        response = view(request)
+        response = view(request, itinerary_pk=self.itinerary.pk)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_activity_update_unauthenticated(self):
@@ -329,7 +327,7 @@ class ItineraryActivityAPITestCase(TestCase):
             'duration': 90,
             'itinerary': self.itinerary.id
         }
-        view = ItineraryActivityUpdateAPIView.as_view()
+        view = ItineraryActivityViewSet.as_view({'patch': 'partial_update'})
         request = self.factory.patch(f'/activities/{self.activity.id}/', data)
         response = view(request, pk=self.activity.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -338,16 +336,16 @@ class ItineraryActivityAPITestCase(TestCase):
         """
         Test deleting an itinerary activity without authentication.
         """
-        view = ItineraryActivityDestroyAPIView.as_view()
+        view = ItineraryActivityViewSet.as_view({'delete': 'destroy'})
         request = self.factory.delete(f'/activities/{self.activity.id}/')
-        response = view(request, pk=self.activity.id)
+        response = view(request, itinerary_pk=self.itinerary.pk, pk=self.activity.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_activity_list_unauthenticated(self):
         """
         Test listing itinerary activities without authentication.
         """
-        view = ItineraryActivityListAPIView.as_view()
+        view = ItineraryActivityViewSet.as_view({'get': 'list'})
         request = self.factory.get('/activities/')
-        response = view(request)
+        response = view(request, itinerary_pk=self.itinerary.pk)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

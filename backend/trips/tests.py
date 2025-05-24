@@ -6,8 +6,7 @@ from django.core.files.storage import FileSystemStorage
 from django.test.utils import override_settings
 
 from trips.views.expense_views import ExpenseViewSet
-from trips.views.ticket_views import TicketCreateAPIView, TicketRetrieveAPIView, TicketDestroyAPIView, \
-    TicketUpdateAPIView
+from trips.views.ticket_views import TicketViewSet
 from users.models import CustomUser, UserProfile, UserProfileType
 from trips.models import Trip, Expense, Ticket, TicketType, ExpenseType
 
@@ -188,17 +187,17 @@ class TicketAPITestCase(TestCase):
             "valid_from_time": "14:00",
             "trip": self.trip.id,
         }
-        view = TicketCreateAPIView.as_view()
+        view = TicketViewSet.as_view({'post': 'create'})
         request = self.factory.post('/trip/ticket/create/', data, format='multipart')
         force_authenticate(request, user=self.user)
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_ticket_retrieve(self):
-        view = TicketRetrieveAPIView.as_view()
+        view = TicketViewSet.as_view({'get': 'retrieve'})
         request = self.factory.get(f'/trip/ticket/{self.ticket.id}/')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.ticket.id)
+        response = view(request, trip_pk=self.trip.pk, pk=self.ticket.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['trip'], self.trip.id)
 
@@ -210,17 +209,17 @@ class TicketAPITestCase(TestCase):
             "valid_from_date": "2025-06-08",
             "valid_from_time": "16:00"
         }
-        view = TicketUpdateAPIView.as_view()
+        view = TicketViewSet.as_view({'patch': 'partial_update'})
         request = self.factory.patch(f'/trip/ticket/{self.ticket.id}/update/', data, format='multipart')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.ticket.id)
+        response = view(request, trip_pk=self.trip.pk, pk=self.ticket.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_ticket_destroy(self):
-        view = TicketDestroyAPIView.as_view()
+        view = TicketViewSet.as_view({'delete': 'destroy'})
         request = self.factory.delete(f'/trip/ticket/{self.ticket.id}/delete/')
         force_authenticate(request, user=self.user)
-        response = view(request, pk=self.ticket.id)
+        response = view(request, trip_pk=self.trip.pk, pk=self.ticket.id)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Ticket.objects.filter(id=self.ticket.id).exists())
 
@@ -233,7 +232,7 @@ class TicketAPITestCase(TestCase):
             "valid_from_time": "15:00",
             "trip": self.trip.id,
         }
-        view = TicketCreateAPIView.as_view()
+        view = TicketViewSet.as_view({'post': 'create'})
         request = self.factory.post('/trip/ticket/create/', data, format='multipart')
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
