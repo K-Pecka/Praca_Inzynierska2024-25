@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Trip, Ticket, TicketType, ExpenseType, Expense, TripAccessToken
+from .models import Trip, Ticket, TicketType, ExpenseType, Expense, TripAccessToken, DetailedExpense
 
 
 @admin.register(Trip)
@@ -39,6 +39,13 @@ class ExpenseAdmin(admin.ModelAdmin):
     list_display = ('title', 'amount', 'date', 'note', 'trip', 'user', 'category')
     list_filter = ('trip', 'category', 'date')
     search_fields = ('title', 'note', 'user__user__first_name', 'user__user__last_name')
+    date_hierarchy = 'date'
+
+@admin.register(DetailedExpense)
+class DetailedExpenseAdmin(admin.ModelAdmin):
+    list_select_related = ('trip', 'user', 'category')
+    list_display = ('trip', 'name', 'creator', 'price', 'currency', 'price_in_pln', 'price_per_member', 'price_per_member_in_pln')
+    search_fields = ('name', 'price')
     date_hierarchy = 'date'
 
 
