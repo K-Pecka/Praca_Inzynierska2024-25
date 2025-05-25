@@ -13,7 +13,7 @@ class BudgetScreen extends StatefulWidget {
   final int userProfileId;
 
   const BudgetScreen({
-    super.key,g
+    super.key,
     required this.trip,
     required this.userProfileId,
   });
