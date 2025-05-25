@@ -110,9 +110,7 @@ class DetailedExpenseViewSet(ModelViewSet):
             return ValidationError("Wybrany użytkownik nie znajduje się na liście do spłaty długu lub nie istnieje")
 
         expense.amount -= expense.amount_per_member
-
         expense.members.remove(member_to_remove)
-
         expense.calculate_shares()
         expense.save()
 

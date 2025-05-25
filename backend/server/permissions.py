@@ -9,7 +9,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import BasePermission
 
 from chats.models import Chatroom, Message
-from trips.models import Trip, Ticket, Expense, TripAccessToken
+from trips.models import Trip, Ticket, Expense, TripAccessToken, DetailedExpense
 from itineraries.models import Itinerary, ItineraryActivity
 
 ##################################################################################
@@ -168,6 +168,8 @@ class IsTripParticipant(BasePermission):
             return obj.itinerary.trip
         elif isinstance(obj, Expense):
             return obj.trip
+        elif isinstance(obj, DetailedExpense):
+            return obj.trip
         return None
 
 
@@ -243,6 +245,8 @@ class IsTripCreator(BasePermission):
         if isinstance(obj, ItineraryActivity):
             return obj.itinerary.trip.creator == profile
         if isinstance(obj, Expense):
+            return obj.trip.creator == profile
+        if isinstance(obj, DetailedExpense):
             return obj.trip.creator == profile
         return False
 
