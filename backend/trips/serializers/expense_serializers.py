@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 from trips.models import Trip, Expense, ExpenseType, DetailedExpense
 from users.models import UserProfile
+from users.serializers.user_profile_serializers import UserProfileListSerializer
 
 
 class ExpenseTypeRetrieveSerializer(serializers.ModelSerializer):
@@ -181,7 +182,7 @@ class DetailedExpenseListSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     currency = serializers.CharField(read_only=True, max_length=3)
     price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
+    members = UserProfileListSerializer(many=True, read_only=True)
     price_per_member = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     price_per_member_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 

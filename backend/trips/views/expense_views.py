@@ -64,6 +64,11 @@ class DetailedExpenseViewSet(ModelViewSet):
         trip_pk = self.kwargs.get('trip_pk')
         return DetailedExpense.objects.filter(trip__id=trip_pk)
 
+    def get_object(self):
+        trip_pk = self.kwargs.get('trip_pk')
+        pk = self.kwargs.get('pk')
+        return DetailedExpense.objects.filter(trip__id=trip_pk, pk=pk).first()
+
     def get_permissions(self):
         if self.action == 'create':
             return [IsAuthenticated(), IsTripParticipant()]
