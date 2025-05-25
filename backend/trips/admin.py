@@ -46,7 +46,6 @@ class DetailedExpenseAdmin(admin.ModelAdmin):
     list_select_related = ('trip', 'user', 'category')
     list_display = ('trip', 'name', 'creator', 'price', 'currency', 'price_in_pln', 'price_per_member', 'price_per_member_in_pln')
     search_fields = ('name', 'price')
-    date_hierarchy = 'date'
 
 
 @admin.register(TripAccessToken)
