@@ -148,6 +148,7 @@ class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
             expense = DetailedExpense(**validated_data)
             expense.creator = request.user.get_default_profile()
             expense.trip = trip
+            expense.convert_to_pln()
             expense.save()
 
             expense.members.set(members)

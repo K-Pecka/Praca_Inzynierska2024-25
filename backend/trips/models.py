@@ -396,6 +396,47 @@ class DetailedExpense(models.Model):
         help_text=_("PRICE PER MEMBER IN PLN")
     )
 
+    @property
+    def convert_to_pln(self):
+        try:
+            response = requests.get(
+                'https://api.frankfurter.app/latest',
+                params={'from': self.currency, 'to': 'PLN'}
+            )
+            data = response.json()
+
+            if 'rates' not in data:
+                return round(self.price, 2)
+
+            rate = Decimal(list(data['rates'].values())[0])
+            return round(self.price * rate, 2)
+
+        except Exception as e:
+            print("Conversion error:", e)
+            return None
+
+    @property
+    def converted_price(self):
+        try:
+            if self.currency == 'PLN':
+                return round(self.price, 2)
+
+            response = requests.get(
+                'https://api.frankfurter.app/latest',
+                params={'from': self.currency, 'to': 'PLN'}
+            )
+            data = response.json()
+
+            if 'rates' not in data:
+                return round(self.price, 2)
+
+            rate = Decimal(list(data['rates'].values())[0])
+            return round(self.price * rate, 2)
+
+        except Exception as e:
+            print("Conversion error:", e)
+            return None
+
 
     def calculate_shares(self):
         member_count = self.members.count()
