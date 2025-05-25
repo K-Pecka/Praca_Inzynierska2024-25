@@ -11,7 +11,7 @@ from user_auth.serializers import CustomTokenObtainPairSerializer
 from users.models import CustomUser
 
 
-@extend_schema(tags=['0 - Auth'])
+@extend_schema(tags=['0 - Auth'], operation_id="00_Login")
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
@@ -29,7 +29,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         return super().post(request, *args, **kwargs)
 
 
-@extend_schema(tags=['0 - Auth'])
+@extend_schema(tags=['0 - Auth'], operation_id="00_Login")
 class LogoutView(APIView):
     """
     Invalidate JWT tokens (log out).
