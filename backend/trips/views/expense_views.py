@@ -95,23 +95,24 @@ class DetailedExpenseViewSet(ModelViewSet):
         responses={200: OpenApiExample('Sukces', value={"detail": "Użytkownik usunięty z wydatku"})},
         tags=["expense"]
     )
-    @action(detail=True, methods=['post'], url_path='remove-member', permission_classes=[IsAuthenticated, IsTripParticipant])
+    @action(detail=True, methods=['post'], url_path='remove-member',
+            permission_classes=[IsAuthenticated, IsTripParticipant])
     def remove_member(self, request, trip_pk=None, pk=None):
         user_profile = request.data.get('profile_id')
         if not user_profile:
-            return ValidationError("Nie podano profilu użytkownika")
+            raise ValidationError("Nie podano profilu użytkownika")
 
         expense = self.get_object()
         if not expense:
-            return ValidationError("Wydatek o podanym id nie istnieje")
+            raise ValidationError("Wydatek o podanym id nie istnieje")
 
         member_to_remove = expense.members.filter(id=user_profile).first()
         if not member_to_remove:
-            return ValidationError("Wybrany użytkownik nie znajduje się na liście do spłaty długu lub nie istnieje")
+            raise ValidationError("Wybrany użytkownik nie znajduje się na liście do spłaty długu lub nie istnieje")
 
         expense.amount -= expense.amount_per_member
         expense.members.remove(member_to_remove)
         expense.calculate_shares()
         expense.save()
 
-        return expense
+        return Response({"detail": "Użytkownik został usunięty z wydatku."})
