@@ -6,12 +6,6 @@ import 'change_password_screen.dart';
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
-  void _changePassword(BuildContext context) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Zmień hasło')));
-  }
-
   void _deleteAccount(BuildContext context) {
     ScaffoldMessenger.of(
       context,

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class TripModel {
   final int id;
   final String name;
@@ -54,12 +56,13 @@ class Member {
   });
 
   factory Member.fromJson(Map<String, dynamic> json) {
+    print('👤 [DEBUG] Member JSON: ${jsonEncode(json)}');
     return Member(
-      id: json['id'],
-      email: json['email'],
+      id: json['id'] as int,
+      email: json['email'] ?? 'unknown@example.com',
       firstName: json['first_name'],
       lastName: json['last_name'],
-      type: json['type'],
+      type: json['type'], // ← jeśli to się wywali, wiemy wszystko
     );
   }
 
