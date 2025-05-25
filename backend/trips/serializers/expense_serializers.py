@@ -214,3 +214,10 @@ class DetailedExpenseUpdateSerializer(serializers.ModelSerializer):
         instance.calculate_shares()
         instance.save()
         return instance
+
+
+class RemoveMemberSerializer(serializers.Serializer):
+    profile_id = serializers.IntegerField(
+        required=True,
+        help_text="ID profilu użytkownika do usunięcia z wydatku"
+    )
