@@ -13,7 +13,7 @@ class BudgetScreen extends StatefulWidget {
   final int userProfileId;
 
   const BudgetScreen({
-    super.key,
+    super.key,g
     required this.trip,
     required this.userProfileId,
   });
@@ -62,20 +62,23 @@ class _BudgetScreenState extends State<BudgetScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(ctx).viewInsets.bottom,
-          top: 24,
-          left: 24,
-          right: 24,
-        ),
-        child: ExpenseForm(
-          tripId: widget.trip.id,
-          userProfileId: widget.userProfileId,
-          onSaved: () => Navigator.pop(ctx),
-          onAdded: _loadData,
-        ),
-      ),
+      builder: (ctx) {
+        final bottomInset = MediaQuery.of(ctx).viewInsets.bottom;
+        return SingleChildScrollView(
+          padding: EdgeInsets.only(
+            top: 24,
+            left: 24,
+            right: 24,
+            bottom: bottomInset,
+          ),
+          child: ExpenseForm(
+            tripId: widget.trip.id,
+            userProfileId: widget.userProfileId,
+            onSaved: () => Navigator.pop(ctx),
+            onAdded: _loadData,
+          ),
+        );
+      },
     );
   }
 
