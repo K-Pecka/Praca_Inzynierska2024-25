@@ -141,6 +141,14 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     'SWAGGER_UI_DIST': 'SIDECAR',
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    "SECURITY": [{"BearerAuth": []}],
+    "SWAGGER_UI_INIT_OVERRIDES": {
+        "docExpansion": "none",
+    },
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True,
+        "displayRequestDuration": True,
+    },
     'REDOC_DIST': 'SIDECAR',
     'DISABLE_DEFAULT_SCHEMA_GROUPING': True,
     'COMPONENT_SPLIT_REQUEST': True,
