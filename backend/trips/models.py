@@ -447,5 +447,11 @@ class DetailedExpense(models.Model):
             self.price_per_member = self.price / member_count
             self.price_per_member_in_pln = self.price_in_pln / member_count
 
+    def clean(self):
+        if self.pk:
+            old = DetailedExpense.objects.get(pk=self.pk)
+            if old.price != self.price:
+                self.calculate_shares()
+
     def __str__(self):
         return f"{self.name} ({self.price} {self.currency})"
