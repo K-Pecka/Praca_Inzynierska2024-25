@@ -29,7 +29,7 @@ export const getMutationExpenseCreate = (option: Record<string, any>) =>
       });
     },
     onError: (err: any) => {
-      option.notification.setErrorCurrentMessage(err?.message || "Błąd");
+      option.notification.setErrorCurrentMessage(err?.message || err?.['non_field_errors'][0] || "Błąd");
     },
   });
 export const getMutationExpenseDelete = (option: Record<string, any>) =>

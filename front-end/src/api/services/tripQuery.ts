@@ -77,7 +77,6 @@ export const getMutationUpdateBudget = (option: Record<string,any>)=>useMutation
     onSuccess: ({tripId}) => {
         option.notifications.setSuccessCurrentMessage(option.successMessage);
         option.queryClient.invalidateQueries({queryKey: ["trip",Number(tripId)]});
-        router.push({name: "tripDashboard"});
     },
     onError: (err: any) => {
         option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);

@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from "vue-router";
 
 import {
   YourPlan, ExpenseTracker, TicketsView, ParticipantsView, TripEditForm,
-  PlanForm, BudgetForm, TripDashboard, YourTrip, ActivityView
+  PlanForm, TripDashboard, YourTrip, ActivityView
 } from "@/views/panel";
 
 import PanelLayout from "@/layouts/PanelLayout.vue";
@@ -38,11 +38,6 @@ const panelRoutes: RouteRecordRaw = {
       path: "budgets",
       name: "ExpenseTracker",
       component: ExpenseTracker
-    },
-    {
-      path: "budgets/edit",
-      name: "editBudget",
-      component: BudgetForm
     },
     {
       path: "participants",

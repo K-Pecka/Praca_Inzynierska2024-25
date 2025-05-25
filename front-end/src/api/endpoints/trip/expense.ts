@@ -26,7 +26,7 @@ export const fetchExpenseCreate = async (newExpense: Expense, param: Record<stri
   
   const { data, error } = await fetchData(url, "POST", newExpense);
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
   return {tripId:String(newExpense.trip)};

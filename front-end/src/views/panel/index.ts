@@ -8,5 +8,4 @@ export { default as ParticipantsView } from "@/views/panel/participant/List.vue"
 export { default as ActivityView } from "@/views/panel/itinerary/activity/List.vue";
 export { default as PlanForm } from "@/views/panel/itinerary/CreateForm.vue";
 export { default as TripForm } from "@/views/panel/trip/CreateForm.vue";
-export { default as BudgetForm } from "@/views/panel/budget/CreateForm.vue";
 export { default as TripEditForm } from "@/views/panel/trip/EditForm.vue";

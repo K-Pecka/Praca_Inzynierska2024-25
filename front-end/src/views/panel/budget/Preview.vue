@@ -10,7 +10,7 @@ import {
 } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
 import { budget as budgetCategory } from "@/data/category/budget";
-import { computed, ref,watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useMembersStore } from "@/stores/trip/useMembersStore";
 import { Expense } from "@/types";
 import { VDateInput } from "vuetify/labs/components";
@@ -32,19 +32,22 @@ const toggleForm = () => {
   showForm.value = !showForm.value;
 };
 
-
 const { members: membersStore } = useMembersStore();
 const members = computed(() => membersStore);
 const { budget: budgetStore, trip: tripStore } = useTripStore();
-const { getExpensByTrip,setFilters } = budgetStore;
+const { getExpensByTrip, setFilters } = budgetStore;
 
 const onExpenseAdded = () => {
   showForm.value = false;
 };
 
-const { getTripDetails } = tripStore;
+const { getTripDetails,updateTripBudget } = tripStore;
 const { trip } = getTripDetails();
-const { expensesByTrip: expenses, isLoading_expenses,refetch_expenses } = getExpensByTrip();
+const {
+  expensesByTrip: expenses,
+  isLoading_expenses,
+  refetch_expenses,
+} = getExpensByTrip();
 
 const budget = computed(() => Number(trip.value?.budget_amount) ?? 0);
 const budgetCurrency = computed(() => "PLN");
@@ -56,7 +59,7 @@ const filter = () => {
     category: appliedFilters.value.category ?? null,
     participants: appliedFilters.value.participants ?? null,
     date_from: formatDate(appliedFilters.value.date_from),
-    date_to: formatDate(appliedFilters.value.date_to)
+    date_to: formatDate(appliedFilters.value.date_to),
   });
   refetch_expenses();
 };
@@ -88,10 +91,8 @@ function aggregateExpenses<T extends string>(
     return acc;
   }, {} as Record<T, number>);
 
-  const result: Record<
-    T,
-    { name: string; value: number; percent: string }
-  > = {} as Record<T, { name: string; value: number; percent: string }>;
+  const result: Record<T, { name: string; value: number; percent: string }> =
+    {} as Record<T, { name: string; value: number; percent: string }>;
 
   for (const [key, value] of Object.entries(aggregated) as [T, number][]) {
     const name = nameMapper ? nameMapper(key) : key;
@@ -107,25 +108,51 @@ function aggregateExpenses<T extends string>(
 
 const expensesByUser = computed(() => {
   const total = spent.value || 0;
-  return aggregateExpenses(expenses.value, item => item.username || "", total);
+  return aggregateExpenses(
+    expenses.value,
+    (item) => item.username || "",
+    total
+  );
 });
 
 const expensesByCategory = computed(() => {
   const total = spent.value || 0;
   return aggregateExpenses(
     expenses.value,
-    item => String(item.category || "Inne"),
+    (item) => String(item.category || "Inne"),
     total,
-    key => mapCategoryBudget(Number(key)).name
+    (key) => mapCategoryBudget(Number(key)).name
   );
 });
-
 
 const membersItem = computed(
   () => useMembersStore().members.filter((e) => !e.is_guest) || []
 );
-const {userData} = useAuthStore();
-const {isOwner} = userData;
+const { userData } = useAuthStore();
+const { isOwner } = userData;
+;
+const isEditing = ref(false);
+const editableBudget = ref(budget.value);
+function toggleEdit() {
+  editableBudget.value = budget.value;
+  isEditing.value = true;
+}
+const {getTripId} = useUtilsStore();
+function saveBudget() {
+  if (editableBudget.value <= 0 || editableBudget.value === budget.value) {
+    return;
+  }
+  isEditing.value = false;
+  updateTripBudget.mutateAsync({
+          newBudget: { budget_amount: Number(editableBudget.value) },
+          param: { tripId: String(getTripId()) }
+        });
+}
+
+function cancelEdit() {
+  isEditing.value = false;
+  editableBudget.value = budget.value;
+}
 </script>
 
 <template>
@@ -145,10 +172,63 @@ const {isOwner} = userData;
         <v-row class="budget-overview-gap">
           <!-- Budget Card -->
           <AppCard>
-            <p class="mb-4">Budżet</p>
-            <p class="text-h3 font-weight-bold">
-              {{ budget }} {{ budgetCurrency }}
+            <p class="mb-4 d-flex align-center" style="gap: 8px">
+              Budżet
+              <v-icon
+                v-if="!isEditing"
+                class="edit-icon"
+                @click="toggleEdit"
+                style="cursor: pointer"
+                color="primary"
+                size="20"
+                >mdi-pencil</v-icon
+              >
             </p>
+
+            <div v-if="!isEditing">
+              <p class="text-h3 font-weight-bold mb-0" style="line-height: 1.2">
+                {{ budget.toFixed(2) }} {{ budgetCurrency }}
+              </p>
+            </div>
+
+            <div
+              v-else
+              class="edit-budget d-flex align-center"
+              style="gap: 8px"
+            >
+              <v-text-field
+                v-model.number="editableBudget"
+                type="number"
+                variant="outlined"
+                dense
+                style="max-width: 75%"
+                class="mb-0"
+                :rules="[(v) => v > 0 || 'Budżet musi być większy niż 0',(v)=> editableBudget!=budget || v+'Nie można zapisać tej samej wartości']"
+                placeholder="Wprowadź budżet"
+              />
+              <v-btn
+                icon
+                color="primary"
+                @click="saveBudget"
+                title="Zapisz"
+                size="36"
+                style="margin-bottom: 24px; height: 36px; min-width: 36px;"
+                rounded
+              >
+                <v-icon>mdi-check</v-icon>
+              </v-btn>
+              <v-btn
+                icon
+                color="accent"
+                @click="cancelEdit"
+                title="Anuluj"
+                size="36"
+                style="margin-bottom: 24px; height: 36px; min-width: 36px;"
+                rounded
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </div>
           </AppCard>
 
           <!-- Spent Card -->
@@ -166,10 +246,12 @@ const {isOwner} = userData;
 
           <!-- Remaining Budget Card -->
           <AppCard>
-            <p class="mb-3">{{remaining>=0?"Pozostało":"Debet"}}</p>
+            <p class="mb-3">{{ remaining >= 0 ? "Pozostało" : "Debet" }}</p>
             <p
               class="text-h3 font-weight-bold"
-              :class="remaining >= 0 ? 'difference-positive' : 'difference-negative'"
+              :class="
+                remaining >= 0 ? 'difference-positive' : 'difference-negative'
+              "
             >
               {{ remaining.toFixed(2) }} {{ budgetCurrency }}
             </p>
@@ -179,7 +261,7 @@ const {isOwner} = userData;
           <v-col cols="12" v-if="showForm">
             <v-row>
               <ExpenseForm
-                :isOwnerTrip = "isOwner(trip?.creator?.id || 0)"
+                :isOwnerTrip="isOwner(trip?.creator?.id || 0)"
                 :members="membersItem"
                 @cancelForm="showForm = false"
                 @submitted="onExpenseAdded"
@@ -213,8 +295,9 @@ const {isOwner} = userData;
                 </v-row>
 
                 <!-- Expenses List -->
-                <ExpensesList v-if="!isLoading_expenses"
-                  :isOwnerTrip = "isOwner(trip?.creator?.id || 0)"
+                <ExpensesList
+                  v-if="!isLoading_expenses"
+                  :isOwnerTrip="isOwner(trip?.creator?.id || 0)"
                   variant="manage"
                   :expenses="expenses"
                 />
@@ -322,7 +405,7 @@ const {isOwner} = userData;
                 <v-date-input
                   v-model="appliedFilters.date_from"
                   :min="trip?.start_date"
-                  :max = "appliedFilters.date_to ?? trip?.end_date"
+                  :max="appliedFilters.date_to ?? trip?.end_date"
                   max-width="auto"
                   variant="outlined"
                   prepend-icon=""
@@ -368,9 +451,7 @@ const {isOwner} = userData;
 .difference-positive {
   color: rgba(22, 163, 74, 0.75);
 }
-.difference-negative
-{
-  color:rgb(var(--v-theme-delete));
+.difference-negative {
+  color: rgb(var(--v-theme-delete));
 }
-
 </style>
