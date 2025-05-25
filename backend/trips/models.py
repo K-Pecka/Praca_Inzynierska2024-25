@@ -406,10 +406,10 @@ class DetailedExpense(models.Model):
             data = response.json()
 
             if 'rates' not in data:
-                return round(self.price, 2)
+                return round(self.amount, 2)
 
             rate = Decimal(list(data['rates'].values())[0])
-            return round(self.price * rate, 2)
+            return round(self.amount * rate, 2)
 
         except Exception as e:
             print("Conversion error:", e)
@@ -422,14 +422,14 @@ class DetailedExpense(models.Model):
             self.amount_per_member = Decimal('0')
             self.amount_per_member_in_pln = Decimal('0')
         else:
-            self.amount_in_pln = self.convert_to_pln
+            self.amount_in_pln = self.convert_to_pln or Decimal('0')
             self.amount_per_member = self.amount / member_count
             self.amount_per_member_in_pln = self.amount_in_pln / member_count
 
     def clean(self):
         if self.pk:
             old = DetailedExpense.objects.get(pk=self.pk)
-            if old.price != self.amount:
+            if old.amount != self.amount:
                 self.calculate_shares()
 
     def __str__(self):
