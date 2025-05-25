@@ -129,13 +129,13 @@ class ExpenseDeleteSerializer(serializers.ModelSerializer):
 
 class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
-    price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
     currency = serializers.CharField(max_length=3)
     members = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), many=True)
 
     class Meta:
         model = DetailedExpense
-        fields = ['name', 'price', 'currency', 'members']
+        fields = ['name', 'amount', 'currency', 'members']
 
     def create(self, validated_data):
         request = self.context['request']
