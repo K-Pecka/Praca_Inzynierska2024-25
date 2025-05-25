@@ -36,13 +36,13 @@ export const deleteTrip = async (param: Record<string, string> = {}) => {
         throw error;
     }
 
-    return data;
+    return param;
 };
 
 export const createTrip = async (newTrip: NewTrip, param: Record<string, string> = {}) => {
     const url = setParam(apiEndpoints.trip.create, param);
 
-    const { data, error } = await fetchData<NewTrip>(
+    const { data, error } = await fetchData<Trip>(
         url,
         "POST",
         { ...newTrip, budget_amount: 0 }

@@ -52,14 +52,13 @@ apiClient.interceptors.response.use(
         if (error.response?.status === 500) {
             router.push('/500');
         }
-        else if (error.response?.status === 401 && !originalRequest._retry && authStore.getToken()?.refresh) {
+        else if (error.response?.status === 401 && !originalRequest._retry && authStore.getToken() != null) {
             const refreshToken = authStore.getToken()?.refresh;
-
             if (refreshToken && !isRefreshing) {
                 originalRequest._retry = true;
                 isRefreshing = true;
-
                 try {
+
                     const refreshResponse = await fetchRefreshToken(refreshToken);
                     const newAccess = refreshResponse;
                     authStore.saveToken(newAccess);

@@ -6,7 +6,7 @@
         v-model="localRange"
         :min="inputData.config?.min"
         :max="inputData.config?.max"
-        :label="inputData.placeholder"
+        :label="inputData.label"
         :multiple="inputData.config?.multiple ? 'range' : false"
         variant="outlined"
         prepend-icon=""
