@@ -160,7 +160,7 @@ class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
 
 class DetailedExpenseRetrieveSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True)
-    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    creator = UserProfileListSerializer(read_only=True)
     amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     currency = serializers.CharField(read_only=True, max_length=3)
     amount_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
@@ -177,7 +177,7 @@ class DetailedExpenseRetrieveSerializer(serializers.ModelSerializer):
 class DetailedExpenseListSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
-    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    creator = UserProfileListSerializer(read_only=True)
     amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     currency = serializers.CharField(read_only=True, max_length=3)
     amount_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
