@@ -348,12 +348,12 @@ class DetailedExpense(models.Model):
         verbose_name=_("Twórca wydatku"),
         help_text=_("CREATOR")
     )
-    price = models.DecimalField(
+    amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(Decimal('0.01'))],
         verbose_name=_("Kwota"),
-        help_text=_("PRICE")
+        help_text=_("AMOUNT")
     )
     currency = models.CharField(
         max_length=3,
@@ -362,12 +362,12 @@ class DetailedExpense(models.Model):
         verbose_name=_("Waluta"),
         help_text=_("CURRENCY")
     )
-    price_in_pln = models.DecimalField(
+    amount_in_pln = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=0,
         verbose_name=_("Kwota w PLN"),
-        help_text=_("PRICE IN PLN")
+        help_text=_("AMOUNT IN PLN")
     )
     trip = models.ForeignKey(
         Trip,
@@ -381,19 +381,19 @@ class DetailedExpense(models.Model):
         verbose_name=_("Uczestnicy"),
         help_text=_("MEMBERS")
     )
-    price_per_member = models.DecimalField(
+    amount_per_member = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=0,
         verbose_name=_("Kwota na osobę"),
-        help_text=_("PRICE PER MEMBER")
+        help_text=_("AMOUNT PER MEMBER")
     )
-    price_per_member_in_pln = models.DecimalField(
+    amount_per_member_in_pln = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=0,
         verbose_name=_("Kwota na osobę w PLN"),
-        help_text=_("PRICE PER MEMBER IN PLN")
+        help_text=_("AMOUNT PER MEMBER IN PLN")
     )
 
     @property
@@ -419,18 +419,18 @@ class DetailedExpense(models.Model):
     def calculate_shares(self):
         member_count = self.members.count()
         if member_count == 0:
-            self.price_per_member = Decimal('0')
-            self.price_per_member_in_pln = Decimal('0')
+            self.amount_per_member = Decimal('0')
+            self.amount_per_member_in_pln = Decimal('0')
         else:
-            self.price_in_pln = self.convert_to_pln
-            self.price_per_member = self.price / member_count
-            self.price_per_member_in_pln = self.price_in_pln / member_count
+            self.amount_in_pln = self.convert_to_pln
+            self.amount_per_member = self.amount / member_count
+            self.amount_per_member_in_pln = self.amount_in_pln / member_count
 
     def clean(self):
         if self.pk:
             old = DetailedExpense.objects.get(pk=self.pk)
-            if old.price != self.price:
+            if old.price != self.amount:
                 self.calculate_shares()
 
     def __str__(self):
-        return f"{self.name} ({self.price} {self.currency})"
+        return f"{self.name} ({self.amount} {self.currency})"
