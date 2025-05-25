@@ -1,5 +1,5 @@
 from drf_spectacular.utils import extend_schema, OpenApiExample
-from requests.models import Response
+from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
