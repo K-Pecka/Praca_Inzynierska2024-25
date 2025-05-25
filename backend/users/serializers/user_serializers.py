@@ -131,6 +131,9 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
         password = validated_data.pop('password', None)
 
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+
         if password:
             instance.set_password(password)
             instance.save()
