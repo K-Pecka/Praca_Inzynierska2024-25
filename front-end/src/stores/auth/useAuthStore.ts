@@ -184,13 +184,13 @@ export const useAuthStore = defineStore(
       const lastInitial = user.value.last_name?.[0] ?? "";
       return (firstInitial + lastInitial).toUpperCase() || " ";
     };
-
+    const isGuide = () => getUser()?.profiles?.find((profile) => profile.type == 2)?.is_default ?? false;
     return {
       userData: {
         getUser,
         isOwner,
       },
-
+      isGuide,
       token,
       user,
       saveToken,

@@ -11,7 +11,7 @@ export const fetchAddParticipant = async (
   const { data, error } = await fetchData(url, "PUT", participant);
 
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
   return idTrip;

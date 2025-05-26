@@ -27,9 +27,14 @@ const {getTripDetails} = tripStore;
 const {trip} = getTripDetails();
 import {useMembersStore} from "@/stores/trip/useMembersStore"
 
-const {members: membersStore} = useMembersStore();
-const members = computed(() => membersStore.filter(e => !e.is_owner))
+const {setData} = useMembersStore();
 
+const members = computed(() => {
+  if (trip.value !== undefined) {
+    setData(trip.value);
+  }
+  return useMembersStore().members.filter(e => !e.is_owner && !e.is_guest) || [];
+});
 const showForm = ref(false);
 
 async function handleAddTicket(newTicketData: {

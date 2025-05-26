@@ -31,18 +31,25 @@ const appliedFilters = ref<{
 const toggleForm = () => {
   showForm.value = !showForm.value;
 };
-
-const { members: membersStore } = useMembersStore();
-const members = computed(() => membersStore);
 const { budget: budgetStore, trip: tripStore } = useTripStore();
-const { getExpensByTrip, setFilters } = budgetStore;
+const { getTripDetails,updateTripBudget } = tripStore;
+const { trip } = getTripDetails();
+
+const { setData } = useMembersStore();
+const members = computed(() => {
+  if (trip.value !== undefined) {
+    setData(trip.value);
+  }
+  return useMembersStore().members.filter(e => !e.is_owner && !e.is_guest) || [];
+});
+
+const { getExpensByTrip } = budgetStore;
 
 const onExpenseAdded = () => {
   showForm.value = false;
 };
 
-const { getTripDetails,updateTripBudget } = tripStore;
-const { trip } = getTripDetails();
+
 const {
   expensesByTrip: expenses,
   isLoading_expenses,

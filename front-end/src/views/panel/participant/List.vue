@@ -12,7 +12,7 @@ const {setErrorCurrentMessage} = useNotificationStore();
 const route = useRoute();
 const tripId = Number(route.params.tripId);
 
-const {userData} = useAuthStore();
+const {userData,isGuide} = useAuthStore();
 const {isOwner} = userData;
 const {trip:tripStore} = useTripStore();
 const {getTripDetails} = tripStore;
@@ -20,8 +20,14 @@ const {trip} = getTripDetails();
 const {removeParticipant, addParticipant,} = useTripStore();
 
 import {useMembersStore} from "@/stores/trip/useMembersStore"
+const {setData} = useMembersStore();
 
-const members = computed(() => useMembersStore().members.filter(e=>!e.is_owner) || []);
+const members = computed(() => {
+  if (trip.value !== undefined) {
+    setData(trip.value);
+  }
+  return useMembersStore().members.filter(e => !e.is_owner) || [];
+});
 
 
 const maxParticipants = 5;
@@ -29,8 +35,9 @@ const maxParticipants = 5;
 const showForm = ref(false);
 
 function inviteParticipant(participant: { email: string }) {
-  if (members.value.length == maxParticipants) {
+  if (members.value.length == maxParticipants && !isGuide()) {
     setErrorCurrentMessage("Osiągnięto limit");
+    showForm.value=false;
     return;
   }
   addParticipant(Number(tripId), participant);
@@ -59,7 +66,7 @@ const removeParticipantById = (id: number) => {
       <template #title>
         <HeaderSection
             subtitle="Zarządzaj uczestnikami"
-            :button="isOwner(trip?.creator?.id ?? 0)"
+            :button="isOwner(trip?.creator?.id ?? 0) && maxParticipants != members.length || isGuide()"
             button-text="Dodaj"
             :button-action="toggleForm"
         />
@@ -70,6 +77,7 @@ const removeParticipantById = (id: number) => {
         <v-row>
           <v-col>
             <ParticipantsCounter
+                v-if="!isGuide()"
                 :current="members.length"
                 :max="maxParticipants"
                 title="Uczestnicy"
@@ -79,7 +87,6 @@ const removeParticipantById = (id: number) => {
         <v-row>
           <v-col>
             <ParticipantAddForm
-                v-show="showForm"
                 v-model:dialog="showForm"
                 title="Dodaj uczestnika"
                 @cancel="showForm = false"

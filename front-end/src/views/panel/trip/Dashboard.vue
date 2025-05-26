@@ -13,6 +13,7 @@ const getSpecialSectionName = () => "Panel";
 onMounted(() => {
   useTripStore().initialize();
 })
+
 </script>
 
 <template>

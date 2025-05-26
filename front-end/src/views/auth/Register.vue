@@ -75,9 +75,7 @@ const onAcceptTerms = () => {
           acceptRegulation(handleSubmit, { validFn: isFormValid })"
       />
     </template>
-  </Section>
-
-  <TermsDialog
+    <TermsDialog
     v-model="showTermsDialog"
     title="Regulamin rejestracji"
     acceptButtonText="Akceptuję regulamin"
@@ -85,4 +83,5 @@ const onAcceptTerms = () => {
     @accepted="onAcceptTerms"
     @cancel="showTermsDialog = false"
   />
+  </Section>
 </template>

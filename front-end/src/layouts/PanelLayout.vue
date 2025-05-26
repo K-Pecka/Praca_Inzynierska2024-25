@@ -26,7 +26,7 @@ import { useDisplay } from 'vuetify'
 const drawer = ref(true)
 onMounted(() => {
     drawer.value = !display.mdAndDown.value
-  })
+  });
 </script>
 
 <template>
