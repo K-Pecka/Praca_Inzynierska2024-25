@@ -88,7 +88,7 @@ class ConfirmEmailView(APIView):
             user_profile = user.get_default_profile()
             user_profile.trip_access_tokens.all().delete()
             user.save()
-            return HttpResponseRedirect(f"{settings.SUCCESSFUL_REGISTRATION_PAGE}")
+            return HttpResponseRedirect(f"{settings.LOGIN_PAGE}")
         else:
             return HttpResponseRedirect(f"{settings.FAILED_REGISTRATION_PAGE}")
 
