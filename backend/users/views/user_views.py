@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
 from django.shortcuts import get_object_or_404
+from django.http.response import HttpResponseRedirect
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
@@ -11,6 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from server import settings
 from server.authentication import TripTokenAuthentication
 from server.permissions import IsAuthenticatedOrValidTripToken
 from users.serializers.user_serializers import UserCreateSerializer, UserUpdateSerializer, UserUpdatePasswordSerializer, \
@@ -86,9 +88,9 @@ class ConfirmEmailView(APIView):
             user_profile = user.get_default_profile()
             user_profile.trip_access_tokens.all().delete()
             user.save()
-            return Response({"message": "Email confirmed successfully!"}, status=200)
+            return HttpResponseRedirect(f"{settings.SUCCESSFUL_REGISTRATION_PAGE}")
         else:
-            return Response({"message": "Email confirmation failed!"}, status=400)
+            return HttpResponseRedirect(f"{settings.FAILED_REGISTRATION_PAGE}")
 
 
 @extend_schema(

@@ -79,7 +79,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             except Exception as e:
                 raise serializers.ValidationError({"error": f"Błąd przy tworzeniu użytkownika {e}"})
 
-            return HttpResponseRedirect(f"{settings.AFTER_REGISTRATION_PAGE}")
+            return user
 
     def send_confirmation_email(self, user, confirmation_link):
         subject = 'Potwierdź swój adres email.'
