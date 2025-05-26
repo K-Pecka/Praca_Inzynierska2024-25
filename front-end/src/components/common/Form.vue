@@ -8,10 +8,13 @@ const props = defineProps<{
   formValues: Record<string, string>;
   submitButtonLabel: string | undefined;
 }>();
-const emit = defineEmits(["submitForm"]);
-const updateState = (name: string, value: string) => props.formValues[name] = value;
+const emit = defineEmits(["update:formValues", "submitForm"]);
+const updateState = (name: string, value: string) => {
+  emit("update:formValues", { ...props.formValues, [name]: value });
+}
 const handleFieldUpdate = (name: string, value: string) => {
-  props.formValues[name] = value;
+  const updatedValues = { ...props.formValues, [name]: value };
+  emit("update:formValues", updatedValues);
 
   const input = props.inputs.find((input) => input.name === name);
   if (input) {
@@ -21,11 +24,12 @@ const handleFieldUpdate = (name: string, value: string) => {
       if (related) {
         related.error = [...related.validation
             .isEqual(value)
-            .validate(props.formValues[el])];
+            .validate(updatedValues[el])];
       }
     });
   }
-  emit("submitForm", props.formValues);
+
+  emit("submitForm", updatedValues);
 };
 
 const handleSubmit = () => {
