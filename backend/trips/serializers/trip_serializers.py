@@ -11,7 +11,6 @@ from users.serializers.user_profile_serializers import UserProfileListSerializer
 class TripCreateSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False)
-    members = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=UserProfile.objects.all())
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2, write_only=True)
@@ -51,7 +50,7 @@ class TripCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Trip
-        fields = ['id', 'name', 'creator', 'members', 'start_date', 'end_date', 'budget_amount']
+        fields = ['id', 'name', 'creator', 'start_date', 'end_date', 'budget_amount']
 
 
 class TripRetrieveSerializer(serializers.ModelSerializer):
