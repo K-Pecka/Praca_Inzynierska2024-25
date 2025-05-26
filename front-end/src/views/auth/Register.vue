@@ -39,7 +39,7 @@ const handleSubmit = async (_: any, config: any) => {
       <Form
         :submitButtonLabel="sectionTitle"
         :inputs="inputs"
-        v-model:formValues="formValues"
+        :formValues="formValues"
         @submitForm="handleSubmit"
       />
     </template>
