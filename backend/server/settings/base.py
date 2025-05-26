@@ -9,6 +9,7 @@ from datetime import timedelta
 load_dotenv()
 
 TRIP_JOINING_PAGE = "https://plannder.com/trip/invite/"
+AFTER_REGISTRATION_PAGE = "https://plannder.com/login/"
 
 ASGI_APPLICATION = "server.asgi.application"
 

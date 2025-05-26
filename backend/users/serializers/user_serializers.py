@@ -4,6 +4,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
+from django.http.response import HttpResponseRedirect
+
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
@@ -77,7 +79,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             except Exception as e:
                 raise serializers.ValidationError({"error": f"Błąd przy tworzeniu użytkownika {e}"})
 
-            return user
+            return HttpResponseRedirect(f"{settings.AFTER_REGISTRATION_PAGE}")
 
     def send_confirmation_email(self, user, confirmation_link):
         subject = 'Potwierdź swój adres email.'
