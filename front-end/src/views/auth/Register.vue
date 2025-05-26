@@ -17,26 +17,15 @@ const formValues = ref<Record<string, string>>(
   )
 );
 
-const handleSubmit = async (event: Event, config: { send: boolean }) => {
-  event.preventDefault();
-
-  console.log("Submitting form:", formValues.value);
-
+const handleSubmit = async (_: any, config: any) => {
   if (config?.send && isFormValid(FormType.REGISTER, formValues.value)) {
     const { pass_2, ...registrationData } = formValues.value;
-
     try {
       await registerMutation.mutateAsync(registrationData as unknown as Register);
-      console.log("Registration successful");
     } catch (error) {
-      console.error("Registration error:", error);
-    }
 
-    Object.keys(formValues.value).forEach(key => {
-      formValues.value[key] = '';
-    });
-  } else {
-    console.log("Form invalid or config.send is false");
+    }
+    formValues.value={};
   }
 };
 </script>
