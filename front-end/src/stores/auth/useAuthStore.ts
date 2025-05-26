@@ -159,7 +159,6 @@ export const useAuthStore = defineStore(
       mutationFn: registerFetch,
       onSuccess: (data) => {
         setSuccessCurrentMessage("Rejestracja zakończona sukcesem");
-        router.push({ name: "login" });
       },
       onError: (err) => {
         setErrorCurrentMessage("Error");
