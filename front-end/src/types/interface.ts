@@ -1,6 +1,7 @@
 import { Validator } from "@/utils/validator/validation";
 import { NavigationFailure } from "vue-router";
 import { TypeOfButton } from "./enum";
+import { PricingPlanType } from "./types";
 
 export interface TOKEN {
   refresh?: string;
@@ -205,6 +206,7 @@ export interface TicketData {
 }
 
 export interface PricingCard {
+  type: PricingPlanType;
   name: string;
   price: string;
   features: string[];
@@ -250,5 +252,6 @@ export interface ActivityType {
   name: string;
 }
 export interface Profile{
+  checkout_url: string;
   type: number;id:number;is_default:boolean;
 }

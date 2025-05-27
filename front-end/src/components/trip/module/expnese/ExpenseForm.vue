@@ -93,7 +93,6 @@ const formIsValid = ref(false);
                 variant="outlined"
                 bg-color="background"
                 density="comfortable"
-                :disabled="members.length === 0"
                 :rules="[(v) => !!v || 'Uczestnik jest wymagany']"
               />
               <v-text-field
@@ -147,6 +146,7 @@ const formIsValid = ref(false);
                 :rules="[
                   (v) => !!v || 'Cena jest wymagana',
                   (v) => v > 0 || 'Cena musi być większa niż 0',
+                  (v) => String(v).length <=5 || 'Cena jest zbyt duża',
                 ]"
                 v-model="form.amount"
                 variant="outlined"

@@ -27,14 +27,14 @@ defineProps<{
 
     <!-- Title -->
     <v-col cols="12">
-      <v-row :class="{ 'justify-center': center || $vuetify.display.smAndDown }" class="title color-text w-100" no-gutters>
+      <v-row :class="{ 'justify-center': center || $vuetify.display.smAndDown }" class="title color-text" no-gutters>
         <span v-if="!isLoading_trip && !error_trip && !title">
           {{ trip?.name }}
         </span>
         <span
             v-else-if="!isLoading_trip && !error_trip"
-            class="d-flex align-center color-primary text-h3 font-weight-bold w-100"
-            :class="{ 'justify-center': center || $vuetify.display.smAndDown }"
+            class="d-flex align-center color-primary text-h3 font-weight-bold"
+            :class="{ 'justify-center flex-column': center || $vuetify.display.smAndDown }"
         >
           <AppButton
                 v-if="btnGoBack"
@@ -46,8 +46,9 @@ defineProps<{
                 dense
                 iconName="mdi-arrow-left"
                 font-auto
+                class="mr-md-4"
             />
-          {{ title }}
+          <span>{{ title }}</span>
         </span>
         <span v-else>
             ...

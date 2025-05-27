@@ -18,12 +18,12 @@ import dayjs from "dayjs";
 import { useAuthStore, useUtilsStore } from "@/stores";
 const appliedFilters = ref<{
   category: string | null;
-  participants: string | null;
+  user: string | null;
   date_from: string | null;
   date_to: string | null;
 }>({
   category: null,
-  participants: null,
+  user: null,
   date_from: null,
   date_to: null,
 });
@@ -32,15 +32,14 @@ const toggleForm = () => {
   showForm.value = !showForm.value;
 };
 const { budget: budgetStore, trip: tripStore } = useTripStore();
-const { getTripDetails,updateTripBudget } = tripStore;
-const { trip } = getTripDetails();
+const { getTripDetails, updateTripBudget } = tripStore;
+const { trip, isLoading_trip } = getTripDetails();
 
-const { setData } = useMembersStore();
 const members = computed(() => {
   if (trip.value !== undefined) {
-    setData(trip.value);
+    useMembersStore().setData(trip.value);
   }
-  return useMembersStore().members.filter(e => !e.is_owner && !e.is_guest) || [];
+  return useMembersStore().members.filter((e) => !e.is_guest) || [];
 });
 
 const { getExpensByTrip } = budgetStore;
@@ -48,7 +47,6 @@ const { getExpensByTrip } = budgetStore;
 const onExpenseAdded = () => {
   showForm.value = false;
 };
-
 
 const {
   expensesByTrip: expenses,
@@ -64,7 +62,7 @@ const filter = () => {
   showFilters.value = false;
   budgetStore.setFilters({
     category: appliedFilters.value.category ?? null,
-    participants: appliedFilters.value.participants ?? null,
+    user: appliedFilters.value.user ?? null,
     date_from: formatDate(appliedFilters.value.date_from),
     date_to: formatDate(appliedFilters.value.date_to),
   });
@@ -132,28 +130,24 @@ const expensesByCategory = computed(() => {
   );
 });
 
-const membersItem = computed(
-  () => useMembersStore().members.filter((e) => !e.is_guest) || []
-);
 const { userData } = useAuthStore();
 const { isOwner } = userData;
-;
 const isEditing = ref(false);
 const editableBudget = ref(budget.value);
 function toggleEdit() {
   editableBudget.value = budget.value;
   isEditing.value = true;
 }
-const {getTripId} = useUtilsStore();
+const { getTripId } = useUtilsStore();
 function saveBudget() {
-  if (editableBudget.value <= 0 || editableBudget.value === budget.value) {
+  if (editableBudget.value <= 0 || editableBudget.value === budget.value || String(editableBudget.value).length >= 8) {
     return;
   }
   isEditing.value = false;
   updateTripBudget.mutateAsync({
-          newBudget: { budget_amount: Number(editableBudget.value) },
-          param: { tripId: String(getTripId()) }
-        });
+    newBudget: { budget_amount: Number(editableBudget.value) },
+    param: { tripId: String(getTripId()) },
+  });
 }
 
 function cancelEdit() {
@@ -182,7 +176,7 @@ function cancelEdit() {
             <p class="mb-4 d-flex align-center" style="gap: 8px">
               Budżet
               <v-icon
-                v-if="!isEditing"
+                v-if="!isEditing && isOwner(trip?.creator?.id || 0)"
                 class="edit-icon"
                 @click="toggleEdit"
                 style="cursor: pointer"
@@ -191,8 +185,18 @@ function cancelEdit() {
                 >mdi-pencil</v-icon
               >
             </p>
-
-            <div v-if="!isEditing">
+            <template v-if="isLoading_trip">
+              <v-row justify="center">
+                <v-col cols="auto">
+                  <v-progress-circular
+                    indeterminate
+                    color="primary"
+                    size="32"
+                  />
+                </v-col>
+              </v-row>
+            </template>
+            <div v-else-if="!isEditing">
               <p class="text-h3 font-weight-bold mb-0" style="line-height: 1.2">
                 {{ budget.toFixed(2) }} {{ budgetCurrency }}
               </p>
@@ -205,12 +209,18 @@ function cancelEdit() {
             >
               <v-text-field
                 v-model.number="editableBudget"
-                type="number"
+                type="text"
                 variant="outlined"
                 dense
                 style="max-width: 75%"
                 class="mb-0"
-                :rules="[(v) => v > 0 || 'Budżet musi być większy niż 0',(v)=> editableBudget!=budget || v+'Nie można zapisać tej samej wartości']"
+                :rules="[
+                  (v) => !isNaN(Number(v)) && v > 0 || 'Budżet musi być większy niż 0',
+                  (v) =>
+                    editableBudget != budget ||
+                    'Nie można zapisać tej samej wartości',
+                  (v) => String(v).length <= 8 || 'Budżet jest zbyt duża',
+                ]"
                 placeholder="Wprowadź budżet"
               />
               <v-btn
@@ -219,7 +229,7 @@ function cancelEdit() {
                 @click="saveBudget"
                 title="Zapisz"
                 size="36"
-                style="margin-bottom: 24px; height: 36px; min-width: 36px;"
+                style="margin-bottom: 24px; height: 36px; min-width: 36px"
                 rounded
               >
                 <v-icon>mdi-check</v-icon>
@@ -230,7 +240,7 @@ function cancelEdit() {
                 @click="cancelEdit"
                 title="Anuluj"
                 size="36"
-                style="margin-bottom: 24px; height: 36px; min-width: 36px;"
+                style="margin-bottom: 24px; height: 36px; min-width: 36px"
                 rounded
               >
                 <v-icon>mdi-close</v-icon>
@@ -241,7 +251,19 @@ function cancelEdit() {
           <!-- Spent Card -->
           <AppCard>
             <span>Wydano</span>
+            <template v-if="isLoading_trip">
+              <v-row justify="center">
+                <v-col cols="auto">
+                  <v-progress-circular
+                    indeterminate
+                    color="primary"
+                    size="32"
+                  />
+                </v-col>
+              </v-row>
+            </template>
             <BudgetContent
+              v-else
               :showCurrency="false"
               :content="{
                 amount: budget,
@@ -253,8 +275,20 @@ function cancelEdit() {
 
           <!-- Remaining Budget Card -->
           <AppCard>
-            <p class="mb-3">{{ remaining >= 0 ? "Pozostało" : "Debet" }}</p>
+            <p class="mb-3">Pozostało</p>
+            <template v-if="isLoading_trip">
+              <v-row justify="center">
+                <v-col cols="auto">
+                  <v-progress-circular
+                    indeterminate
+                    color="primary"
+                    size="32"
+                  />
+                </v-col>
+              </v-row>
+            </template>
             <p
+              v-else
               class="text-h3 font-weight-bold"
               :class="
                 remaining >= 0 ? 'difference-positive' : 'difference-negative'
@@ -269,7 +303,7 @@ function cancelEdit() {
             <v-row>
               <ExpenseForm
                 :isOwnerTrip="isOwner(trip?.creator?.id || 0)"
-                :members="membersItem"
+                :members="members"
                 @cancelForm="showForm = false"
                 @submitted="onExpenseAdded"
                 class="form-container"
@@ -397,7 +431,7 @@ function cancelEdit() {
               </v-col>
               <v-col cols="12">
                 <v-select
-                  v-model="appliedFilters.participants"
+                  v-model="appliedFilters.user"
                   :items="members"
                   item-title="name"
                   item-value="userId"

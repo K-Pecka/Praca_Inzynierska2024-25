@@ -50,7 +50,7 @@ onMounted(()=>{
       <v-card-title class="text-left">
         <HeaderSection
           title="Dołącz do"
-          title-gradient-text=" wycieczki!"
+          title-gradient-text="wycieczki!"
           no-sub-title
         />
       </v-card-title>

@@ -23,7 +23,7 @@ export const useTripStore = defineStore("trip", () => {
 
   const { addParticipant, removeParticipant } = useParticipants();
 
-  const { getTickets } = useTicketStore();
+  const { getTickets,createTicket } = useTicketStore();
   return {
     dashboard: {
       getDashboard,
@@ -46,6 +46,10 @@ export const useTripStore = defineStore("trip", () => {
     },
     plan:{
       handleDeleteItinerary
+    },
+    ticket:{
+      getTickets,
+      createTicket
     },
     yourPlans,
     getPlans,

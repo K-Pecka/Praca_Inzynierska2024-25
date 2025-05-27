@@ -36,7 +36,6 @@
         color="primary"
         bg-color="white"
         rounded="lg"
-        clearable
         :counter="inputData.config?.maxLength ?? undefined"
       />
     </template>

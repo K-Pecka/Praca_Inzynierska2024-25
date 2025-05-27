@@ -32,3 +32,17 @@ export const fetchUserRole = async (role: string): Promise<Profile> => {
 
   return data as Profile;
 };
+
+export const fetchPaymentUrl = async (priceId: string) => {
+  const { data, error } = await fetchData(
+    apiEndpoints.pay,
+    "POST",
+    { price_id: priceId }
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data as { checkout_url: string};
+};

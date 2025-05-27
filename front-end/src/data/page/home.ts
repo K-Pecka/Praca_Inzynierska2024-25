@@ -86,6 +86,7 @@ export const footerData = () => ({
 
 export const pricingPlans = [
     {
+        type: "tourist",
         name: "Podstawowy",
         price: "Darmowy",
         features: ["Tekst", "Tekst", "Tekst"],
@@ -93,14 +94,16 @@ export const pricingPlans = [
         buttonVariant: "primary" as "primary",
     },
     {
+        type: "premium",
         name: "Turysta",
         price: "15.0 zł / miesiąc",
         features: ["Tekst", "Tekst", "Tekst"],
         buttonVariant: "primary" as "primary",
     },
     {
+        type: "guide",
         name: "Podróżnik",
-        price: "40.0 zł / miesiąc",
+        price: "45.0 zł / miesiąc",
         features: ["Tekst", "Tekst", "Tekst"],
         contentVariant: "secondary" as "secondary",
         buttonVariant: "primary" as "primary",

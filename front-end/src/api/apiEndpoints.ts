@@ -38,6 +38,7 @@ export const apiEndpoints = {
     getUserById: `/user/user/by-profile/:userId/`,
     role: `/user/profile/:role/change-default/`,
   },
+  pay: `/payment/create-checkout-session/`,
   auth: {
     login: `/user_auth/login/`,
     register: `/user/create/`,

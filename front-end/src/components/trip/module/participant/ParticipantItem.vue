@@ -26,13 +26,14 @@ const tags = [
 ];
 import {useAuthStore,useTripStore} from "@/stores"
 const {userData} = useAuthStore();
-const {isOwner} = userData;
+const {isOwner,getActiveProfile} = userData;
 
 const {trip:tripStore} = useTripStore();
 const {getTripDetails} = tripStore;
 const {trip} = getTripDetails();
-const hasPermissionToDelete = () => {
-  if(isOwner(trip.value?.creator?.id ?? 0))
+const hasPermissionToDelete = (user : number) => {
+  
+  if(isOwner(trip.value?.creator?.id ?? 0) || getActiveProfile()?.id === user)
   {
     handleRemoveClick()
   }
@@ -89,8 +90,8 @@ const hasPermissionToDelete = () => {
                 font-auto
                 max-width="190px"
                 text="Usuń uczestnika"
-                @click="hasPermissionToDelete"
-                :disabled="!isOwner(trip?.creator?.id ?? 0)"
+                @click="() => hasPermissionToDelete(user.userId)"
+                :disabled="!isOwner(trip?.creator?.id ?? 0) && getActiveProfile()?.id !== user.userId"
               />
             </v-col>
           </v-row>

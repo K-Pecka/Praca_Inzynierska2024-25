@@ -11,6 +11,7 @@ import {
   fetchVerify,
   fetchLogOut,
   fetchPermission,
+  fetchPaymentUrl
 } from "@/api/endpoints/auth";
 import { getMutationUpdateUser } from "@/api/services/userQuery";
 import { queryClient } from "@/main";
@@ -184,11 +185,28 @@ export const useAuthStore = defineStore(
       const lastInitial = user.value.last_name?.[0] ?? "";
       return (firstInitial + lastInitial).toUpperCase() || " ";
     };
+    const getActiveProfile = () => {
+      return user.value?.profiles?.find((profile) => profile.is_default) || null;
+    }
     const isGuide = () => getUser()?.profiles?.find((profile) => profile.type == 2)?.is_default ?? false;
+    const startCheckout  = useMutation({
+      mutationFn: fetchPaymentUrl,
+      onSuccess: (data) => {
+        window.location.href = data?.checkout_url;
+      },
+      onError: (err: any) =>{
+        notificationStore.setErrorCurrentMessage(
+          err?.detail || "Błąd"
+        )
+      }
+    });
+
     return {
+      startCheckout,
       userData: {
         getUser,
         isOwner,
+        getActiveProfile
       },
       isGuide,
       token,

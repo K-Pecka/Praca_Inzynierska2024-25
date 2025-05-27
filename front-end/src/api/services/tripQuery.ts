@@ -54,7 +54,6 @@ export const getMutationCreate = (option: Record<string, any>) =>
       });
     },
     onError: (err: any) => {
-      console.error("Error deleting trip:", err);
       option.notifications.setErrorCurrentMessage(
         err?.["non_field_errors"][0] || option.errorMessage
       );
