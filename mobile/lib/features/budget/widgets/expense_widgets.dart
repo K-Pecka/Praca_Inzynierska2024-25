@@ -5,7 +5,7 @@ import 'package:mobile/core/models/expense_model.dart';
 import 'package:mobile/core/services/budget_service.dart';
 import 'package:mobile/core/theme/icons.dart';
 import 'package:mobile/core/theme/themes.dart';
-import 'package:mobile/core/widgets/custom_expense_input_field.dart';
+import 'package:mobile/core/widgets/custom_input_field.dart';
 import 'package:mobile/core/theme/text_styles.dart';
 import 'package:mobile/core/utils/error_handler.dart';
 
@@ -363,7 +363,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   child: ElevatedButton(
                     onPressed: _submitForm,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6C55ED),
+                      backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),

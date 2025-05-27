@@ -9,8 +9,7 @@ import '../../../core/models/debt_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/services/debt_service.dart';
 import '../../../core/theme/themes.dart';
-import '../../../core/widgets/custom_expense_input_field.dart';
-import '../screens/debt_detail_screen.dart';
+import '../../../core/widgets/custom_input_field.dart';
 
 class DebtOverviewCard extends StatefulWidget {
   final double totalBudget;
