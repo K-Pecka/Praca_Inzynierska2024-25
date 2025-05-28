@@ -32,7 +32,7 @@ class ChatroomViewSet(ModelViewSet):
                 .filter(trip_id=trip_id)
                 .select_related('creator')
                 .prefetch_related('members')
-            )
+            ).order_by('-created_at')
         return Chatroom.objects.all()
 
     def get_serializer_class(self):

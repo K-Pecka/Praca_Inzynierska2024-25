@@ -30,7 +30,7 @@ class MessageViewSet(ModelViewSet):
             .filter(chatroom_id=self.kwargs['room_pk'])
             .select_related('profile', 'chatroom')
             .prefetch_related('chatroom__members')
-        )
+        ).order_by('-created_at')
 
     def get_serializer_class(self):
         if self.action == 'create':

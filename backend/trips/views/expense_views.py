@@ -25,7 +25,8 @@ class ExpenseViewSet(ModelViewSet):
 
     def get_queryset(self):
         return Expense.objects.filter(trip__pk=self.kwargs['trip_pk']) \
-                              .select_related('trip', 'user', 'category')
+                            .select_related('trip', 'user', 'category') \
+                            .order_by('-created_at')
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -65,7 +66,7 @@ class ExpenseTypeListAPIView(ListAPIView):
 class DetailedExpenseViewSet(ModelViewSet):
     def get_queryset(self):
         trip_pk = self.kwargs.get('trip_pk')
-        return DetailedExpense.objects.filter(trip__id=trip_pk)
+        return DetailedExpense.objects.filter(trip__id=trip_pk).order_by('-created_at')
 
     def get_object(self):
         trip_pk = self.kwargs.get('trip_pk')

@@ -235,7 +235,7 @@ class TicketAPITestCase(TestCase):
         view = TicketViewSet.as_view({'post': 'create'})
         request = self.factory.post('/trip/ticket/create/', data, format='multipart')
         response = view(request)
-        self.assertEqual(response.status_code, status.HTTP_400_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def tearDown(self):
         self.ticket.file.delete(save=False)

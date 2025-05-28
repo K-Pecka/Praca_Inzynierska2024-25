@@ -33,7 +33,7 @@ class TicketViewSet(ModelViewSet):
             Ticket.objects
             .by_trip_and_profile(trip_id, profile)
             .select_related('owner', 'trip')
-        )
+        ).order_by('-created_at')
 
     def get_object(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs['pk'])

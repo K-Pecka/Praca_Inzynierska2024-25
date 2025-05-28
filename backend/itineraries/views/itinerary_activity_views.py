@@ -21,7 +21,7 @@ class ItineraryActivityViewSet(ModelViewSet):
         return [IsAuthenticated(), IsTripParticipant()]
 
     def get_queryset(self):
-        return ItineraryActivity.objects.by_itinerary(self.kwargs['itinerary_pk'])
+        return ItineraryActivity.objects.by_itinerary(self.kwargs['itinerary_pk']).order_by('-created_at')
 
     def get_object(self):
         return get_object_or_404(

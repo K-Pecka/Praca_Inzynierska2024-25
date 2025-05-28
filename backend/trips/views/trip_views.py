@@ -34,7 +34,7 @@ class TripViewSet(ModelViewSet):
                 .by_user_profile(self.request.user.get_default_profile())
                 .select_related('creator')
                 .prefetch_related('members')
-            )
+            ).order_by('-created_at')
         return Trip.objects.all()
 
     def get_object(self):

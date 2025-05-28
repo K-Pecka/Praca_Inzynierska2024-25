@@ -20,7 +20,7 @@ class ItineraryViewSet(ModelViewSet):
         return [IsAuthenticated(), IsTripParticipant()]
 
     def get_queryset(self):
-        return Itinerary.objects.filter(trip_id=self.kwargs['trip_pk'])
+        return Itinerary.objects.filter(trip_id=self.kwargs['trip_pk']).order_by('-start_date')
 
     def get_object(self):
         return get_object_or_404(self.get_queryset(), pk=self.kwargs['pk'])
