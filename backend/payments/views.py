@@ -101,10 +101,8 @@ class StripeWebhookView(APIView):
         if event['type'] == 'invoice.paid':
             print('XDXDXD')
             invoice = event['data']['object']
+            subscription_id = None
             print("== RAW INVOICE ==")
-            session = event['data']['object']
-            session_id = session.get('id')
-            print("Session ID:", session_id)
 
             try:
                 subscription_id = (
@@ -115,14 +113,23 @@ class StripeWebhookView(APIView):
                     .get('subscription')
                 )
             except Exception as e:
-                print(f"❌ Błąd przy wyciąganiu subscription_id: {e}")
-                return HttpResponse(status=200)
+                pass
 
             print("Extracted subscription_id:", subscription_id)
 
             if not subscription_id:
                 print('❌ Brak subscription_id – przerywam')
                 return HttpResponse(status=200)
+
+            sessions = stripe.checkout.Session.list(subscription=subscription_id, limit=1)
+            if not sessions.data:
+                print("❌ Nie znaleziono session po subscription_id")
+                return HttpResponse(status=200)
+
+            session = sessions.data[0]
+            session_id = session.id
+            print("✅ Session ID:", session_id)
+
             try:
                 print('XD1')
                 order = Order.objects.get(stripe_session_id=session_id)
