@@ -90,6 +90,7 @@ class StripeWebhookView(APIView):
             return HttpResponse(status=400)
 
         print(f'event type: {event["type"]}')
+        print(f'event: {event.__dict__}')
 
         if event['type'] == 'checkout.session.completed':
             print('XDXDXD')
@@ -105,6 +106,7 @@ class StripeWebhookView(APIView):
                 order.is_paid = True
                 order.save()
                 print('XD2')
+                print(f'order: {order.__dict__}')
                 user = order.user
                 subscription = stripe.Subscription.retrieve(subscription_id)
                 current_period_end = datetime.fromtimestamp(subscription['current_period_end'], tz=timezone.utc)
