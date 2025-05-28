@@ -10,8 +10,11 @@ class TripService {
     final response = await HttpHandler.request(url);
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-      return data.map((e) => TripModel.fromJson(e)).toList();
+      final Map<String, dynamic> decoded =
+      jsonDecode(utf8.decode(response.bodyBytes));
+
+      final List<dynamic> results = decoded['results'];
+      return results.map((e) => TripModel.fromJson(e)).toList();
     } else {
       throw Exception('Błąd podczas pobierania wycieczek: ${response.body}');
     }

@@ -6,15 +6,24 @@ class DebtService {
   static final String _baseUrl = 'https://api.plannder.com';
 
   static Future<List<DebtModel>> fetchDebts({required int tripId}) async {
-    final url = Uri.parse('$_baseUrl/trip/$tripId/debt/');
-    final response = await HttpHandler.request(url);
+    List<DebtModel> allDebts = [];
+    String? nextUrl = '$_baseUrl/trip/$tripId/debt/?page=1&page_size=10';
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-      return data.map((e) => DebtModel.fromJson(e)).toList();
-    } else {
-      throw Exception('Błąd podczas pobierania zaległości: ${response.body}');
+    while (nextUrl != null) {
+      final response = await HttpHandler.request(Uri.parse(nextUrl));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decoded = jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> results = decoded['results'];
+        allDebts.addAll(results.map((e) => DebtModel.fromJson(e)));
+
+        nextUrl = decoded['next'];
+      } else {
+        throw Exception('Błąd podczas pobierania zaległości: ${response.body}');
+      }
     }
+
+    return allDebts;
   }
 
   static Future<void> addDebt({
@@ -82,7 +91,6 @@ class DebtService {
   }) async {
     final url = Uri.parse('$_baseUrl/trip/$tripId/debt/$debtId/');
     final response = await HttpHandler.request(url);
-    print('🧩 [DEBUG] Odpowiedź z /debt/:id: ${utf8.decode(response.bodyBytes)}');
     if (response.statusCode == 200) {
       final data = jsonDecode(utf8.decode(response.bodyBytes));
       return DebtModel.fromJson(data);

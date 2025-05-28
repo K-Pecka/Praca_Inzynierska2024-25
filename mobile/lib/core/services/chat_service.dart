@@ -13,27 +13,45 @@ class ChatService {
   static WebSocketChannel? _channel;
 
   static Future<List<ChatroomModel>> getUserChatrooms(int tripId) async {
-    final url = Uri.parse('$baseUrl/trip/$tripId/chat/');
-    final response = await HttpHandler.request(url);
+    List<ChatroomModel> allRooms = [];
+    String? nextUrl = '$baseUrl/trip/$tripId/chat/?page=1&page_size=30';
 
-    if (response.statusCode == 200) {
-      final List data = jsonDecode(utf8.decode(response.bodyBytes));
-      return data.map((e) => ChatroomModel.fromJson(e)).toList();
-    } else {
-      throw Exception("Błąd ładowania pokojów: ${response.body}");
+    while (nextUrl != null) {
+      final response = await HttpHandler.request(Uri.parse(nextUrl));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decoded = jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> results = decoded['results'];
+        allRooms.addAll(results.map((e) => ChatroomModel.fromJson(e)));
+
+        nextUrl = decoded['next'];
+      } else {
+        throw Exception("Błąd ładowania pokojów: ${response.body}");
+      }
     }
+
+    return allRooms;
   }
 
   static Future<List<MessageModel>> getMessages(int tripId, int roomId) async {
-    final url = Uri.parse('$baseUrl/trip/$tripId/chat/$roomId/chat-message/');
-    final response = await HttpHandler.request(url);
+    List<MessageModel> allMessages = [];
+    String? nextUrl = '$baseUrl/trip/$tripId/chat/$roomId/chat-message/?page=1&page_size=30';
 
-    if (response.statusCode == 200) {
-      final List data = jsonDecode(utf8.decode(response.bodyBytes));
-      return data.map((e) => MessageModel.fromJson(e)).toList();
-    } else {
-      throw Exception("Błąd ładowania wiadomości: ${response.statusCode}");
+    while (nextUrl != null) {
+      final response = await HttpHandler.request(Uri.parse(nextUrl));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decoded = jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> results = decoded['results'];
+        allMessages.addAll(results.map((e) => MessageModel.fromJson(e)));
+
+        nextUrl = decoded['next'];
+      } else {
+        throw Exception("Błąd ładowania wiadomości: ${response.statusCode}");
+      }
     }
+
+    return allMessages;
   }
 
   static Future<void> sendHttpMessage({

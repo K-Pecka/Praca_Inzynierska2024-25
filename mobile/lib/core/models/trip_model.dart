@@ -62,19 +62,4 @@ class Member {
       type: json['type'],
     );
   }
-
-  Member copyWith({
-    String? email,
-    String? firstName,
-    String? lastName,
-    int? type,
-  }) {
-    return Member(
-      id: id,
-      email: email ?? this.email,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      type: type ?? this.type,
-    );
-  }
 }
