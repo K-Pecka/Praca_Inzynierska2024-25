@@ -31,7 +31,7 @@ class ItineraryViewSet(ModelViewSet):
         elif self.action == 'retrieve':
             return ItineraryRetrieveSerializer
         elif self.action == 'list':
-            return ItineraryRetrieveSerializer
+            return ItineraryListSerializer
         elif self.action in ['update', 'partial_update']:
             return ItineraryUpdateSerializer
         elif self.action == 'destroy':
