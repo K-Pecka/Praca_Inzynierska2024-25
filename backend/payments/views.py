@@ -99,16 +99,9 @@ class StripeWebhookView(APIView):
         print("================================")
 
         if event['type'] == 'invoice.paid':
-            print('XDXDXD')
-            invoice = event['data']['object']
-            subscription_id = None
             print("== RAW INVOICE ==")
 
-            try:
-                subscription_id = invoice.get('subscription')
-            except Exception as e:
-                pass
-
+            subscription_id = event['subscription']
             print("Extracted subscription_id:", subscription_id)
 
             if not subscription_id:
@@ -125,12 +118,11 @@ class StripeWebhookView(APIView):
             print("✅ Session ID:", session_id)
 
             try:
-                print('XD1')
                 order = Order.objects.get(stripe_session_id=session_id)
                 order.is_paid = True
                 order.save()
-                print('XD2')
                 user = order.user
+
                 subscription = stripe.Subscription.retrieve(subscription_id)
                 print("📦 Subskrypcja z Stripe:", json.dumps(subscription, indent=2))
 
@@ -142,16 +134,14 @@ class StripeWebhookView(APIView):
                 current_period_end = datetime.fromtimestamp(current_period_end_ts, tz=timezone.utc)
                 print('✅ current_period_end:', current_period_end)
 
-                print('XD3')
                 user.subscription_active = True
                 user.subscription_plan = order.subscription_type
                 user.stripe_subscription_id = subscription_id
-                print('XD4')
                 user.subscription_ends_at = current_period_end
                 user.save()
 
             except Order.DoesNotExist:
-                print("❌ Nie znaleziono zamówienia.")
+                print(f"❌ Nie znaleziono zamówienia dla session_id={session_id}")
 
         elif event['type'] == 'invoice.payment_failed':
             print('fdgdfgdfggdfg')
