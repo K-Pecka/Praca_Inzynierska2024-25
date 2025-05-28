@@ -59,6 +59,8 @@ class CreateCheckoutSessionView(APIView):
                 cancel_url='https://plannder.com/payment/cancel',
             )
 
+            print(f'ssssssssssssssssssssssssssssss {session.id}')
+
             Order.objects.create(
                 user=user,
                 stripe_session_id=session.id,
