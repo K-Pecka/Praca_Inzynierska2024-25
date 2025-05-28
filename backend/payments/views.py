@@ -100,9 +100,15 @@ class StripeWebhookView(APIView):
             print('XDXDXD')
             session = event['data']['object']
             session_id = session.get('id')
-            subscription_id = session.get('subscription')
+            subscription_id = (
+                session.get('lines', {})
+                .get('data', [{}])[0]
+                .get('parent', {})
+                .get('subscription_item_details', {})
+                .get('subscription')
+            )
             if not subscription_id:
-                print('====================================================================================================================')
+                print('❌ Brak subscription_id – przerywam')
                 return HttpResponse(status=200)
 
             try:
