@@ -102,6 +102,7 @@ class StripeWebhookView(APIView):
             session_id = session.get('id')
             subscription_id = session.get('subscription')
             if not subscription_id:
+                print('====================================================================================================================')
                 return HttpResponse(status=200)
 
             try:
