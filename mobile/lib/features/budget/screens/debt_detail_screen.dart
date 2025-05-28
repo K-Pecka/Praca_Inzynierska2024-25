@@ -76,13 +76,8 @@ class _DebtDetailScreenState extends State<DebtDetailScreen> {
           debtId: _debt.id,
         );
 
-        if (context.mounted) {
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (_) => DebtOverviewScreen(trip: widget.trip),
-            ),
-                (route) => route.isFirst,
-          );
+        if (mounted) {
+          Navigator.pop(context);
         }
       } else {
         await DebtService.removeMemberFromDebt(
