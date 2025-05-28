@@ -335,7 +335,7 @@ class Expense(BaseModel):
         verbose_name_plural = "Wydatki"
 
 
-class DetailedExpense(models.Model):
+class DetailedExpense(BaseModel):
     name = models.CharField(
         max_length=255,
         verbose_name=_("Nazwa wydatku"),
