@@ -136,9 +136,14 @@ class StripeWebhookView(APIView):
                 order.is_paid = True
                 order.save()
                 print('XD2')
-                print(f'order: {order.__dict__}')
                 user = order.user
                 subscription = stripe.Subscription.retrieve(subscription_id)
+                print("📦 Subskrypcja z Stripe:", json.dumps(subscription, indent=2))
+
+                current_period_end_ts = subscription.get('current_period_end')
+                if not current_period_end_ts:
+                    print("❌ current_period_end nie istnieje – subskrypcja może być anulowana lub nieaktywna")
+                    return HttpResponse(status=200)
                 current_period_end = datetime.fromtimestamp(subscription['current_period_end'], tz=timezone.utc)
                 print('XD3')
                 user.subscription_active = True
