@@ -92,7 +92,7 @@ class StripeWebhookView(APIView):
         print(f'event type: {event["type"]}')
         print(f'event: {event}')
 
-        if event['type'] == 'checkout.session.completed':
+        if event['type'] == 'invoice.paid':
             print('XDXDXD')
             session = event['data']['object']
             session_id = session.get('id')
