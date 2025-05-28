@@ -7,6 +7,7 @@ const props = defineProps<{
   inputs: Input[];
   formValues: Record<string, string>;
   submitButtonLabel: string | undefined;
+  disabled?: boolean;
 }>();
 const emit = defineEmits(["submitForm"]);
 const updateState = (name: string, value: string) => props.formValues[name] = value;
@@ -47,7 +48,7 @@ const handleSubmit = () => {
       </div>
       <v-col>
         <v-row no-gutters>
-          <v-btn type="submit" class="accept-form-button w-100">{{ submitButtonLabel }}</v-btn>
+          <v-btn type="submit" class="accept-form-button w-100" :disabled="props.disabled">{{ submitButtonLabel }}</v-btn>
         </v-row>
       </v-col>
       <div class="moreOption">

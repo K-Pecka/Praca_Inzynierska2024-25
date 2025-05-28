@@ -12,6 +12,7 @@ import {
   fetchVerify,
   fetchLogOut,
   fetchPermission,
+  updateUser,
 } from "@/api/endpoints/auth";
 import {getMutationUpdateUser} from "@/api/services/userQuery"
 import { nextTick } from "vue";
@@ -170,19 +171,14 @@ export const useAuthStore = defineStore(
         notification,
         queryClient,
         successMessage: "Zaktualizowano dane",
-        errorMessage: "Wystąpił problem z zmianą danych",
+        errorMessage: "Wystąpił problem przy zmianie danych",
     })
     const updateProfileMutation = useMutation({
       mutationFn: async (dto: {
         first_name?: string;
         last_name?: string;
-        current_password?: string;
-        password?: string;
-      }): Promise<{ first_name?: string; last_name?: string }> => {
-        return {
-          first_name: dto.first_name,
-          last_name: dto.last_name,
-        };
+      }) => {
+          return updateUser(dto);
       },
       onSuccess: (data) => {
         if (data && user?.value) {
@@ -193,6 +189,24 @@ export const useAuthStore = defineStore(
       },
       onError: (err: any) =>
         setErrorCurrentMessage(err?.message || unexpectedError()),
+    });
+
+    const updatePasswordMutation = useMutation({
+      mutationFn: async (dto: {
+          password: string;
+          password_confirm: string
+      }) => {
+          if (!dto.password || !dto.password_confirm) {
+              throw new Error("Hasło nie może być puste");
+          }
+          return updateUser(dto);
+      },
+      onSuccess: () => {
+          setSuccessCurrentMessage("Hasło zostało zmienione");
+      },
+      onError: (err) => {
+          setErrorCurrentMessage(err?.message || "Błąd przy zmianie hasła");
+      },
     });
 
     const getUserInitials = () => {
@@ -223,6 +237,7 @@ export const useAuthStore = defineStore(
       refreshToken,
       checkPermission,
       updateProfileMutation,
+      updatePasswordMutation,
       getUserInitials,
       getUser,
     };

@@ -8,7 +8,8 @@ import {
   tripInput,
   budgetInput,
   getMoreOptions,
-  profileInput,
+  profilePersonalInput,
+  profilePasswordInput
 } from "@/data/index";
 import { computed, ref } from "vue";
 import { useAuthStore,useNotificationStore } from "@/stores";
@@ -35,8 +36,12 @@ export const useFormStore = defineStore("form", () => {
 
   const getBudgetInputs = (): Input[] => budgetInput(getErrorMessages());
 
-  const getProfileInputs = (): Input[] =>
-      profileInput(getErrorMessages({ isEqual: extraValidationMessages.isEqual }));
+  const getProfilePersonalInputs = (): Input[] =>
+      profilePersonalInput(getErrorMessages());
+
+  const getProfilePasswordInputs = (): Input[] =>
+      profilePasswordInput(getErrorMessages({ isEqual: extraValidationMessages.isEqual }));
+
 
   const formInputGenerators: Record<FormType, () => Input[]> = {
     [FormType.LOGIN]: getLoginInputs,
@@ -44,8 +49,10 @@ export const useFormStore = defineStore("form", () => {
     [FormType.PLAN]: getPlanInputs,
     [FormType.TRIP]: getTripInputs,
     [FormType.BUDGET]: getBudgetInputs,
-    [FormType.PROFILE]: getProfileInputs,
+    [FormType.PROFILE_PERSONAL]: getProfilePersonalInputs,
+    [FormType.PROFILE_PASSWORD]: getProfilePasswordInputs
   };
+
   const getFormInputs = (type: FormType): Input[] =>
     formInputGenerators[type]?.() ?? [];
   const initForm = (type: FormType) => {
@@ -70,19 +77,19 @@ export const useFormStore = defineStore("form", () => {
     });
   };
   const isSend = ref(false);
-  const sendForm =async (formValue: any, config: any)=>{
-    if (config?.send && isFormValid(FormType.LOGIN, formValue) && !isSend.value) {
+  const sendForm = async (formValue: any, config: any, type: FormType = formType.value) => {
+    if (config?.send && isFormValid(type, formValue) && !isSend.value) {
       isSend.value = true;
       try {
-        await loginMutation.mutateAsync(formValue);
-        formValue={}
-        formValues.value={}
-        formType.value = FormType.REGISTER;
-      } catch (error) {
-      }
-      isSend.value = false
+        if (type === FormType.LOGIN) {
+          await loginMutation.mutateAsync(formValue);
+          formValues.value = {};
+          formType.value = FormType.REGISTER;
+        }
+      } catch (error) {}
+      isSend.value = false;
     }
-  }
+  };
   const formValues = ref(createformValues())
-  return { sendForm,initForm,formValues,getFormInputs, isFormValid, getMoreOptions };
+  return { sendForm,initForm,formValues,getFormInputs, isFormValid, getMoreOptions, getProfilePersonalInputs, getProfilePasswordInputs };
 });

@@ -34,6 +34,7 @@
         :id="inputData.name"
         :type="inputData.type"
         :placeholder="inputData.placeholder"
+        :value="modelValue"
         @input="updateModel"
         @blur="handleInput"
         class="input"
