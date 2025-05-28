@@ -11,7 +11,8 @@ import {
   fetchVerify,
   fetchLogOut,
   fetchPermission,
-  fetchPaymentUrl
+  fetchPaymentUrl,
+  updateUser
 } from "@/api/endpoints/auth";
 import { getMutationUpdateUser } from "@/api/services/userQuery";
 import { queryClient } from "@/main";
@@ -156,13 +157,8 @@ export const useAuthStore = defineStore(
       mutationFn: async (dto: {
         first_name?: string;
         last_name?: string;
-        current_password?: string;
-        password?: string;
-      }): Promise<{ first_name?: string; last_name?: string }> => {
-        return {
-          first_name: dto.first_name,
-          last_name: dto.last_name,
-        };
+      }) => {
+          return updateUser(dto);
       },
       onSuccess: (data) => {
         if (data && user.value) {
@@ -177,6 +173,24 @@ export const useAuthStore = defineStore(
         notificationStore.setErrorCurrentMessage(
           err?.message || "Nieoczekiwany błąd podczas aktualizacji profilu"
         ),
+    });
+
+    const updatePasswordMutation = useMutation({
+      mutationFn: async (dto: {
+          password: string;
+          password_confirm: string
+      }) => {
+          if (!dto.password || !dto.password_confirm) {
+              throw new Error("Hasło nie może być puste");
+          }
+          return updateUser(dto);
+      },
+      onSuccess: () => {
+          notificationStore.setSuccessCurrentMessage("Hasło zostało zmienione");
+      },
+      onError: (err) => {
+          notificationStore.setErrorCurrentMessage(err?.message || "Błąd przy zmianie hasła");
+      },
     });
 
     const getUserInitials = (): string => {
@@ -224,6 +238,7 @@ export const useAuthStore = defineStore(
       registerMutation,
       userUpdateMutation,
       updateProfileMutation,
+      updatePasswordMutation,
       getUserInitials,
     };
   },

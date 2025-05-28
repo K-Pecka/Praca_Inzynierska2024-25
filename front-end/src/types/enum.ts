@@ -12,7 +12,8 @@ export enum FormType {
   PLAN = "plan",
   TRIP = "trip",
   BUDGET = "budget",
-  PROFILE = "profile",
+  PROFILE_PERSONAL = "profile_personal",
+  PROFILE_PASSWORD = "profile_password",
 }
 export enum Role {
   UNKNOWN = "unknown",

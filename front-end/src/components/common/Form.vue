@@ -10,6 +10,7 @@ const props = defineProps<{
     label: string | undefined;
     onclick?: () => void;
   };
+  disabled?: boolean;
 }>();
 const emit = defineEmits(["submitForm"]);
 const updateState = (name: string, value: string) => {
@@ -65,14 +66,14 @@ const handleSubmit = () => {
             >
           </v-col>
           <v-col cols="12" md="6" class="d-flex justify-center">
-            <v-btn type="submit" class="primary-form-button w-100">{{
+            <v-btn type="submit" class="primary-form-button w-100" :disabled="props.disabled">{{
               submitButtonLabel
             }}</v-btn>
             
           </v-col>
         </v-row>
         <v-row no-gutters class="mx-3" v-else>
-          <v-btn type="submit" class="primary-form-button w-100">{{
+          <v-btn type="submit" class="primary-form-button w-100" :disabled="props.disabled">{{
             submitButtonLabel
           }}</v-btn>
         </v-row>

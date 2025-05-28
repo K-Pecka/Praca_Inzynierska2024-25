@@ -8,7 +8,8 @@ import {
   planInput,
   tripInput,
   budgetInput,
-  profileInput,
+  profilePersonalInput,
+  profilePasswordInput,
   getMoreOptions,
 } from "@/data/index";
 import { useNotificationStore } from "@/stores";
@@ -40,10 +41,12 @@ export const useFormStore = defineStore("form", () => {
       getErrorMessages({ dateRange: extraValidationMessages.dateRange })
     );
   const getBudgetInputs = (): Input[] => budgetInput(getErrorMessages());
-  const getProfileInputs = (): Input[] =>
-    profileInput(
-      getErrorMessages({ isEqual: extraValidationMessages.isEqual })
-    );
+
+  const getProfilePersonalInputs = (): Input[] =>
+      profilePersonalInput(getErrorMessages());
+
+  const getProfilePasswordInputs = (): Input[] =>
+      profilePasswordInput(getErrorMessages({ isEqual: extraValidationMessages.isEqual }));
 
   const formInputGenerators: Record<FormType, () => Input[]> = {
     [FormType.LOGIN]: getLoginInputs,
@@ -51,7 +54,8 @@ export const useFormStore = defineStore("form", () => {
     [FormType.PLAN]: getPlanInputs,
     [FormType.TRIP]: getTripInputs,
     [FormType.BUDGET]: getBudgetInputs,
-    [FormType.PROFILE]: getProfileInputs,
+    [FormType.PROFILE_PERSONAL]: getProfilePersonalInputs,
+    [FormType.PROFILE_PASSWORD]: getProfilePasswordInputs
   };
 
   const getFormInputs = (type: FormType): Input[] =>
@@ -129,5 +133,7 @@ export const useFormStore = defineStore("form", () => {
     setBackendErrors,
     getBackendErrors,
     getMoreOptions,
+    getProfilePersonalInputs,
+    getProfilePasswordInputs
   };
 });
