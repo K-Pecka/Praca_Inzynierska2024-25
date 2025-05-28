@@ -106,7 +106,8 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         try:
             email = data.get('email', None)
             profile_id = data.get('profile_id', None)
-            profile = UserProfile.objects.filter(email=email).first()
+            user = CustomUser.objects.filter(email=email).first()
+            profile = UserProfile.objects.filter(user=user, type__code__in=['guest', 'tourist']).first()
             if not profile:
                 profile = UserProfile.objects.filter(pk=profile_id).first()
 
