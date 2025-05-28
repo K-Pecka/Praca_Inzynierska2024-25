@@ -1,17 +1,17 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
-import { Trip, NewTrip } from "@/types/interface";
+import { Trip,TripData, NewTrip } from "@/types/interface";
 import { QueryFunctionContext } from "@tanstack/vue-query";
-import { Budget, Expense } from "@/types/interface";
+import { Budget } from "@/types/interface";
 
 
 export const fetchTrips = async () => {
-    const { data, error } = await fetchData<Trip[]>(apiEndpoints.trip.all, "GET");
+    const { data, error } = await fetchData<TripData>(apiEndpoints.trip.all, "GET");
 
     if (error) {
         throw new Error(error);
     }
 
-    return data || [];
+    return data?.results || [];
 };
 
 export const fetchTrip = async ({ queryKey }: QueryFunctionContext<[string, number]>) => {

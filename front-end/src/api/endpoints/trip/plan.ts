@@ -1,16 +1,16 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
-import { Plan, NewPlan } from "@/types/interface";
+import { Plan, NewPlan,PlanResponse } from "@/types/interface";
 
 export const fetchPlans = async (param: Record<string, string> = {}) => {
   const url = setParam(apiEndpoints.plan.all, param);
 
-  const { data, error } = await fetchData<Plan[]>(url, "GET");
+  const { data, error } = await fetchData<PlanResponse>(url, "GET");
 
   if (error) {
     throw new Error(error);
   }
 
-  return data;
+  return data?.results;
 };
 
 export const fetchPlan = async () => {

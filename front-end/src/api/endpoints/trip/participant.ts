@@ -30,7 +30,7 @@ export const fetchRemoveParticipant = async (
   });
 
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
   return idTrip;

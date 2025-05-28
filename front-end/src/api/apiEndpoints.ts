@@ -53,6 +53,12 @@ export const apiEndpoints = {
     delete: `/trip/:tripId/expenses/:expenseId/`,
     create: `/trip/:tripId/expenses/`,
   },
+  debt:{
+    all: `/trip/:tripId/debt/`,
+    create: `/trip/:tripId/debt/`,
+    delete: `/trip/:tripId/debt/:debtId/`,
+    removeMember: `/trip/:tripId/debt/:debtId/remove-member/`
+  },
   trip: {
     all: `/trip/`,
     detail: `/trip/:tripId/`,

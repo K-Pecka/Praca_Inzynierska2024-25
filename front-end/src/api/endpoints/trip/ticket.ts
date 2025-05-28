@@ -1,17 +1,17 @@
 import apiClient from "@/api/apiClient";
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
-import { TicketData } from "@/types/interface";
+import { TicketData,TicketResponse } from "@/types/interface";
 
 export const fetchTicket = async (params: { [key: string]: string }) => {
   const url = setParam(apiEndpoints.ticket.all, params);
 
-  const { data, error } = await fetchData<TicketData[]>(url, "GET");
+  const { data, error } = await fetchData<TicketResponse>(url, "GET");
 
   if (error) {
     throw new Error(error);
   }
 
-  return data;
+  return data?.results;
 };
 
 export const createTicket = async (

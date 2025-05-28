@@ -1,19 +1,36 @@
 <script lang="ts" setup>
 import {useRouter} from "vue-router";
-import {computed, onMounted, shallowRef} from "vue";
+import {computed, watch,ref} from "vue";
 import {usePagePanelStore} from "@/stores"
+import { useTripStore } from "@/stores";
+import { Role } from "@/types/enum";
+import { useRoleStore } from "@/stores/auth/useRoleStore";
+import {SideNavItem} from "@/types"
 usePagePanelStore().initialize();
 const {getSideNavItems} = usePagePanelStore();
 const router = useRouter();
-
+const {getRole} = useRoleStore()
 const props = defineProps({
-  modelValue: Boolean
+  modelValue: Boolean,
 })
+const { trip } = useTripStore();
+const {getTripDetails} = trip;
+const { trip: tripDetails } = getTripDetails();
 
-const side_nav_items = shallowRef(getSideNavItems());
+const side_nav_items = ref<SideNavItem[]>([]);
+
+watch(tripDetails, (newVal) => {
+  if (newVal?.creator?.type !== undefined) {
+    const creatorType = Number(newVal.creator.type);
+    const tripType = !isNaN(creatorType) && (creatorType === 2 || getRole() === Role.GUIDE)
+      ? Role.GUIDE
+      : Role.TOURIST;
+
+    side_nav_items.value = getSideNavItems(tripType);
+  }
+}, { immediate: true });
 
 const emit = defineEmits(['update:modelValue'])
-
 const drawer = computed({
   get: () => props.modelValue,
   set: val => emit('update:modelValue', val)
@@ -26,7 +43,6 @@ const drawer = computed({
       class="navbar-border font-weight-bold"
       v-model="drawer"
   >
-
     <!-- Navigation Drawer -->
     <v-list>
       <template v-for="item in side_nav_items">
@@ -56,7 +72,6 @@ const drawer = computed({
               class="pl-6"
           />
         </v-list-group>
-
         <!-- Pages without children -->
         <v-list-item
             v-else

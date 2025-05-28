@@ -70,8 +70,14 @@ export interface Expense {
   username?: string;
   converted_amount?: string;
 }
+export interface ExpenseResponse{
+  results:Expense[];
+}
+export interface TripData {
+  results:Trip[];
+}
 export interface Trip {
-  creator: {id:number,first_name:string,last_name:string};
+  creator: { id: number; first_name: string;type: string; last_name: string };
   id: number;
   name: string;
   start_date: string;
@@ -82,7 +88,7 @@ export interface Trip {
   pending_members?: Memebers[];
   activity_count?: number;
   budget_amount?: string;
-  isOwner?:boolean;
+  isOwner?: boolean;
 }
 export interface NewPlan {
   id: number;
@@ -145,8 +151,8 @@ export interface SideNavItem {
   title: string;
   icon?: string;
   iconActive?: string;
-  page?: {name: string};
-  children?: {title: string, page: {name: string}}[];
+  page?: { name: string };
+  children?: { title: string; page: { name: string } }[];
   permission?: number[];
   name?: string;
 }
@@ -161,14 +167,15 @@ export interface Image {
   caption?: string;
 }
 export interface Role {
+  type:string;
   title: string;
   description: string;
   image: Image;
   path: string | { name: string; params?: Record<string, string> };
 }
 export interface RoleSelection {
-  title: String;
-  subtitle: String;
+  title: string;
+  subtitle: string;
   roles: Role[];
 }
 
@@ -184,6 +191,9 @@ export interface Plan {
   city?: string;
   start_date: string;
   end_date: string;
+}
+export interface PlanResponse{
+  results:Plan[];
 }
 export interface Ticket {
   id: string;
@@ -203,6 +213,9 @@ export interface TicketData {
   valid_from_time: string;
   trip: number;
   type_display?: string;
+}
+export interface TicketResponse {
+  results: TicketData[];
 }
 
 export interface PricingCard {
@@ -233,7 +246,10 @@ export interface Activity {
   location?: string;
   assignedTo?: string;
   description?: string;
-  ticekt?:string;
+  ticekt?: string;
+}
+export interface ActivityResponse{
+  results:Activity[];
 }
 export interface User {
   userId: number;
@@ -243,15 +259,43 @@ export interface User {
   name?: string | null;
   is_guest?: boolean;
   is_owner?: boolean;
-  profiles?:Profile[];
-  fullname?:string;
+  profiles?: Profile[];
+  fullname?: string;
 }
 
 export interface ActivityType {
   id: number;
   name: string;
 }
-export interface Profile{
+export interface Profile {
   checkout_url: string;
-  type: number;id:number;is_default:boolean;
+  type: number;
+  id: number;
+  is_default: boolean;
+}
+export interface Debt {
+  trip: number;
+  name: string;
+  amount: number;
+  currency: string;
+  members: number[];
+}
+export interface DebtDetails {
+  id: number;
+  creator:Profile
+  name: string;
+  amount: string;
+  currency: string;
+  amount_in_pln: string;
+  members: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+  }[];
+  amount_per_member: string;
+  amount_per_member_in_pln: string;
+}
+export interface DebtResponse {
+  results:DebtDetails[];
 }

@@ -27,7 +27,7 @@ export const useParticipants = () => {
             queryClient.refetchQueries({ queryKey: ["trip", idTrip] });
         },
         onError: (err: any) =>
-            notifications.setErrorCurrentMessage(err.message || "Błąd"),
+            notifications.setErrorCurrentMessage(err?.message || err?.detail || "Błąd"),
     });
 
     const addParticipant = (

@@ -9,3 +9,4 @@ export { default as ActivityView } from "@/views/panel/itinerary/activity/List.v
 export { default as PlanForm } from "@/views/panel/itinerary/CreateForm.vue";
 export { default as TripForm } from "@/views/panel/trip/CreateForm.vue";
 export { default as TripEditForm } from "@/views/panel/trip/EditForm.vue";
+export { default as DebtView } from "@/views/panel/debt/DebtView.vue";

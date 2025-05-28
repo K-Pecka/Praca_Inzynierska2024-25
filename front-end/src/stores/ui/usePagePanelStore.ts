@@ -12,12 +12,14 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         subtitle: "W jakiej roli planujesz zorganizować podróż?",
         roles: [
             {
+                type:"tourist",
                 title: "Turysta",
                 description: "Planowanie indywidualnych podróży dla siebie i rodziny",
                 image: images.role.tourist,
                 path:{name:"ChooseTrip",params:{role:"tourist"}}
             },
             {
+                type:"guide",
                 title: "Przewodnik",
                 description: "Tworzenie i zarządzanie wycieczkami dla grup turystycznych",
                 image: images.role.guide,
@@ -31,12 +33,12 @@ export const usePagePanelStore = defineStore("pagePanel", () => {
         [Role.UNKNOWN]: function (): SideNavItem[] {
             throw new Error("Function not implemented.");
         },
-        [Role.ADMIN]: function (): SideNavItem[] {
+        [Role.GUEST]: function (): SideNavItem[] {
             throw new Error("Function not implemented.");
         }
     }
-    const getSideNavItems = (): SideNavItem[]=> {
-        return selectRole[getRole()]() || [];
+    const getSideNavItems = (role?:Role): SideNavItem[]=> {
+        return selectRole[role || getRole()]() || [];
     }
     return {
         getRoleSelection,

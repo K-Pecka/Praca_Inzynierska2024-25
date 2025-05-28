@@ -4,6 +4,7 @@ import { useDashboard } from "./useDashboard";
 import { usePlans } from "./usePlans";
 import { useTrips } from "./useTrips";
 import { useBudget } from "./useBudget";
+import {useDebt} from './useDebt'
 import { useTicketStore, useUtilsStore } from "@/stores";
 export const useTripStore = defineStore("trip", () => {
   const { getTripId } = useUtilsStore();
@@ -19,6 +20,8 @@ export const useTripStore = defineStore("trip", () => {
   } = useTrips(getTripId);
   const {createExpense, getExpenseByTrip,deleteExpense,setFilters,getFilters } =
     useBudget(getTripId);
+
+  const {createDebt,getDebt,removeMember,deleteDebt} = useDebt(getTripId)
   const { getPlans, yourPlans, planMutationAdd, handleDeleteItinerary } = usePlans(getTripId);
 
   const { addParticipant, removeParticipant } = useParticipants();
@@ -35,6 +38,12 @@ export const useTripStore = defineStore("trip", () => {
       createExpense,
       setFilters,
       getFilters
+    },
+    debt:{
+      createDebt,
+      getDebt,
+      removeMember,
+      deleteDebt
     },
     trip:{
       getTrips,
@@ -61,61 +70,3 @@ export const useTripStore = defineStore("trip", () => {
     createExpense,
   };
 });
-// import { defineStore } from "pinia";
-// import { useParticipants } from "./useParticipants";
-// import { useDashboard } from "./useDashboard";
-// import { usePlans } from "./usePlans";
-// import { useTrips } from "./useTrips";
-// import { useBudget } from "./useBudget";
-// import { useTicketStore } from "@/stores";
-
-// export const useTripStore = defineStore("trip", () => {
-//   // Dashboard
-//   const { getDashboard, getExpenseItem } = useDashboard();
-
-//   // Plans
-//   const { getPlans, yourPlans, addPlan } = usePlans();
-
-//   // Trips
-//   const { yourTrips, getTripDetails, getTrips, addTrip, updateTrip } = useTrips();
-
-//   // Participants
-//   const { addParticipant, removeParticipant } = useParticipants();
-
-//   // Budget
-//   const { addExpense, getExpenses, budgetMutation } = useBudget();
-
-//   // Tickets
-//   const { getTickets } = useTicketStore();
-
-//   return {
-//     dashboard: {
-//       getDashboard,
-//       getExpenseItem,
-//     },
-//     plans: {
-//       getPlans,
-//       yourPlans,
-//       addPlan,
-//     },
-//     trips: {
-//       yourTrips,
-//       getTripDetails,
-//       getTrips,
-//       addTrip,
-//       updateTrip,
-//     },
-//     participants: {
-//       addParticipant,
-//       removeParticipant,
-//     },
-//     budget: {
-//       addExpense,
-//       getExpenses,
-//       budgetMutation,
-//     },
-//     tickets: {
-//       getTickets,
-//     },
-//   };
-// });

@@ -67,8 +67,8 @@ export const getGudieNav = () => [
     children: [
       {
         title: "Pokaż",
-        name: "budgetShow",
-        page: { name: "ExpenseTracker" },
+        name: "debt",
+        page: { name: "debt" },
       }
     ],
   },

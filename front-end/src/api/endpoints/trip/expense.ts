@@ -1,6 +1,6 @@
 import { useTripStore } from "@/stores";
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
-import { Expense } from "@/types/interface";
+import { Expense,ExpenseResponse } from "@/types/interface";
 
 export const fetchExpenses = async (param: Record<string, string>, filters?: Record<string, string>) => {
   const {budget} = useTripStore()
@@ -12,13 +12,13 @@ export const fetchExpenses = async (param: Record<string, string>, filters?: Rec
 
   const url = `${setParam(apiEndpoints.expense.all,param)}?${params.toString()}`;
 
-  const { data, error } = await fetchData<Expense[]>(url, "GET");
+  const { data, error } = await fetchData<ExpenseResponse>(url, "GET");
 
   if (error) {
     throw new Error(error);
   }
 
-  return data;
+  return data?.results;
 };
 
 export const fetchExpenseCreate = async (newExpense: Expense, param: Record<string, string> = {}) => {

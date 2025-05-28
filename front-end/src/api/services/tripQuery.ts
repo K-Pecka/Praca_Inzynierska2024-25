@@ -13,7 +13,7 @@ import router from "@/router";
 import { useQueryClient } from "@tanstack/vue-query";
 import { useRoleStore } from "@/stores/auth/useRoleStore";
 import { useAuthStore } from "@/stores";
-import { getRandomValues } from "crypto";
+
 export const getTripQuery = (role: string) => {
   return useQuery<Trip[], Error, Trip[]>({
     queryKey: ["trips", role],
@@ -27,7 +27,6 @@ export const getTripQuery = (role: string) => {
         authStore.setActiveProfile(profile.id);
         roleStore.setRole(role);
       }
-
       return fetchTrips();
     },
     staleTime: 1000 * 60,

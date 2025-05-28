@@ -35,9 +35,10 @@ export const useRoleStore = defineStore('roleStore', () => {
     setRole,
     switchRole,
   };
-}, {
-  persist: {
-    storage: localStorage,
-    pick: ['role'],
-  },
-});
+},
+  {
+    persist: {
+      key: 'role',
+      storage: localStorage
+    },
+  });

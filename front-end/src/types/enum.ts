@@ -18,7 +18,7 @@ export enum Role {
   UNKNOWN = "unknown",
   TOURIST = "tourist",
   GUIDE = "guide",
-  ADMIN = "admin",
+  GUEST = "guest",
 }
 export enum TypeOfButton{
   TRIP = 'trip',
