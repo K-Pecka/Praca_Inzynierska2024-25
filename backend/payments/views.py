@@ -105,13 +105,7 @@ class StripeWebhookView(APIView):
             print("== RAW INVOICE ==")
 
             try:
-                subscription_id = (
-                    invoice.get('lines', {})
-                    .get('data', [{}])[0]
-                    .get('parent', {})
-                    .get('subscription_item_details', {})
-                    .get('subscription')
-                )
+                subscription_id = invoice.get('subscription')
             except Exception as e:
                 pass
 

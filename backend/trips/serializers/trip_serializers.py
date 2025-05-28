@@ -62,6 +62,8 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
     end_date = serializers.DateField(read_only=True)
     activity_count = serializers.SerializerMethodField()
     budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    activity_for_today = serializers.IntegerField(read_only=True)
+    activity_for_week = serializers.IntegerField(read_only=True)
 
     def get_pending_members(self, obj):
         access_tokens = obj.access_tokens.filter(is_pending=True)
@@ -73,7 +75,7 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Trip
-        fields = ['name', 'creator', 'members', 'pending_members', 'start_date', 'end_date', 'activity_count', 'budget_amount']
+        fields = ['name', 'creator', 'members', 'pending_members', 'start_date', 'end_date', 'activity_count', 'budget_amount', 'activity_for_today', 'activity_for_week']
 
 
 class TripListSerializer(TripRetrieveSerializer):

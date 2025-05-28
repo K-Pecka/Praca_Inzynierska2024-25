@@ -2,6 +2,8 @@ import secrets
 import pycountry
 import requests
 from decimal import Decimal
+from django.utils import timezone
+from datetime import timedelta
 
 from cloudinary_storage.storage import MediaCloudinaryStorage
 
@@ -65,6 +67,25 @@ class Trip(BaseModel):
     )
 
     objects = TripManager()
+
+    @property
+    def activity_count_for_today(self):
+        """Zwraca liczbę aktywności powiązanych z itineraries, które są aktywne dzisiaj"""
+        today = timezone.now().date()
+        count = 0
+        for itinerary in self.itineraries.filter(start_date__lte=today, end_date__gte=today):
+            count += itinerary.activities.count()
+        return count
+
+    @property
+    def activity_count_for_week(self):
+        """Zwraca liczbę aktywności powiązanych z itineraries kończących się w tym tygodniu"""
+        today = timezone.now().date()
+        next_week = today + timedelta(days=7)
+        count = 0
+        for itinerary in self.itineraries.filter(start_date__lte=today, end_date__range=(today, next_week)):
+            count += itinerary.activities.count()
+        return count
 
     @classmethod
     def add_member(cls, trip, user_profile):
