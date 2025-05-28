@@ -343,7 +343,7 @@ class IsTripCreatorOrTargetUser(BasePermission):
         if target_profile == user_profile:
             return True
 
-        if trip.creator == profile or profile in trip.participants.all():
+        if trip.creator == profile or profile in trip.members.all():
             return True
 
         raise PermissionDenied(self.message)
