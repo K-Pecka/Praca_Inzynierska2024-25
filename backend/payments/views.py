@@ -78,7 +78,7 @@ class StripeWebhookView(APIView):
     def post(self, request):
         print('##########################################################################')
         payload = request.body
-        print('payload', payload.__dict__)
+        print('payload', payload)
         sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
         endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
 
@@ -90,7 +90,7 @@ class StripeWebhookView(APIView):
             return HttpResponse(status=400)
 
         print(f'event type: {event["type"]}')
-        print(f'event: {event.__dict__}')
+        print(f'event: {event}')
 
         if event['type'] == 'checkout.session.completed':
             print('XDXDXD')
