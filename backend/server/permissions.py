@@ -364,7 +364,7 @@ class IsTripCreatorOrTargetUser(BasePermission):
         if not trip:
             return False
 
-        return trip.creator == profile or profile in trip.participants.all()
+        return trip.creator == profile or profile in trip.members.all()
 
     def get_trip_from_view(self, view):
         """
