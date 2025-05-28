@@ -95,7 +95,7 @@ class StripeWebhookView(APIView):
 
         print(f'event type: {event["type"]}')
         print("====== FULL STRIPE EVENT ======")
-        print(json.dumps(event, indent=2))
+        print(event)
         print("================================")
 
         if event['type'] == 'invoice.paid':
