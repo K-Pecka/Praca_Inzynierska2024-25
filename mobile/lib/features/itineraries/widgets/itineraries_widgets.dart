@@ -378,18 +378,25 @@ void showActivityDetailsModal(
                 Center(
                   child: ElevatedButton.icon(
                     onPressed: () async {
-                      final encoded = Uri.encodeComponent(activity.location);
-                      final uri = Uri.parse(
-                        'https://www.google.com/maps/dir/?api=1&destination=$encoded',
-                      );
+                      final location = activity.location.trim();
 
-                      if (await canLaunchUrl(uri)) {
+                      final encoded = Uri.encodeComponent(location);
+                      final geoUri = Uri.parse('geo:0,0?q=$encoded');
+
+                      try {
                         await launchUrl(
-                          uri,
+                          geoUri,
                           mode: LaunchMode.externalApplication,
                         );
-                      } else {
-                        debugPrint('Nie można otworzyć Google Maps');
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Nie udało się otworzyć lokalizacji w Mapach Google.\nUpewnij się, że aplikacja Google Maps jest zainstalowana i obsługuje linki.',
+                            ),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
                       }
                     },
                     icon: const Icon(

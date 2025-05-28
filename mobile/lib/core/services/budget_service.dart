@@ -10,7 +10,7 @@ class BudgetService {
     required int tripId,
   }) async {
     List<ExpenseModel> allExpenses = [];
-    String? nextUrl = '$_baseUrl/trip/$tripId/expenses/?page=1&page_size=100';
+    String? nextUrl = '$_baseUrl/trip/$tripId/expenses/';
 
     while (nextUrl != null) {
       final response = await HttpHandler.request(Uri.parse(nextUrl));

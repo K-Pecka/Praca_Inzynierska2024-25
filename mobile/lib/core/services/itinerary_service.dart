@@ -35,7 +35,7 @@ class ItineraryService {
     required int itineraryId,
   }) async {
     List<ActivityModel> allActivities = [];
-    String? nextUrl = '$_baseUrl/trip/$tripId/itinerary/$itineraryId/activities/?page=1&page_size=10';
+    String? nextUrl = '$_baseUrl/trip/$tripId/itinerary/$itineraryId/activities/';
 
     while (nextUrl != null) {
       final response = await HttpHandler.request(Uri.parse(nextUrl));

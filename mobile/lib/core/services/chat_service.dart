@@ -14,7 +14,7 @@ class ChatService {
 
   static Future<List<ChatroomModel>> getUserChatrooms(int tripId) async {
     List<ChatroomModel> allRooms = [];
-    String? nextUrl = '$baseUrl/trip/$tripId/chat/?page=1&page_size=30';
+    String? nextUrl = '$baseUrl/trip/$tripId/chat/';
 
     while (nextUrl != null) {
       final response = await HttpHandler.request(Uri.parse(nextUrl));

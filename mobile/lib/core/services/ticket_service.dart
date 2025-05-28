@@ -7,7 +7,7 @@ class TicketService {
 
   static Future<List<TicketModel>> getTicketsByTrip(int tripId) async {
     List<TicketModel> allTickets = [];
-    String? nextUrl = '$_baseUrl/trip/$tripId/ticket/?page=1&page_size=5';
+    String? nextUrl = '$_baseUrl/trip/$tripId/ticket/';
 
     while (nextUrl != null) {
       final response = await HttpHandler.request(Uri.parse(nextUrl));

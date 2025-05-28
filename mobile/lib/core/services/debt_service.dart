@@ -7,7 +7,7 @@ class DebtService {
 
   static Future<List<DebtModel>> fetchDebts({required int tripId}) async {
     List<DebtModel> allDebts = [];
-    String? nextUrl = '$_baseUrl/trip/$tripId/debt/?page=1&page_size=10';
+    String? nextUrl = '$_baseUrl/trip/$tripId/debt/';
 
     while (nextUrl != null) {
       final response = await HttpHandler.request(Uri.parse(nextUrl));
