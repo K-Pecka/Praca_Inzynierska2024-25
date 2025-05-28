@@ -15,7 +15,7 @@ export const useParticipants = () => {
             queryClient.refetchQueries({ queryKey: ["trip", idTrip] });
         },
         onError: (err: any) =>
-            notifications.setErrorCurrentMessage(err.message || "Błąd"),
+            notifications.setErrorCurrentMessage(JSON.parse(err.error.replace(/'/g, '"'))[0] || "Błąd"),
     });
 
     const removeParticipantMutation = useMutation({

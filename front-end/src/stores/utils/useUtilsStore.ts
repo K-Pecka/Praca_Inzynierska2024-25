@@ -16,7 +16,7 @@ export const useUtilsStore = defineStore("utils", () => {
   }
   const getRole = ()=>{
     const role = route.params.role;
-      return Number(Array.isArray(role) ? role[0] : role);
+      return String(Array.isArray(role) ? role[0] : role);
   }
   const isCurrentRouteNotInSet = (RouteSet: string[]) =>
     computed(() => {

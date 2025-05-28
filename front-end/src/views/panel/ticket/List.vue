@@ -7,13 +7,13 @@ import TicketForm from "@/components/trip/module/ticket/TicketForm.vue";
 import AppButton from "@/components/AppButton.vue";
 import {useUtilsStore} from "@/stores";
 import HeaderSection from "@/components/common/HeaderSection.vue";
-import {createTicket} from "@/api"
 import {images} from "@/data";
 import axios from "axios";
 
 const {getTripId} = useUtilsStore();
 const tripStore = useTripStore();
-const {getTickets} = tripStore;
+const {ticket} = tripStore;
+const {getTickets, createTicket} = ticket;
 const {
   data: tickets,
   isLoading,
@@ -27,9 +27,14 @@ const {getTripDetails} = tripStore;
 const {trip} = getTripDetails();
 import {useMembersStore} from "@/stores/trip/useMembersStore"
 
-const {members: membersStore} = useMembersStore();
-const members = computed(() => membersStore.filter(e => !e.is_owner))
+const {setData} = useMembersStore();
 
+const members = computed(() => {
+  if (trip.value !== undefined) {
+    setData(trip.value);
+  }
+  return useMembersStore().members.filter(e => !e.is_owner && !e.is_guest) || [];
+});
 const showForm = ref(false);
 
 async function handleAddTicket(newTicketData: {
@@ -47,7 +52,9 @@ async function handleAddTicket(newTicketData: {
   formData.append("trip", String(getTripId()));
   formData.append("valid_from_date", newTicketData.date);
   formData.append("valid_from_time", newTicketData.time);
-  formData.append("file", newTicketData.file);
+  if (newTicketData.file){
+    formData.append("file", newTicketData.file);
+  }
 
   if (newTicketData.assignedTo?.length) {
     newTicketData.assignedTo.forEach((id) => {
@@ -56,7 +63,12 @@ async function handleAddTicket(newTicketData: {
   }
 
   try {
-    await createTicket(formData, {tripId: String(getTripId())});
+    createTicket.mutate(
+      {
+        formData,
+        params: { tripId: String(getTripId()) }
+      }
+    );
     await refetchTickets();
     showForm.value = false;
   } catch (error: any) {

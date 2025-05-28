@@ -8,6 +8,6 @@ export const registerFetch = async (userData: Register) => {
         return response.data;
     } catch (error: any) {
         const errorData = error.response?.data;
-        throw new Error(errorData || "unknown");
+        throw errorData || { message: "unknown" };
     }
 };

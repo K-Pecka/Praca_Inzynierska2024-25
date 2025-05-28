@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useAuthStore } from '@/stores/auth/useAuthStore';
-import { apiEndpoints } from './apiEndpoints';
 import { fetchRefreshToken } from './endpoints/auth';
+import { ro } from 'vuetify/lib/locale/index.mjs';
+import router from '@/router';
 
 const apiClient = axios.create({
     baseURL: 'https://api.plannder.com',
@@ -11,7 +12,6 @@ const apiClient = axios.create({
     timeout: 5000,
 });
 
-// === KOLEJKA + FLAGA odświeżania ===
 let isRefreshing = false;
 let failedQueue: any[] = [];
 
@@ -46,19 +46,20 @@ apiClient.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
         const authStore = useAuthStore();
-
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            console.log('401 error', error.response?.data);
+        if (error.response?.status === 404) {
+            // router.push('/404');
+        }
+        if (error.response?.status === 500) {
+            router.push('/500');
+        }
+        else if (error.response?.status === 401 && !originalRequest._retry && authStore.getToken() != null) {
             const refreshToken = authStore.getToken()?.refresh;
-
             if (refreshToken && !isRefreshing) {
                 originalRequest._retry = true;
                 isRefreshing = true;
-
                 try {
-                    console.log('before', refreshToken);
+
                     const refreshResponse = await fetchRefreshToken(refreshToken);
-                    console.log('after', refreshResponse);
                     const newAccess = refreshResponse;
                     authStore.saveToken(newAccess);
                     apiClient.defaults.headers.common['Authorization'] = `Bearer ${newAccess.access}`;
@@ -73,7 +74,6 @@ apiClient.interceptors.response.use(
                 }
             }
 
-            // Kolejka oczekujących
             return new Promise((resolve, reject) => {
                 failedQueue.push({
                     resolve: (token: string) => {

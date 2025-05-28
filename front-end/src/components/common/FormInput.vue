@@ -1,61 +1,51 @@
 <template>
   <div class="input-wrapper">
-    <label
-      :for="inputData.name"
-      class="input-label"
-      :class="{ required: inputData.config?.required }"
-      >{{ inputData.label }}</label
-    >
-
+  
     <template v-if="inputData.type === 'date_range'">
       <v-date-input
+        v-model="localRange"
         :min="inputData.config?.min"
         :max="inputData.config?.max"
-        v-model="localRange"
-        :label="inputData.config?.edit ? `${inputData.config?.min} - ${inputData.config?.maxDate}` : inputData.placeholder"
+        :label="inputData.label"
         :multiple="inputData.config?.multiple ? 'range' : false"
-        :placeholder="inputData.placeholder"
-        max-width="auto"
         variant="outlined"
         prepend-icon=""
         prepend-inner-icon="mdi-calendar"
         bg-color="white"
         rounded="lg"
-        @update:modelValue="onRangeChange"
+        @update:model-value="onRangeChange"
         color="primary"
-        :clearable="true"
+        clearable
         header-color="primary"
+        :error="!!inputData.error?.length"
+        :error-messages="inputData.error"
       />
     </template>
 
     <template v-else>
-      <input
+      <v-text-field
+        v-model="inputValue"
+        :type="inputData.type || 'text'"
         :name="inputData.name"
         :id="inputData.name"
-        :type="inputData.type"
-        :placeholder="inputData?.config?.label ? inputData?.config?.label : inputData.placeholder"
-        @input="updateModel"
+        :label="inputData.label || inputData.config?.label"
+        variant="outlined"
+        :error="!!inputData.error?.length"
+        :error-messages="inputData.error"
         @blur="handleInput"
-        class="input"
-        :class="{ error: inputData.error && inputData.error.length > 0 }"
+        color="primary"
+        bg-color="white"
+        rounded="lg"
+        :counter="inputData.config?.maxLength ?? undefined"
       />
     </template>
-
-    <div>
-      <span
-        v-for="(error, index) in inputData.error"
-        :key="index"
-        class="showError"
-        >{{ error }}</span
-      >
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { VDateInput } from "vuetify/labs/components";
-import { Input } from "@/types/interface";
+import { ref, watch } from 'vue'
+import { VDateInput} from 'vuetify/labs/components'
+import { Input } from '@/types/interface'
 
 const props = defineProps({
   inputData: {
@@ -63,73 +53,52 @@ const props = defineProps({
     required: true,
   },
   modelValue: {
-    type: String,
+    type: [String, Array],
     default: '',
   },
-});
-console.log("inputData", props.inputData);
-const emit = defineEmits(["update", "updateModel"]);
+})
 
-const localRange = ref<string[]>(
-  Array.isArray(props.modelValue) ? props.modelValue : []
-);
+const emit = defineEmits(['update', 'updateModel'])
 
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    if (Array.isArray(newVal)) {
-      localRange.value = newVal;
-    }
+const inputValue = ref(props.modelValue as string)
+const localRange = ref<string[]>(Array.isArray(props.modelValue) ? props.modelValue as string[] : []);
+
+watch(() => props.modelValue, (newVal) => {
+  if (typeof newVal === 'string') {
+    inputValue.value = newVal
+  } else if (Array.isArray(newVal)) {
+    localRange.value = newVal as string[]
   }
-);
+})
 
-const updateModel = (event: Event) => {
-  const name = (event.target as HTMLInputElement).name;
-  const value = (event.target as HTMLInputElement).value;
-  emit("updateModel", name, value);
-};
+watch(inputValue, (newVal) => {
+  emit('updateModel', props.inputData.name, newVal)
+})
 
 function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
-  return `${year}-${month}-${day}`;
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  return `${year}-${month}-${day}`
 }
 
 function onRangeChange(value: string[] | string) {
   if (Array.isArray(value) && value.length >= 2) {
-    const startDate = formatDate(new Date(value[0]));
-    const endDate = formatDate(new Date(value[value.length - 1]));
-    emit("update", props.inputData.name, `${startDate} - ${endDate}`);
-  } else {
-    const singleDate = formatDate(new Date(value[0]));
-    emit("update", props.inputData.name, `${singleDate} - ${singleDate}`);
+    const startDate = formatDate(new Date(value[0]))
+    const endDate = formatDate(new Date(value[value.length - 1]))
+    emit('update', props.inputData.name, `${startDate} - ${endDate}`)
+  } else if (Array.isArray(value)) {
+    const singleDate = formatDate(new Date(value[0]))
+    emit('update', props.inputData.name, `${singleDate} - ${singleDate}`)
   }
 }
 
-const handleInput = (event: Event) => {
-  const name = (event.target as HTMLInputElement).name;
-  const value = (event.target as HTMLInputElement).value;
-  emit("update", name, value);
-};
+function handleInput() {
+  emit('update', props.inputData.name, inputValue.value)
+}
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/styles/style" as *;
-@use "@/assets/styles/input.scss";
-
-.input-wrapper > input[type="checkbox"] {
-  flex-direction: row-reverse;
-}
-
-input[type="checkbox"] {
-  margin: 1rem;
-}
-
-.error {
-  border: 1px solid red;
-}
-
 .required::after {
   content: " *";
   color: red;
@@ -140,33 +109,4 @@ input[type="checkbox"] {
   flex-direction: column;
   margin: 1.5rem;
 }
-
-.input-label {
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
-
-.input {
-  padding: 0.5rem;
-  border-radius: 10px;
-  background-color: white;
-  font-size: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.5);
-}
-
-input {
-  padding: 1rem 0.75rem;
-  border-radius: 0.5rem;
-  width: 100%;
-}
-
-span {
-  position: relative;
-}
-
-.showError {
-  font-size: 0.7rem;
-  display: block;
-}
-
 </style>

@@ -6,17 +6,18 @@ import {
   fetchExpenseCreate,
 } from "@/api";
 
-export const getExpensesQuery = (id: number) => {
+export const getExpensesQuery = (params: Record<string, string>, filters: Record<string, string>) => {
   return useQuery({
-    queryKey: ["expense", id],
-    queryFn: () => fetchExpenses(["expense", id]),
-    enabled: !!id,
+    queryKey: ["expense", params.tripId, JSON.stringify(filters)],
+    queryFn: () => fetchExpenses(params, filters),
+    enabled: !!params.tripId,
     select: (data: Expense[] | undefined) =>
       Array.isArray(data)
         ? data.filter((item): item is Expense => item !== undefined)
         : [],
   });
 };
+
 
 export const getMutationExpenseCreate = (option: Record<string, any>) =>
   useMutation({
@@ -28,7 +29,7 @@ export const getMutationExpenseCreate = (option: Record<string, any>) =>
       });
     },
     onError: (err: any) => {
-      option.notification.setErrorCurrentMessage(err?.message || "Błąd");
+      option.notification.setErrorCurrentMessage(err?.message || err?.['non_field_errors'][0] || "Błąd");
     },
   });
 export const getMutationExpenseDelete = (option: Record<string, any>) =>

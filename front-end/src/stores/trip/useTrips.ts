@@ -1,10 +1,12 @@
-import {useMutation, useQueryClient} from "@tanstack/vue-query";
-import {useNotificationStore} from "@/stores";
+import {useQueryClient} from "@tanstack/vue-query";
+import {useNotificationStore, useUtilsStore} from "@/stores";
+import { useRoleStore } from "@/stores/auth/useRoleStore";
 import { getTripQuery,getTripDetailsQuery, getMutationCreate, getMutationDelete,getMutationUpdate, getMutationUpdateBudget } from "@/api/services/tripQuery";
 export const useTrips = (tripId:Function) => {
     const queryClient = useQueryClient();
     const notifications = useNotificationStore();
     const roleStore = useRoleStore();
+    const {getRole} = useUtilsStore();
     const getTrips = (role?:string) => {
         const {data:trips,isLoading:isLoading_trips,error:error_trips} =  getTripQuery(role || roleStore.getRole())
         return {trips,isLoading_trips,error_trips}
@@ -12,10 +14,11 @@ export const useTrips = (tripId:Function) => {
 
     const getTripDetails = (id?: number) => {
         const {data:trip,isLoading:isLoading_trip,error:error_trip} =  getTripDetailsQuery(id ?? tripId())
-        return {trip,isLoading_trip,error_trip,}
+        return {trip,isLoading_trip,error_trip}
     }
 
     const deleteTrip = getMutationDelete({
+        getRole: () => getRole(),
         notifications,
         queryClient,
         successMessage: "Pomyślnie usunięto wycieczkę",
@@ -23,6 +26,7 @@ export const useTrips = (tripId:Function) => {
     })
 
     const createTrip = getMutationCreate({
+        getRole: () => getRole(),
         notifications,
         queryClient,
         successMessage: "Dodano wycieczkę",

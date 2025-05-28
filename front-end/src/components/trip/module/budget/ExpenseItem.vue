@@ -19,7 +19,8 @@ const { expense, isOwnerTrip } = defineProps<{
 const { icon, name: categoryName } = mapCategoryBudget(expense.category);
 const currencyValue =
   expense.currency != "PLN" ? `(${expense.converted_amount} PLN)` : "";
-const { getUser } = useAuthStore();
+const { userData } = useAuthStore();
+const { getUser } = userData;
 const hasPermissionToDelete = (userId: number) => {
   return isOwnerTrip || getUser()?.profiles?.some(p => p.id === userId);
 };

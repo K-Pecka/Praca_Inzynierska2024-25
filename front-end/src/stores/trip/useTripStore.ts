@@ -17,13 +17,13 @@ export const useTripStore = defineStore("trip", () => {
     updateTrip,
     updateTripBudget
   } = useTrips(getTripId);
-  const {createExpense, getExpenseByTrip,deleteExpense } =
+  const {createExpense, getExpenseByTrip,deleteExpense,setFilters,getFilters } =
     useBudget(getTripId);
   const { getPlans, yourPlans, planMutationAdd, handleDeleteItinerary } = usePlans(getTripId);
 
   const { addParticipant, removeParticipant } = useParticipants();
 
-  const { getTickets } = useTicketStore();
+  const { getTickets,createTicket } = useTicketStore();
   return {
     dashboard: {
       getDashboard,
@@ -32,7 +32,9 @@ export const useTripStore = defineStore("trip", () => {
     budget: {
       getExpensByTrip: getExpenseByTrip,
       deleteExpense,
-      createExpense
+      createExpense,
+      setFilters,
+      getFilters
     },
     trip:{
       getTrips,
@@ -44,6 +46,10 @@ export const useTripStore = defineStore("trip", () => {
     },
     plan:{
       handleDeleteItinerary
+    },
+    ticket:{
+      getTickets,
+      createTicket
     },
     yourPlans,
     getPlans,

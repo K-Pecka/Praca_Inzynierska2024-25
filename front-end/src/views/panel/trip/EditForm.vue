@@ -50,7 +50,6 @@ watch(
         };
       }
     }
-    console.log("trip", formValues.value);
   },
   { immediate: true }
 );

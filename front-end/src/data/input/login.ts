@@ -11,7 +11,7 @@ export const loginInput = (errorMessage: Record<string, string>) => [
     label: "Podaj Email:",
     type: InputType.EMAIL,
     placeholder: "Wprowadź email",
-    validation: getValidator(errorMessage),
+    validation: getValidator(errorMessage).email(),
     error: [],
   },
   {

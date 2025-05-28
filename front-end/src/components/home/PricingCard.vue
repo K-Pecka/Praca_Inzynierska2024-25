@@ -1,8 +1,21 @@
 <script setup lang="ts">
 import AppButton from "@/components/AppButton.vue";
 import { PricingCard } from "@/types/interface";
+import { PricingPlanType } from "@/types/types";
 
-defineProps<PricingCard>();
+const props = defineProps<PricingCard>();
+const paymentPlanIds: Record<PricingPlanType, string> = {
+  tourist: "price_1RRymmB3a037ikFEaqDq2J8N",
+  premium: "price_1RQV0aB3a037ikFEAEbdKvqx",
+  guide: "price_1RQwW7B3a037ikFEidRPP1SS"
+};
+const emit = defineEmits<{
+  (e: 'plan-selected', planId: string): void;
+}>();
+
+const handleSelectPlan = () => {
+  emit('plan-selected', paymentPlanIds[props.type as PricingPlanType]);
+};
 </script>
 
 <template>
@@ -35,7 +48,7 @@ defineProps<PricingCard>();
 
     <AppButton
         :color="buttonVariant"
-        class="border-none"
+        :onClick="handleSelectPlan"
         max-width="150px"
         text="Wybierz"
     />

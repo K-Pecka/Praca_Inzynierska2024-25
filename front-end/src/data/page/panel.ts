@@ -23,10 +23,7 @@ export const getTouristNav = () => [
   {
     title: 'Budżet',
     icon: 'mdi-currency-usd',
-    children: [
-      {title: 'Pokaż', page: {name: 'ExpenseTracker'}},
-      {title: 'Zmień budżet', page: {name: 'editBudget'}},
-    ]
+    page: {name: 'ExpenseTracker'},
   },
   {
     title: 'Uczestnicy',
@@ -72,12 +69,7 @@ export const getGudieNav = () => [
         title: "Pokaż",
         name: "budgetShow",
         page: { name: "ExpenseTracker" },
-      },
-      {
-        title: "Zmień budżet",
-        name: "budgetChange",
-        page: { name: "budget" },
-      },
+      }
     ],
   },
   {

@@ -20,7 +20,7 @@ const tripRoutes = {
             component: roleSelection
         },
         {
-            path: "trip/create",
+            path: "/:role/trip/create",
             name: "createTrip",
             component: TripForm
         },

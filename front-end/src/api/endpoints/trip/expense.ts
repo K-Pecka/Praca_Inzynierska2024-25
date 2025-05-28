@@ -1,11 +1,16 @@
+import { useTripStore } from "@/stores";
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
 import { Expense } from "@/types/interface";
-import {MutationFunction} from "@tanstack/vue-query";
 
-export const fetchExpenses = async (queryKey: [string, number]) => {
-  const [, id] = queryKey;
-  const param = { tripId: String(id) };
-  const url = setParam(apiEndpoints.expense.all, param);
+export const fetchExpenses = async (param: Record<string, string>, filters?: Record<string, string>) => {
+  const {budget} = useTripStore()
+  const params = new URLSearchParams();
+
+  Object.entries(budget.getFilters() ?? {}).forEach(([key, value]) => {
+    if (value) params.append(key, String(value));
+  });
+
+  const url = `${setParam(apiEndpoints.expense.all,param)}?${params.toString()}`;
 
   const { data, error } = await fetchData<Expense[]>(url, "GET");
 
@@ -15,12 +20,13 @@ export const fetchExpenses = async (queryKey: [string, number]) => {
 
   return data;
 };
+
 export const fetchExpenseCreate = async (newExpense: Expense, param: Record<string, string> = {}) => {
   const url = setParam(apiEndpoints.expense.create, {tripId:String(newExpense.trip)});
   
   const { data, error } = await fetchData(url, "POST", newExpense);
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
   return {tripId:String(newExpense.trip)};

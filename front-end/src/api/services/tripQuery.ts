@@ -1,97 +1,115 @@
-import { useMutation, useQuery} from "@tanstack/vue-query"
+import { useMutation, useQuery } from "@tanstack/vue-query";
 import type { Budget, Trip } from "@/types";
-import {fetchTrips, fetchTrip, deleteTrip, createTrip, updateTrip, saveBudget} from "@api";
+import {
+  fetchTrips,
+  fetchTrip,
+  deleteTrip,
+  createTrip,
+  updateTrip,
+  saveBudget,
+} from "@api";
 import { fetchUserRole } from "@/api/endpoints/auth";
 import router from "@/router";
 import { useQueryClient } from "@tanstack/vue-query";
 import { useRoleStore } from "@/stores/auth/useRoleStore";
-
+import { useAuthStore } from "@/stores";
+import { getRandomValues } from "crypto";
 export const getTripQuery = (role: string) => {
   return useQuery<Trip[], Error, Trip[]>({
-    queryKey: ['trips', role],
+    queryKey: ["trips", role],
     queryFn: async () => {
-        const queryClient = useQueryClient();
-        console.log("Fetching trips for role:", ['trips', role]);
+      const queryClient = useQueryClient();
       const roleStore = useRoleStore();
-      const cached = queryClient.getQueryData(['trips', role]);
-
+      const authStore = useAuthStore();
+      const cached = queryClient.getQueryData(["trips", role]);
       if (!cached) {
-        await fetchUserRole(role);
+        let profile = await fetchUserRole(role);
+        authStore.setActiveProfile(profile.id);
         roleStore.setRole(role);
       }
 
       return fetchTrips();
     },
     staleTime: 1000 * 60,
-    gcTime: 1000 * 60 * 30
+    gcTime: 1000 * 60 * 30,
   });
 };
 export const getTripDetailsQuery = (id: number) => {
-    return useQuery<Trip, Error, Trip, [string, number]>({
-        queryKey: ["trip", id],
-        queryFn: fetchTrip,
-        enabled: !!id,
-        staleTime: 1000 * 60,
-        gcTime: 1000 * 60 * 30
-    })
-}
-export const getMutationCreate = (option: Record<string,any>) => useMutation({
+  return useQuery<Trip, Error, Trip, [string, number]>({
+    queryKey: ["trip", id],
+    queryFn: fetchTrip,
+    enabled: !!id,
+    staleTime: 1000 * 60,
+    gcTime: 1000 * 60 * 30,
+  });
+};
+export const getMutationCreate = (option: Record<string, any>) =>
+  useMutation({
     mutationFn: createTrip,
     onSuccess: () => {
-        router.back();
-        option.notifications.setSuccessCurrentMessage(option.successMessage);
-        option.queryClient.invalidateQueries({queryKey: ["trips"]});
+      router.back();
+      option.notifications.setSuccessCurrentMessage(option.successMessage);
+      option.queryClient.invalidateQueries({
+        queryKey: ["trips", String(option.getRole())],
+      });
     },
     onError: (err: any) => {
-        option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);
+      option.notifications.setErrorCurrentMessage(
+        err?.["non_field_errors"][0] || option.errorMessage
+      );
     },
-});
-export const getMutationDelete = (option: Record<string,any>) => useMutation({
+  });
+export const getMutationDelete = (option: Record<string, any>) =>
+  useMutation({
     mutationFn: deleteTrip,
-    onSuccess: () => {
-        option.notifications.setSuccessCurrentMessage(option.successMessage);
-        option.queryClient.invalidateQueries({queryKey: ["trips"]});
+    onSuccess: ({tripId}) => {
+      option.notifications.setSuccessCurrentMessage(option.successMessage);
+      option.queryClient.setQueryData(['trips', String(option.getRole())], (oldTrips: Trip[] | undefined) => {
+      if (!oldTrips) return [];
+      return oldTrips.filter(trip => trip.id !== Number(tripId));
+    });
     },
     onError: (err) => {
-        option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);
+      option.notifications.setErrorCurrentMessage(
+        err?.message || option.errorMessage
+      );
     },
-});
-export const getMutationUpdate = (option: Record<string,any>)=>useMutation({
-    mutationFn: ({tripId, newData}: { tripId: string; newData: any }) =>
-        updateTrip({tripId}, newData),
-    onSuccess: ({tripId}) => {
-        option.notifications.setSuccessCurrentMessage(option.successMessage);
-        option.queryClient.invalidateQueries({queryKey: ["trip",Number(tripId)]});
-        router.push({name: "tripDashboard"});
-    },
-    onError: (err: any) => {
-        option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);
-    },
-});
-export const getMutationUpdateBudget = (option: Record<string,any>)=>useMutation({
-    mutationFn: ({newBudget, param}: { newBudget: Budget; param: Record<string,string> }) =>
-        saveBudget(newBudget, param),
-    onSuccess: ({tripId}) => {
-    onSuccess: ({tripId}) => {
-        option.notifications.setSuccessCurrentMessage(option.successMessage);
-        option.queryClient.invalidateQueries({queryKey: ["trip",Number(tripId)]});
-        router.push({name: "tripDashboard"});
+  });
+export const getMutationUpdate = (option: Record<string, any>) =>
+  useMutation({
+    mutationFn: ({ tripId, newData }: { tripId: string; newData: any }) =>
+      updateTrip({ tripId }, newData),
+    onSuccess: ({ tripId }) => {
+      option.notifications.setSuccessCurrentMessage(option.successMessage);
+      option.queryClient.invalidateQueries({
+        queryKey: ["trip", Number(tripId)],
+      });
+      router.push({ name: "tripDashboard" });
     },
     onError: (err: any) => {
-        option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);
+      option.notifications.setErrorCurrentMessage(
+        err?.message || option.errorMessage
+      );
     },
-});
-export const getMutationUpdateBudget = (option: Record<string,any>)=>useMutation({
-    mutationFn: ({newBudget, param}: { newBudget: Budget; param: Record<string,string> }) =>
-        saveBudget(newBudget, param),
-    onSuccess: ({tripId}) => {
-        option.notifications.setSuccessCurrentMessage(option.successMessage);
-        option.queryClient.invalidateQueries({queryKey: ["trip",Number(tripId)]});
-        router.push({name: "tripDashboard"});
-        option.queryClient.invalidateQueries({queryKey: ["trip",Number(tripId)]});
-        router.push({name: "tripDashboard"});
+  });
+export const getMutationUpdateBudget = (option: Record<string, any>) =>
+  useMutation({
+    mutationFn: ({
+      newBudget,
+      param,
+    }: {
+      newBudget: Budget;
+      param: Record<string, string>;
+    }) => saveBudget(newBudget, param),
+    onSuccess: ({ tripId }) => {
+      option.notifications.setSuccessCurrentMessage(option.successMessage);
+      option.queryClient.invalidateQueries({
+        queryKey: ["trip", Number(tripId)],
+      });
     },
     onError: (err: any) => {
-        option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);
+      option.notifications.setErrorCurrentMessage(
+        err?.message || option.errorMessage
+      );
     },
-});
+  });

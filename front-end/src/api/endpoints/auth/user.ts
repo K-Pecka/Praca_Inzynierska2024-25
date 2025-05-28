@@ -1,5 +1,5 @@
 import { apiEndpoints, fetchData, setParam } from "@/api/apiEndpoints";
-import { User } from "@/types";
+import { User,Profile } from "@/types";
 
 export const fetchUserById = async (id: number) => {
   const url = setParam(apiEndpoints.user.getUserById, { userId: id.toString() });
@@ -12,7 +12,7 @@ export const fetchUserById = async (id: number) => {
 
   return data as User;
 };
-export const updateUser = async (dto: { first_name?: string; last_name?: string;  password?: string; password_confirm?: string }) => {
+export const updateUser = async (dto: { first_name?: string; last_name?: string; current_password?: string; password?: string;password_confirm?: string }) => {
 
   const { data, error } = await fetchData<User>(apiEndpoints.user.update, "PATCH",dto);
 
@@ -22,14 +22,27 @@ export const updateUser = async (dto: { first_name?: string; last_name?: string;
 
   return data as User;
 };
-export const fetchUserRole = async (role: string) => {
+export const fetchUserRole = async (role: string): Promise<Profile> => {
   const url = setParam(apiEndpoints.user.role, { role });
-  console.log("Fetching user role:", url);
-  const { data, error } = await fetchData<User>(url, "PATCH");
+  const { data, error } = await fetchData<Profile>(url, "PATCH");
 
   if (error) {
     throw new Error(error);
   }
 
-  return data as User;
+  return data as Profile;
+};
+
+export const fetchPaymentUrl = async (priceId: string) => {
+  const { data, error } = await fetchData(
+    apiEndpoints.pay,
+    "POST",
+    { price_id: priceId }
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  return data as { checkout_url: string};
 };

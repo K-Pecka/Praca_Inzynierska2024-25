@@ -3,16 +3,22 @@
   import { usePanelStore} from "@/stores/panel/usePanelStore";
   import { useAuthStore } from "@/stores";
   import { onMounted } from 'vue';
-
+  
   const panelStore = usePanelStore();
   const authStore = useAuthStore();
-
+  const {hamburgerIcon} = defineProps({
+    hamburgerIcon: {
+      type: Boolean,
+      default: true,
+    },
+  });
+  import { useDisplay } from 'vuetify'
+  const display = useDisplay()
   const userInitials = authStore.getUserInitials();
 
   const emit = defineEmits(['toggle-drawer'])
-
   onMounted(() => {
-    emit('toggle-drawer')
+    emit('toggle-drawer',!display.mdAndDown.value)
   })
 </script>
 
@@ -28,7 +34,7 @@
       <!-- Nav -->
       <template v-slot:append>
         <v-app-bar-nav-icon
-            v-if="$vuetify.display.mdAndDown"
+            v-if="$vuetify.display.mdAndDown && hamburgerIcon"
             @click="emit('toggle-drawer')"
         />
         <v-menu v-else>

@@ -5,7 +5,7 @@ import AppButton from "@/components/AppButton.vue";
 import Loader from "@/components/common/AppLoader.vue"
 import {images} from "@/data";
 import {Trip} from "@/types";
-
+import { useRoute } from "vue-router";
 const {confirmAndRun} = useSafeDelete();
 const tripStore = useTripStore();
 tripStore.initialize();
@@ -27,27 +27,22 @@ const handleDelete = (tripId: string) => {
     wordToConfirm: "USUŃ"
   });
 };
+const route = useRoute();
+import { HeaderSection } from "@/components";
 </script>
 
 <template>
   <v-col cols="12" sm="10" md="10" lg="10" xl="10">
-
+    <HeaderSection
+        title="Zarządzaj wycieczkami"
+        subtitle="Przeglądaj i zarządzaj swoimi wycieczkami"
+        :button="true"
+        buttonText="Dodaj wycieczkę"
+        btnGoBack
+        :buttonAction="() => $router.push({ name: 'createTrip', params:{role:route.params.role} })"
+        :goBackAction="() => $router.push({ name: 'roleSelection' })"
+      />
     <!-- Header with button -->
-    <v-row
-        no-gutters
-        class="justify-space-between align-center mb-10"
-    >
-        <span class="text-h4 pb-4 font-weight-bold">
-          Zarządzaj wycieczkami
-        </span>
-      <router-link :to="{ name: 'createTrip' }">
-
-        <AppButton
-            color="empty"
-            text="Dodaj wycieczkę"
-        />
-      </router-link>
-    </v-row>
     <v-row v-if="isLoading_trips">
       <Loader text="Ładowanie danych..."/>
     </v-row>

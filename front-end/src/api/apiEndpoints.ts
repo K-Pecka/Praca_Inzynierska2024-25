@@ -15,7 +15,7 @@ export const fetchData = async <T = unknown>(
     return { data: response.data };
   } catch (error: any) {
     return {
-      error: error.response?.data?.message || error.message || 'Wystąpił błąd',
+      error: error.response.data || 'Wystąpił błąd',
     };
   }
 };
@@ -38,6 +38,7 @@ export const apiEndpoints = {
     getUserById: `/user/user/by-profile/:userId/`,
     role: `/user/profile/:role/change-default/`,
   },
+  pay: `/payment/create-checkout-session/`,
   auth: {
     login: `/user_auth/login/`,
     register: `/user/create/`,

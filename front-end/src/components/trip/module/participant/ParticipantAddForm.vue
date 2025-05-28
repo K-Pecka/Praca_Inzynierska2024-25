@@ -31,7 +31,11 @@ function handleCancel() {
 </script>
 
 <template>
-  <v-dialog v-model="props.dialog" max-width="800">
+  <v-dialog
+    :model-value="props.dialog"
+    @update:model-value="(val) => emit('update:dialog', val)"
+    max-width="800"
+  >
     <v-card class="pa-2">
       <v-card-title class="text-h6">{{
         props.title ?? "Dodaj uczestnika"

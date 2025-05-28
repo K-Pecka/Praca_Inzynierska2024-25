@@ -1,31 +1,61 @@
 <script lang="ts" setup>
-import { ref } from "vue";
-import {Section, Form, HeaderSection} from "@/components";
-import { Input,Register } from "@/types/interface";
+import { ref, onMounted } from "vue";
+import { Section, Form, HeaderSection } from "@/components";
+import TermsDialog from "@/components/dialog/TermsDialog.vue";
+import { Register } from "@/types/interface";
 import { FormType } from "@/types/enum";
-import { useAuthStore,useFormStore,usePageHomeStore } from "@/stores";
-
+import { useAuthStore, useFormStore, usePageHomeStore } from "@/stores";
 const { getSectionTitle } = usePageHomeStore();
 const { registerMutation } = useAuthStore();
-const { getFormInputs, isFormValid } = useFormStore();
+const { initForm, sendForm, isFormValid } = useFormStore();
 
 const sectionTitle = getSectionTitle(FormType.REGISTER);
-const inputs = ref<Input[]>(getFormInputs(FormType.REGISTER));
-const formValues = ref<Record<string, string>>(
-  Object.fromEntries(
-    inputs.value.map((input: { name: string }) => [input.name, ""])
-  )
-);
+const init = initForm(FormType.REGISTER);
+const inputs = ref(init.inputs);
+const formValues = ref(init.values);
 
-const handleSubmit = async (_: any, config: any) => {
-  if (config?.send && isFormValid(FormType.REGISTER, formValues.value)) {
-    const { pass_2, ...registrationData } = formValues.value;
-    try {
-      await registerMutation.mutateAsync(registrationData as unknown as Register);
-    } catch (error) {
-      
+const showTermsDialog = ref(false);
+const afterAcceptCallback = ref<null | (() => void)>(null);
+
+const TERMS_KEY = "hasAcceptedTerms";
+
+const hasAcceptedTerms = ref(false);
+
+onMounted(() => {
+  hasAcceptedTerms.value = localStorage.getItem(TERMS_KEY) === "true";
+});
+
+const acceptRegulation = (
+  fn: () => void,
+  config: { validFn: typeof isFormValid }
+) => {
+  const isValid = config.validFn(FormType.REGISTER, formValues.value);
+  if (!isValid) return;
+
+  if (hasAcceptedTerms.value) {
+    fn();
+  } else {
+    afterAcceptCallback.value = fn;
+    showTermsDialog.value = true;
+  }
+};
+
+const handleSubmit = async () => {
+  await sendForm({
+    data: formValues.value,
+    send: async (data) => {
+      const { pass_2, ...registrationData } = data;
+      await registerMutation.mutateAsync(registrationData as Register);
     }
-    formValues.value={};
+  });
+};
+
+const onAcceptTerms = () => {
+  hasAcceptedTerms.value = true;
+  localStorage.setItem(TERMS_KEY, "true");
+  if (afterAcceptCallback.value) {
+    afterAcceptCallback.value();
+    afterAcceptCallback.value = null;
   }
 };
 </script>
@@ -35,67 +65,24 @@ const handleSubmit = async (_: any, config: any) => {
     <template #title>
       <HeaderSection no-sub-title :title-gradient-text="sectionTitle" center />
     </template>
+
     <template #content>
       <Form
         :submitButtonLabel="sectionTitle"
         :inputs="inputs"
         :formValues="formValues"
-        @submitForm="handleSubmit"
+        @submitForm="() =>
+          acceptRegulation(handleSubmit, { validFn: isFormValid })"
       />
     </template>
+    
   </Section>
+  <TermsDialog
+    v-model="showTermsDialog"
+    title="Regulamin rejestracji"
+    acceptButtonText="Akceptuję regulamin"
+    :showCloseButton="true"
+    @accepted="onAcceptTerms"
+    @cancel="showTermsDialog = false"
+  />
 </template>
-
-
-
-<style scoped lang="scss">
-h1 {
-  font-size: 2rem;
-}
-.container {
-  width: 50%;
-  margin: auto;
-}
-.form-container {
-  width: 100%;
-  background-color: rgb(var(--v-theme-secondary), 0.9);
-  margin: auto;
-  padding: 0.25rem;
-  margin-bottom: 1rem;
-  border-radius: 0.5rem;
-}
-.extraOption a {
-  color: rgb(var(--v-theme-text));
-}
-.extraOption div {
-  margin: 2rem auto;
-}
-.wrapper {
-  padding: 2rem;
-}
-button {
-  background-color: rgb(var(--v-theme-primary));
-  color: rgb(var(--v-theme-secondary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin: auto;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  border: none;
-  padding: 1rem;
-  cursor: pointer;
-}
-.more-action {
-  img {
-    width: 1.5rem;
-    height: 1.5rem;
-    padding: 0.25rem;
-  }
-}
-.error-message {
-  color: red;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-}
-</style>

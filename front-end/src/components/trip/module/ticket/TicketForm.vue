@@ -35,15 +35,6 @@ function submitTicket() {
   };
 
   emit("submitTicket", payload);
-
-  form.value = {
-    type: ticketCategory[0].value,
-    name: "",
-    date: null,
-    time: "",
-    assignedTo: null,
-    file: null,
-  };
 }
 
 const timeMenu = ref(false);
