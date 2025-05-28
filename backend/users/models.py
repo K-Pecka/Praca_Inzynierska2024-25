@@ -34,6 +34,30 @@ class CustomUser(AbstractBaseUser, BaseModel):
         verbose_name=_("Nazwisko"),
         help_text=_("Nazwisko użytkownika")
     )
+    subscription_active = models.BooleanField(
+        default=False,
+        verbose_name=_("Czy aktywna subskrypcja"),
+        help_text=_("Czy użytkownik ma aktywną subskrypcję")
+    )
+    subscription_plan = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        choices=[
+            ("basic", _("Podstawowy")),
+            ("tourist", _("Turysta")),
+            ("guide", _("Przewodnik")),
+        ],
+        verbose_name=_("Plan subskrypcyjny"),
+        help_text=_("Plan subskrypcyjny użytkownika")
+    )
+    stripe_subscription_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name=_("ID subskrypcji Stripe"),
+        help_text=_("ID subskrypcji Stripe użytkownika")
+    )
     is_guest = models.BooleanField(
         default=False,
         verbose_name=_("Czy gość"),

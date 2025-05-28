@@ -6,11 +6,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from users.models import UserProfile
+from users.models import UserProfile, CustomUser
 from .models import Order
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
+from datetime import datetime, timezone
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -90,6 +91,8 @@ class StripeWebhookView(APIView):
             session = event['data']['object']
             session_id = session.get('id')
             subscription_id = session.get('subscription')
+            if not subscription_id:
+                return HttpResponse(status=200)
 
             try:
                 order = Order.objects.get(stripe_session_id=session_id)
@@ -97,20 +100,25 @@ class StripeWebhookView(APIView):
                 order.save()
 
                 user = order.user
-                profile = user.get_default_profile()
+                subscription = stripe.Subscription.retrieve(subscription_id)
+                current_period_end = datetime.fromtimestamp(subscription['current_period_end'], tz=timezone.utc)
+
                 user.subscription_active = True
                 user.subscription_plan = order.subscription_type
                 user.stripe_subscription_id = subscription_id
-                profile.save()
+
+                user.subscription_ends_at = current_period_end
+                user.save()
+
             except Order.DoesNotExist:
                 print("Nie znaleziono zamówienia.")
 
         elif event['type'] == 'invoice.payment_failed':
             subscription = event['data']['object'].get('subscription')
             try:
-                profile = UserProfile.objects.get(stripe_subscription_id=subscription)
-                print(f"Payment failed for {profile.user.username}")
-            except UserProfile.DoesNotExist:
+                user = CustomUser.objects.get(stripe_subscription_id=subscription)
+                print(f"Payment failed for {user.username}")
+            except CustomUser.DoesNotExist:
                 print("Nie znaleziono profilu użytkownika")
 
         elif event['type'] == 'customer.subscription.deleted':
@@ -118,11 +126,12 @@ class StripeWebhookView(APIView):
             subscription_id = subscription.get('id')
 
             try:
-                profile = UserProfile.objects.get(stripe_subscription_id=subscription_id)
-                profile.subscription_active = False
-                profile.save()
+                user = CustomUser.objects.get(stripe_subscription_id=subscription_id)
+                user.subscription_active = False
+                user.subscription_ends_at = None
+                user.save()
                 print(f"Subscription {subscription_id} deactivated.")
-            except UserProfile.DoesNotExist:
+            except CustomUser.DoesNotExist:
                 print("Nie znaleziono subskrypcji.")
 
         return HttpResponse(status=200)

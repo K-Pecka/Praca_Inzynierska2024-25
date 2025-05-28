@@ -24,6 +24,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['is_guest'] = user.is_guest
         token['fullname'] = user.full_name
         token['email'] = user.email
+        token['subscription_active'] = user.subscription_active
+        token['subscription_plan'] = user.subscription_plan
 
         return token
 
@@ -43,5 +45,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['is_guest'] = self.user.is_guest
         data['fullname'] = self.user.full_name
         data['email'] = self.user.email
+        data['subscription_active'] = self.user.subscription_active
+        data['subscription_plan'] = self.user.subscription_plan
 
         return data
