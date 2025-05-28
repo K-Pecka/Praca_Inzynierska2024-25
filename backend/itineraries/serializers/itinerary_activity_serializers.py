@@ -32,8 +32,8 @@ class ItineraryActivityListSerializer(serializers.ModelSerializer):
     start_time = serializers.TimeField(read_only=True)
     duration = serializers.IntegerField(read_only=True)
     itinerary = serializers.PrimaryKeyRelatedField(read_only=True)
-    itinerary_for_today = serializers.IntegerField(source='itinerary_for_today', read_only=True)
-    itinerary_for_week = serializers.IntegerField(source='itinerary_for_week', read_only=True)
+    itinerary_for_today = serializers.IntegerField(read_only=True)
+    itinerary_for_week = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = ItineraryActivity
