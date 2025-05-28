@@ -104,8 +104,11 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         action = self.request.query_params.get('action', None)
 
         try:
-            profile_id = data.get('email', None)
-            profile = UserProfile.objects.filter(email=profile_id).first() if profile_id else None
+            email = data.get('email', None)
+            profile_id = data.get('profile_id', None)
+            profile = UserProfile.objects.filter(email=email).first()
+            if not profile:
+                profile = UserProfile.objects.filter(pk=profile_id).first()
 
             if action == 'invite':
                 if not IsTripCreatorOrTargetUser().is_creator_or_participant_for_post(view=self, profile=profile):
