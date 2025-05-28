@@ -2,6 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from dicts.models import BaseModel
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+from datetime import timedelta
 
 from trips.models import Trip, Ticket
 from itineraries.managers import ItineraryManager, ItineraryActivityManager
@@ -87,6 +89,17 @@ class ItineraryActivity(BaseModel):
     )
 
     objects = ItineraryActivityManager()
+
+    @property
+    def itinerary_for_today(self):
+        today = timezone.now().date()
+        return Itinerary.objects.filter(date=today).count()
+
+    @property
+    def itinerary_for_week(self):
+        today = timezone.now().date()
+        next_week = today + timedelta(days=7)
+        return Itinerary.objects.filter(date__range=(today, next_week)).count()
 
     class Meta:
         db_table = "itinerary_activities"
