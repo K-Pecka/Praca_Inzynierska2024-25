@@ -98,11 +98,11 @@ class StripeWebhookView(APIView):
 
         if event['type'] == 'invoice.paid':
             print('XDXDXD')
-            session = event['data']['object']
-            session_id = session.get('id')
             invoice = event['data']['object']
             print("== RAW INVOICE ==")
             print(json.dumps(invoice, indent=2))
+            session = event['data']['object']
+            session_id = session.get('id')
 
             try:
                 subscription_id = (
