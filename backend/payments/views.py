@@ -1,3 +1,5 @@
+import json
+
 import stripe
 from django.conf import settings
 from drf_spectacular.utils import extend_schema
@@ -90,7 +92,9 @@ class StripeWebhookView(APIView):
             return HttpResponse(status=400)
 
         print(f'event type: {event["type"]}')
-        print(f'event: {event}')
+        print("====== FULL STRIPE EVENT ======")
+        print(json.dumps(event, indent=2))
+        print("================================")
 
         if event['type'] == 'invoice.paid':
             print('XDXDXD')
