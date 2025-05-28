@@ -144,7 +144,12 @@ class StripeWebhookView(APIView):
                 if not current_period_end_ts:
                     print("❌ current_period_end nie istnieje – subskrypcja może być anulowana lub nieaktywna")
                     return HttpResponse(status=200)
-                current_period_end = datetime.fromtimestamp(subscription['current_period_end'], tz=timezone.utc)
+                try:
+                    current_period_end_ts = subscription["items"]["data"][0]["current_period_end"]
+                    current_period_end = datetime.fromtimestamp(current_period_end_ts, tz=timezone.utc)
+                except (KeyError, IndexError) as e:
+                    print(f"❌ Błąd przy pobieraniu current_period_end: {e}")
+                    return HttpResponse(status=200)
                 print('XD3')
                 user.subscription_active = True
                 user.subscription_plan = order.subscription_type
