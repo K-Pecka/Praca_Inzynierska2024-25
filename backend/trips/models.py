@@ -222,7 +222,8 @@ class Ticket(BaseModel):
         related_name="shared_tickets",
         verbose_name=_("Udostępnione profile"),
         help_text=_("Profile, które mają dostęp do biletu"),
-        blank=True
+        blank=True,
+        null=True
     )
 
     objects = TicketManager()
