@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from users.models import UserProfile, CustomUser
+from users.models import CustomUser
 from .models import Order
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
@@ -76,6 +76,7 @@ class StripeWebhookView(APIView):
     permission_classes = []
 
     def post(self, request):
+        print('##########################################################################')
         payload = request.body
         sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
         endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
@@ -95,18 +96,19 @@ class StripeWebhookView(APIView):
                 return HttpResponse(status=200)
 
             try:
+                print('XD1')
                 order = Order.objects.get(stripe_session_id=session_id)
                 order.is_paid = True
                 order.save()
-
+                print('XD2')
                 user = order.user
                 subscription = stripe.Subscription.retrieve(subscription_id)
                 current_period_end = datetime.fromtimestamp(subscription['current_period_end'], tz=timezone.utc)
-
+                print('XD3')
                 user.subscription_active = True
                 user.subscription_plan = order.subscription_type
                 user.stripe_subscription_id = subscription_id
-
+                print('XD4')
                 user.subscription_ends_at = current_period_end
                 user.save()
 
