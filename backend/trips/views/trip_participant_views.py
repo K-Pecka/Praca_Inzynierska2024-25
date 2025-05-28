@@ -14,7 +14,7 @@ from rest_framework.generics import UpdateAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from server.permissions import IsTripCreator
+from server.permissions import IsTripCreator, IsTripCreatorOrTargetUser
 from trips.models import Trip, TripAccessToken
 from trips.serializers.trip_participant_serializers import TripParticipantsUpdateSerializer
 from users.models import CustomUser, UserProfile
@@ -104,9 +104,16 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         action = self.request.query_params.get('action', None)
 
         try:
+            profile_id = data.get('profile_id', None)
+            profile = UserProfile.objects.filter(id=profile_id).first() if profile_id else None
+
             if action == 'invite':
+                if not IsTripCreatorOrTargetUser().is_creator_or_participant_for_post(view=self, profile=profile):
+                    raise PermissionDenied(IsTripCreatorOrTargetUser().message)
                 return self.handle_invite(trip, data)
-            elif action== 'remove':
+            elif action == 'remove':
+                if not IsTripCreator().is_creator_for_post_request(view=self, profile=profile):
+                    raise PermissionDenied(IsTripCreator().message)
                 return handle_remove(trip, data)
             return None
         except Exception as e:
