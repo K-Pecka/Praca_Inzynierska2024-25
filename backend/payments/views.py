@@ -97,16 +97,24 @@ class StripeWebhookView(APIView):
         print("================================")
 
         if event['type'] == 'invoice.paid':
-            print('XDXDXD')
-            session = event['data']['object']
-            session_id = session.get('id')
-            subscription_id = (
-                session.get('lines', {})
-                .get('data', [{}])[0]
-                .get('parent', {})
-                .get('subscription_item_details', {})
-                .get('subscription')
-            )
+            invoice = event['data']['object']
+            print("== RAW INVOICE ==")
+            print(json.dumps(invoice, indent=2))
+
+            try:
+                subscription_id = (
+                    invoice.get('lines', {})
+                    .get('data', [{}])[0]
+                    .get('parent', {})
+                    .get('subscription_item_details', {})
+                    .get('subscription')
+                )
+            except Exception as e:
+                print(f"❌ Błąd przy wyciąganiu subscription_id: {e}")
+                return HttpResponse(status=200)
+
+            print("Extracted subscription_id:", subscription_id)
+
             if not subscription_id:
                 print('❌ Brak subscription_id – przerywam')
                 return HttpResponse(status=200)
