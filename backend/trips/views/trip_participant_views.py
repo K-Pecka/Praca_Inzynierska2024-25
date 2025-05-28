@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.mail import send_mail
 from django.http.response import HttpResponseRedirect
 from django.template.loader import render_to_string
@@ -91,7 +91,7 @@ def send_invitation_email(email, trip, invitation_link):
 )
 class TripParticipantsUpdateAPIView(UpdateAPIView):
     serializer_class = TripParticipantsUpdateSerializer
-    permission_classes = [IsAuthenticated, IsTripCreator]
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         return Trip.objects.get(pk=self.kwargs['trip_pk'])
@@ -116,6 +116,9 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             )
 
     def handle_invite(self, trip, data):
+        if not IsTripCreator().has_object_permission(self.request, self, trip):
+            raise PermissionDenied("Tylko twórca może zapraszać użytkowników.")
+
         user = CustomUser.objects.filter(email=data['email']).first()
 
         if user == self.request.user:
