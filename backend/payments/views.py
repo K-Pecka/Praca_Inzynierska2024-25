@@ -78,6 +78,7 @@ class StripeWebhookView(APIView):
     def post(self, request):
         print('##########################################################################')
         payload = request.body
+        print('payload', payload.__dict__)
         sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
         endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
 
@@ -88,7 +89,10 @@ class StripeWebhookView(APIView):
         except stripe.error.SignatureVerificationError:
             return HttpResponse(status=400)
 
+        print(f'event type: {event["type"]}')
+
         if event['type'] == 'checkout.session.completed':
+            print('XDXDXD')
             session = event['data']['object']
             session_id = session.get('id')
             subscription_id = session.get('subscription')
@@ -116,6 +120,7 @@ class StripeWebhookView(APIView):
                 print("Nie znaleziono zamówienia.")
 
         elif event['type'] == 'invoice.payment_failed':
+            print('fdgdfgdfggdfg')
             subscription = event['data']['object'].get('subscription')
             try:
                 user = CustomUser.objects.get(stripe_subscription_id=subscription)
@@ -124,6 +129,7 @@ class StripeWebhookView(APIView):
                 print("Nie znaleziono profilu użytkownika")
 
         elif event['type'] == 'customer.subscription.deleted':
+            print('grfhfghfghfgh')
             subscription = event['data']['object']
             subscription_id = subscription.get('id')
 
