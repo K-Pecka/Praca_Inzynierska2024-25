@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from itineraries.serializers.itinerary_serializers import ItineraryCreateSerializer, ItineraryRetrieveSerializer, \
-    ItineraryUpdateSerializer, ItineraryDeleteSerializer
+    ItineraryUpdateSerializer, ItineraryDeleteSerializer, ItineraryListSerializer
 
 from itineraries.models import Itinerary
 from server.permissions import IsTripCreator, IsTripParticipant
