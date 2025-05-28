@@ -112,7 +112,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
                     raise PermissionDenied(IsTripCreatorOrTargetUser().message)
                 return self.handle_invite(trip, data)
             elif action == 'remove':
-                if not IsTripCreatorOrTargetUser().is_creator_or_participant_for_post(view=self, profile=profile):
+                if not IsTripCreatorOrTargetUser().is_creator_or_target_for_post(view=self, profile=profile):
                     raise PermissionDenied(IsTripCreator().message)
                 return handle_remove(trip, data)
             return None

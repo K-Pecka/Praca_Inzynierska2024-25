@@ -10,6 +10,8 @@ from rest_framework.permissions import BasePermission
 from chats.models import Chatroom, Message
 from trips.models import Trip, Ticket, Expense, TripAccessToken, DetailedExpense
 from itineraries.models import Itinerary, ItineraryActivity
+from users.models import UserProfile
+
 
 ##################################################################################
 # Chat permissions
@@ -320,7 +322,7 @@ class IsTripCreatorOrTargetUser(BasePermission):
         if not profile:
             return False
 
-        return self.is_creator_or_participant_for_post(view, profile)
+        return self.is_creator_or_target_for_post(view, profile)
 
     def has_object_permission(self, request, view, obj):
         profile = request.user.get_default_profile()
@@ -328,18 +330,23 @@ class IsTripCreatorOrTargetUser(BasePermission):
             return False
         return self.is_trip_creator_or_target(obj, profile)
 
-    def is_creator_or_participant_for_post(self, view, profile):
+    def is_creator_or_target_for_post(self, view, profile):
         """
         Checks if the user is the creator or a participant in the trip or related itinerary.
         """
         trip = self.get_trip_from_view(view)
-        if not trip:
-            raise NotFound(detail="Nie znaleziono wycieczki.")
 
-        if trip.creator == profile or profile in trip.members.all():
+        request = view.request if hasattr(view, 'request') else None
+        data = request.data
+
+        profile_id = data.get('profile_id') or data.get('profile')
+
+        target_profile = UserProfile.objects.filter(pk=profile_id).first()
+
+        if trip.creator == profile or profile == target_profile:
             return True
 
-        raise PermissionDenied(self.message)
+        return False
 
     def is_trip_creator_or_target(self, obj, profile):
         """
@@ -348,16 +355,18 @@ class IsTripCreatorOrTargetUser(BasePermission):
         trip = self.extract_trip_from_obj(obj)
 
         request = getattr(self, 'request', None)
-        target_profile = profile
-        user_profile = request.user.get_default_profile()
+        data = request.data
 
-        if target_profile == user_profile:
+        profile_id = data.get('profile_id') or data.get('profile')
+        target_profile = UserProfile.objects.filter(pk=profile_id).first()
+
+        if profile == trip.creator or profile == target_profile:
             return True
 
         if not trip:
             return False
 
-        return trip.creator == profile or profile in trip.members.all()
+        return False
 
     def get_trip_from_view(self, view):
         """
