@@ -223,7 +223,7 @@ class IsTripCreator(BasePermission):
                 trip = itinerary.trip
 
         if not trip:
-            raise NotFound(detail="Nie znaleziono wycieczki.")
+            raise PermissionDenied(detail="Nie znaleziono wycieczki.")
 
         if trip.creator != profile:
             raise PermissionDenied(self.message)
@@ -335,13 +335,6 @@ class IsTripCreatorOrTargetUser(BasePermission):
         trip = self.get_trip_from_view(view)
         if not trip:
             raise NotFound(detail="Nie znaleziono wycieczki.")
-
-        request = getattr(self, 'request', None)
-        target_profile = profile
-        user_profile = request.user.get_default_profile()
-
-        if target_profile == user_profile:
-            return True
 
         if trip.creator == profile or profile in trip.members.all():
             return True
