@@ -97,6 +97,9 @@ class StripeWebhookView(APIView):
         print("================================")
 
         if event['type'] == 'invoice.paid':
+            print('XDXDXD')
+            session = event['data']['object']
+            session_id = session.get('id')
             invoice = event['data']['object']
             print("== RAW INVOICE ==")
             print(json.dumps(invoice, indent=2))
@@ -118,7 +121,6 @@ class StripeWebhookView(APIView):
             if not subscription_id:
                 print('❌ Brak subscription_id – przerywam')
                 return HttpResponse(status=200)
-
             try:
                 print('XD1')
                 order = Order.objects.get(stripe_session_id=session_id)
