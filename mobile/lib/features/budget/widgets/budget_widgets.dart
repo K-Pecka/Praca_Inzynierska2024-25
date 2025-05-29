@@ -130,7 +130,6 @@ class BudgetActionsRow extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             onPressed: onFilter,
-            icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
             label: const Text('Filtruj', style: TextStyles.whiteSubtitle),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,

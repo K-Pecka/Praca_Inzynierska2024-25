@@ -122,7 +122,7 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
               const SizedBox(height: 16),
               _loadingActivities
                   ? const Center(child: CircularProgressIndicator())
-                  : ActivitiesList(activities: filteredActivities, tripId: widget.trip.id),
+                  : ActivitiesList(activities: filteredActivities, trip: widget.trip),
             ],
           );
         },

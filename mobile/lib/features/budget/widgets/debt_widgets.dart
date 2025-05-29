@@ -113,7 +113,6 @@ class DebtActionsRow extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             onPressed: onFilter,
-            icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
             label: const Text('Filtruj', style: TextStyles.whiteSubtitle),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
@@ -235,25 +234,36 @@ class _DebtFormState extends State<DebtForm> {
             ),
             const SizedBox(height: 16),
             MultiSelectDialogField<Member>(
-              items: _allMembers.map((m) {
-                final name = '${m.firstName ?? ''} ${m.lastName ?? ''}'.trim();
-                return MultiSelectItem<Member>(m, name);
-              }).toList(),
+              dialogWidth: 300,
+              dialogHeight: 400,
+              items: [
+                MultiSelectItem<Member>(
+                  Member(id: -1, firstName: 'Wszyscy', lastName: '', email: ''),
+                  'Wszyscy',
+                ),
+                ..._allMembers.map((m) {
+                  final name = '${m.firstName ?? ''} ${m.lastName ?? ''}'.trim();
+                  return MultiSelectItem<Member>(m, name);
+                })
+              ],
               title: const Text("Uczestnicy"),
               buttonText: const Text("Wybierz uczestników"),
               buttonIcon: const Icon(Icons.person_add),
-              cancelText: const Text("Anuluj", style: TextStyles.subtitle,),
-              confirmText: const Text("OK", style: TextStyles.subtitle,),
+              cancelText: const Text("Anuluj", style: TextStyles.subtitle),
+              confirmText: const Text("OK", style: TextStyles.subtitle),
               searchable: true,
               listType: MultiSelectListType.LIST,
-              chipDisplay: MultiSelectChipDisplay(
-                chipColor: AppColors.primary,
-                textStyle: const TextStyle(color: Colors.white),
-                onTap: (value) {
-                  setState(() => _selectedMembers.remove(value));
-                },
-              ),
-              onConfirm: (values) => setState(() => _selectedMembers = values),
+              chipDisplay: MultiSelectChipDisplay.none(),
+              onConfirm: (values) {
+                final isSelectAll = values.any((m) => m.id == -1);
+                setState(() {
+                  if (isSelectAll) {
+                    _selectedMembers = List.from(_allMembers);
+                  } else {
+                    _selectedMembers = values.where((m) => m.id != -1).toList();
+                  }
+                });
+              },
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black38, width: 1.2),
                 borderRadius: BorderRadius.circular(16),

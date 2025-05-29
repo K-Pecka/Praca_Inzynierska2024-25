@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../core/models/trip_model.dart';
 import '../../../core/services/ticket_service.dart';
 import '../../../core/theme/themes.dart';
 import '../../tickets/screens/ticket_preview_screen.dart';
@@ -131,12 +132,12 @@ class _DaySelectorState extends State<DaySelector> {
 
 class ActivitiesList extends StatelessWidget {
   final List<ActivityModel> activities;
-  final int tripId;
+  final TripModel trip;
 
   const ActivitiesList({
     super.key,
     required this.activities,
-    required this.tripId,
+    required this.trip,
   });
 
   Widget _getActivityIcon(int type) {
@@ -168,7 +169,12 @@ class ActivitiesList extends StatelessWidget {
       itemBuilder: (context, index) {
         final a = activities[index];
         return InkWell(
-          onTap: () => showActivityDetailsModal(context, a, tripId),
+          onTap: () => showActivityDetailsModal(
+            context,
+            a,
+            trip.id,
+            isCreator: trip.isCreator,
+          ),
           child: Container(
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(16),
@@ -278,149 +284,131 @@ class PlanDropdownCard extends StatelessWidget {
 }
 
 void showActivityDetailsModal(
-  BuildContext context,
-  ActivityModel activity,
-  int tripId,
-) {
+    BuildContext context,
+    ActivityModel activity,
+    int tripId, {
+      required bool isCreator,
+    }) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
-    builder:
-        (_) => Padding(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.subtitleText,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
+    builder: (_) => Padding(
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.subtitleText,
+                borderRadius: BorderRadius.circular(2),
               ),
-              const SizedBox(height: 16),
-              Text(
-                "Tytuł: ${activity.name}",
-                style: TextStyles.cardTitleHeading,
-              ),
-              const SizedBox(height: 8),
-              Text("Opis: ${activity.description}", style: TextStyles.subtitle),
-              const SizedBox(height: 8),
-              Text(
-                "Data: ${DateFormat('d MMMM y', 'pl_PL').format(activity.date)}",
-                style: TextStyles.subtitle,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "Godzina: ${activity.startTime}",
-                style: TextStyles.subtitle,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "Lokalizacja: ${activity.location}",
-                style: TextStyles.subtitle,
-              ),
-              const SizedBox(height: 24),
-              if (activity.ticket != null)
-                Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () async {
-                      try {
-                        final tickets = await TicketService.getTicketsByTrip(
-                          tripId,
-                        );
-                        final ticket = tickets.firstWhere(
-                          (t) => t.id == activity.ticket,
-                        );
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (_) =>
-                                    TicketPreviewScreen(imageUrl: ticket.file),
-                          ),
-                        );
-                      } catch (e) {
-                        handleError(
-                          context,
-                          e,
-                          userMessage: 'Nie udało się pobrać biletu.',
-                        );
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.airplane_ticket,
-                      color: AppColors.cardsBackground,
-                    ),
-                    label: const Text("Bilet", style: TextStyles.whiteSubtitle),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
-              const SizedBox(height: 8),
-              if (activity.location.isNotEmpty)
-                Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () async {
-                      final location = activity.location.trim();
-
-                      final encoded = Uri.encodeComponent(location);
-                      final geoUri = Uri.parse('geo:0,0?q=$encoded');
-
-                      try {
-                        await launchUrl(
-                          geoUri,
-                          mode: LaunchMode.externalApplication,
-                        );
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Nie udało się otworzyć lokalizacji w Mapach Google.\nUpewnij się, że aplikacja Google Maps jest zainstalowana i obsługuje linki.',
-                            ),
-                            backgroundColor: Colors.redAccent,
-                          ),
-                        );
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.location_on,
-                      color: AppColors.cardsBackground,
-                    ),
-                    label: const Text(
-                      "Lokalizacja",
-                      style: TextStyles.whiteSubtitle,
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
+            ),
           ),
-        ),
+          const SizedBox(height: 16),
+          Text("Tytuł: ${activity.name}", style: TextStyles.cardTitleHeading),
+          const SizedBox(height: 8),
+          Text("Opis: ${activity.description}", style: TextStyles.subtitle),
+          const SizedBox(height: 8),
+          Text(
+            "Data: ${DateFormat('d MMMM y', 'pl_PL').format(activity.date)}",
+            style: TextStyles.subtitle,
+          ),
+          const SizedBox(height: 8),
+          Text("Godzina: ${activity.startTime}", style: TextStyles.subtitle),
+          const SizedBox(height: 8),
+          Text("Lokalizacja: ${activity.location}", style: TextStyles.subtitle),
+          const SizedBox(height: 24),
+
+          if (isCreator && activity.ticket != null)
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  try {
+                    final tickets = await TicketService.getTicketsByTrip(tripId);
+                    final ticket = tickets.firstWhere((t) => t.id == activity.ticket);
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TicketPreviewScreen(imageUrl: ticket.file),
+                      ),
+                    );
+                  } catch (e) {
+                    handleError(
+                      context,
+                      e,
+                      userMessage: 'Nie udało się pobrać biletu.',
+                    );
+                  }
+                },
+                icon: const Icon(
+                  Icons.airplane_ticket,
+                  color: AppColors.cardsBackground,
+                ),
+                label: const Text("Bilet", style: TextStyles.whiteSubtitle),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+
+          const SizedBox(height: 8),
+
+          if (activity.location.isNotEmpty)
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  final location = activity.location.trim();
+                  final encoded = Uri.encodeComponent(location);
+                  final geoUri = Uri.parse('geo:0,0?q=$encoded');
+
+                  try {
+                    await launchUrl(
+                      geoUri,
+                      mode: LaunchMode.externalApplication,
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Nie udało się otworzyć lokalizacji w Mapach Google.\nUpewnij się, że aplikacja Google Maps jest zainstalowana i obsługuje linki.',
+                        ),
+                        backgroundColor: Colors.redAccent,
+                      ),
+                    );
+                  }
+                },
+                icon: const Icon(
+                  Icons.location_on,
+                  color: AppColors.cardsBackground,
+                ),
+                label: const Text(
+                  "Lokalizacja",
+                  style: TextStyles.whiteSubtitle,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    ),
   );
 }
+
