@@ -473,6 +473,14 @@ class DetailedExpense(BaseModel):
             print("Conversion error:", e)
             return None
 
+    @classmethod
+    def get_user_whole_debt(cls, user):
+        """
+        Zwraca całkowity dług użytkownika we wszystkich szczegółowych wydatkach.
+        """
+        total_debt = cls.objects.filter(members=user).aggregate(total=models.Sum('amount_per_member_in_pln'))['total']
+        return total_debt if total_debt else Decimal('0.00')
+
 
     def calculate_shares(self):
         member_count = self.members.count()

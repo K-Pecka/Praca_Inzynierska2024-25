@@ -167,11 +167,17 @@ class DetailedExpenseRetrieveSerializer(serializers.ModelSerializer):
     members = UserProfileListSerializer(many=True, read_only=True)
     amount_per_member = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     amount_per_member_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    user_whole_debt = serializers.SerializerMethodField(read_only=True)
+
+    def get_user_whole_debt(self, obj):
+        request = self.context['request']
+        user_profile = request.user.get_default_profile()
+        return DetailedExpense.get_user_whole_debt(user_profile)
 
     class Meta:
         model = DetailedExpense
         fields = ['name', 'creator', 'amount', 'currency', 'amount_in_pln', 'members', 'amount_per_member',
-                  'amount_per_member_in_pln']
+                  'amount_per_member_in_pln', 'user_whole_debt']
 
 
 class DetailedExpenseListSerializer(serializers.ModelSerializer):
