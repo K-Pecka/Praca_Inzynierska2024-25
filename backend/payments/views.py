@@ -18,9 +18,9 @@ from datetime import datetime, timezone
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 SUBSCRIPTION_MAP = {
-    'price_1RRymmB3a037ikFEaqDq2J8N': 'Podstawowy',
-    'price_1RQV0aB3a037ikFEAEbdKvqx': 'Turysta',
-    'price_1RQwW7B3a037ikFEidRPP1SS': 'Przewodnik',
+    'price_1RRymmB3a037ikFEaqDq2J8N': 'basic',
+    'price_1RQV0aB3a037ikFEAEbdKvqx': 'tourist',
+    'price_1RQwW7B3a037ikFEidRPP1SS': 'guide',
     'price_1RSRkBB3a037ikFE3FNMd1ub': ':)',
 }
 
@@ -59,8 +59,6 @@ class CreateCheckoutSessionView(APIView):
                 cancel_url='https://plannder.com/payment/cancel',
             )
 
-            print(f'ssssssssssssssssssssssssssssss {session.id}')
-
             Order.objects.create(
                 user=user,
                 stripe_session_id=session.id,
@@ -80,9 +78,7 @@ class StripeWebhookView(APIView):
     permission_classes = []
 
     def post(self, request):
-        print('##########################################################################')
         payload = request.body
-        print('payload', payload)
         sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
         endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
 
@@ -101,7 +97,6 @@ class StripeWebhookView(APIView):
         if event['type'] == 'invoice.paid':
             invoice = event['data']['object']
             print("== RAW INVOICE ==")
-            print(f'invoiceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: {event}')
 
             subscription_id = (
                 invoice.get("lines", {})
@@ -132,7 +127,6 @@ class StripeWebhookView(APIView):
                 user = order.user
 
                 subscription = stripe.Subscription.retrieve(subscription_id)
-                print("📦 Subskrypcja z Stripe:", json.dumps(subscription, indent=2))
 
                 current_period_end_ts = subscription["items"]["data"][0]["current_period_end"]
                 if not current_period_end_ts:
@@ -152,7 +146,6 @@ class StripeWebhookView(APIView):
                 print(f"❌ Nie znaleziono zamówienia dla session_id={session_id}")
 
         elif event['type'] == 'invoice.payment_failed':
-            print('fdgdfgdfggdfg')
             subscription = event['data']['object'].get('subscription')
             try:
                 user = CustomUser.objects.get(stripe_subscription_id=subscription)
@@ -161,7 +154,6 @@ class StripeWebhookView(APIView):
                 print("Nie znaleziono profilu użytkownika")
 
         elif event['type'] == 'customer.subscription.deleted':
-            print('grfhfghfghfgh')
             subscription = event['data']['object']
             subscription_id = subscription.get('id')
 
