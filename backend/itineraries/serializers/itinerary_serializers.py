@@ -65,6 +65,12 @@ class ItineraryCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         view = self.context['view']
         trip = Trip.objects.get(pk=view.kwargs.get('trip_pk'))
+        if not trip:
+            raise serializers.ValidationError("Nie znaleziono wycieczki.")
+
+        if trip.itineraries.count() >= trip.get_itinerary_limit_for_user():
+            raise serializers.ValidationError("Osiągnięto limit wycieczek dla aktualnego planu.")
+
         validated_data['trip'] = trip
         return Itinerary.objects.create(**validated_data)
 

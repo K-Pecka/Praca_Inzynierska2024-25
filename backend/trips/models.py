@@ -113,13 +113,47 @@ class Trip(BaseModel):
             return True
         return False
 
+    def get_itinerary_limit_for_user(self):
+        """Zwraca maksymalną liczbę itineraries, które użytkownik może mieć"""
+        if self.creator.type.code == "free":
+            return 1
+        elif self.creator.type.code == "tourist":
+            return float('inf')
+        elif self.creator.type.code == "guide":
+            return float('inf')
+        return 0
+
+    def get_trip_limit_for_user(self):
+        """Zwraca maksymalną liczbę wycieczek, które użytkownik może mieć"""
+        if self.creator.type.code == "free":
+            return 3
+        elif self.creator.type.code == "tourist":
+            return float('inf')
+        elif self.creator.type.code == "guide":
+            return float('inf')
+        return 0
+
+    def get_members_limit_for_user(self):
+        """Zwraca maksymalną liczbę członków, których użytkownik może mieć w wycieczce"""
+        if self.creator.type.code == "free":
+            return 0
+        elif self.creator.type.code == "tourist":
+            return 5
+        elif self.creator.type.code == "guide":
+            return 30
+        return 0
+
     def clean(self):
         super().clean()
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
 
-        if self.pk and self.members.count() > 5:
-            raise ValidationError("Wycieczka może mieć maksymalnie 5 uczestników.")
+        if self.pk and self.members.count() > self.get_trip_limit_for_user():
+            raise ValidationError("Osiągnięto limit wycieczek dla tego użytkownika.")
+
+        if not self.pk:
+            if self.creator.trips_as_creator.count() >= self.get_trip_limit_for_user():
+                raise ValidationError("Osiągnięto limit wycieczek dla tego użytkownika.")
 
     def save(self, *args, **kwargs):
         self.clean()
