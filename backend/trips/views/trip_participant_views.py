@@ -131,7 +131,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         if user == self.request.user:
             raise ValidationError(_("Nie możesz zaprosić samego siebie"))
 
-        if trip.members.count() >= trip.get_members_limit_for_user():
+        if trip.members.count() >= trip.creator.user.get_members_limit():
             raise ValidationError(_("Osiągnięto limit uczestników w wycieczce dla tego użytkownika."))
 
         if not CustomUser.objects.filter(email=data['email']).exists():

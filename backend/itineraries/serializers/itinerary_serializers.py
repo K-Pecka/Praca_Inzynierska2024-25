@@ -68,7 +68,7 @@ class ItineraryCreateSerializer(serializers.ModelSerializer):
         if not trip:
             raise serializers.ValidationError("Nie znaleziono wycieczki.")
 
-        if trip.itineraries.count() >= trip.get_itinerary_limit_for_user():
+        if trip.itineraries.count() >= trip.creator.user.get_itinerary_limit():
             raise serializers.ValidationError("Osiągnięto limit wycieczek dla aktualnego planu.")
 
         validated_data['trip'] = trip

@@ -24,7 +24,7 @@ class TripCreateSerializer(serializers.ModelSerializer):
         request = self.context['request']
 
         if not request.user.is_guide:
-            if Trip.objects.filter(creator=request.user.get_default_profile()).count() > 2:
+            if Trip.objects.filter(creator=request.user.get_default_profile()).count() >= request.user.get_trip_limit():
                 raise serializers.ValidationError("Osiągnąłeś limit wycieczek dla swojego profilu.")
 
         if data.get("start_date") and data.get("end_date"):
@@ -102,7 +102,7 @@ class TripUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField()
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2)

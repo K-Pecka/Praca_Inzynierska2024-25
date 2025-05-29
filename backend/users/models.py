@@ -102,6 +102,36 @@ class CustomUser(AbstractBaseUser, BaseModel):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
+    def get_itinerary_limit(self):
+        """Zwraca maksymalną liczbę itineraries, które użytkownik może mieć"""
+        if self.subscription_plan == "free":
+            return 1
+        elif self.subscription_plan == "tourist" and self.subscription_active:
+            return float('inf')
+        elif self.subscription_plan == "guide" and self.subscription_active:
+            return float('inf')
+        return 0
+
+    def get_trip_limit(self):
+        """Zwraca maksymalną liczbę wycieczek, które użytkownik może mieć"""
+        if self.subscription_plan == "free":
+            return 3
+        elif self.subscription_plan == "tourist" and self.subscription_active:
+            return float('inf')
+        elif self.subscription_plan == "guide" and self.subscription_active:
+            return float('inf')
+        return 0
+
+    def get_members_limit(self):
+        """Zwraca maksymalną liczbę członków, których użytkownik może mieć w wycieczce"""
+        if self.subscription_plan == "free":
+            return 0
+        elif self.subscription_plan == "tourist" and self.subscription_active:
+            return 5
+        elif self.subscription_plan == "guide" and self.subscription_active:
+            return 30
+        return 0
+
     def register_guest_account(self, data):
         """
         Register a guest account.
