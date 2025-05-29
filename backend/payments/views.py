@@ -8,11 +8,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from users.models import CustomUser
+from users.models import CustomUser, UserProfile
 from .models import Order
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
+from django.db import transaction
+
 from datetime import datetime, timezone
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -121,32 +123,51 @@ class StripeWebhookView(APIView):
             print("✅ Session ID:", session_id)
 
             try:
-                order = Order.objects.get(stripe_session_id=session_id)
-                order.is_paid = True
-                order.save()
-                user = order.user
+                with transaction.atomic():
+                    order = Order.objects.get(stripe_session_id=session_id)
+                    order.is_paid = True
+                    order.save()
+                    user = order.user
 
-                subscription = stripe.Subscription.retrieve(subscription_id)
+                    if order.subscription_type == 'tourist':
+                        profile = user.get_default_profile()
+                        profile.type = 'tourist'
+                        profile.save()
+                    elif order.subscription_type == 'guide':
+                        profile = UserProfile.objects.get_or_create(
+                            user=user,
+                            is_default=True,
+                            defaults={'type': 'guide'}
+                        )[0]
+                        profile.save()
 
-                current_period_end_ts = subscription["items"]["data"][0]["current_period_end"]
-                if not current_period_end_ts:
-                    print("❌ current_period_end nie istnieje – subskrypcja może być anulowana lub nieaktywna")
-                    return HttpResponse(status=200)
+                    subscription = stripe.Subscription.retrieve(subscription_id)
 
-                current_period_end = datetime.fromtimestamp(current_period_end_ts, tz=timezone.utc)
-                print('✅ current_period_end:', current_period_end)
+                    current_period_end_ts = subscription["items"]["data"][0]["current_period_end"]
+                    if not current_period_end_ts:
+                        print("❌ current_period_end nie istnieje – subskrypcja może być anulowana lub nieaktywna")
+                        return HttpResponse(status=200)
 
-                user.subscription_active = True
-                user.subscription_plan = order.subscription_type
-                user.stripe_subscription_id = subscription_id
-                user.subscription_ends_at = current_period_end
-                user.save()
+                    current_period_end = datetime.fromtimestamp(current_period_end_ts, tz=timezone.utc)
+                    print('✅ current_period_end:', current_period_end)
+
+                    user.subscription_active = True
+                    user.subscription_plan = order.subscription_type
+                    user.stripe_subscription_id = subscription_id
+                    user.subscription_ends_at = current_period_end
+                    user.save()
 
             except Order.DoesNotExist:
                 print(f"❌ Nie znaleziono zamówienia dla session_id={session_id}")
 
         elif event['type'] == 'invoice.payment_failed':
-            subscription = event['data']['object'].get('subscription')
+            subscription = (
+                invoice.get("lines", {})
+                .get("data", [{}])[0]
+                .get("parent", {})
+                .get("subscription_item_details", {})
+                .get("subscription")
+            )
             try:
                 user = CustomUser.objects.get(stripe_subscription_id=subscription)
                 print(f"Payment failed for {user.username}")
@@ -154,8 +175,13 @@ class StripeWebhookView(APIView):
                 print("Nie znaleziono profilu użytkownika")
 
         elif event['type'] == 'customer.subscription.deleted':
-            subscription = event['data']['object']
-            subscription_id = subscription.get('id')
+            subscription_id = (
+                invoice.get("lines", {})
+                .get("data", [{}])[0]
+                .get("parent", {})
+                .get("subscription_item_details", {})
+                .get("subscription")
+            )
 
             try:
                 user = CustomUser.objects.get(stripe_subscription_id=subscription_id)

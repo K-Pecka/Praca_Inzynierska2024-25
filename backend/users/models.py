@@ -215,9 +215,6 @@ class UserProfile(BaseModel):
         verbose_name=_("Czy jest podstawowym profilem"),
         help_text=_("Czy jest podstawowym profilem")
     )
-    subscription_active = models.BooleanField(default=False)
-    subscription_plan = models.CharField(max_length=50, blank=True, null=True)
-    stripe_subscription_id = models.CharField(max_length=255, blank=True, null=True)
 
     objects = UserProfileManager()
 
