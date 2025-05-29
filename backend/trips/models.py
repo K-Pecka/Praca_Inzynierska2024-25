@@ -69,7 +69,7 @@ class Trip(BaseModel):
     objects = TripManager()
 
     @property
-    def activity_count_for_today(self):
+    def activity_for_today(self):
         """Zwraca liczbę aktywności powiązanych z itineraries, które są aktywne dzisiaj"""
         today = timezone.now().date()
         count = 0
@@ -78,7 +78,7 @@ class Trip(BaseModel):
         return count
 
     @property
-    def activity_count_for_week(self):
+    def activity_for_week(self):
         """Zwraca liczbę aktywności powiązanych z itineraries kończących się w tym tygodniu"""
         today = timezone.now().date()
         next_week = today + timedelta(days=7)
