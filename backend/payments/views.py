@@ -101,6 +101,7 @@ class StripeWebhookView(APIView):
         if event['type'] == 'invoice.paid':
             invoice = event['data']['object']
             print("== RAW INVOICE ==")
+            print(f'invoiceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: {event}')
 
             subscription_id = invoice["parent"]["subscription_details"]["subscription"]
             print("Extracted subscription_id:", subscription_id)
