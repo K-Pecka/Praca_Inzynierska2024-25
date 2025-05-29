@@ -17,7 +17,7 @@ const {isOwner} = userData;
 const {trip:tripStore} = useTripStore();
 const {getTripDetails} = tripStore;
 const {trip} = getTripDetails();
-const {removeParticipant, addParticipant,} = useTripStore();
+const {removeParticipant, addParticipant} = useTripStore();
 
 import {useMembersStore} from "@/stores/trip/useMembersStore"
 const {setData} = useMembersStore();

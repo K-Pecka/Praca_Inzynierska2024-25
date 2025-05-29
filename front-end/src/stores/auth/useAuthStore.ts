@@ -212,6 +212,9 @@ export const useAuthStore = defineStore(
         notificationStore.setErrorCurrentMessage(
           err?.detail || "Błąd"
         )
+        if(!getUser()){
+          router.push({name:"logIn"})
+        }
       }
     });
 

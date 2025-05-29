@@ -28,27 +28,28 @@ const members = computed(() => {
   return useMembersStore().members.filter((e) => !e.is_guest && !e.is_owner) || [];
 });
 
-
 const onDebtAdded = () => {
   showForm.value = false;
 };
 const debtAmount = computed(() => {
+
   if (Array.isArray(debt.value) && getActiveProfile()?.type != 2) {
     return debt.value.reduce((acc, item) => {
-      const amount = item.members.find(el=>el.id == getActiveProfile()?.id) ? parseFloat(item.amount_per_member):0;
+      const amount = item.members.find(el=>el.id == getActiveProfile()?.id) ? parseFloat(item.amount_per_member_in_pln):0;
       return acc + (isNaN(amount) ? 0 : amount);
     }, 0);
   }
   else
   {
     return debt?.value?.reduce((acc, item) => {
-      const amount = parseFloat(item.amount);
+      const amount = parseFloat(item.amount_in_pln);
       return acc + (isNaN(amount) ? 0 : amount);
     }, 0);
   }
 });
 const { userData } = useAuthStore();
 const {getActiveProfile,isOwner} = userData;
+
 const touristDebt = computed(() => {
   if (!Array.isArray(debt.value) || debt.value.length <= 0) {
     return null;
@@ -63,6 +64,7 @@ const touristDebt = computed(() => {
 });
 const showForm = ref(false);
 const currency = "PLN"
+
 </script>
 
 <template>
@@ -137,11 +139,6 @@ const currency = "PLN"
                 <template v-if="!isLoading_debt">
                   <DebtList
                     :debts="touristDebt ?? (debt as DebtDetails[] | undefined)"
-                    :currency="currency"
-                    variant="manage"
-                    :members="members"
-                    :tripId="trip?.id"
-                    :isOwnerTrip="isOwner(trip?.creator?.id || 0)"
                   />
                 </template>
                 <template v-else>

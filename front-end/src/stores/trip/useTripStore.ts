@@ -26,7 +26,7 @@ export const useTripStore = defineStore("trip", () => {
 
   const { addParticipant, removeParticipant } = useParticipants();
 
-  const { getTickets,createTicket } = useTicketStore();
+  const { getTickets,createTicket,deleteTicket,updateMembers } = useTicketStore();
   return {
     dashboard: {
       getDashboard,
@@ -58,7 +58,9 @@ export const useTripStore = defineStore("trip", () => {
     },
     ticket:{
       getTickets,
-      createTicket
+      createTicket,
+      deleteTicket,
+      updateMembers
     },
     yourPlans,
     getPlans,
@@ -66,7 +68,5 @@ export const useTripStore = defineStore("trip", () => {
     planMutationAdd,
     removeParticipant,
     addParticipant,
-    getTickets,
-    createExpense,
   };
 });

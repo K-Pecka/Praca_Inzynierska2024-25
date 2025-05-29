@@ -1,7 +1,6 @@
 import type { RouteRecordRaw } from "vue-router";
 import { Home, Landing, PricingSection, ContactUs } from "@/views/home";
 import { AccountSettings } from "@/views/account";
-import { TripForm } from "@/views/panel";
 import { Error_500,Error_404 } from "@/views/unexpected";
 import {LogIn, Register, RoleSelection as roleSelection} from "@/views";
 

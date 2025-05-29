@@ -1,5 +1,6 @@
 export const backendNotification = false;
 import apiClient from './apiClient';
+import { updateMembers } from './endpoints/trip';
 
 export const fetchData = async <T = unknown>(
     url: string,
@@ -86,6 +87,7 @@ export const apiEndpoints = {
     all: `/trip/:tripId/ticket/`,
     create: `/trip/:tripId/ticket/`,
     delete: `/trip/:tripId/ticket/:ticketId/`,
+    updateMembers: '/trip/:tripId/ticket/:ticketId/'
   },
   budget: {
     update: `/trip/:tripId/budget/update/`,

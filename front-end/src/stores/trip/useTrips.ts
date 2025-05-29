@@ -18,12 +18,7 @@ export const useTrips = (tripId:Function) => {
 
     const getTripDetails = (id?: number) => {
         const {data:trip,isLoading:isLoading_trip,error:error_trip} =  getTripDetailsQuery(id ?? tripId())
-        // let owner = computed(()=>{
-        //     if(trip.value?.creator == getActiveProfile()?.id)
-        //     {
-                
-        //     }
-        // })
+      
         return {trip,isLoading_trip,error_trip}
     }
 

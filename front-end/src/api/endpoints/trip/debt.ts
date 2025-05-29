@@ -37,6 +37,6 @@ export const fetchDebtDelete = async (param: Record<string, string> = {}) => {
     if (error) {
         throw error;
     }
-    return data;
+    return param;
 
 }

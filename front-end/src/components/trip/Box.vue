@@ -75,9 +75,9 @@ import {BudgetContent} from "@/components";
     </v-card-title>
     <v-card-text class="px-0 py-0 text-h5 font-weight-bold">
       <template v-if="Array.isArray(props.content)">
-        <v-list v-if="props.content.length > 0">
+        <v-list v-if="props.content.length > 0" style="background-color: transparent;">
           <v-list-item v-for="(item, index) in props.content" :key="index">
-            <v-list-item-title>{{ item }}</v-list-item-title>
+            <v-list-item-title :class="props.className" class="v-card-title px-0 py-0 text-h5 font-weight-bold">{{ item }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </template>

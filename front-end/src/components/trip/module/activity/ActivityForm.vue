@@ -49,7 +49,11 @@ async function submitActivity() {
 const { activityTypes } = useActivityStore();
 const { getTickets } = useTicketStore();
 const { data: tickets } = getTickets();
-
+import {activity} from "@/data/category/activity"
+const activityTypesList = computed(()=>{
+  if(activityTypes.length>0) return activityTypes;
+  return activity
+})
 const ticketsItems = computed(() => {
   return (tickets.value || []).map((t) => ({
     title: t.name,
@@ -67,7 +71,7 @@ const ticketsItems = computed(() => {
           <v-col cols="12" sm="6">
             <v-select
               v-model="form.type"
-              :items="activityTypes"
+              :items="activityTypesList"
               label="Typ aktywności"
               variant="outlined"
               bg-color="background"
@@ -128,6 +132,7 @@ const ticketsItems = computed(() => {
               variant="outlined"
               :items="ticketsItems"
               bg-color="background"
+              clearable
             />
           </v-col>
 
@@ -150,7 +155,7 @@ const ticketsItems = computed(() => {
           color="primary"
           text="Dodaj"
           @click="submitActivity"
-          :disabled="hasError"
+          :disabled="!isFormValid"
         />
       </v-card-actions>
     </v-card>

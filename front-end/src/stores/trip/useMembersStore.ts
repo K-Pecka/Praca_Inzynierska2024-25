@@ -1,13 +1,9 @@
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
-import { useQueryClient } from "@tanstack/vue-query";
 import type { Trip, User } from "@/types";
 import { fetchUserById } from "@/api";
 
 export const useMembersStore = defineStore("tripDetails", () => {
-  const route = useRoute();
-  const queryClient = useQueryClient();
 
   const members = ref<User[]>([]);
 
@@ -24,6 +20,7 @@ export const useMembersStore = defineStore("tripDetails", () => {
   watch(
     trip,
     async () => {
+      members.value=[]
       const cachedTrip: Trip | null = trip.value;
       if (!cachedTrip) {
         members.value = [];

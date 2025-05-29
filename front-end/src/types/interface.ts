@@ -24,7 +24,7 @@ export interface Input {
   related?: string[];
   type: string;
   placeholder: string;
-  validation: Validator | any; //TODO: naprawić użycie any<tymczasowo>
+  validation: Validator | any; 
   config?: Config;
   error: string[];
 }
@@ -78,6 +78,8 @@ export interface TripData {
 }
 export interface Trip {
   creator: { id: number; first_name: string;type: string; last_name: string };
+  activity_for_today: number;
+  activity_for_week: number;
   id: number;
   name: string;
   start_date: string;
@@ -152,9 +154,10 @@ export interface SideNavItem {
   icon?: string;
   iconActive?: string;
   page?: { name: string };
-  children?: { title: string; page: { name: string } }[];
+  children?: { title: string; page: { name: string },isOwner?:boolean }[];
   permission?: number[];
   name?: string;
+  isOwner?:boolean;
 }
 
 export interface FAQItem {
@@ -185,6 +188,7 @@ export interface NewTrip {
   end_date: string;
 }
 export interface Plan {
+  activities_count? : number;
   id?: number;
   name: string;
   country: string;
@@ -208,7 +212,7 @@ export interface TicketData {
   name: string;
   file: string;
   type: string;
-  profile: number;
+  profiles: number[];
   valid_from_date: string;
   valid_from_time: string;
   trip: number;
@@ -261,6 +265,7 @@ export interface User {
   is_owner?: boolean;
   profiles?: Profile[];
   fullname?: string;
+  
 }
 
 export interface ActivityType {

@@ -5,6 +5,7 @@ import panelRoutes from "./panelRoutes";
 import tripRoutes from "@/router/tripRoutes";
 import authRoutes from "./authRoutes";
 import inviteRouters from "./inviteRouters"
+import paymentRoutes from "./paymentRoutes"
 import { useAuthStore, useNotificationStore } from "@/stores";
 
 const routes: RouteRecordRaw[] = [
@@ -12,7 +13,8 @@ const routes: RouteRecordRaw[] = [
   ...homeRoutes,
   panelRoutes,
   tripRoutes,
-  inviteRouters
+  inviteRouters,
+  paymentRoutes
 ];
 
 const router = createRouter({

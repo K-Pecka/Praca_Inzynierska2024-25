@@ -12,7 +12,7 @@ export const getTouristNav = () => [
     icon: 'mdi-note-text-outline',
     children: [
       {title: 'Utworzone', page: {name: 'tripPlans'}},
-      {title: 'Dodaj', page: {name: 'createPlan'}},
+      {title: 'Dodaj', page: {name: 'createPlan'}, isOwner:true},
     ]
   },
   {
@@ -33,6 +33,7 @@ export const getTouristNav = () => [
   {
     title: 'Ustawienia',
     icon: 'mdi-cog-outline',
+    isOwner:true,
     children: [
       {
         title: 'Edycja wycieczki',
@@ -52,7 +53,7 @@ export const getGudieNav = () => [
     icon: 'mdi-note-text-outline',
     children: [
       {title: 'Utworzone', page: {name: 'tripPlans'}},
-      {title: 'Dodaj', page: {name: 'createPlan'}},
+      {title: 'Dodaj', page: {name: 'createPlan'},isOwner:true},
     ]
   },
   {
@@ -82,11 +83,12 @@ export const getGudieNav = () => [
     title: "Ustawienia",
     name: "setting",
     icon: images.icon.menu.setting,
+    isOwner:true,
     children: [
       {
         title: "Edycja wycieczki",
         name: "settingEdit",
-        page: {name: 'editTrip'},
+        page: {name: 'editTrip'}
       },
     ],
   }

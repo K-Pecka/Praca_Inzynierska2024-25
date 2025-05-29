@@ -33,5 +33,5 @@ export const fetchRemoveParticipant = async (
     throw error;
   }
 
-  return idTrip;
+  return {idTrip,idParticipant};
 };

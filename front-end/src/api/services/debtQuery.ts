@@ -43,7 +43,7 @@ export const getMutationRemoveMemberQuery = (option: Record<string, any>) =>
 export const getMutationDeleteDebt = (option: Record<string, any>) =>
     useMutation({
     mutationFn: fetchDebtDelete,
-    onSuccess: (tripId) => {
+    onSuccess: ({tripId}) => {
       option.notification.setSuccessCurrentMessage(option.successMessage);
       option.queryClient.invalidateQueries({
         queryKey: ["debt", Number(tripId)],

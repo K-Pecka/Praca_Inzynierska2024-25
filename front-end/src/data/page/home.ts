@@ -89,7 +89,7 @@ export const pricingPlans = [
         type: "tourist",
         name: "Podstawowy",
         price: "Darmowy",
-        features: ["Tekst", "Tekst", "Tekst"],
+        features: ["3 wycieczki w skali roku", "1 plan na wycieczkę", "brak możliwości zapraszania uczestników"],
         contentVariant: "secondary" as "secondary",
         buttonVariant: "primary" as "primary",
     },
@@ -97,7 +97,7 @@ export const pricingPlans = [
         type: "premium",
         name: "Turysta",
         price: "15.0 zł / miesiąc",
-        features: ["Tekst", "Tekst", "Tekst"],
+        features: ["Nielimitowane wycieczki", "Nielimitowane plany", "do 5 uczestników"],
         buttonVariant: "primary" as "primary",
     },
     {

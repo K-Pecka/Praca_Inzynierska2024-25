@@ -12,9 +12,11 @@ const props = defineProps<{
 
 const dialog = ref(false);
 import { useUtilsStore } from "@/stores";
+
 const { getTripId } = useUtilsStore();
 const {debt} = useTripStore();
 const { removeMember,deleteDebt } = debt;
+
 const markAsPaid = (profile: number) => { 
   removeMember.mutate(
     {

@@ -39,10 +39,9 @@ const handleSelectPlan = () => {
       <v-list-item
         v-for="(feature, idx) in features"
         :key="idx"
-        class="justify-center py-1"
+        class="justify-center py-1 align-center"
       >
-        <v-icon size="22" class="checkmark me-2 ">mdi-check</v-icon>
-        <span :class="contentVariant">{{ feature }}</span>
+        <span :class="contentVariant" class="d-flex justify-center align-center">{{ feature }}</span>
       </v-list-item>
     </v-list>
 

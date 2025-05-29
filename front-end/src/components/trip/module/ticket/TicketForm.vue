@@ -36,18 +36,23 @@ function submitTicket() {
 
   emit("submitTicket", payload);
 }
-
-const timeMenu = ref(false);
-
+const timeRules = [
+  (value: string) => {
+    if (!value) return "Godzina jest wymagana";
+    const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+    return timeRegex.test(value) || "Podaj godzinę w formacie HH:mm";
+  }
+];
 defineProps<{
   members: User[];
 }>();
+const formIsValid = ref(false);
 </script>
 
 <template>
   <v-card class="pa-4 mt-4 background-secondary rounded-lg" elevation="4">
     <v-card-title>Dodaj nowy bilet</v-card-title>
-
+<v-form ref="formRef" v-slot="{ isValid }" v-model="formIsValid">
     <v-card-text>
       <v-row>
         <v-col cols="12" lg="6" md="6" class="tight-col">
@@ -94,31 +99,13 @@ defineProps<{
         <v-col cols="12" lg="3" md="6" class="tight-col">
           <v-text-field
             v-model="form.time"
-            :active="timeMenu"
-            :focus="timeMenu"
             variant="outlined"
             label="Godzina"
+            :rules="timeRules"
             prepend-inner-icon="mdi-clock-time-four-outline"
-            readonly
             bg-color="background"
             density="comfortable"
-          >
-            <v-menu
-              v-model="timeMenu"
-              :close-on-content-click="false"
-              activator="parent"
-              transition="scale-transition"
-              density="comfortable"
-            >
-              <v-time-picker
-                v-if="timeMenu"
-                v-model="form.time"
-                format="24hr"
-                scrollable
-              >
-              </v-time-picker>
-            </v-menu>
-          </v-text-field>
+          />
         </v-col>
 
         <v-col cols="12" lg="6" md="12" class="tight-col">
@@ -149,6 +136,11 @@ defineProps<{
             variant="outlined"
             bg-color="background"
             density="comfortable"
+            :rules="[
+              (v: File | null) => !!v || 'Plik jest wymagany',
+              (v: File | null) =>
+                !v || v.type.startsWith('image/') || 'Dozwolone są tylko pliki graficzne (jpg, png, webp)'
+            ]"
           >
           </v-file-input>
         </v-col>
@@ -169,8 +161,10 @@ defineProps<{
         height-auto
         text="Dodaj"
         @click="submitTicket"
+        :disabled="!formIsValid"
       />
     </v-card-actions>
+    </v-form>
   </v-card>
 </template>
 
