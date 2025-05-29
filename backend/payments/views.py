@@ -134,7 +134,7 @@ class StripeWebhookView(APIView):
                 subscription = stripe.Subscription.retrieve(subscription_id)
                 print("📦 Subskrypcja z Stripe:", json.dumps(subscription, indent=2))
 
-                current_period_end_ts = subscription.get('current_period_end')
+                current_period_end_ts = subscription["items"]["data"][0]["current_period_end"]
                 if not current_period_end_ts:
                     print("❌ current_period_end nie istnieje – subskrypcja może być anulowana lub nieaktywna")
                     return HttpResponse(status=200)
