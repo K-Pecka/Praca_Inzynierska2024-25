@@ -43,8 +43,9 @@ class CustomUser(AbstractBaseUser, BaseModel):
         max_length=50,
         blank=True,
         null=True,
+        default="free",
         choices=[
-            ("basic", _("Podstawowy")),
+            ("free", _("Podstawowy")),
             ("tourist", _("Turysta")),
             ("guide", _("Przewodnik")),
         ],
