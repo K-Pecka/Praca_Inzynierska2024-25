@@ -81,9 +81,11 @@ class Trip(BaseModel):
     def activity_for_week(self):
         """Zwraca liczbę aktywności powiązanych z itineraries kończących się w tym tygodniu"""
         today = timezone.now().date()
-        next_week = today + timedelta(days=7)
+        days_until_sunday = 6 - today.weekday()
+        end_of_sunday = today + timedelta(days=days_until_sunday)
+        end_of_sunday = end_of_sunday if end_of_sunday <= today + timedelta(days=7) else today + timedelta(days=7)
         count = 0
-        for itinerary in self.itineraries.filter(start_date__lte=today, end_date__range=(today, next_week)):
+        for itinerary in self.itineraries.filter(start_date__lte=today, end_date__range=(today, end_of_sunday)):
             count += itinerary.activities.count()
         return count
 
