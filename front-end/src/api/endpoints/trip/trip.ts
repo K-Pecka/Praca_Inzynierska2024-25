@@ -1,15 +1,21 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
-import { Trip, NewTrip } from "@/types/interface";
+import { Trip,TripData, NewTrip } from "@/types/interface";
 import { QueryFunctionContext } from "@tanstack/vue-query";
+import { Budget } from "@/types/interface";
 
-export const fetchTrips = async () => {
-    const { data, error } = await fetchData<Trip[]>(apiEndpoints.trip.all, "GET");
+
+export const fetchTrips = async ():Promise<TripData> => {
+    const { data, error } = await fetchData<TripData>(apiEndpoints.trip.all, "GET");
 
     if (error) {
         throw new Error(error);
     }
+    
+    if (!data) {
+        throw new Error("No data returned from fetchTrips");
+    }
 
-    return data || [];
+    return data;
 };
 
 export const fetchTrip = async ({ queryKey }: QueryFunctionContext<[string, number]>) => {
@@ -31,23 +37,22 @@ export const deleteTrip = async (param: Record<string, string> = {}) => {
     const { data, error } = await fetchData(url, "DELETE");
 
     if (error) {
-        throw new Error(error);
+        throw error;
     }
 
-    return data;
+    return param;
 };
 
 export const createTrip = async (newTrip: NewTrip, param: Record<string, string> = {}) => {
     const url = setParam(apiEndpoints.trip.create, param);
 
-    const { data, error } = await fetchData<NewTrip>(
+    const { data, error } = await fetchData<Trip>(
         url,
         "POST",
-        { ...newTrip, budget_amount: 1 }
+        { ...newTrip, budget_amount: 0 }
     );
-
     if (error) {
-        throw new Error(error);
+        throw error;
     }
 
     return data;
@@ -59,11 +64,22 @@ export const updateTrip = async (
 ) => {
     const url = setParam(apiEndpoints.trip.update, param);
 
-    const { data, error } = await fetchData<Trip>(url, "PATCH", tripData);
+    const { error } = await fetchData<Trip>(url, "PATCH", tripData);
 
     if (error) {
         throw new Error(error);
     }
 
-    return data;
+    return param;
+};
+export const saveBudget = async (newBudget: Budget, param: Record<string, string> = {}) => {
+  const url = setParam(apiEndpoints.trip.update, param);
+
+  const { error } = await fetchData(url, "PATCH", newBudget);
+
+  if (error) {
+    throw new Error(error);
+  }
+
+  return param;
 };

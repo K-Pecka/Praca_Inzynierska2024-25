@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { ref } from "vue";
 import { Input } from "@/types/interface";
 import { FormType } from "@/types/enum";
 import {
@@ -7,36 +8,52 @@ import {
   planInput,
   tripInput,
   budgetInput,
+  profilePersonalInput,
+  profilePasswordInput,
   getMoreOptions,
-  profileInput,
 } from "@/data/index";
-import { computed, ref } from "vue";
-import { useAuthStore,useNotificationStore } from "@/stores";
+import { useNotificationStore } from "@/stores";
 
 export const useFormStore = defineStore("form", () => {
   const { getErrorMessages } = useNotificationStore();
-  const { loginMutation } = useAuthStore();
-  const formType = ref<FormType>(FormType.LOGIN);
+
+  const currentFormType = ref<FormType>(FormType.LOGIN);
+  const isSending = ref(false);
+  const backendErrors = ref<Record<string, Record<string, string>>>({});
+  const formValues = ref<Record<string, string>>({});
 
   const extraValidationMessages = {
     isEqual: "Hasła muszą być takie same",
     dateRange: "Data zakończenia nie może być wcześniejsza niż rozpoczęcia",
+    strongPassword: "Hasło musi zawierać przynajmniej jedną dużą literę, jedną cyfrę i jeden znak specjalny."
   };
+
   const getLoginInputs = (): Input[] => loginInput(getErrorMessages());
-
   const getRegisterInputs = (): Input[] =>
-    registerInput(getErrorMessages({ isEqual: extraValidationMessages.isEqual }));
-
+    registerInput(
+      getErrorMessages({ 
+        isEqual: extraValidationMessages.isEqual,
+        strongPassword:extraValidationMessages.strongPassword
+       })
+    );
   const getPlanInputs = (): Input[] =>
-    planInput(getErrorMessages({ dateRange: extraValidationMessages.dateRange }));
-
+    planInput(
+      getErrorMessages({ dateRange: extraValidationMessages.dateRange })
+    );
   const getTripInputs = (): Input[] =>
-    tripInput(getErrorMessages({ dateRange: extraValidationMessages.dateRange }));
-
+    tripInput(
+      getErrorMessages({ dateRange: extraValidationMessages.dateRange })
+    );
   const getBudgetInputs = (): Input[] => budgetInput(getErrorMessages());
 
-  const getProfileInputs = (): Input[] =>
-      profileInput(getErrorMessages({ isEqual: extraValidationMessages.isEqual }));
+  const getProfilePersonalInputs = (): Input[] =>
+      profilePersonalInput(getErrorMessages());
+
+  const getProfilePasswordInputs = (): Input[] =>
+      profilePasswordInput(getErrorMessages({ 
+        isEqual: extraValidationMessages.isEqual,
+        strongPassword:extraValidationMessages.strongPassword
+       }));
 
   const formInputGenerators: Record<FormType, () => Input[]> = {
     [FormType.LOGIN]: getLoginInputs,
@@ -44,21 +61,30 @@ export const useFormStore = defineStore("form", () => {
     [FormType.PLAN]: getPlanInputs,
     [FormType.TRIP]: getTripInputs,
     [FormType.BUDGET]: getBudgetInputs,
-    [FormType.PROFILE]: getProfileInputs,
+    [FormType.PROFILE_PERSONAL]: getProfilePersonalInputs,
+    [FormType.PROFILE_PASSWORD]: getProfilePasswordInputs
   };
+
   const getFormInputs = (type: FormType): Input[] =>
     formInputGenerators[type]?.() ?? [];
+
   const initForm = (type: FormType) => {
-    formType.value = type;
-    return getFormInputs(type);
-  }
-  const createformValues = () => {
-    const inputs = getFormInputs(formType.value);
-    return Object.fromEntries(inputs.map((input: { name: string }) => [input.name, ""]));
+    currentFormType.value = type;
+    formValues.value = createFormValues(type);
+    return {inputs:getFormInputs(type),values: formValues.value};
   };
-  const isFormValid  = (type: FormType, formValues: Record<string, string>) => {
-    return getFormInputs(type).every((input) => {
-      const value = formValues[input.name];
+
+  const createFormValues = (type: FormType): Record<string, string> => {
+    const inputs = getFormInputs(type);
+    return Object.fromEntries(inputs.map((input) => [input.name, ""]));
+  };
+
+  const isFormValid = (
+    type: FormType,
+    values: Record<string, string>
+  ): boolean =>
+    getFormInputs(type).every((input) => {
+      const value = values[input.name];
       let errors: string[] = [];
 
       if (input.validation && "validate" in input.validation) {
@@ -68,21 +94,53 @@ export const useFormStore = defineStore("form", () => {
       input.error = [...errors];
       return errors.length === 0;
     });
-  };
-  const isSend = ref(false);
-  const sendForm =async (formValue: any, config: any)=>{
-    if (config?.send && isFormValid(FormType.LOGIN, formValue) && !isSend.value) {
-      isSend.value = true;
+
+  const sendForm = async ({
+    send,
+    onSuccess,
+    onError,
+    data,
+  }: {
+    send: (formData: Record<string, any>) => Promise<void>;
+    onSuccess?: () => void;
+    onError?: (error: any) => void;
+    data: Record<string, string>;
+  }) => {
+    if (isFormValid(currentFormType.value, data) && !isSending.value) {
+      isSending.value = true;
       try {
-        await loginMutation.mutateAsync(formValue);
-        formValue={}
-        formValues.value={}
-        formType.value = FormType.REGISTER;
+        await send(data);
+        formValues.value = createFormValues(currentFormType.value);
+        onSuccess?.();
       } catch (error) {
+        onError?.(error);
+      } finally {
+        isSending.value = false;
       }
-      isSend.value = false
+    } else {
+      const { setErrorCurrentMessage } = useNotificationStore();
+      setErrorCurrentMessage("Uzupełnij wszystkie wymagane pola poprawnie.");
     }
-  }
-  const formValues = ref(createformValues())
-  return { sendForm,initForm,formValues,getFormInputs, isFormValid, getMoreOptions };
+  };
+
+  const setBackendErrors = (error: Record<string, any>) => {
+    backendErrors.value[currentFormType.value] = error;
+  };
+
+  const getBackendErrors = () => backendErrors.value;
+
+  return {
+    currentFormType,
+    formValues,
+    isSending,
+    initForm,
+    getFormInputs,
+    isFormValid,
+    sendForm,
+    setBackendErrors,
+    getBackendErrors,
+    getMoreOptions,
+    getProfilePersonalInputs,
+    getProfilePasswordInputs
+  };
 });

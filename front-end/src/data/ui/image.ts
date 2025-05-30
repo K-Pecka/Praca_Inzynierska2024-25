@@ -20,6 +20,10 @@ import emptyTicketImg from '@/assets/images/emptyState/empty-state-ticket.svg';
 
 import myAccountImg from '@/assets/images/icons/my-account.svg';
 
+import MW_avatar from '@/assets/images/avatar/MW_avatar.png';
+import JP_avatar from '@/assets/images/avatar/JP_avatar.png';
+import AE_avatar from '@/assets/images/avatar/AE_avatar.png';
+import KP_avatar from '@/assets/images/avatar/KP_avatar.png';
 export const images = {
   hero: {
     img: heroImg,
@@ -105,4 +109,22 @@ export const images = {
       alt: 'my account',
     },
   },
+  teamMembers:{
+    MateuszWisniewski:{
+      src: MW_avatar,
+      alt: 'Mateusz Wiśniewski',
+    },
+    JakubPoblocki:{
+      src: JP_avatar,
+      alt: 'Jakub Pobłocki',
+    },
+    AndrzejEbertowski:{
+      src: AE_avatar,
+      alt: 'Andrzej Ebertowski',
+    },
+    KacperPecka:{
+      src: KP_avatar,
+      alt: 'Kacper Pecka',
+    },
+  }
 };

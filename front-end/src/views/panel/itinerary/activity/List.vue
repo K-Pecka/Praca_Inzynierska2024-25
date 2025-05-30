@@ -8,21 +8,22 @@ import {Activity} from "@/types/interface";
 import ActivityCard from "@/components/trip/module/activity/ActivityCard.vue";
 import ActivityForm from "@/components/trip/module/activity/ActivityForm.vue";
 import AppButton from "@/components/AppButton.vue";
-import HeaderSection from "@/components/common/HeaderSection.vue";
+import HeaderSection from "@/components/shared/HeaderSection.vue";
 import {Section} from "@/components";
-
 const route = useRoute();
-const tripId = route.params.tripId as string;
-const planId = route.params.planId as string;
 
-const {trip: tripStore} = useTripStore();
-const {getTripDetails, getPlans} = useTripStore();
+
+const {itinerary,trip:tripStore} = useTripStore();
+
+const {getItineraries} = itinerary
+const {getTripDetails} = tripStore
+
 const {userData} = useAuthStore();
-const {formatDatePolish} = useUtilsStore();
+const {formatDatePolish,getTripId,getItineraryId} = useUtilsStore();
 const activityStore = useActivityStore();
 
-const {trip} = getTripDetails();
-const {data: plansData} = getPlans(tripId);
+const {itineraries} = getItineraries();
+const {trip} = getTripDetails()
 const {data: activities, isSuccess} = activityStore.getActivity();
 
 const isOwnerValue = computed(() => {
@@ -32,8 +33,9 @@ const isOwnerValue = computed(() => {
 
 // Wszystkie dni planu (dla właściciela)
 const allDays = computed(() => {
-  const from = trip.value?.start_date;
-  const to = trip.value?.end_date;
+  const itinerary = itineraries.value?.results.find(el=>el.id == getItineraryId())
+  const from = itinerary?.start_date;
+  const to = itinerary?.end_date;
   if (!from || !to) return [];
 
   const arr: string[] = [];
@@ -74,22 +76,22 @@ function addActivity(day: string, activityData: any) {
         date: day,
       },
       {
-        tripId,
-        planId,
+        tripId:String(getTripId()),
+        itineraryId: String(getItineraryId()),
       }
   );
   showFormForDay.value = null;
 }
 
 onMounted(() => {
-  activityStore.loadActivityTypes(tripId);
+  activityStore.loadActivityTypes(String(getTripId()));
 });
 </script>
 
 <template>
   <Section>
     <template #title>
-      <HeaderSection subtitle="Zarządzaj aktywnościami"/>
+      <HeaderSection :subtitle="isOwnerValue ?'Zarządzaj aktywnościami':'Aktualne aktywności'"/>
     </template>
 
     <template #content>

@@ -11,31 +11,30 @@ export const getTouristNav = () => [
     title: 'Plany',
     icon: 'mdi-note-text-outline',
     children: [
-      {title: 'Utworzone', page: {name: 'tripPlans'}},
-      {title: 'Dodaj', page: {name: 'createPlan'}},
+      {title: 'Utworzone', page: {name: 'itineraries'}},
+      {title: 'Dodaj', page: {name: 'createItinerary'}, isOwner:true},
     ]
   },
   {
     title: 'Bilety',
     page: {name: 'yourTickets'},
-    icon: 'mdi-ticket-confirmation-outline'
+    icon: 'mdi-ticket-confirmation-outline',
   },
   {
     title: 'Budżet',
     icon: 'mdi-currency-usd',
-    children: [
-      {title: 'Pokaż', page: {name: 'ExpenseTracker'}},
-      {title: 'Zmień budżet', page: {name: 'editBudget'}},
-    ]
+    page: {name: 'ExpenseTracker'},
   },
   {
     title: 'Uczestnicy',
     page: {name: 'tripParticipants'},
-    icon: 'mdi-account-multiple-outline'
+    icon: 'mdi-account-multiple-outline',
+    activeSubscription:true,
   },
   {
     title: 'Ustawienia',
     icon: 'mdi-cog-outline',
+    isOwner:true,
     children: [
       {
         title: 'Edycja wycieczki',
@@ -54,8 +53,8 @@ export const getGudieNav = () => [
     title: 'Plany',
     icon: 'mdi-note-text-outline',
     children: [
-      {title: 'Utworzone', page: {name: 'tripPlans'}},
-      {title: 'Dodaj', page: {name: 'createPlan'}},
+      {title: 'Utworzone', page: {name: 'itineraries'}},
+      {title: 'Dodaj', page: {name: 'createItinerary'}, isOwner:true},
     ]
   },
   {
@@ -70,14 +69,9 @@ export const getGudieNav = () => [
     children: [
       {
         title: "Pokaż",
-        name: "budgetShow",
-        page: { name: "ExpenseTracker" },
-      },
-      {
-        title: "Zmień budżet",
-        name: "budgetChange",
-        page: { name: "budget" },
-      },
+        name: "debt",
+        page: { name: "debt" },
+      }
     ],
   },
   {
@@ -90,11 +84,12 @@ export const getGudieNav = () => [
     title: "Ustawienia",
     name: "setting",
     icon: images.icon.menu.setting,
+    isOwner:true,
     children: [
       {
         title: "Edycja wycieczki",
         name: "settingEdit",
-        page: {name: 'editTrip'},
+        page: {name: 'editTrip'}
       },
     ],
   }

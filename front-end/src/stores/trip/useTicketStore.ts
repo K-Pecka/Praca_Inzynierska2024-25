@@ -1,13 +1,46 @@
 import { defineStore } from "pinia";
-import { getTicketsQuery,createTicketMutation } from "@/api/services/ticketQuery";
+import {
+  getTicketsQuery,
+  createTicketMutation,
+  getMutationDelete,
+  getMutationUpdate
+} from "@/api/services/ticketQuery";
 import { useUtilsStore } from "../utils/useUtilsStore";
-export const useTicketStore = defineStore("ticket", () => {
-    const {getTripId} = useUtilsStore()
-    const createTicket = createTicketMutation;
-    const getTickets = (tripId?:string) => getTicketsQuery(tripId ?? String(getTripId()));
+import { useNotificationStore } from "../ui/useNotificationStore";
+import { useQueryClient } from "@tanstack/vue-query";
 
-    return {
-        createTicket,
-        getTickets
-    };
+export const useTicketStore = defineStore("ticket", () => {
+  const { getTripId } = useUtilsStore();
+  const queryClient = useQueryClient();
+  const notifications = useNotificationStore();
+
+  const createTicket = createTicketMutation({
+    tripId: getTripId,
+    notifications,
+    queryClient,
+    successMessage: "Dodano poyślnie bilet",
+    errorMessage: "Nie udało się dodać biletu",
+  });
+  const deleteTicket = getMutationDelete({
+    tripId: getTripId,
+    notifications,
+    queryClient,
+    successMessage: "Usunięto pomyślnie bilet",
+    errorMessage: "Nie udało się usunąć biletu",
+  })
+  const updateMembers = getMutationUpdate({
+    tripId: getTripId,
+    notifications,
+    queryClient,
+    successMessage: "Dostęp do biletu został zminiony",
+    errorMessage: "Nie udało się zmienić dostępu biletu",
+  })
+  const getTickets = (tripId?: string) =>
+    getTicketsQuery(tripId ?? String(getTripId()));
+  return {
+    createTicket,
+    getTickets,
+    deleteTicket,
+    updateMembers
+  };
 });

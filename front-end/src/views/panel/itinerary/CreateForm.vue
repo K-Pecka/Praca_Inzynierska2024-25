@@ -3,9 +3,10 @@ import { ref, watch } from "vue";
 import {Section, Form, HeaderSection} from "@/components";
 import { useFormStore,useTripStore, useUtilsStore } from "@/stores";
 import { FormType } from "@/types/enum";
-import { Plan } from "@/types/interface";
+import { Itinerary, NewItinerary} from "@/types/interface";
 
-const { planMutationAdd } = useTripStore();
+const { itinerary } = useTripStore();
+const {createItinerary} = itinerary
 const { getFormInputs, isFormValid } = useFormStore();
 
 const {trip:tripStore} = useTripStore();
@@ -35,14 +36,14 @@ const handleSubmit = (_formData: any, config: any) => {
   if (config?.send && isFormValid(FormType.PLAN, formValues.value)) {
     const { tripName, city,tripDates } = formValues.value;
     const [start_date, end_date] = tripDates.split(' - ');
-    const newPlan:Plan = {
+    const newPlan:NewItinerary= {
       name: tripName,
       country: city,
       start_date: start_date || '',
       end_date: end_date || ''
     };
     try {
-      planMutationAdd.mutateAsync({ data: newPlan, tripId: getTripId() });
+      createItinerary.mutateAsync({ data: newPlan, tripId: getTripId() });
     } catch (error) {
       
     }

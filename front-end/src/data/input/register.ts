@@ -39,7 +39,7 @@ export const registerInput = (errorMessage: Record<string, string>) => [
         label: "Podaj hasło:",
         type: InputType.PASSWORD,
         placeholder: "Wprowadź hasło",
-        validation: getValidator(errorMessage).isEmpty(),
+        validation: getValidator(errorMessage).isEmpty().minLength(8).strongPassword(),
         config: { required: true },
         error: [],
       },
@@ -49,7 +49,7 @@ export const registerInput = (errorMessage: Record<string, string>) => [
         label: "Podaj ponownie hasło:",
         type: InputType.PASSWORD,
         placeholder: "Wprowadź hasło",
-        validation: getValidator(errorMessage).isEmpty(),
+        validation: getValidator(errorMessage).isEmpty().minLength(8).strongPassword(),
         config: { required: true },
         error: [],
       }

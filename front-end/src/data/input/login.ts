@@ -11,7 +11,7 @@ export const loginInput = (errorMessage: Record<string, string>) => [
     label: "Podaj Email:",
     type: InputType.EMAIL,
     placeholder: "Wprowadź email",
-    validation: getValidator(errorMessage),
+    validation: getValidator(errorMessage).email(),
     error: [],
   },
   {
@@ -24,6 +24,5 @@ export const loginInput = (errorMessage: Record<string, string>) => [
   },
 ];
 export const getMoreOptions = () => [
-    { label: "Zapomniałeś hasła?", href: {name:"home"} },
     { label: "Nie masz konta? Zarejestruj się.", href: {name:"register"} },
   ];

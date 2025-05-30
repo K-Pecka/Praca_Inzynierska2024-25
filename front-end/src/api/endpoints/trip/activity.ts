@@ -1,5 +1,5 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
-import { Activity, ActivityType } from "@/types";
+import { Activity, ActivityType,ActivityResponse } from "@/types";
 
 export const createActivity = async (newActivity: Activity, param: Record<string, string> = {}) => {
     const url = setParam(apiEndpoints.activity.create, param);
@@ -16,13 +16,13 @@ export const createActivity = async (newActivity: Activity, param: Record<string
 export const fetchActivity = async (param: Record<string, string> = {}): Promise<Activity[]> => {
     const url = setParam(apiEndpoints.activity.all, param);
 
-    const { data, error } = await fetchData<Activity[]>(url, "GET");
+    const { data, error } = await fetchData<ActivityResponse>(url, "GET");
 
     if (error) {
         throw new Error(error);
     }
 
-    return Array.isArray(data) ? data : [];
+    return data?.results || [];
 };
 
 

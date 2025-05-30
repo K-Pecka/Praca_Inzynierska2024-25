@@ -1,175 +1,171 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import {useActivityStore} from "@/stores/trip/useActivityStore";
+import { useActivityStore } from "@/stores/trip/useActivityStore";
 import AppButton from "@/components/AppButton.vue";
-import { VTimePicker } from "vuetify/labs/VTimePicker";
 import { useTicketStore } from "@/stores";
 
 const emit = defineEmits(["submitActivity", "cancelForm"]);
+
+const formRef = ref();
+const isFormValid = ref(false);
+const hasError = ref(false);
 
 const form = ref({
   type: 1,
   name: "",
   start_time: "",
-  duration: "",
+  duration: 0,
   location: "",
   description: "",
-  ticket:""
+  ticket: ""
 });
-
-const timeMenu = ref(false);
 
 const nameRules = [(v: string) => !!v || "Nazwa aktywności jest wymagana"];
+const timeRules = [
+  (value: string) => {
+    if (!value) return "Godzina jest wymagana";
+    const timeRegex = /^(?:([0-9])|([01]\d|2[0-3])):([0-5]\d)$/;
+    return timeRegex.test(value) || "Podaj godzinę w formacie HH:MM w systyemie 24H";
+  }
+];
+const durationRules = [
+  (v: string) => !v || !isNaN(Number(v)) || "Podaj poprawny czas trwania",
+  (v: string) => {
+  const num = Number(v);
+  return num <= 1000 || "Maksymalna wartość to 1000 min";
+  },
+  (v: string) => !isNaN(Number(v)) && Number(v)>=0 || "Czas trwania nie może być mniejszy niż 0",
+  (v: string) => /^\d+$/.test(v) || "Podaj poprawną liczbę całkowitą",
+];
 
-const isFormValid = computed(() => form.value.name.trim() !== "");
-
-function submitActivity() {
-  if (!isFormValid.value) {
-    alert("Uzupełnij nazwę aktywności.");
+async function submitActivity() {
+ const isValid = await formRef.value?.validate?.();
+  if (!isValid) {
+    hasError.value = true;
     return;
   }
- const payload = Object.fromEntries(
-    Object.entries(form.value).filter(([key, value]) => !(key === 'ticket' && value === ''))
+  hasError.value = false;
+
+  const payload = Object.fromEntries(
+    Object.entries(form.value).filter(([key, value]) => !(key === "ticket" && value === ""))
   );
   emit("submitActivity", { ...payload });
-  form.value = {
-    type: 1,
-    name: "",
-    start_time: "",
-    duration: "",
-    location: "",
-    description: "",
-    ticket:""
-  };
 }
+
 const { activityTypes } = useActivityStore();
-
-const {getTickets} = useTicketStore()
-const {data:tickets} = getTickets();
-
-const ticketsItems = computed(() =>{
+const { getTickets } = useTicketStore();
+const { data: tickets } = getTickets();
+import {activity} from "@/data/category/activity"
+const activityTypesList = computed(()=>{
+  if(activityTypes.length>0) return activityTypes;
+  return activity
+})
+const ticketsItems = computed(() => {
   return (tickets.value || []).map((t) => ({
     title: t.name,
-    value: t.id,
-  }))
+    value: t.id
+  }));
 });
-  
 </script>
 
 <template>
-  <v-card class="activity-form pa-4 mt-4" elevation="0">
-    <v-card-title>Dodaj nową aktywność</v-card-title>
+  <v-form ref="formRef" v-slot="{ isValid }" v-model="isFormValid">
+    <v-card class="activity-form pa-4 mt-4" elevation="0">
+      <v-card-title>Dodaj nową aktywność</v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12" sm="6">
+            <v-select
+              v-model="form.type"
+              :items="activityTypesList"
+              label="Typ aktywności"
+              variant="outlined"
+              bg-color="background"
+              item-value="id"
+              item-title="name"
+            />
+          </v-col>
 
-    <v-card-text>
-      <v-row>
-        <v-col cols="12" sm="6">
-          <v-select
-            v-model="form.type"
-            :items="activityTypes"
-            label="Typ aktywności"
-            variant="outlined"
-            bg-color="background"
-            item-value="id"
-            item-title="name"
-          >
-          </v-select>
-        </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="form.name"
+              :rules="nameRules"
+              label="Nazwa aktywności"
+              variant="outlined"
+              required
+              bg-color="background"
+            />
+          </v-col>
 
-        <v-col cols="12" sm="6">
-          <v-text-field
-            v-model="form.name"
-            :rules="nameRules"
-            label="Nazwa aktywności"
-            variant="outlined"
-            required
-            bg-color="background"
-          />
-        </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="form.start_time"
+              variant="outlined"
+              label="Godzina rozpoczęcia"
+              bg-color="background"
+              placeholder="hh:mm"
+              :rules="timeRules"
+              maxlength="5"
+            />
+          </v-col>
 
-        <v-col cols="12" sm="6">
-          <v-text-field
-            v-model="form.start_time"
-            :active="timeMenu"
-            :focus="timeMenu"
-            variant="outlined"
-            label="Godzina rozpoczęcia"
-            prepend-inner-icon="mdi-clock-time-four-outline"
-            readonly
-            bg-color="background"
-          >
-            <v-menu
-              v-model="timeMenu"
-              :close-on-content-click="false"
-              activator="parent"
-              transition="scale-transition"
-            >
-              <v-time-picker
-                v-if="timeMenu"
-                v-model="form.start_time"
-                format="24hr"
-                scrollable
-                :actions="true"
-              />
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="form.duration"
+              label="Czas trwania (min)"
+              variant="outlined"
+              type="number"
+              bg-color="background"
+              :rules="durationRules"
+            />
+          </v-col>
 
-            </v-menu>
-          </v-text-field>
-        </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="form.location"
+              label="Miejsce"
+              variant="outlined"
+              bg-color="background"
+              :rules="nameRules"
+            />
+          </v-col>
 
-        <v-col cols="12" sm="6">
-          <v-text-field
-            v-model="form.duration"
-            label="Czas trwania (min)"
-            variant="outlined"
-            type="number"
-            bg-color="background"
-          />
-        </v-col>
+          <v-col cols="12" sm="6">
+            <v-select
+              v-model="form.ticket"
+              :disabled="ticketsItems.length === 0"
+              label="Wybierz bilet"
+              variant="outlined"
+              :items="ticketsItems"
+              bg-color="background"
+              clearable
+            />
+          </v-col>
 
-        <v-col cols="12" sm="6">
-          <v-text-field
-            v-model="form.location"
-            label="Miejsce"
-            variant="outlined"
-            bg-color="background"
-          />
-        </v-col>
+          <v-col cols="12">
+            <v-textarea
+              v-model="form.description"
+              label="Opis"
+              variant="outlined"
+              bg-color="background"
+              :rules="nameRules"
+            />
+          </v-col>
+        </v-row>
+      </v-card-text>
 
-        <v-col cols="12" sm="6">
-          <v-select
-            v-model="form.ticket"
-            label="Wybierz bilet"
-            variant="outlined"
-            :items="ticketsItems"
-            bg-color="background"
-          />
-        </v-col>
-
-        <v-col cols="12" sm="12">
-          <v-textarea
-            v-model="form.description"
-            label="Opis"
-            variant="outlined"
-            bg-color="background"
-          />
-        </v-col>
-      </v-row>
-    </v-card-text>
-
-    <v-card-actions>
-      <v-spacer />
-      <AppButton
-          color="accent"
-          text="Anuluj"
-          @click="$emit('cancelForm')"
-      />
-      <AppButton
+      <v-card-actions>
+        <v-spacer />
+        <AppButton color="accent" text="Anuluj" @click="$emit('cancelForm')" />
+        <AppButton
           color="primary"
           text="Dodaj"
           @click="submitActivity"
           :disabled="!isFormValid"
-      />
-    </v-card-actions>
-  </v-card>
+        />
+      </v-card-actions>
+    </v-card>
+  </v-form>
 </template>
 
 <style scoped lang="scss">

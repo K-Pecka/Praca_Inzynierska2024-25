@@ -2,10 +2,10 @@
 import {useTripStore, useUtilsStore, useAuthStore} from "@/stores";
 import {useSafeDelete} from "@/composables/useSafeDelete";
 import AppButton from "@/components/AppButton.vue";
-import Loader from "@/components/common/AppLoader.vue"
+import Loader from "@/components/shared/AppLoader.vue"
 import {images} from "@/data";
 import {Trip} from "@/types";
-
+import { useRoute } from "vue-router";
 const {confirmAndRun} = useSafeDelete();
 const tripStore = useTripStore();
 tripStore.initialize();
@@ -27,35 +27,33 @@ const handleDelete = (tripId: string) => {
     wordToConfirm: "USUŃ"
   });
 };
+
+import { HeaderSection } from "@/components";
+
+const route = useRoute();
+
 </script>
 
 <template>
   <v-col cols="12" sm="10" md="10" lg="10" xl="10">
-
+    <HeaderSection
+        title="Zarządzaj wycieczkami"
+        subtitle="Przeglądaj i zarządzaj swoimi wycieczkami"
+        :button="true"
+        buttonText="Dodaj wycieczkę"
+        btnGoBack
+        :buttonAction="() => $router.push({ name: 'createTrip', params:{role:route.params.role} })"
+        :goBackAction="() => $router.push({ name: 'roleSelection' })"
+      />
     <!-- Header with button -->
-    <v-row
-        no-gutters
-        class="justify-space-between align-center mb-10"
-    >
-        <span class="text-h4 pb-4 font-weight-bold">
-          Zarządzaj wycieczkami
-        </span>
-      <router-link :to="{ name: 'createTrip' }">
-
-        <AppButton
-            color="empty"
-            text="Dodaj wycieczkę"
-        />
-      </router-link>
-    </v-row>
     <v-row v-if="isLoading_trips">
       <Loader text="Ładowanie danych..."/>
     </v-row>
     <!-- Trip cards -->
     <v-row v-else>
-      <template v-if="trips && trips.length > 0">
+      <template v-if="trips?.results && trips.results.length && trips.results.length > 0">
         <v-col
-            v-for="trip in trips" :key="trip.id"
+            v-for="trip in trips.results" :key="trip.id"
             cols="12"
             sm="6"
             md="4"
@@ -75,7 +73,7 @@ const handleDelete = (tripId: string) => {
 
                 <!-- Trip Info -->
                 <v-card-actions class="flex-column" style="max-width: 220px;">
-                  <v-card-title class="font-weight-bold">{{ trip.name }}</v-card-title>
+                  <v-card-title class="font-weight-bold">{{trip.name }}</v-card-title>
                   <v-card-subtitle class="font-weight-medium pb-6">
                     {{ formatDatePolish(trip.start_date) || '' }} - {{ formatDatePolish(trip.end_date) || '' }}
                   </v-card-subtitle>

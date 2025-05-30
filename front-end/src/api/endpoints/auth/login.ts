@@ -5,13 +5,13 @@ import { useNotificationStore } from "@/stores";
 export const loginFetch = async (credentials: Record<string, string>) => {
   try {
     const response = await apiClient.post(apiEndpoints.auth.login, credentials);
+    if (response.status === 401 ){
+      
+      throw response.data || { message: "Unauthorized" };
+    }
     return response.data;
   } catch (error: any) {
-    let errorData = null;
-    if (backendNotification && error.response?.data) {
-      errorData = error.response.data;
-    }
-    const { loginError } = useNotificationStore();
-    throw new Error(errorData || loginError());
+    const errorData = error.response?.data;
+        throw errorData || { message: "unknown" };
   }
 };

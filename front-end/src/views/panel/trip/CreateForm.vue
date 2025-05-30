@@ -1,44 +1,45 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import {Section,Form} from "@/components";
-import { useFormStore,useTripStore } from "@/stores";
+import { Section, Form, HeaderSection } from "@/components";
+import { useFormStore, useTripStore } from "@/stores";
 import { FormType } from "@/types/enum";
 
 const { trip } = useTripStore();
-const {createTrip} = trip;
-const { getFormInputs, isFormValid } = useFormStore();
+const { createTrip } = trip;
 
-const inputs = ref(getFormInputs(FormType.TRIP));
+const { initForm, sendForm } = useFormStore();
+const init = initForm(FormType.TRIP);
+const inputs = ref(init.inputs);
+const formValues = ref(init.values);
 
-const formValues = ref<Record<string, string>>(
-    Object.fromEntries(inputs.value.map(input => [input.name, ""]))
-);
-const handleSubmit = async (_formData: any, config: any) => {
-  if (config?.send && isFormValid(FormType.TRIP, formValues.value)) {
-    const { tripDates } = formValues.value;
-    const [start_date = '', end_date = ''] = (tripDates || '').split(' - ');
-    const data = {
-      name: formValues.value.tripName,
-      start_date: start_date || '',
-      end_date: end_date || ''
-    }
-  
-    try {
-      await createTrip.mutateAsync(data);
-    } catch (error) {
-      console.error("Błąd tworzenia wycieczki:", error);
-    }
-  }
+const handleSubmit = async () => {
+  await sendForm({
+    data: formValues.value,
+    send: async (data: Record<string, string>) => {
+      const { tripDates } = formValues.value;
+      const [start_date = "", end_date = ""] = (tripDates || "").split(" - ");
+      const tripData = {
+        name: formValues.value.tripName,
+        start_date: start_date || "",
+        end_date: end_date || "",
+      };
+      await createTrip.mutateAsync(tripData);
+    },
+  });
 };
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 </script>
 
 <template>
   <Section style="">
     <template #title>
-      <h4 class="pb-2">Stwórz wycieczkę</h4>
-      <h6 style="font-weight: 500">Zaplanuj swoją wymarzoną wycieczkę</h6>
-      <p></p>
+      <HeaderSection
+        title="Stwórz wycieczkę"
+        subtitle="Zaplanuj swoją wymarzoną wycieczkę"
+        :center="true"
+      />
     </template>
 
     <template #content>
@@ -47,6 +48,7 @@ const handleSubmit = async (_formData: any, config: any) => {
         :inputs="inputs"
         :formValues="formValues"
         @submitForm="handleSubmit"
+        :cancel="{ label: 'anuluj',onclick: () => router.go(-1) }"
       >
       </Form>
     </template>
@@ -58,7 +60,7 @@ h1 {
   color: rgb(var(--v-theme-primary));
   font-size: 2rem;
   margin-bottom: 0.5rem;
-  color: rgba(0, 0, 0, .75);
+  color: rgba(0, 0, 0, 0.75);
 }
 p {
   margin: 0 0 2rem 0;

@@ -1,4 +1,3 @@
-import type { RouteRecordRaw } from "vue-router";
 import InviteLayout from "@/layouts/InviteLayout.vue";
 import InviteLanding from "@/views/invite/InviteLanding.vue";
 const inviteRoutes = {

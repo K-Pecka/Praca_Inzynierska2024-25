@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import {useActivityStore} from "@/stores/trip/useActivityStore";
-import {useAuthStore, useUtilsStore} from "@/stores";
+import {useUtilsStore} from "@/stores";
 
-const {getTripId, getPlanId} = useUtilsStore();
+const {getTripId, getItineraryId} = useUtilsStore();
 import AppButton from "../../../AppButton.vue";
+import { computed } from "vue";
 
 defineProps({
   isOwner: Boolean,
@@ -12,12 +13,16 @@ defineProps({
     required: true,
   },
 });
-
+import {activity as activityType} from "@/data/category/activity"
 const {activityTypes, deleteActivity} = useActivityStore();
-
+const activityTypesList = computed(()=>{
+  if(activityTypes.length>0) return activityTypes;
+  return activityType
+})
 const getTypeLabel = (type: number | string) => {
+
   const typeAsNumber = Number(type);
-  const found = activityTypes.find((t) => t.id === typeAsNumber);
+  const found = activityTypesList.value.find((t) => t.id === typeAsNumber);
   return found ? found.name : String(type);
 };
 
@@ -91,7 +96,7 @@ const formatTime = (timeString: string) => {
                     deleteActivity.mutate({
                     activityId: String(activity.id),
                     tripId: String(getTripId()),
-                    planId: String(getPlanId())
+                    itineraryId: String(getItineraryId())
                   })}"
                 />
               </v-card-actions>

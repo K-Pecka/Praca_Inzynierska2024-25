@@ -1,34 +1,61 @@
 <script setup lang="ts">
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import {Section, Form} from '@/components';
 import {Input} from '@/types/interface';
-import {useFormStore} from '@/stores';
-import {FormType} from '@/types/enum';
-import {useAuthStore} from '@/stores';
+import {useFormStore, useAuthStore} from '@/stores';
+import {FormType} from "@/types/enum";
 
-const {getFormInputs, isFormValid} = useFormStore();
-const {updateProfileMutation} = useAuthStore();
+const { getFormInputs, isFormValid } = useFormStore();
+const { updateProfileMutation, updatePasswordMutation , userData } = useAuthStore();
+const personalInputs = ref<Input[]>(getFormInputs(FormType.PROFILE_PERSONAL));
+const passwordInputs = ref<Input[]>(getFormInputs(FormType.PROFILE_PASSWORD));
+const user = userData.getUser();
 
-const inputs = ref<Input[]>(getFormInputs(FormType.PROFILE));
-const formValues = ref<Record<string, string>>(
-    Object.fromEntries(inputs.value.map(i => [i.name, '']))
+const personalValues = ref<Record<string, string>>({
+  first_name: user?.first_name ?? "",
+  last_name: user?.last_name ?? "",
+});
+
+const passwordValues = ref<Record<string, string>>(
+    Object.fromEntries(passwordInputs.value.map(i => [i.name, ""]))
 );
 
-async function handleSubmit(_: any, cfg: { send?: boolean }) {
-  if (!cfg?.send) return;
-  if (!isFormValid(FormType.PROFILE, formValues.value)) return;
+const isChanged = computed(() => {
+  return (
+      personalValues.value.first_name !== (user?.first_name ?? "") ||
+      personalValues.value.last_name !== (user?.last_name ?? "")
+  );
+});
 
-  const {firstName, lastName, currentPass, newPass} = formValues.value;
-  const payload = {
-    first_name: firstName,
-    last_name: lastName,
-    current_password: currentPass,
-    new_password: newPass,
-  };
-  try {
-    await updateProfileMutation.mutateAsync(payload);
-  } catch {
+const isPasswordValid = computed(() => {
+  const newPass = passwordValues.value.new_pass;
+  const repeatPass = passwordValues.value.repeat_pass;
+
+  return (
+      newPass.length >= 6 &&
+      repeatPass.length >= 6 &&
+      newPass === repeatPass
+  );
+});
+
+async function handlePersonalSubmit(_: any, cfg: { send?: boolean }) {
+  if (!cfg?.send || !isFormValid(FormType.PROFILE_PERSONAL, personalValues.value)) return;
+
+  const { first_name, last_name } = personalValues.value;
+
+  await updateProfileMutation.mutateAsync({ first_name, last_name });
+}
+
+async function handlePasswordSubmit(_: any, cfg: { send?: boolean }) {
+  if (!cfg?.send || !isFormValid(FormType.PROFILE_PASSWORD, passwordValues.value)) {
+    return;
   }
+  const { new_pass, repeat_pass } = passwordValues.value;
+
+  await updatePasswordMutation.mutateAsync({
+    password: new_pass,
+    password_confirm: repeat_pass,
+  });
 }
 </script>
 
@@ -41,10 +68,19 @@ async function handleSubmit(_: any, cfg: { send?: boolean }) {
 
     <template #content>
       <Form
-          :submitButtonLabel="'Zapisz zmiany'"
-          :inputs="inputs"
-          :formValues="formValues"
-          @submitForm="handleSubmit"
+          :submitButtonLabel="'Zapisz dane osobowe'"
+          :inputs="personalInputs"
+          :formValues="personalValues"
+          :disabled="!isChanged"
+          @submitForm="handlePersonalSubmit"
+      />
+      <br />
+      <Form
+          :submitButtonLabel="'Zmień hasło'"
+          :inputs="passwordInputs"
+          :formValues="passwordValues"
+          :disabled="!isPasswordValid"
+          @submitForm="handlePasswordSubmit"
       />
     </template>
   </Section>
@@ -57,7 +93,7 @@ async function handleSubmit(_: any, cfg: { send?: boolean }) {
 }
 
 .settings-subtitle {
-  margin-bottom: 1rem;
+  margin-bottom: .1rem;
   color: rgb(var(--v-theme-text), .8);
 }
 </style>

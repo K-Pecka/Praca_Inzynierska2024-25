@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
 import { useParticipants } from "./useParticipants";
 import { useDashboard } from "./useDashboard";
-import { usePlans } from "./usePlans";
+import { useItineraries } from "./useItineraries";
 import { useTrips } from "./useTrips";
 import { useBudget } from "./useBudget";
+import {useDebt} from './useDebt'
 import { useTicketStore, useUtilsStore } from "@/stores";
 export const useTripStore = defineStore("trip", () => {
   const { getTripId } = useUtilsStore();
@@ -15,14 +16,17 @@ export const useTripStore = defineStore("trip", () => {
     deleteTrip,
     createTrip,
     updateTrip,
+    updateTripBudget
   } = useTrips(getTripId);
-  const { tripMutationBudget, createExpense, getExpenseByTrip,deleteExpense } =
+  const {createExpense, getExpenseByTrip,deleteExpense,setFilters,getFilters } =
     useBudget(getTripId);
-  const { getPlans, yourPlans, planMutationAdd, handleDeleteItinerary } = usePlans(getTripId);
+
+  const {createDebt,getDebt,removeMember,deleteDebt} = useDebt(getTripId)
+  const { createItinerary, getItineraries, handleDeleteItinerary } = useItineraries(getTripId);
 
   const { addParticipant, removeParticipant } = useParticipants();
 
-  const { getTickets } = useTicketStore();
+  const { getTickets,createTicket,deleteTicket,updateMembers } = useTicketStore();
   return {
     dashboard: {
       getDashboard,
@@ -31,84 +35,41 @@ export const useTripStore = defineStore("trip", () => {
     budget: {
       getExpensByTrip: getExpenseByTrip,
       deleteExpense,
-      createExpense
+      createExpense,
+      setFilters,
+      getFilters
+    },
+    debt:{
+      createDebt,
+      getDebt,
+      removeMember,
+      deleteDebt
     },
     trip:{
       getTrips,
       getTripDetails,
       deleteTrip,
       createTrip,
-      updateTrip
+      updateTrip,
+      updateTripBudget
     },
     plan:{
       handleDeleteItinerary
     },
-    yourPlans,
-    getPlans,
-    getTripDetails,
-    tripMutationBudget,
-    planMutationAdd,
-    removeParticipant,
-    addParticipant,
-    getTickets,
-    createExpense,
+    ticket:{
+      getTickets,
+      createTicket,
+      deleteTicket,
+      updateMembers
+    },
+    itinerary:{
+      getItineraries,
+      createItinerary,
+      handleDeleteItinerary
+    },
+    participant:{
+      removeParticipant,
+      addParticipant,
+    }
   };
 });
-// import { defineStore } from "pinia";
-// import { useParticipants } from "./useParticipants";
-// import { useDashboard } from "./useDashboard";
-// import { usePlans } from "./usePlans";
-// import { useTrips } from "./useTrips";
-// import { useBudget } from "./useBudget";
-// import { useTicketStore } from "@/stores";
-
-// export const useTripStore = defineStore("trip", () => {
-//   // Dashboard
-//   const { getDashboard, getExpenseItem } = useDashboard();
-
-//   // Plans
-//   const { getPlans, yourPlans, addPlan } = usePlans();
-
-//   // Trips
-//   const { yourTrips, getTripDetails, getTrips, addTrip, updateTrip } = useTrips();
-
-//   // Participants
-//   const { addParticipant, removeParticipant } = useParticipants();
-
-//   // Budget
-//   const { addExpense, getExpenses, budgetMutation } = useBudget();
-
-//   // Tickets
-//   const { getTickets } = useTicketStore();
-
-//   return {
-//     dashboard: {
-//       getDashboard,
-//       getExpenseItem,
-//     },
-//     plans: {
-//       getPlans,
-//       yourPlans,
-//       addPlan,
-//     },
-//     trips: {
-//       yourTrips,
-//       getTripDetails,
-//       getTrips,
-//       addTrip,
-//       updateTrip,
-//     },
-//     participants: {
-//       addParticipant,
-//       removeParticipant,
-//     },
-//     budget: {
-//       addExpense,
-//       getExpenses,
-//       budgetMutation,
-//     },
-//     tickets: {
-//       getTickets,
-//     },
-//   };
-// });

@@ -1,18 +1,27 @@
 <script lang="ts" setup>
-import {Form, HeaderSection, ListLink, Section} from "@/components/common";
-import { usePageHomeStore,useFormStore } from "@/stores/";
+import { Form, HeaderSection, ListLink, Section } from "@/components/shared";
+import { usePageHomeStore, useFormStore, useAuthStore } from "@/stores/";
 import { FormType } from "@/types/enum";
 import { ref } from "vue";
 
 const { getSectionTitle } = usePageHomeStore();
-const { getMoreOptions,initForm,sendForm, formValues } = useFormStore();
-
+const { getMoreOptions, initForm, sendForm } = useFormStore();
+const { loginMutation } = useAuthStore();
 const sectionTitle = getSectionTitle(FormType.LOGIN);
-const inputs = ref(initForm(FormType.LOGIN));
+const init = initForm(FormType.LOGIN);
+const inputs = ref(init.inputs);
+const formValues = ref(init.values);
 const moreOptions = getMoreOptions();
-const handleSubmit = async (formValue: any, config: any) => {
-  sendForm(formValue, config);
+
+const handleSubmit = async () => {
+  await sendForm({
+    data: formValues.value,
+    send: async (data: Record<string, string>) => {
+      await loginMutation.mutateAsync(data);
+    }
+  });
 };
+
 </script>
 
 <template>

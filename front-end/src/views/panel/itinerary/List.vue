@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import {Section, TripCard} from "@/components";
+import {Section, ItineraryCard} from "@/components";
 import {useTripStore} from "@/stores/trip/useTripStore";
-import HeaderSection from "@/components/common/HeaderSection.vue";
+import HeaderSection from "@/components/shared/HeaderSection.vue";
 import AppButton from "@/components/AppButton.vue";
 import {images} from "@/data";
 import { useUtilsStore,useAuthStore } from "@/stores";
 import { useRouter } from "vue-router";
+import { computed } from "vue";
 const {getTripId} = useUtilsStore();
-const {yourPlans} = useTripStore();
-const {data: rawPlans, isLoading, error} = yourPlans.plans();
+const {itinerary} = useTripStore();
+const {getItineraries} = itinerary;
+const {itineraries, isLoading_itineraries, error_itineraries} = getItineraries();
 
+const itineraryWithActivities= computed(() => itineraries.value?.results.filter(el =>isOwner(trip.value?.creator?.id ?? 0) || el && typeof el.activities_count === 'number' && el.activities_count > 0))
 const {trip:tripStore} = useTripStore();
 const {getTripDetails} = tripStore;
 const {trip} = getTripDetails();
@@ -17,9 +20,9 @@ const {trip} = getTripDetails();
 const { userData } = useAuthStore();
 const { isOwner } = userData;
 const router = useRouter();
-const goToCreatePlan = () => {
+const goToCreateItinerary= () => {
   if (isOwner(trip.value?.creator?.id ?? 0)) {
-    router.push({ name: 'createPlan', params: { tripId: String(getTripId()) } });
+    router.push({ name: 'createItinerary', params: { tripId: String(getTripId()) } });
   }
 }
 </script>
@@ -27,22 +30,21 @@ const goToCreatePlan = () => {
 <template>
 
   <Section>
-    <template #title v-if="trip && rawPlans && rawPlans.length">
+    <template #title v-if="trip && itineraries && itineraries.results.length">
       <HeaderSection subtitle="Plany podróży" />
     </template>
     <template #content>
-      <p v-if="isLoading">Ładowanie...</p>
-      <p v-else-if="error">Błąd: {{ error.message }}</p>
-      <template v-else-if="trip && rawPlans && rawPlans.length">
-        <TripCard
-            :plans="rawPlans"
-            :btn="yourPlans.btn ?? []"
+      <p v-if="isLoading_itineraries">Ładowanie...</p>
+      <p v-else-if="error_itineraries">Błąd: {{ error_itineraries.message }}</p>
+      <template v-else-if="trip && itineraries && itineraries.results.length">
+        <ItineraryCard
+            :itineraries="itineraryWithActivities"
             :isOwner = "isOwner(trip?.creator?.id)"
         />
       </template>
 
       <!-- Empty state -->
-      <template v-else>
+      <template v-if="itineraries && itineraries?.results.length==0">
         <v-col cols="12" class="text-center py-10">
           <v-row class="flex-column align-center">
           <span class="empty-header font-weight-bold mb-8">
@@ -63,7 +65,7 @@ const goToCreatePlan = () => {
                 fontSize="font-auto"
                 text="Dodaj plan podróży"
                 :disabled="!isOwner(trip?.creator?.id ?? 0)"
-                @click="goToCreatePlan"
+                @click="goToCreateItinerary"
               />
           </v-row>
         </v-col>

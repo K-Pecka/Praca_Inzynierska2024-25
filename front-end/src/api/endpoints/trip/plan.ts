@@ -1,26 +1,16 @@
 import { apiEndpoints, fetchData, setParam } from "../../apiEndpoints";
-import { Plan, NewPlan } from "@/types/interface";
+import { Itinerary, NewItinerary,ItineraryResponse } from "@/types/interface";
 
-export const fetchPlans = async (param: Record<string, string> = {}) => {
+export const fetchItinerary = async (param: Record<string, string> = {}):Promise<ItineraryResponse> => {
   const url = setParam(apiEndpoints.plan.all, param);
 
-  const { data, error } = await fetchData<Plan[]>(url, "GET");
+  const { data, error } = await fetchData<ItineraryResponse>(url, "GET");
 
   if (error) {
     throw new Error(error);
   }
 
-  return data;
-};
-
-export const fetchPlan = async () => {
-  const { data, error } = await fetchData<Plan>(apiEndpoints.plan.detail, "GET");
-
-  if (error) {
-    throw new Error(error);
-  }
-
-  return data;
+  return data || {results:[]};
 };
 
 export const deleteItinerary = async (param: Record<string, string> = {}) => {
@@ -35,13 +25,13 @@ export const deleteItinerary = async (param: Record<string, string> = {}) => {
   return param;
 };
 
-export const createPlan = async (
-    newPlan: Plan,
+export const createItinerary = async (
+    newPlan: NewItinerary,
     param: Record<string, string> = {}
 ) => {
   const url = setParam(apiEndpoints.plan.create, param);
 
-  const { data, error } = await fetchData<NewPlan>(url, "POST", newPlan);
+  const { data, error } = await fetchData<NewItinerary>(url, "POST", newPlan);
 
   if (error) {
     throw new Error(error);

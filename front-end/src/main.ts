@@ -15,7 +15,8 @@ import { messages } from "./lib/messages";
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000,
+      staleTime: 5 * 60,
+      gcTime: 1000 * 60 * 15
     },
   },
 });

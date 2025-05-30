@@ -1,4 +1,3 @@
-import {createWebHistory} from 'vue-router';
 import Dashboard from "@/views/panel/YourTrip.vue";
 import {RoleSelection as roleSelection, TripForm} from "@/views/panel";
 import ChooseRoleLayout from "@/layouts/ChooseRoleLayout.vue";
@@ -20,7 +19,7 @@ const tripRoutes = {
             component: roleSelection
         },
         {
-            path: "trip/create",
+            path: "/:role/trip/create",
             name: "createTrip",
             component: TripForm
         },

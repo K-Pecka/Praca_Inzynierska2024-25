@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import {ref, watch} from "vue";
-import {useRoute} from "vue-router";
-import {Section, Form, HeaderSection} from "@/components";
-import {useFormStore, useTripStore} from "@/stores";
-import {FormType} from "@/types/enum";
+import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import { Section, Form, HeaderSection } from "@/components";
+import { useFormStore, useTripStore } from "@/stores";
+import { FormType } from "@/types/enum";
+import dayjs from "dayjs";
 
 const route = useRoute();
 const id = Number(route.params.tripId);
@@ -12,11 +13,11 @@ const { getFormInputs, isFormValid } = useFormStore();
 const inputs = ref(getFormInputs(FormType.TRIP));
 
 const formValues = ref<Record<string, string>>(
-    Object.fromEntries(inputs.value.map((input) => [input.name, ""]))
+  Object.fromEntries(inputs.value.map((input) => [input.name, ""]))
 );
 
-const { trip:tripStore } = useTripStore();
-const {updateTrip,getTripDetails}= tripStore
+const { trip: tripStore } = useTripStore();
+const { updateTrip, getTripDetails } = tripStore;
 const { isLoading_trip, error_trip } = getTripDetails();
 
 const trip = ref(tripStore.getTripDetails().trip);
@@ -24,18 +25,28 @@ watch(
   () => trip?.value,
   (newTrip) => {
     if (newTrip) {
+      const tripNameInput = inputs.value.find(
+        (input) => input.name === "tripName"
+      );
+      if (tripNameInput) {
+        formValues.value.tripName = newTrip?.name ?? "";
+        tripNameInput.config = {
+          ...tripNameInput.config,
+          edit: true,
+          label: newTrip?.name
+        };
+      }
       const tripDatesInput = inputs.value.find(
         (input) => input.name === "tripDates"
       );
       if (tripDatesInput) {
-        formValues.value.tripName = newTrip?.name ?? '';
-        formValues.value.start_date = newTrip?.start_date ?? '';
-        formValues.value.end_date = newTrip?.end_date ?? '';
+        formValues.value.start_date = newTrip?.start_date ?? "";
+        formValues.value.end_date = newTrip?.end_date ?? "";
         tripDatesInput.config = {
           ...tripDatesInput.config,
           edit: true,
-          min: newTrip?.start_date ?? '',
-          max: newTrip?.end_date ?? '',
+          min: dayjs().format("YYYY-MM-DD") ?? "",
+          maxDate: newTrip?.end_date ?? "",
         };
       }
     }
@@ -45,12 +56,12 @@ watch(
 function handleSubmit(_formData: any, config: any) {
   if (config?.send && isFormValid(FormType.TRIP, formValues.value)) {
     const { tripName, tripDates } = formValues.value;
-    const [start_date, end_date] = tripDates.split(' - ');
+    const [start_date, end_date] = tripDates.split(" - ");
 
     const newData = {
       name: tripName,
-      start_date: start_date || '',
-      end_date: end_date || '',
+      start_date: start_date || "",
+      end_date: end_date || "",
     };
     updateTrip.mutateAsync({ tripId: String(id), newData });
   }
@@ -60,16 +71,14 @@ function handleSubmit(_formData: any, config: any) {
 <template>
   <Section>
     <template #title>
-      <HeaderSection
-          title="Edytuj wycieczkę"
-          no-sub-title
-          center
-      />
+      <HeaderSection title="Edytuj wycieczkę" no-sub-title center />
     </template>
 
     <template #content>
       <p v-if="isLoading_trip">Ładowanie danych wycieczki...</p>
-      <p v-else-if="error_trip && error_trip.message">Błąd: {{ error_trip.message }}</p>
+      <p v-else-if="error_trip && error_trip.message">
+        Błąd: {{ error_trip.message }}
+      </p>
 
       <Form
         v-else

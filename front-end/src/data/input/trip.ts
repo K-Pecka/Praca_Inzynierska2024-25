@@ -1,5 +1,6 @@
 import { InputType } from "@/types/enum";
 import { Validator } from "@/utils/validator/validation";
+import { max } from "moment";
 
 const getValidator = (errorMessage: Record<string, string>): Validator => {
   return new Validator(errorMessage).isEmpty().save();
@@ -10,9 +11,9 @@ export const tripInput = (errorMessage: Record<string, string>) => [
         name: "tripName",
         label: "Nazwa",
         type: InputType.TEXT,
-        placeholder: "Bałkany",
-        validation: getValidator(errorMessage),
-        config: { required: true },
+        placeholder: "Podaj nazwę wycieczki",
+        validation: getValidator(errorMessage).maxLength(50),
+        config: { required: true,maxLength:50 },
         error: [],
       },
       {
