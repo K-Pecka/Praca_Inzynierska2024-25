@@ -4,7 +4,6 @@ import 'package:mobile/core/models/trip_model.dart';
 import 'package:mobile/core/theme/text_styles.dart';
 import 'package:mobile/core/theme/themes.dart';
 import 'package:mobile/core/services/debt_service.dart';
-import 'debt_overview_screen.dart';
 
 class DebtDetailScreen extends StatefulWidget {
   final DebtModel debt;

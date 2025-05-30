@@ -3,7 +3,6 @@ import 'package:mobile/core/models/trip_model.dart';
 import 'package:mobile/core/models/debt_model.dart';
 import 'package:mobile/core/services/debt_service.dart';
 import 'package:mobile/core/screens/base_screen.dart';
-
 import '../widgets/debt_widgets.dart';
 import 'debt_detail_screen.dart';
 

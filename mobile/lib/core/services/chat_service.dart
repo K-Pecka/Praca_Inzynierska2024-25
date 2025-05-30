@@ -54,25 +54,6 @@ class ChatService {
     return allMessages;
   }
 
-  static Future<void> sendHttpMessage({
-    required int tripId,
-    required int roomId,
-    required String content,
-  }) async {
-    final url = Uri.parse('$baseUrl/trip/$tripId/chat/$roomId/chat-message/');
-    final body = jsonEncode({'content': content});
-
-    final response = await HttpHandler.request(
-      url,
-      method: 'POST',
-      body: body,
-    );
-
-    if (response.statusCode != 201) {
-      throw Exception("Błąd wysyłania wiadomości: ${response.body}");
-    }
-  }
-
   static void disconnectWebSocket() {
     _channel?.sink.close();
     _channel = null;
@@ -103,3 +84,11 @@ class ChatService {
     channel.sink.add(message);
   }
 }
+
+
+
+
+
+
+
+
