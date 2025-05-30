@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from users.models import CustomUser, UserProfile
+from users.models import CustomUser, UserProfile, UserProfileType
 from .models import Order
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
@@ -131,13 +131,15 @@ class StripeWebhookView(APIView):
 
                     if order.subscription_type == 'tourist':
                         profile = user.get_default_profile()
-                        profile.type = 'tourist'
+                        profile_type = UserProfileType.objects.filter(code='tourist').first()
+                        profile.type = profile_type
                         profile.save()
                     elif order.subscription_type == 'guide':
+                        profile_type = UserProfileType.objects.filter(code='guide').first()
                         profile = UserProfile.objects.get_or_create(
                             user=user,
                             is_default=True,
-                            defaults={'type': 'guide'}
+                            defaults={'type': profile_type}
                         )[0]
                         profile.save()
 

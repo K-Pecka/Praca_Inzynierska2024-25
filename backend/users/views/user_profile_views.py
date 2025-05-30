@@ -22,7 +22,7 @@ class UserProfileListAPIView(ListAPIView):
     def get_queryset(self):
         search_query = self.request.query_params.get('email', None)
         if search_query:
-            return UserProfile.objects.filter(user__email__icontains=search_query, type='tourist')
+            return UserProfile.objects.filter(user__email__icontains=search_query, type__code='tourist')
         else:
             return UserProfile.objects.all()
 
