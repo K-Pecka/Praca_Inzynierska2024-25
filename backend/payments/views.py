@@ -91,11 +91,6 @@ class StripeWebhookView(APIView):
         except stripe.error.SignatureVerificationError:
             return HttpResponse(status=400)
 
-        print(f'event type: {event["type"]}')
-        print("====== FULL STRIPE EVENT ======")
-        print(json.dumps(event, indent=2))
-        print("================================")
-
         if event['type'] == 'invoice.paid':
             invoice = event['data']['object']
             print("== RAW INVOICE ==")
@@ -129,6 +124,8 @@ class StripeWebhookView(APIView):
                     order.save()
                     user = order.user
 
+                    print(f"Typ subskrypcji: {order.subscription_type}")
+
                     if order.subscription_type == 'tourist':
                         profile = user.get_default_profile()
                         profile_type = UserProfileType.objects.filter(code='tourist').first()
@@ -136,11 +133,13 @@ class StripeWebhookView(APIView):
                         profile.save()
                     elif order.subscription_type == 'guide':
                         profile_type = UserProfileType.objects.filter(code='guide').first()
+                        print(f'profile type: {profile_type}')
                         profile = UserProfile.objects.get_or_create(
                             user=user,
                             is_default=True,
                             defaults={'type': profile_type}
                         )[0]
+                        print(f'profile: {profile}')
                         profile.save()
 
                     subscription = stripe.Subscription.retrieve(subscription_id)
