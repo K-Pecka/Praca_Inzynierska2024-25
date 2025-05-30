@@ -6,7 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 from chats.serializers.chatroom_serializers import ChatroomCreateSerializer, ChatroomRetrieveSerializer, \
     ChatroomListSerializer, ChatroomUpdateSerializer
 from chats.models import Chatroom
-from server.permissions import IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatroom
+from server.permissions import IsTripParticipant, IsParticipantForChatroom, IsCreatorForChatroom, IsTripCreator
 
 
 @extend_schema(tags=['chat_room'])
@@ -16,11 +16,13 @@ class ChatroomViewSet(ModelViewSet):
     aktualizacji i usuwania pokojów czatowych (chatroomów).
     """
     def get_permissions(self):
-        base = [IsAuthenticated(), IsTripParticipant()]
+        base = [IsAuthenticated()]
         if self.action in ['retrieve']:
             base.append(IsParticipantForChatroom())
         elif self.action in ['update', 'partial_update', 'destroy']:
             base.append(IsCreatorForChatroom())
+        elif self.action == 'create':
+            base.append(IsTripCreator())
         return base
 
     def get_queryset(self):

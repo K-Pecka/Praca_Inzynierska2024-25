@@ -252,6 +252,67 @@ class IsTripCreator(BasePermission):
         return False
 
 
+class IsTripParticipantOrCreator(BasePermission):
+    """
+    Allows access if the user is either the creator or a member (participant) of the related trip.
+    """
+    message = "Tylko uczestnicy lub twórca wycieczki mogą wykonać tę akcję."
+
+    def has_permission(self, request, view):
+        profile = request.user.get_default_profile()
+        if not profile:
+            raise PermissionDenied("Nie znaleziono profilu użytkownika.")
+
+        if hasattr(view, 'action') and view.action in ['create', 'list']:
+            trip_pk = view.kwargs.get('trip_pk')
+            if trip_pk:
+                trip = Trip.objects.filter(pk=trip_pk).first()
+                if not trip:
+                    raise NotFound("Wycieczka nie istnieje.")
+                if self.is_creator_or_member(trip, profile):
+                    return True
+                raise PermissionDenied(self.message)
+            return True
+
+        try:
+            obj = view.get_object()
+        except NotFound:
+            raise
+        except Exception:
+            raise NotFound("Nie znaleziono obiektu.")
+
+        trip = self.get_related_trip(obj)
+        if not trip:
+            raise PermissionDenied("Nie można znaleźć powiązanej wycieczki.")
+
+        if self.is_creator_or_member(trip, profile):
+            return True
+
+        raise PermissionDenied(self.message)
+
+    def is_creator_or_member(self, trip, profile):
+        return trip.creator == profile or trip.members.filter(pk=profile.pk).exists()
+
+    def get_related_trip(self, obj):
+        if isinstance(obj, Trip):
+            return obj
+        elif isinstance(obj, Chatroom):
+            return obj.trip
+        elif isinstance(obj, Message):
+            return obj.chatroom.trip
+        elif isinstance(obj, Ticket):
+            return obj.trip
+        elif isinstance(obj, Itinerary):
+            return obj.trip
+        elif isinstance(obj, ItineraryActivity):
+            return obj.itinerary.trip
+        elif isinstance(obj, Expense):
+            return obj.trip
+        elif isinstance(obj, DetailedExpense):
+            return obj.trip
+        return None
+
+
 class IsTicketOwner(BasePermission):
     """
     Custom permission to check if the user is the creator or shared profile for the ticket.

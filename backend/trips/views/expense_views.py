@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from django.core.exceptions import ValidationError
 
-from server.permissions import IsTripParticipant, IsExpenseOwnerOrTripCreator
+from server.permissions import IsTripParticipant, IsExpenseOwnerOrTripCreator, IsTripParticipantOrCreator
 from trips.filters import ExpenseFilter
 from trips.models import Expense, ExpenseType, DetailedExpense
 from trips.serializers.expense_serializers import ExpenseCreateSerializer, ExpenseRetrieveSerializer, \
@@ -43,7 +43,7 @@ class ExpenseViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'create' or self.action == 'list' or self.action == 'retrieve':
-            return [IsAuthenticated(), IsTripParticipant()]
+            return [IsAuthenticated(), IsTripParticipantOrCreator()]
         elif self.action in ['update', 'partial_update', 'destroy']:
             return [IsAuthenticated(), IsExpenseOwnerOrTripCreator()]
         return [IsAuthenticated()]
