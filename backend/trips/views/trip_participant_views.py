@@ -38,6 +38,7 @@ def handle_remove(trip, data):
                 profile.user.delete()
         else:
             with transaction.atomic():
+                profile.chat_rooms.filter(trip=trip).delete()
                 trip.members.remove(profile)
         delete_access_token(trip, profile)
 
