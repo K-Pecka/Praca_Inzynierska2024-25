@@ -13,7 +13,7 @@ import '../widgets/message_bubble.dart';
 class PrivateChatScreen extends StatefulWidget {
   final int userProfileId;
   final TripModel trip;
-  final int chatroomId;
+  final int? chatroomId;
 
   const PrivateChatScreen({
     super.key,

@@ -3,6 +3,8 @@ import 'package:mobile/features/chat/screens/private_chat_screen.dart';
 import '../../../core/models/chatroom_model.dart';
 import '../../../core/models/trip_model.dart';
 import '../../../core/services/chat_service.dart';
+import '../../../core/theme/text_styles.dart';
+import '../../../core/theme/themes.dart';
 import '../../../core/utils/error_handler.dart';
 import '../../../core/screens/base_screen.dart';
 import 'announcement_channel_screen.dart';
@@ -115,7 +117,9 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
       announcement = null;
     }
 
-    final otherRooms = chatrooms.where((r) => r.type != 'group').toList();
+    final otherRooms = chatrooms
+        .where((r) => r.type != 'group' && r.lastMessage != null)
+        .toList();
 
     return BaseScreen(
       trip: widget.trip,
@@ -141,7 +145,21 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
               },
             ),
           const SizedBox(height: 8),
-
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              label: const Text('Nowa wiadomość', style: TextStyles.whiteSubtitle),
+              onPressed: () => _showNewMessageDialog(context),
+            ),
+          ),
+          const SizedBox(height: 8),
           for (var room in otherRooms)
             ChatTile(
               label: getChatLabel(room),
@@ -163,6 +181,66 @@ class _ChatOverviewScreenState extends State<ChatOverviewScreen> {
             ),
         ],
       ),
+    );
+  }
+
+  void _showNewMessageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text('Wybierz odbiorcę'),
+          content: SizedBox(
+            width: double.maxFinite,
+            height: 300,
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: widget.trip.members.length,
+                    itemBuilder: (_, i) {
+                      final m = widget.trip.members[i];
+                      final name = '${m.firstName ?? ''} ${m.lastName ?? ''}'.trim();
+                      return ListTile(
+                        leading: CircleAvatar(
+                          child: Text(
+                              (m.firstName?.substring(0,1) ?? m.email[0]).toUpperCase()
+                          ),
+                        ),
+                        title: Text(name.isNotEmpty ? name : m.email),
+                        onTap: () async {
+                          Navigator.pop(context);
+
+                          try {
+                            final chatroom = chatrooms.firstWhere((r) =>
+                            r.type == 'private' &&
+                                ((r.creatorId == widget.userProfileId && r.memberIds.contains(m.id)) ||
+                                    (r.creatorId == m.id && r.memberIds.contains(widget.userProfileId)))
+                            );
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => PrivateChatScreen(
+                                  userProfileId: widget.userProfileId,
+                                  trip: widget.trip,
+                                  chatroomId: chatroom.id,
+                                ),
+                              ),
+                            ).then((_) => loadChatrooms());
+                          } catch (_) {
+                            handleError(context, Exception("Nie znaleziono czatu z tym użytkownikiem."));
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
