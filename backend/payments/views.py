@@ -134,11 +134,11 @@ class StripeWebhookView(APIView):
                     elif order.subscription_type == 'guide':
                         profile_type = UserProfileType.objects.filter(code='guide').first()
                         print(f'profile type: {profile_type}')
-                        profile = UserProfile.objects.get_or_create(
+                        profile = UserProfile.objects.create(
                             user=user,
                             is_default=True,
-                            defaults={'type': profile_type}
-                        )[0]
+                            type=profile_type
+                        )
                         print(f'profile: {profile}')
                         profile.save()
 
