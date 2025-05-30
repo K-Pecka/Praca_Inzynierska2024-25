@@ -2,6 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from dicts.models import BaseModel
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+from datetime import timedelta
 
 from trips.models import Trip, Ticket
 from itineraries.managers import ItineraryManager, ItineraryActivityManager

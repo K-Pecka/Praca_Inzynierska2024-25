@@ -11,7 +11,6 @@ from users.serializers.user_profile_serializers import UserProfileListSerializer
 class TripCreateSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), required=False)
-    members = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=UserProfile.objects.all())
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2, write_only=True)
@@ -25,7 +24,7 @@ class TripCreateSerializer(serializers.ModelSerializer):
         request = self.context['request']
 
         if not request.user.is_guide:
-            if Trip.objects.filter(creator=request.user.get_default_profile()).count() > 2:
+            if Trip.objects.filter(creator=request.user.get_default_profile()).count() >= request.user.get_trip_limit():
                 raise serializers.ValidationError("Osiągnąłeś limit wycieczek dla swojego profilu.")
 
         if data.get("start_date") and data.get("end_date"):
@@ -51,7 +50,7 @@ class TripCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Trip
-        fields = ['id', 'name', 'creator', 'members', 'start_date', 'end_date', 'budget_amount']
+        fields = ['id', 'name', 'creator', 'start_date', 'end_date', 'budget_amount']
 
 
 class TripRetrieveSerializer(serializers.ModelSerializer):
@@ -63,6 +62,8 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
     end_date = serializers.DateField(read_only=True)
     activity_count = serializers.SerializerMethodField()
     budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    activity_for_today = serializers.IntegerField(read_only=True)
+    activity_for_week = serializers.IntegerField(read_only=True)
 
     def get_pending_members(self, obj):
         access_tokens = obj.access_tokens.filter(is_pending=True)
@@ -74,7 +75,7 @@ class TripRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Trip
-        fields = ['name', 'creator', 'members', 'pending_members', 'start_date', 'end_date', 'activity_count', 'budget_amount']
+        fields = ['name', 'creator', 'members', 'pending_members', 'start_date', 'end_date', 'activity_count', 'budget_amount', 'activity_for_today', 'activity_for_week']
 
 
 class TripListSerializer(TripRetrieveSerializer):
@@ -101,7 +102,7 @@ class TripUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField()
     creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = serializers.PrimaryKeyRelatedField(many=True, queryset=UserProfile.objects.all())
+    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     budget_amount = serializers.DecimalField(max_digits=10, decimal_places=2)

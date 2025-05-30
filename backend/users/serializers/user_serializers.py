@@ -4,6 +4,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
+from django.http.response import HttpResponseRedirect
+
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
@@ -130,6 +132,10 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             return instance.register_guest_account(validated_data)
 
         password = validated_data.pop('password', None)
+
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.save()
 
         if password:
             instance.set_password(password)

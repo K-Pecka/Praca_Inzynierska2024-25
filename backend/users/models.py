@@ -34,6 +34,31 @@ class CustomUser(AbstractBaseUser, BaseModel):
         verbose_name=_("Nazwisko"),
         help_text=_("Nazwisko użytkownika")
     )
+    subscription_active = models.BooleanField(
+        default=False,
+        verbose_name=_("Czy aktywna subskrypcja"),
+        help_text=_("Czy użytkownik ma aktywną subskrypcję")
+    )
+    subscription_plan = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        default="free",
+        choices=[
+            ("free", _("Podstawowy")),
+            ("tourist", _("Turysta")),
+            ("guide", _("Przewodnik")),
+        ],
+        verbose_name=_("Plan subskrypcyjny"),
+        help_text=_("Plan subskrypcyjny użytkownika")
+    )
+    stripe_subscription_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name=_("ID subskrypcji Stripe"),
+        help_text=_("ID subskrypcji Stripe użytkownika")
+    )
     is_guest = models.BooleanField(
         default=False,
         verbose_name=_("Czy gość"),
@@ -76,6 +101,36 @@ class CustomUser(AbstractBaseUser, BaseModel):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    def get_itinerary_limit(self):
+        """Zwraca maksymalną liczbę itineraries, które użytkownik może mieć"""
+        if self.subscription_plan == "free":
+            return 1
+        elif self.subscription_plan == "tourist" and self.subscription_active:
+            return float('inf')
+        elif self.subscription_plan == "guide" and self.subscription_active:
+            return float('inf')
+        return 0
+
+    def get_trip_limit(self):
+        """Zwraca maksymalną liczbę wycieczek, które użytkownik może mieć"""
+        if self.subscription_plan == "free":
+            return 3
+        elif self.subscription_plan == "tourist" and self.subscription_active:
+            return float('inf')
+        elif self.subscription_plan == "guide" and self.subscription_active:
+            return float('inf')
+        return 0
+
+    def get_members_limit(self):
+        """Zwraca maksymalną liczbę członków, których użytkownik może mieć w wycieczce"""
+        if self.subscription_plan == "free":
+            return 0
+        elif self.subscription_plan == "tourist" and self.subscription_active:
+            return 5
+        elif self.subscription_plan == "guide" and self.subscription_active:
+            return 30
+        return 0
 
     def register_guest_account(self, data):
         """
@@ -191,9 +246,6 @@ class UserProfile(BaseModel):
         verbose_name=_("Czy jest podstawowym profilem"),
         help_text=_("Czy jest podstawowym profilem")
     )
-    subscription_active = models.BooleanField(default=False)
-    subscription_plan = models.CharField(max_length=50, blank=True, null=True)
-    stripe_subscription_id = models.CharField(max_length=255, blank=True, null=True)
 
     objects = UserProfileManager()
 

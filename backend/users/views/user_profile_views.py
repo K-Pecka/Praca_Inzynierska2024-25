@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateAPIView, UpdateAPIView
@@ -22,7 +22,7 @@ class UserProfileListAPIView(ListAPIView):
     def get_queryset(self):
         search_query = self.request.query_params.get('email', None)
         if search_query:
-            return UserProfile.objects.filter(user__email__icontains=search_query, type='tourist')
+            return UserProfile.objects.filter(user__email__icontains=search_query, type__code='tourist')
         else:
             return UserProfile.objects.all()
 

@@ -1,7 +1,6 @@
 """
 Permission configuration for server project.
 """
-from django.utils.crypto import constant_time_compare
 from django.core.exceptions import ValidationError
 
 from rest_framework.exceptions import NotFound, PermissionDenied, AuthenticationFailed
@@ -9,8 +8,10 @@ from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import BasePermission
 
 from chats.models import Chatroom, Message
-from trips.models import Trip, Ticket, Expense, TripAccessToken
+from trips.models import Trip, Ticket, Expense, TripAccessToken, DetailedExpense
 from itineraries.models import Itinerary, ItineraryActivity
+from users.models import UserProfile
+
 
 ##################################################################################
 # Chat permissions
@@ -168,6 +169,8 @@ class IsTripParticipant(BasePermission):
             return obj.itinerary.trip
         elif isinstance(obj, Expense):
             return obj.trip
+        elif isinstance(obj, DetailedExpense):
+            return obj.trip
         return None
 
 
@@ -222,7 +225,7 @@ class IsTripCreator(BasePermission):
                 trip = itinerary.trip
 
         if not trip:
-            raise NotFound(detail="Nie znaleziono wycieczki.")
+            raise PermissionDenied(detail="Nie znaleziono wycieczki.")
 
         if trip.creator != profile:
             raise PermissionDenied(self.message)
@@ -244,7 +247,70 @@ class IsTripCreator(BasePermission):
             return obj.itinerary.trip.creator == profile
         if isinstance(obj, Expense):
             return obj.trip.creator == profile
+        if isinstance(obj, DetailedExpense):
+            return obj.trip.creator == profile
         return False
+
+
+class IsTripParticipantOrCreator(BasePermission):
+    """
+    Allows access if the user is either the creator or a member (participant) of the related trip.
+    """
+    message = "Tylko uczestnicy lub twórca wycieczki mogą wykonać tę akcję."
+
+    def has_permission(self, request, view):
+        profile = request.user.get_default_profile()
+        if not profile:
+            raise PermissionDenied("Nie znaleziono profilu użytkownika.")
+
+        if hasattr(view, 'action') and view.action in ['create', 'list']:
+            trip_pk = view.kwargs.get('trip_pk')
+            if trip_pk:
+                trip = Trip.objects.filter(pk=trip_pk).first()
+                if not trip:
+                    raise NotFound("Wycieczka nie istnieje.")
+                if self.is_creator_or_member(trip, profile):
+                    return True
+                raise PermissionDenied(self.message)
+            return True
+
+        try:
+            obj = view.get_object()
+        except NotFound:
+            raise
+        except Exception:
+            raise NotFound("Nie znaleziono obiektu.")
+
+        trip = self.get_related_trip(obj)
+        if not trip:
+            raise PermissionDenied("Nie można znaleźć powiązanej wycieczki.")
+
+        if self.is_creator_or_member(trip, profile):
+            return True
+
+        raise PermissionDenied(self.message)
+
+    def is_creator_or_member(self, trip, profile):
+        return trip.creator == profile or trip.members.filter(pk=profile.pk).exists()
+
+    def get_related_trip(self, obj):
+        if isinstance(obj, Trip):
+            return obj
+        elif isinstance(obj, Chatroom):
+            return obj.trip
+        elif isinstance(obj, Message):
+            return obj.chatroom.trip
+        elif isinstance(obj, Ticket):
+            return obj.trip
+        elif isinstance(obj, Itinerary):
+            return obj.trip
+        elif isinstance(obj, ItineraryActivity):
+            return obj.itinerary.trip
+        elif isinstance(obj, Expense):
+            return obj.trip
+        elif isinstance(obj, DetailedExpense):
+            return obj.trip
+        return None
 
 
 class IsTicketOwner(BasePermission):
@@ -303,4 +369,111 @@ class IsAuthenticatedOrValidTripToken(BasePermission):
         user = getattr(request, 'user', None)
         if user and getattr(user, 'is_authenticated', False):
             return True
+        return False
+
+
+class IsTripCreatorOrTargetUser(BasePermission):
+    """
+    Custom permission to check if the user is either the trip creator or an allowed target user (e.g., participant).
+    """
+    message = "Tylko twórca wycieczki lub uprawniony uczestnik może wykonać tę akcję."
+
+    def has_permission(self, request, view):
+        profile = request.user.get_default_profile()
+        if not profile:
+            return False
+
+        return self.is_creator_or_target_for_post(view, profile)
+
+    def has_object_permission(self, request, view, obj):
+        profile = request.user.get_default_profile()
+        if not profile:
+            return False
+        return self.is_trip_creator_or_target(obj, profile)
+
+    def is_creator_or_target_for_post(self, view, profile):
+        """
+        Checks if the user is the creator or a participant in the trip or related itinerary.
+        """
+        trip = self.get_trip_from_view(view)
+
+        request = view.request if hasattr(view, 'request') else None
+        data = request.data
+
+        profile_id = data.get('profile_id') or data.get('profile')
+
+        target_profile = UserProfile.objects.filter(pk=profile_id).first()
+
+        if trip.creator == profile or profile == target_profile:
+            return True
+
+        return False
+
+    def is_trip_creator_or_target(self, obj, profile):
+        """
+        Checks if the user is the trip creator or the target user (e.g., involved participant).
+        """
+        trip = self.extract_trip_from_obj(obj)
+
+        request = getattr(self, 'request', None)
+        data = request.data
+
+        profile_id = data.get('profile_id') or data.get('profile')
+        target_profile = UserProfile.objects.filter(pk=profile_id).first()
+
+        if profile == trip.creator or profile == target_profile:
+            return True
+
+        if not trip:
+            return False
+
+        return False
+
+    def get_trip_from_view(self, view):
+        """
+        Retrieves the Trip object from the view kwargs or associated object.
+        """
+        trip_pk = view.kwargs.get('trip_pk')
+        itinerary_pk = view.kwargs.get('itinerary_pk')
+        obj = None
+
+        if not trip_pk and not itinerary_pk and hasattr(view, 'get_object'):
+            try:
+                obj = view.get_object()
+            except Exception:
+                pass
+
+        if isinstance(obj, Trip):
+            return obj
+        elif isinstance(obj, Itinerary):
+            return obj.trip
+
+        if trip_pk:
+            return Trip.objects.filter(pk=trip_pk).first()
+        if itinerary_pk:
+            itinerary = Itinerary.objects.filter(pk=itinerary_pk).first()
+            return itinerary.trip if itinerary else None
+
+        return None
+
+    def extract_trip_from_obj(self, obj):
+        """
+        Retrieves the Trip object related to various models.
+        """
+        if isinstance(obj, Trip):
+            return obj
+        elif isinstance(obj, Chatroom):
+            return obj.trip
+        elif isinstance(obj, Message):
+            return obj.chatroom.trip
+        elif isinstance(obj, Ticket):
+            return obj.trip
+        elif isinstance(obj, Itinerary):
+            return obj.trip
+        elif isinstance(obj, ItineraryActivity):
+            return obj.itinerary.trip
+        elif isinstance(obj, Expense):
+            return obj.trip
+        elif isinstance(obj, DetailedExpense):
+            return obj.trip
         return False

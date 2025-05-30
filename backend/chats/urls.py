@@ -1,24 +1,26 @@
-from django.urls import path
+from django.urls import path, include
 
-from chats.views.message_views import MessageCreateAPIView, MessageRetrieveAPIView, MessageListAPIView, \
-    MessageUpdateAPIView, MessageDestroyAPIView
-from chats.views.chatroom_views import ChatroomCreateAPIView, ChatroomRetrieveAPIView, ChatroomListAPIView, \
-    ChatroomUpdateAPIView, ChatroomDestroyAPIView
+from rest_framework.routers import DefaultRouter
+
+from chats.views.chatroom_views import ChatroomViewSet
+from chats.views.message_views import MessageViewSet
+
+router = DefaultRouter()
+router.register(r'', ChatroomViewSet, basename='chatroom')
 
 urlpatterns = [
-    path('chatroom/create/', ChatroomCreateAPIView.as_view(), name='chatroom-create'),
-    path('chatroom/<int:pk>/', ChatroomRetrieveAPIView.as_view(), name='chatroom-retrieve'),
-    path('chatroom/all/', ChatroomListAPIView.as_view(), name='chatroom-list'),
-    path('chatroom/<int:pk>/update/', ChatroomUpdateAPIView.as_view(), name='chatroom-update'),
-    path('chatroom/<int:pk>/delete/', ChatroomDestroyAPIView.as_view(), name='chatroom-delete'),
+    path('', include(router.urls)),
 
     # Message URLs
-    path('<int:room_pk>/chat-message/create/', MessageCreateAPIView.as_view(), name='chat-message-create'),
-    path('<int:room_pk>/chat-message/<int:pk>/', MessageRetrieveAPIView.as_view(),
-         name='chat-message-retrieve'),
-    path('<int:room_pk>/chat-message/all/', MessageListAPIView.as_view(), name='chat-message-list'),
-    path('<int:room_pk>/chat-message/<int:pk>/update/', MessageUpdateAPIView.as_view(),
-         name='chat-message-update'),
-    path('<int:room_pk>/chat-message/<int:pk>/delete/', MessageDestroyAPIView.as_view(),
-         name='chat-message-delete'),
+    path('<int:room_pk>/chat-message/', MessageViewSet.as_view({
+        'get': 'list',
+        'post': 'create'
+    }), name='chat-message-list-create'),
+
+    # retrieve, update, partial_update, destroy
+    path('<int:room_pk>/chat-message/<int:pk>/', MessageViewSet.as_view({
+        'put': 'update',
+        'patch': 'partial_update',
+        'delete': 'destroy'
+    }), name='chat-message-detail'),
 ]

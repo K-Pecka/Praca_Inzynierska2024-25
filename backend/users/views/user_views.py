@@ -2,15 +2,17 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
 from django.shortcuts import get_object_or_404
+from django.http.response import HttpResponseRedirect
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from server import settings
 from server.authentication import TripTokenAuthentication
 from server.permissions import IsAuthenticatedOrValidTripToken
 from users.serializers.user_serializers import UserCreateSerializer, UserUpdateSerializer, UserUpdatePasswordSerializer, \
@@ -83,11 +85,12 @@ class ConfirmEmailView(APIView):
                 profile.type = 'tourist'
                 profile.save()
             user.is_active = True
-            user.trip_access_tokens().delete()
+            user_profile = user.get_default_profile()
+            user_profile.trip_access_tokens.all().delete()
             user.save()
-            return Response({"message": "Email confirmed successfully!"}, status=200)
+            return HttpResponseRedirect(f"{settings.LOGIN_PAGE}")
         else:
-            return Response({"message": "Email confirmation failed!"}, status=400)
+            return HttpResponseRedirect(f"{settings.FAILED_REGISTRATION_PAGE}")
 
 
 @extend_schema(
@@ -141,3 +144,21 @@ class CheckAccountTypeAPIView(APIView):
             raise ValueError("Profil użytkownika nie ma przypisanego typu.")
 
         return Response({"profile_type": profile_type}, status=status.HTTP_200_OK)
+
+
+@extend_schema(tags=['user'])
+class UserDeleteAPIView(DestroyAPIView):
+    """
+    View for handling deletion of user accounts.
+
+    This API view is responsible for deleting user accounts. It extends the
+    DestroyAPIView from Django REST framework, providing a simple way to delete a
+    user account by their ID. Appropriate permissions should be used to restrict
+    access to this view to authorized users only.
+
+    @extend_schema(tags=['user'])
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user

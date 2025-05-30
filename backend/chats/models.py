@@ -67,7 +67,7 @@ class Message(BaseModel):
     )
     profile = models.ForeignKey(
         UserProfile,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name="messages",
         verbose_name=_("Autor wiadomości"), help_text=_("Autor wiadomości")
     )

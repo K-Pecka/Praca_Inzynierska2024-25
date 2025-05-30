@@ -19,6 +19,8 @@ class CustomUserAdmin(admin.ModelAdmin):
         ('Personal info', {'fields': ('first_name', 'last_name')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         ('Important dates', {'fields': ('last_login',)}),
+        ('Subscription', {'fields': ('stripe_subscription_id', 'subscription_plan', 'subscription_active')}),
+        ('Guest Account', {'fields': ('is_guest',)}),
     )
     add_fieldsets = (
         (None, {

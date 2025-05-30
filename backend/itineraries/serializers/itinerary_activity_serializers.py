@@ -33,6 +33,7 @@ class ItineraryActivityListSerializer(serializers.ModelSerializer):
     duration = serializers.IntegerField(read_only=True)
     itinerary = serializers.PrimaryKeyRelatedField(read_only=True)
 
+
     class Meta:
         model = ItineraryActivity
         fields = ['id', 'name', 'type', 'ticket', 'description', 'location', 'date', 'start_time', 'duration', 'itinerary']

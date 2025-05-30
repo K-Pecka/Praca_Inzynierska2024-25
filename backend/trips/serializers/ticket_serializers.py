@@ -98,21 +98,23 @@ class TicketListSerializer(serializers.ModelSerializer):
 class TicketUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=False)
-    file = serializers.FileField()
-    type = serializers.PrimaryKeyRelatedField(queryset=TicketType.objects.all())
-    owner = serializers.PrimaryKeyRelatedField(read_only=True)
+    file = serializers.FileField(required=False)
+    type = serializers.PrimaryKeyRelatedField(queryset=TicketType.objects.all(), required=False)
+    owner = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
     profiles = serializers.PrimaryKeyRelatedField(
         many=True, queryset=UserProfile.objects.all(), required=False
     )
     valid_from_date = serializers.DateField(
         format="%d.%m.%Y",
-        input_formats=["%d.%m.%Y", "iso-8601"]
+        input_formats=["%d.%m.%Y", "iso-8601"],
+        required=False
     )
     valid_from_time = serializers.TimeField(
         format="%H:%M",
-        input_formats=["%H:%M", "iso-8601"]
+        input_formats=["%H:%M", "iso-8601"],
+        required=False
     )
-    trip = serializers.PrimaryKeyRelatedField(read_only=True)
+    trip = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
 
     def update(self, instance, validated_data):
         profiles = validated_data.pop('profiles', None)

@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.mail import send_mail
 from django.http.response import HttpResponseRedirect
 from django.template.loader import render_to_string
@@ -14,7 +14,7 @@ from rest_framework.generics import UpdateAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from server.permissions import IsTripCreator
+from server.permissions import IsTripCreator, IsTripCreatorOrTargetUser
 from trips.models import Trip, TripAccessToken
 from trips.serializers.trip_participant_serializers import TripParticipantsUpdateSerializer
 from users.models import CustomUser, UserProfile
@@ -91,7 +91,7 @@ def send_invitation_email(email, trip, invitation_link):
 )
 class TripParticipantsUpdateAPIView(UpdateAPIView):
     serializer_class = TripParticipantsUpdateSerializer
-    permission_classes = [IsAuthenticated, IsTripCreator]
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         return Trip.objects.get(pk=self.kwargs['trip_pk'])
@@ -104,9 +104,16 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         action = self.request.query_params.get('action', None)
 
         try:
+            user = request.user
+            profile = user.get_default_profile() if user else None
+
             if action == 'invite':
+                if not IsTripCreator().is_creator_for_post_request(view=self, profile=profile):
+                    raise PermissionDenied(IsTripCreatorOrTargetUser().message)
                 return self.handle_invite(trip, data)
-            elif action== 'remove':
+            elif action == 'remove':
+                if not IsTripCreatorOrTargetUser().is_creator_or_target_for_post(view=self, profile=profile):
+                    raise PermissionDenied(IsTripCreator().message)
                 return handle_remove(trip, data)
             return None
         except Exception as e:
@@ -116,13 +123,16 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             )
 
     def handle_invite(self, trip, data):
+        if not IsTripCreator().has_object_permission(self.request, self, trip):
+            raise PermissionDenied("Tylko twórca może zapraszać użytkowników.")
+
         user = CustomUser.objects.filter(email=data['email']).first()
 
         if user == self.request.user:
             raise ValidationError(_("Nie możesz zaprosić samego siebie"))
 
-        if trip.members.count() >= 5:
-            raise ValidationError(_("Wycieczka może mieć maksymalnie 5 uczestników."))
+        if trip.members.count() >= trip.creator.user.get_members_limit():
+            raise ValidationError(_("Osiągnięto limit uczestników w wycieczce dla tego użytkownika."))
 
         if not CustomUser.objects.filter(email=data['email']).exists():
             try:
@@ -220,5 +230,8 @@ class JoinTripAPIView(RetrieveAPIView):
         except Exception as e:
             return Response({"error": f"{_('Nie udało się dodać użytkownika do wycieczki:')} {str(e)}"},
                             status=status.HTTP_400_BAD_REQUEST)
+
+        if not user.is_guest:
+            return HttpResponseRedirect(f"{settings.LOGIN_PAGE}")
 
         return HttpResponseRedirect(f"{settings.TRIP_JOINING_PAGE}?token={token}&pk={pk}")

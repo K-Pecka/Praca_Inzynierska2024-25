@@ -2,6 +2,8 @@ import secrets
 import pycountry
 import requests
 from decimal import Decimal
+from django.utils import timezone
+from datetime import timedelta
 
 from cloudinary_storage.storage import MediaCloudinaryStorage
 
@@ -9,7 +11,7 @@ from rest_framework.response import Response
 
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from dicts.models import BaseModel
@@ -66,6 +68,27 @@ class Trip(BaseModel):
 
     objects = TripManager()
 
+    @property
+    def activity_for_today(self):
+        """Zwraca liczbę aktywności powiązanych z itineraries, które są aktywne dzisiaj"""
+        today = timezone.now().date()
+        count = 0
+        for itinerary in self.itineraries.filter(start_date__lte=today, end_date__gte=today):
+            count += itinerary.activities.count()
+        return count
+
+    @property
+    def activity_for_week(self):
+        """Zwraca liczbę aktywności powiązanych z itineraries kończących się w tym tygodniu"""
+        today = timezone.now().date()
+        days_until_sunday = 6 - today.weekday()
+        end_of_sunday = today + timedelta(days=days_until_sunday)
+        end_of_sunday = end_of_sunday if end_of_sunday <= today + timedelta(days=7) else today + timedelta(days=7)
+        count = 0
+        for itinerary in self.itineraries.filter(start_date__lte=today, end_date__range=(today, end_of_sunday)):
+            count += itinerary.activities.count()
+        return count
+
     @classmethod
     def add_member(cls, trip, user_profile):
         if trip.members.filter(id=user_profile.id).exists():
@@ -95,8 +118,9 @@ class Trip(BaseModel):
         if self.end_date and self.start_date and self.end_date < self.start_date:
             raise ValidationError(_("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."))
 
-        if self.pk and self.members.count() > 5:
-            raise ValidationError("Wycieczka może mieć maksymalnie 5 uczestników.")
+        if not self.pk:
+            if self.creator.trips_as_creator.count() >= self.creator.user.get_trip_limit():
+                raise ValidationError("Osiągnięto limit wycieczek dla tego użytkownika.")
 
     def save(self, *args, **kwargs):
         self.clean()
@@ -222,7 +246,8 @@ class Ticket(BaseModel):
         related_name="shared_tickets",
         verbose_name=_("Udostępnione profile"),
         help_text=_("Profile, które mają dostęp do biletu"),
-        blank=True
+        blank=True,
+        null=True
     )
 
     objects = TicketManager()
@@ -335,7 +360,7 @@ class Expense(BaseModel):
         verbose_name_plural = "Wydatki"
 
 
-class DetailedExpense(models.Model):
+class DetailedExpense(BaseModel):
     name = models.CharField(
         max_length=255,
         verbose_name=_("Nazwa wydatku"),
@@ -348,12 +373,12 @@ class DetailedExpense(models.Model):
         verbose_name=_("Twórca wydatku"),
         help_text=_("CREATOR")
     )
-    price = models.DecimalField(
+    amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(Decimal('0.01'))],
         verbose_name=_("Kwota"),
-        help_text=_("PRICE")
+        help_text=_("AMOUNT")
     )
     currency = models.CharField(
         max_length=3,
@@ -362,12 +387,18 @@ class DetailedExpense(models.Model):
         verbose_name=_("Waluta"),
         help_text=_("CURRENCY")
     )
-    price_in_pln = models.DecimalField(
+    amount_in_pln = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=0,
         verbose_name=_("Kwota w PLN"),
-        help_text=_("PRICE IN PLN")
+        help_text=_("AMOUNT IN PLN")
+    )
+    trip = models.ForeignKey(
+        Trip,
+        on_delete=models.CASCADE,
+        related_name="detailed_expenses",
+        verbose_name=_("Wycieczka"), help_text=_("Wycieczka")
     )
     members = models.ManyToManyField(
         'users.UserProfile',
@@ -375,34 +406,64 @@ class DetailedExpense(models.Model):
         verbose_name=_("Uczestnicy"),
         help_text=_("MEMBERS")
     )
-    price_per_member = models.DecimalField(
+    amount_per_member = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=0,
         verbose_name=_("Kwota na osobę"),
-        help_text=_("PRICE PER MEMBER")
+        help_text=_("AMOUNT PER MEMBER")
     )
-    price_per_member_in_pln = models.DecimalField(
+    amount_per_member_in_pln = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=0,
         verbose_name=_("Kwota na osobę w PLN"),
-        help_text=_("PRICE PER MEMBER IN PLN")
+        help_text=_("AMOUNT PER MEMBER IN PLN")
     )
+
+    @property
+    def convert_to_pln(self):
+        try:
+            response = requests.get(
+                'https://api.frankfurter.app/latest',
+                params={'from': self.currency, 'to': 'PLN'}
+            )
+            data = response.json()
+
+            if 'rates' not in data:
+                return round(self.amount, 2)
+
+            rate = Decimal(list(data['rates'].values())[0])
+            return round(self.amount * rate, 2)
+
+        except Exception as e:
+            print("Conversion error:", e)
+            return None
+
+    @classmethod
+    def get_user_whole_debt(cls, user):
+        """
+        Zwraca całkowity dług użytkownika we wszystkich szczegółowych wydatkach.
+        """
+        total_debt = cls.objects.filter(members=user).aggregate(total=models.Sum('amount_per_member_in_pln'))['total']
+        return total_debt if total_debt else Decimal('0.00')
 
 
     def calculate_shares(self):
         member_count = self.members.count()
         if member_count == 0:
-            self.price_per_member = Decimal('0')
-            self.price_per_member_in_pln = Decimal('0')
+            self.amount_per_member = Decimal('0')
+            self.amount_per_member_in_pln = Decimal('0')
         else:
-            self.price_per_member = self.price / member_count
-            self.price_per_member_in_pln = self.price_in_pln / member_count
+            self.amount_in_pln = self.convert_to_pln or Decimal('0')
+            self.amount_per_member = self.amount / member_count
+            self.amount_per_member_in_pln = self.amount_in_pln / member_count
 
-    def save(self, *args, **kwargs):
-        self.calculate_shares()
-        super().save(*args, **kwargs)
+    def clean(self):
+        if self.pk:
+            old = DetailedExpense.objects.get(pk=self.pk)
+            if old.amount != self.amount:
+                self.calculate_shares()
 
     def __str__(self):
-        return f"{self.name} ({self.price} {self.currency})"
+        return f"{self.name} ({self.amount} {self.currency})"

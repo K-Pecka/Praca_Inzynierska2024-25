@@ -33,7 +33,7 @@ urlpatterns = [
     path('trip/<int:trip_pk>/itinerary/', include('itineraries.urls')),
     path('trip/<int:trip_pk>/chat/', include('chats.urls')),
     path('dict/', include('dicts.urls')),
-    path('trip/', include('trips.urls')),
+    path('', include('trips.urls')),
     path('apis/', include('apis.urls')),
     path('payment/', include('payments.urls')),
     path('download/<str:filename>/', views.download_ticket, name='download_ticket'),

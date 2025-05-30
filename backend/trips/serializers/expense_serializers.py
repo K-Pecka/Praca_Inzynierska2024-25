@@ -1,9 +1,11 @@
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 from rest_framework import serializers
 
 from trips.models import Trip, Expense, ExpenseType, DetailedExpense
 from users.models import UserProfile
+from users.serializers.user_profile_serializers import UserProfileListSerializer
 
 
 class ExpenseTypeRetrieveSerializer(serializers.ModelSerializer):
@@ -127,68 +129,84 @@ class ExpenseDeleteSerializer(serializers.ModelSerializer):
 
 class DetailedExpenseCreateSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
-    creator = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
-    price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
     currency = serializers.CharField(max_length=3)
-    price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2)
     members = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), many=True)
 
     class Meta:
         model = DetailedExpense
-        fields = ['name', 'creator', 'price', 'currency', 'price_in_pln', 'members']
+        fields = ['name', 'amount', 'currency', 'members']
 
     def create(self, validated_data):
+        request = self.context['request']
+        view = self.context['view']
+        trip_pk = view.kwargs.get('trip_pk')
+        trip = get_object_or_404(Trip, pk=trip_pk)
+
         members = validated_data.pop('members')
-        expense = DetailedExpense.objects.create(**validated_data)
-        expense.members.set(members)
-        expense.calculate_shares()
-        expense.save()
+
+        with transaction.atomic():
+            expense = DetailedExpense(**validated_data)
+            expense.creator = request.user.get_default_profile()
+            expense.trip = trip
+            expense.save()
+
+            expense.members.set(members)
+            expense.calculate_shares()
+            expense.save()
+
         return expense
 
 
 class DetailedExpenseRetrieveSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True)
-    creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    creator = UserProfileListSerializer(read_only=True)
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     currency = serializers.CharField(read_only=True, max_length=3)
-    price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
-    price_per_member = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    price_per_member_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    amount_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    members = UserProfileListSerializer(many=True, read_only=True)
+    amount_per_member = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    amount_per_member_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    user_whole_debt = serializers.SerializerMethodField(read_only=True)
+
+    def get_user_whole_debt(self, obj):
+        request = self.context['request']
+        user_profile = request.user.get_default_profile()
+        return DetailedExpense.get_user_whole_debt(user_profile)
 
     class Meta:
         model = DetailedExpense
-        fields = ['name', 'creator', 'price', 'currency', 'price_in_pln', 'members', 'price_per_member',
-                  'price_per_member_in_pln']
+        fields = ['name', 'creator', 'amount', 'currency', 'amount_in_pln', 'members', 'amount_per_member',
+                  'amount_per_member_in_pln', 'user_whole_debt']
 
 
 class DetailedExpenseListSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
-    creator = serializers.PrimaryKeyRelatedField(read_only=True)
-    price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    creator = UserProfileListSerializer(read_only=True)
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     currency = serializers.CharField(read_only=True, max_length=3)
-    price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    members = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
-    price_per_member = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
-    price_per_member_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    amount_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    members = UserProfileListSerializer(many=True, read_only=True)
+    amount_per_member = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    amount_per_member_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = DetailedExpense
-        fields = ['id', 'name', 'creator', 'price', 'currency', 'price_in_pln', 'members', 'price_per_member',
-                  'price_per_member_in_pln']
+        fields = ['id', 'name', 'creator', 'amount', 'currency', 'amount_in_pln', 'members', 'amount_per_member',
+                  'amount_per_member_in_pln']
 
 
 class DetailedExpenseUpdateSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=False)
-    price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
     currency = serializers.CharField(max_length=3, required=False)
-    price_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    amount_in_pln = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
     members = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), many=True, required=False)
 
     class Meta:
         model = DetailedExpense
-        fields = ['name', 'price', 'currency', 'price_in_pln', 'members']
+        fields = ['name', 'amount', 'currency', 'amount_in_pln', 'members']
 
     def update(self, instance, validated_data):
         members = validated_data.pop('members', None)
@@ -202,3 +220,10 @@ class DetailedExpenseUpdateSerializer(serializers.ModelSerializer):
         instance.calculate_shares()
         instance.save()
         return instance
+
+
+class RemoveMemberSerializer(serializers.Serializer):
+    profile_id = serializers.IntegerField(
+        required=True,
+        help_text="ID profilu użytkownika do usunięcia z wydatku"
+    )

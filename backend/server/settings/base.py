@@ -9,6 +9,8 @@ from datetime import timedelta
 load_dotenv()
 
 TRIP_JOINING_PAGE = "https://plannder.com/trip/invite/"
+LOGIN_PAGE = "https://plannder.com/login/"
+FAILED_REGISTRATION_PAGE = "https://plannder.com/registration-failed/"
 
 ASGI_APPLICATION = "server.asgi.application"
 
@@ -53,13 +55,13 @@ OWN_ADDITIONAL_APPS = [
 ]
 
 INSTALLED_APPS = [
-                     'django.contrib.admin',
-                     'django.contrib.auth',
-                     'django.contrib.contenttypes',
-                     'django.contrib.sessions',
-                     'django.contrib.messages',
-                     'django.contrib.staticfiles',
-                 ] + INSTALLED_ADDITIONAL_APPS + OWN_ADDITIONAL_APPS
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+] + INSTALLED_ADDITIONAL_APPS + OWN_ADDITIONAL_APPS
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -119,12 +121,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'server.pagination.CustomPageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 
 SIMPLE_JWT = {
@@ -141,6 +146,14 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     'SWAGGER_UI_DIST': 'SIDECAR',
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    "SECURITY": [{"BearerAuth": []}],
+    "SWAGGER_UI_INIT_OVERRIDES": {
+        "docExpansion": "none",
+    },
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True,
+        "displayRequestDuration": True,
+    },
     'REDOC_DIST': 'SIDECAR',
     'DISABLE_DEFAULT_SCHEMA_GROUPING': True,
     'COMPONENT_SPLIT_REQUEST': True,
@@ -150,7 +163,6 @@ SPECTACULAR_SETTINGS = {
     'TAGS': [
         {'name': 'trip', 'description': 'Endpoints for managing trips.'},
         {'name': 'ticket', 'description': 'Endpoints for managing tickets.'},
-        {'name': 'budget', 'description': 'Endpoints for managing budgets.'},
         {'name': 'expense', 'description': 'Endpoints for managing expenses.'},
         {'name': 'itinerary', 'description': 'Endpoints for managing itineraries.'},
         {'name': 'itinerary activity', 'description': 'Endpoints for managing itinerary activities.'},

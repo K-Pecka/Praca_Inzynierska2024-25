@@ -1,28 +1,32 @@
-from django.urls import path
+from django.urls import path, include
+
+from rest_framework.routers import DefaultRouter
 
 from itineraries.views.itinerary_activity_type_views import ItineraryActivityTypeListAPIView
-from itineraries.views.itinerary_activity_views import ItineraryActivityListAPIView, ItineraryActivityCreateAPIView, \
-    ItineraryActivityRetrieveAPIView, ItineraryActivityUpdateAPIView, ItineraryActivityDestroyAPIView
-from itineraries.views.itinerary_views import ItineraryListAPIView, ItineraryCreateAPIView, ItineraryRetrieveAPIView, \
-    ItineraryUpdateAPIView, ItineraryDestroyAPIView
+from itineraries.views.itinerary_activity_views import ItineraryActivityViewSet
+from itineraries.views.itinerary_views import ItineraryViewSet
+
+
+router = DefaultRouter()
+router.register(r'', ItineraryViewSet, basename='itinerary')
 
 urlpatterns = [
     # Itineraries
-    path('all/', ItineraryListAPIView.as_view(), name='itinerary-list'),
-    path('<int:pk>/', ItineraryRetrieveAPIView.as_view(), name='itinerary-detail'),
-    path('create/', ItineraryCreateAPIView.as_view(), name='itinerary-create'),
-    path('<int:pk>/update/', ItineraryUpdateAPIView.as_view(), name='itinerary-update'),
-    path('<int:pk>/delete/', ItineraryDestroyAPIView.as_view(), name='itinerary-delete'),
+    path('', include(router.urls)),
 
-    # Itinerary activity
-    path('<int:itinerary_pk>/activities/all/', ItineraryActivityListAPIView.as_view(), name='activity-list'),
-    path('<int:itinerary_pk>/activities/<int:pk>/', ItineraryActivityRetrieveAPIView.as_view(), name='activity-detail'),
-    path('<int:itinerary_pk>/activities/create/', ItineraryActivityCreateAPIView.as_view(), name='activity-create'),
-    path('<int:itinerary_pk>/activities/<int:pk>/update/', ItineraryActivityUpdateAPIView.as_view(),
-         name='activity-update'),
-    path('<int:itinerary_pk>/activities/<int:pk>/delete/', ItineraryActivityDestroyAPIView.as_view(),
-         name='activity-delete'),
+    # Activities
+    path('<int:itinerary_pk>/activities/', ItineraryActivityViewSet.as_view({
+        'get': 'list',
+        'post': 'create'
+    }), name='activity-list-create'),
+
+    path('<int:itinerary_pk>/activities/<int:pk>/', ItineraryActivityViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'patch': 'partial_update',
+        'delete': 'destroy'
+    }), name='activity-detail'),
 
     # Itinerary activity type
-    path('activity-types/all/', ItineraryActivityTypeListAPIView.as_view(), name='activity-type-list'),
+    path('activity-types/', ItineraryActivityTypeListAPIView.as_view(), name='activity-type-list'),
 ]

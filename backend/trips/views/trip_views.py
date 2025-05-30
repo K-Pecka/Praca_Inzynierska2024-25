@@ -1,7 +1,7 @@
 from drf_spectacular.utils import extend_schema
 from django.db.models import Count
 
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated\
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -14,49 +14,44 @@ from trips.serializers.trip_serializers import TripListSerializer, TripRetrieveS
 
 
 @extend_schema(tags=['trip'])
-class TripCreateAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = TripCreateSerializer
+class TripViewSet(ModelViewSet):
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TripFilter
 
+    def get_permissions(self):
+        if self.action == 'create':
+            return [IsAuthenticated()]
+        elif self.action in ['list', 'retrieve']:
+            return [IsAuthenticated(), IsTripParticipant()]
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            return [IsAuthenticated(), IsTripCreator()]
+        return [IsAuthenticated()]
 
-@extend_schema(tags=['trip'])
-class TripRetrieveAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = TripRetrieveSerializer
+    def get_queryset(self):
+        if self.action == 'list':
+            return (
+                Trip.objects
+                .by_user_profile(self.request.user.get_default_profile())
+                .select_related('creator')
+                .prefetch_related('members')
+            ).order_by('-created_at')
+        return Trip.objects.all()
 
     def get_object(self):
         trip_id = self.kwargs.get('pk')
-
         return Trip.objects.annotate(
             activity_count=Count('itineraries__activities')
         ).get(pk=trip_id)
 
-
-@extend_schema(tags=['trip'])
-class TripListAPIView(ListAPIView):
-    permission_classes = [IsAuthenticated, IsTripParticipant]
-    serializer_class = TripListSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = TripFilter
-
-    def get_queryset(self):
-        return (
-            Trip.objects
-            .by_user_profile(self.request.user.get_default_profile())
-            .select_related('creator')
-            .prefetch_related('members')
-        )
-
-@extend_schema(tags=['trip'])
-class TripUpdateAPIView(UpdateAPIView):
-    queryset = Trip.objects.all()
-    permission_classes = [IsAuthenticated, IsTripCreator]
-    serializer_class = TripUpdateSerializer
-
-
-@extend_schema(tags=['trip'])
-class TripDestroyAPIView(DestroyAPIView):
-    queryset = Trip.objects.all()
-    permission_classes = [IsAuthenticated, IsTripCreator]
-    serializer_class = TripDestroySerializer
-
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return TripCreateSerializer
+        elif self.action == 'retrieve':
+            return TripRetrieveSerializer
+        elif self.action == 'list':
+            return TripListSerializer
+        elif self.action in ['update', 'partial_update']:
+            return TripUpdateSerializer
+        elif self.action == 'destroy':
+            return TripDestroySerializer
+        return TripRetrieveSerializer

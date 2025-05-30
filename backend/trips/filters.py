@@ -1,5 +1,7 @@
 from django_filters import rest_framework as filters
-from trips.models import Expense, Trip
+from trips.models import Expense, Trip, ExpenseType
+from users.models import UserProfile
+
 
 class TripFilter(filters.FilterSet):
     name = filters.CharFilter(field_name="name", lookup_expr="icontains")
@@ -11,6 +13,7 @@ class TripFilter(filters.FilterSet):
     end_date_before = filters.DateFilter(field_name="end_date", lookup_expr="lte")
 
     is_creator = filters.BooleanFilter(method="filter_is_creator")
+
 
     class Meta:
         model = Trip
@@ -34,6 +37,9 @@ class ExpenseFilter(filters.FilterSet):
     date = filters.DateFilter(field_name="date", label="Dokładna data")
     date_from = filters.DateFilter(field_name="date", lookup_expr='gte', label="Data od")
     date_to = filters.DateFilter(field_name="date", lookup_expr='lte', label="Data do")
+    trip = filters.ModelChoiceFilter(queryset=Trip.objects.all(), label="Wycieczka")
+    user = filters.ModelChoiceFilter(queryset=UserProfile.objects.all(), label="Użytkownik")
+    category = filters.ModelChoiceFilter(queryset=ExpenseType.objects.all(), label="Kategoria")
 
     class Meta:
         model = Expense
@@ -45,5 +51,8 @@ class ExpenseFilter(filters.FilterSet):
             "date",
             "date_from",
             "date_to",
+            "trip",
+            "user",
+            "category"
         ]
 
