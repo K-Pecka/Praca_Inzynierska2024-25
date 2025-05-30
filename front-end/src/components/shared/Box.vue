@@ -104,7 +104,11 @@ import {BudgetContent} from "@/components";
 
 <style scoped lang="scss">
 @use "@/assets/styles/variables" as *;
-
+.v-list-item-title {
+  white-space: normal;
+  text-overflow: unset;
+  overflow: visible;
+}
 .v-card {
   transition: transform 0.2s, box-shadow 0.2s;
   background-color: $background-secondary;

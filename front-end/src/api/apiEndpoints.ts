@@ -1,6 +1,5 @@
 export const backendNotification = false;
 import apiClient from './apiClient';
-import { updateMembers } from './endpoints/trip';
 
 export const fetchData = async <T = unknown>(
     url: string,
@@ -70,15 +69,15 @@ export const apiEndpoints = {
   },
   plan: {
     all: `/trip/:tripId/itinerary/`,
-    detail: `/trip/:tripId/itinerary/:planId/`,
-    delete: `/trip/:tripId/itinerary/:planId/`,
+    detail: `/trip/:tripId/itinerary/:itineraryId/`,
+    delete: `/trip/:tripId/itinerary/:itineraryId/`,
     create: `/trip/:tripId/itinerary/`,
   },
   activity: {
-    all: `/trip/:tripId/itinerary/:planId/activities/`,
-    detail: `/trip/:tripId/itinerary/:planId/activities/:activityId/`,
-    delete: `/trip/:tripId/itinerary/:planId/activities/:activityId/`,
-    create: `/trip/:tripId/itinerary/:planId/activities/`,
+    all: `/trip/:tripId/itinerary/:itineraryId/activities/`,
+    detail: `/trip/:tripId/itinerary/:itineraryId/activities/:activityId/`,
+    delete: `/trip/:tripId/itinerary/:itineraryId/activities/:activityId/`,
+    create: `/trip/:tripId/itinerary/:itineraryId/activities/`,
   },
   activityType: {
     all: `/trip/:tripId/itinerary/activity-types/`,

@@ -6,7 +6,7 @@ import ParticipantList from "@/components/trip/module/participant/ParticipantLis
 import ParticipantsCounter from "@/components/trip/module/participant/ParticipantsCounter.vue";
 import ParticipantAddForm from "@/components/trip/module/participant/ParticipantAddForm.vue";
 import {useTripStore, useNotificationStore,useAuthStore, useUtilsStore} from "@/stores";
-import HeaderSection from "@/components/common/HeaderSection.vue";
+import HeaderSection from "@/components/shared/HeaderSection.vue";
 const {getTripId} = useUtilsStore()
 const {setErrorCurrentMessage} = useNotificationStore();
 const route = useRoute();
@@ -14,10 +14,11 @@ const tripId = Number(route.params.tripId);
 
 const {userData,isGuide} = useAuthStore();
 const {isOwner} = userData;
-const {trip:tripStore} = useTripStore();
+const {trip:tripStore,participant} = useTripStore();
 const {getTripDetails} = tripStore;
+
+const {removeParticipant, addParticipant} = participant
 const {trip} = getTripDetails();
-const {removeParticipant, addParticipant} = useTripStore();
 
 import {useMembersStore} from "@/stores/trip/useMembersStore"
 const {setData} = useMembersStore();

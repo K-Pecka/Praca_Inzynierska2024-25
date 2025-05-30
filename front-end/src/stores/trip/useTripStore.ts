@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { useParticipants } from "./useParticipants";
 import { useDashboard } from "./useDashboard";
-import { usePlans } from "./usePlans";
+import { useItineraries } from "./useItineraries";
 import { useTrips } from "./useTrips";
 import { useBudget } from "./useBudget";
 import {useDebt} from './useDebt'
@@ -22,7 +22,7 @@ export const useTripStore = defineStore("trip", () => {
     useBudget(getTripId);
 
   const {createDebt,getDebt,removeMember,deleteDebt} = useDebt(getTripId)
-  const { getPlans, yourPlans, planMutationAdd, handleDeleteItinerary } = usePlans(getTripId);
+  const { createItinerary, getItineraries, handleDeleteItinerary } = useItineraries(getTripId);
 
   const { addParticipant, removeParticipant } = useParticipants();
 
@@ -62,11 +62,14 @@ export const useTripStore = defineStore("trip", () => {
       deleteTicket,
       updateMembers
     },
-    yourPlans,
-    getPlans,
-    getTripDetails,
-    planMutationAdd,
-    removeParticipant,
-    addParticipant,
+    itinerary:{
+      getItineraries,
+      createItinerary,
+      handleDeleteItinerary
+    },
+    participant:{
+      removeParticipant,
+      addParticipant,
+    }
   };
 });

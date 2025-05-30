@@ -5,7 +5,7 @@ export const getMutationDelete = (option: Record<string,any>) => useMutation({
     mutationFn: fetchActivityDelete,
     onSuccess: (data) => {
         option.notification.setSuccessCurrentMessage(option.successMessage);
-        option.queryClient.invalidateQueries({queryKey: ["activities", Number(data.tripId), Number(data.planId)]});
+        option.queryClient.invalidateQueries({queryKey: ["activities", Number(data.tripId), Number(data.itineraryId)]});
     },
     onError: (err) => {
         option.notifications.setErrorCurrentMessage(err?.message || option.errorMessage);

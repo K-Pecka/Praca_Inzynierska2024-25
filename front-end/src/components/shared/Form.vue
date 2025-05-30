@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import FormInput from "@/components/common/FormInput.vue";
+import FormInput from "@/components/shared/FormInput.vue";
 import { Input } from "@/types/interface";
 
 const props = defineProps<{
@@ -72,15 +72,15 @@ const handleSubmit = () => {
             
           </v-col>
         </v-row>
-        <v-row no-gutters class="mx-3" v-else>
-          <v-btn type="submit" class="primary-form-button w-100" :disabled="props.disabled">{{
+        <v-row class="mx-3" v-else>
+          <v-btn type="submit" class="primary-form-button w-100 pa-6 d-flex align-center justify-center" :disabled="props.disabled">{{
             submitButtonLabel
           }}</v-btn>
         </v-row>
+        <v-row no-gutters class="mx-3 my-9">
+          <slot name="moreOption"></slot>
+        </v-row>
       </v-col>
-      <div class="moreOption mx-6">
-        <slot name="moreOption"></slot>
-      </div>
     </v-form>
   </v-col>
 </template>
@@ -106,11 +106,4 @@ const handleSubmit = () => {
   border-radius: 15px;
 }
 
-.v-btn {
-  margin-top: 0;
-}
-
-.moreOption {
-  margin: 0 1.5rem 1.5rem 1.5rem;
-}
 </style>

@@ -24,12 +24,18 @@ const nameRules = [(v: string) => !!v || "Nazwa aktywności jest wymagana"];
 const timeRules = [
   (value: string) => {
     if (!value) return "Godzina jest wymagana";
-    const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
-    return timeRegex.test(value) || "Podaj godzinę w formacie HH:mm";
+    const timeRegex = /^(?:([0-9])|([01]\d|2[0-3])):([0-5]\d)$/;
+    return timeRegex.test(value) || "Podaj godzinę w formacie HH:MM w systyemie 24H";
   }
 ];
 const durationRules = [
-  (v: string) => !v || !isNaN(Number(v)) || "Podaj poprawny czas trwania"
+  (v: string) => !v || !isNaN(Number(v)) || "Podaj poprawny czas trwania",
+  (v: string) => {
+  const num = Number(v);
+  return num <= 1000 || "Maksymalna wartość to 1000 min";
+  },
+  (v: string) => !isNaN(Number(v)) && Number(v)>=0 || "Czas trwania nie może być mniejszy niż 0",
+  (v: string) => /^\d+$/.test(v) || "Podaj poprawną liczbę całkowitą",
 ];
 
 async function submitActivity() {

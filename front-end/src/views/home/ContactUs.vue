@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import Section from "@/components/common/Section.vue";
+import Section from "@/components/shared/Section.vue";
 import AppButton from "@/components/AppButton.vue";
 import { useNotificationStore } from "@/stores";
 import { HeaderSection } from "@/components";

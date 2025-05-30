@@ -7,6 +7,7 @@
         :min="inputData.config?.min"
         :max="inputData.config?.max"
         :label="inputData.label"
+        :placeholder = "!inputData.config?.min || !inputData.config?.maxDate ? inputData.placeholder : `${inputData.config?.min} - ${inputData.config?.maxDate}`"
         :multiple="inputData.config?.multiple ? 'range' : false"
         variant="outlined"
         prepend-icon=""
@@ -15,7 +16,6 @@
         rounded="lg"
         @update:model-value="onRangeChange"
         color="primary"
-        clearable
         header-color="primary"
         :error="!!inputData.error?.length"
         :error-messages="inputData.error"
@@ -47,7 +47,7 @@ import { ref, watch } from 'vue'
 import { VDateInput} from 'vuetify/labs/components'
 import { Input } from '@/types/interface'
 
-const props = defineProps({
+const {inputData,modelValue} = defineProps({
   inputData: {
     type: Object as () => Input,
     required: true,
@@ -60,10 +60,22 @@ const props = defineProps({
 
 const emit = defineEmits(['update', 'updateModel'])
 
-const inputValue = ref(props.modelValue as string)
-const localRange = ref<string[]>(Array.isArray(props.modelValue) ? props.modelValue as string[] : []);
-
-watch(() => props.modelValue, (newVal) => {
+const inputValue = ref(modelValue as string)
+const localRange = ref<string[]>(Array.isArray(modelValue) 
+  ? modelValue as string[] : []);
+localRange.value = [
+  inputData?.config?.min
+    ? typeof inputData.config.min === 'string'
+      ? inputData.config.min
+      : formatDate(new Date(inputData.config.min))
+    : '',
+  inputData?.config?.maxDate
+    ? typeof inputData.config.maxDate === 'string'
+      ? inputData.config.maxDate
+      : formatDate(new Date(inputData.config.maxDate))
+    : ''
+]
+watch(() => modelValue, (newVal) => {
   if (typeof newVal === 'string') {
     inputValue.value = newVal
   } else if (Array.isArray(newVal)) {
@@ -72,7 +84,7 @@ watch(() => props.modelValue, (newVal) => {
 })
 
 watch(inputValue, (newVal) => {
-  emit('updateModel', props.inputData.name, newVal)
+  emit('updateModel', inputData.name, newVal)
 })
 
 function formatDate(date: Date): string {
@@ -86,15 +98,20 @@ function onRangeChange(value: string[] | string) {
   if (Array.isArray(value) && value.length >= 2) {
     const startDate = formatDate(new Date(value[0]))
     const endDate = formatDate(new Date(value[value.length - 1]))
-    emit('update', props.inputData.name, `${startDate} - ${endDate}`)
+    emit('update', inputData.name, `${startDate} - ${endDate}`)
   } else if (Array.isArray(value)) {
     const singleDate = formatDate(new Date(value[0]))
-    emit('update', props.inputData.name, `${singleDate} - ${singleDate}`)
+    emit('update', inputData.name, `${singleDate} - ${singleDate}`)
   }
 }
 
 function handleInput() {
-  emit('update', props.inputData.name, inputValue.value)
+  emit('update', inputData.name, inputValue.value)
+}
+if(localRange.value.length > 0 && inputData.type === 'date_range')
+{
+  console.log("tak",localRange.value)
+  onRangeChange(localRange.value)
 }
 </script>
 

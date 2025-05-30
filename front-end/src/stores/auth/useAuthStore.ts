@@ -110,7 +110,7 @@ export const useAuthStore = defineStore(
         router.push({ name: "landing" });
       },
       onError: (err: any) => {
-        notificationStore.setErrorCurrentMessage(err.message);
+        notificationStore.setErrorCurrentMessage(err?.detail || err.message);
       },
     });
 
@@ -140,7 +140,7 @@ export const useAuthStore = defineStore(
       },
       onError: (err: any) => {
         notificationStore.setErrorCurrentMessage(
-          err?.detail || "Nieoczekiwany błąd podczas rejestracji"
+          err?.detail || err?.email[0] || "Nieoczekiwany błąd podczas rejestracji"
         );
       },
     });

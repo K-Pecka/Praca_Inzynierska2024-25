@@ -24,6 +24,5 @@ export const loginInput = (errorMessage: Record<string, string>) => [
   },
 ];
 export const getMoreOptions = () => [
-    { label: "Zapomniałeś hasła?", href: {name:"home"} },
     { label: "Nie masz konta? Zarejestruj się.", href: {name:"register"} },
   ];

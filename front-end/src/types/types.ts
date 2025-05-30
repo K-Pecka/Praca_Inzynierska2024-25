@@ -1,1 +1,1 @@
-export type PricingPlanType = 'tourist' | 'premium' | 'guide';
+export type PricingPlanType = 'tourist' | 'guide';

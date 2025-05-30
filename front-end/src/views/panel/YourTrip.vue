@@ -2,7 +2,7 @@
 import {useTripStore, useUtilsStore, useAuthStore} from "@/stores";
 import {useSafeDelete} from "@/composables/useSafeDelete";
 import AppButton from "@/components/AppButton.vue";
-import Loader from "@/components/common/AppLoader.vue"
+import Loader from "@/components/shared/AppLoader.vue"
 import {images} from "@/data";
 import {Trip} from "@/types";
 import { useRoute } from "vue-router";
@@ -27,8 +27,11 @@ const handleDelete = (tripId: string) => {
     wordToConfirm: "USUŃ"
   });
 };
-const route = useRoute();
+
 import { HeaderSection } from "@/components";
+
+const route = useRoute();
+
 </script>
 
 <template>
@@ -48,9 +51,9 @@ import { HeaderSection } from "@/components";
     </v-row>
     <!-- Trip cards -->
     <v-row v-else>
-      <template v-if="trips && trips.length > 0">
+      <template v-if="trips?.results && trips.results.length && trips.results.length > 0">
         <v-col
-            v-for="trip in trips" :key="trip.id"
+            v-for="trip in trips.results" :key="trip.id"
             cols="12"
             sm="6"
             md="4"
@@ -70,7 +73,7 @@ import { HeaderSection } from "@/components";
 
                 <!-- Trip Info -->
                 <v-card-actions class="flex-column" style="max-width: 220px;">
-                  <v-card-title class="font-weight-bold">{{ trip.name }}</v-card-title>
+                  <v-card-title class="font-weight-bold">{{trip.name }}</v-card-title>
                   <v-card-subtitle class="font-weight-medium pb-6">
                     {{ formatDatePolish(trip.start_date) || '' }} - {{ formatDatePolish(trip.end_date) || '' }}
                   </v-card-subtitle>

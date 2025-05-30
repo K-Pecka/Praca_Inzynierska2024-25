@@ -11,7 +11,7 @@ const { getSideNavItems } = usePagePanelStore();
 const router = useRouter();
 const { getRole } = useRoleStore();
 const { userData } = useAuthStore();
-const { getActiveProfile } = userData;
+const { getActiveProfile,getUser } = userData;
 const props = defineProps({
   modelValue: Boolean,
 });
@@ -21,6 +21,7 @@ const { trip: tripDetails } = getTripDetails();
 
 const side_nav_items = ref<SideNavItem[]>([]);
 const isOwner = ref<null | boolean>(null);
+const activeSubscription = ref<null | boolean>(null);
 watch(
   tripDetails,
   (newVal) => {
@@ -32,15 +33,29 @@ watch(
           : Role.TOURIST;
       side_nav_items.value = getSideNavItems(tripType);
       isOwner.value = getActiveProfile()?.id === newVal?.creator.id;
+      activeSubscription.value = getUser()?.subscription_active ?? null
       side_nav_items.value = side_nav_items.value
-        .filter((item) => isOwner || !item.isOwner)
+        .filter((item) => isOwner.value || !item.isOwner)
         .map((item) => {
           if (item.children) {
             return {
               ...item,
-              children: isOwner
+              children: isOwner.value
                 ? item.children
                 : item.children.filter((child) => !child.isOwner),
+            };
+          }
+          return item;
+        });
+      side_nav_items.value = side_nav_items.value
+        .filter((item) => activeSubscription.value || !item.activeSubscription)
+        .map((item) => {
+          if (item.children) {
+            return {
+              ...item,
+              children: activeSubscription.value
+                ? item.children
+                : item.children.filter((child) => !child.activeSubscription),
             };
           }
           return item;
@@ -57,7 +72,8 @@ const drawer = computed({
 });
 import {useSafeDelete} from "@/composables/useSafeDelete";
 const {confirmAndRun} = useSafeDelete();
-const {removeParticipant} = useTripStore();
+const {participant} =  useTripStore()
+const {removeParticipant} =participant;
 
 const {getTripId} = useUtilsStore();
 const leaveTrip = () => {

@@ -135,7 +135,6 @@ const currency = "PLN"
                   
                 </v-row>
 
-                <!-- Expenses List -->
                 <template v-if="!isLoading_debt">
                   <DebtList
                     :debts="touristDebt ?? (debt as DebtDetails[] | undefined)"

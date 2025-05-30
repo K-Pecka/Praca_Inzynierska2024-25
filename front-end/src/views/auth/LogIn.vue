@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Form, HeaderSection, ListLink, Section } from "@/components/common";
+import { Form, HeaderSection, ListLink, Section } from "@/components/shared";
 import { usePageHomeStore, useFormStore, useAuthStore } from "@/stores/";
 import { FormType } from "@/types/enum";
 import { ref } from "vue";

@@ -2,7 +2,7 @@
 import {useActivityStore} from "@/stores/trip/useActivityStore";
 import {useUtilsStore} from "@/stores";
 
-const {getTripId, getPlanId} = useUtilsStore();
+const {getTripId, getItineraryId} = useUtilsStore();
 import AppButton from "../../../AppButton.vue";
 import { computed } from "vue";
 
@@ -96,7 +96,7 @@ const formatTime = (timeString: string) => {
                     deleteActivity.mutate({
                     activityId: String(activity.id),
                     tripId: String(getTripId()),
-                    planId: String(getPlanId())
+                    itineraryId: String(getItineraryId())
                   })}"
                 />
               </v-card-actions>

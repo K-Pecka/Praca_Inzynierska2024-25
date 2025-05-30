@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import HeaderSection from "@/components/common/HeaderSection.vue";
+import HeaderSection from "@/components/shared/HeaderSection.vue";
 import AppButton from "@/components/AppButton.vue";
 import { useAuthStore } from "@/stores";
 

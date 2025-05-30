@@ -2,12 +2,12 @@
 
 import router from "@/router";
 import {useTripStore, useAuthStore} from "@/stores";
-import AppButton from "../AppButton.vue";
+import { AppButton } from "@/components/";
 
 const {userData} = useAuthStore();
 const {isOwner} = userData;
-const {plan} = useTripStore()
-const {handleDeleteItinerary} = plan;
+const {itinerary} = useTripStore()
+const {handleDeleteItinerary} = itinerary;
 
 function formatPL(dateString: string): string {
   const dateObj = new Date(dateString);
@@ -16,27 +16,26 @@ function formatPL(dateString: string): string {
 }
 import {useSafeDelete} from "@/composables/useSafeDelete";
 const {confirmAndRun} = useSafeDelete();
-const handleDelete = (tripId: string,planId:string) => {
+const handleDelete = (tripId: string,itineraryId:string) => {
   if(!props.isOwner) return;
   confirmAndRun(() => {
-    handleDeleteItinerary(tripId, planId);
+    handleDeleteItinerary(tripId, itineraryId);
   }, {
-    title: "Potwierdź usunięcie wycieczki",
-    message: "Czy na pewno chcesz usunąć tę wycieczkę? Tego działania nie można cofnąć.",
+    title: "Potwierdź usunięcie Planu wycieczki",
+    message: "Czy na pewno chcesz usunąć ten plan? Tego działania nie można cofnąć.",
     wordToConfirm: "USUŃ"
   });
 };
 const props = defineProps<{
   isOwner: boolean,
-  plans: any;
-  btn: any;
+  itineraries: any;
 }>();
 </script>
 
 <template>
-  <v-row v-if="props.plans.length > 0" no-gutters>
+  <v-row v-if="props.itineraries.length > 0" no-gutters>
     <v-col
-        v-for="(trip, index) in plans"
+        v-for="(trip, index) in itineraries"
         :key="index"
         cols="12"
         sm="12"
@@ -88,7 +87,7 @@ const props = defineProps<{
             >
               <AppButton
                   color="primary-outline"
-                  @click="router.push({name: 'ActivityView', params: {planId: trip.id}})"
+                  @click="router.push({name: 'ActivityView', params: {itineraryId: trip.id}})"
                   font-auto
                   :class="{'w-100' :$vuetify.display.smAndDown}"
                   max-width="190px"

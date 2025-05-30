@@ -11,14 +11,14 @@ export const getTouristNav = () => [
     title: 'Plany',
     icon: 'mdi-note-text-outline',
     children: [
-      {title: 'Utworzone', page: {name: 'tripPlans'}},
-      {title: 'Dodaj', page: {name: 'createPlan'}, isOwner:true},
+      {title: 'Utworzone', page: {name: 'itineraries'}},
+      {title: 'Dodaj', page: {name: 'createItinerary'}, isOwner:true},
     ]
   },
   {
     title: 'Bilety',
     page: {name: 'yourTickets'},
-    icon: 'mdi-ticket-confirmation-outline'
+    icon: 'mdi-ticket-confirmation-outline',
   },
   {
     title: 'Budżet',
@@ -28,7 +28,8 @@ export const getTouristNav = () => [
   {
     title: 'Uczestnicy',
     page: {name: 'tripParticipants'},
-    icon: 'mdi-account-multiple-outline'
+    icon: 'mdi-account-multiple-outline',
+    activeSubscription:true,
   },
   {
     title: 'Ustawienia',
@@ -52,8 +53,8 @@ export const getGudieNav = () => [
     title: 'Plany',
     icon: 'mdi-note-text-outline',
     children: [
-      {title: 'Utworzone', page: {name: 'tripPlans'}},
-      {title: 'Dodaj', page: {name: 'createPlan'},isOwner:true},
+      {title: 'Utworzone', page: {name: 'itineraries'}},
+      {title: 'Dodaj', page: {name: 'createItinerary'}, isOwner:true},
     ]
   },
   {

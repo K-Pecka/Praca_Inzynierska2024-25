@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/vue-query";
-import type { Budget, Trip } from "@/types";
+import type { Budget, Trip,TripData } from "@/types";
 import {
   fetchTrips,
   fetchTrip,
@@ -15,7 +15,7 @@ import { useRoleStore } from "@/stores/auth/useRoleStore";
 import { useAuthStore } from "@/stores";
 
 export const getTripQuery = (role: string) => {
-  return useQuery<Trip[], Error, Trip[]>({
+  return useQuery<TripData, Error, TripData>({
     queryKey: ["trips", role],
     queryFn: async () => {
       const queryClient = useQueryClient();
@@ -63,10 +63,20 @@ export const getMutationDelete = (option: Record<string, any>) =>
     mutationFn: deleteTrip,
     onSuccess: ({tripId}) => {
       option.notifications.setSuccessCurrentMessage(option.successMessage);
-      option.queryClient.setQueryData(['trips', String(option.getRole())], (oldTrips: Trip[] | undefined) => {
-      if (!oldTrips) return [];
-      return oldTrips.filter(trip => trip.id !== Number(tripId));
-    });
+      option.queryClient.setQueryData(
+        ['trips', String(option.getRole())],
+        (oldTrips: TripData | undefined) => {
+          if (!oldTrips) return;
+          const filteredTrips = oldTrips.results.filter(trip => {
+            return trip.id !== Number(tripId);
+          });
+
+          return {
+            ...oldTrips,
+            results: filteredTrips,
+          };
+        }
+      );
     },
     onError: (err) => {
       option.notifications.setErrorCurrentMessage(
@@ -76,7 +86,7 @@ export const getMutationDelete = (option: Record<string, any>) =>
   });
 export const getMutationUpdate = (option: Record<string, any>) =>
   useMutation({
-    mutationFn: ({ tripId, newData }: { tripId: string; newData: any }) =>
+    mutationFn: ({ tripId, newData }: { tripId:string; newData: any }) =>
       updateTrip({ tripId }, newData),
     onSuccess: ({ tripId }) => {
       option.notifications.setSuccessCurrentMessage(option.successMessage);
@@ -89,7 +99,7 @@ export const getMutationUpdate = (option: Record<string, any>) =>
       option.notifications.setErrorCurrentMessage(
         err?.message || option.errorMessage
       );
-    },
+    }, 
   });
 export const getMutationUpdateBudget = (option: Record<string, any>) =>
   useMutation({

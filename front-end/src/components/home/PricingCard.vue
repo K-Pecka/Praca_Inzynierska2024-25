@@ -1,21 +1,27 @@
 <script setup lang="ts">
-import AppButton from "@/components/AppButton.vue";
+import {AppButton} from "@/components";
 import { PricingCard } from "@/types/interface";
 import { PricingPlanType } from "@/types/types";
-
+import { useAuthStore } from "@/stores";
+const { userData } = useAuthStore();
+const { getUser } = userData;
 const props = defineProps<PricingCard>();
-const paymentPlanIds: Record<PricingPlanType, string> = {
-  tourist: "price_1RRymmB3a037ikFEaqDq2J8N",
-  premium: "price_1RQV0aB3a037ikFEAEbdKvqx",
-  guide: "price_1RQwW7B3a037ikFEidRPP1SS"
+const paymentitineraryIds: Record<PricingPlanType, string> = {
+  tourist: "price_1RQV0aB3a037ikFEAEbdKvqx",
+  guide: "price_1RQwW7B3a037ikFEidRPP1SS",
 };
 const emit = defineEmits<{
-  (e: 'plan-selected', planId: string): void;
+  (e: "plan-selected", itineraryId: string): void;
 }>();
 
 const handleSelectPlan = () => {
-  emit('plan-selected', paymentPlanIds[props.type as PricingPlanType]);
+  if(props.type)
+  {
+    emit("plan-selected", paymentitineraryIds[props.type as PricingPlanType]);
+  }
 };
+const subscriptionPlan = getUser()?.subscription_plan ?? null;
+const subscritpionActive = getUser()?.subscription_active;
 </script>
 
 <template>
@@ -41,28 +47,36 @@ const handleSelectPlan = () => {
         :key="idx"
         class="justify-center py-1 align-center"
       >
-        <span :class="contentVariant" class="d-flex justify-center align-center">{{ feature }}</span>
+        <span
+          :class="contentVariant"
+          class="d-flex justify-center align-center"
+          >{{ feature }}</span
+        >
       </v-list-item>
     </v-list>
-
-    <AppButton
+    <template v-if="(subscritpionActive == false && props.type == null) || subscriptionPlan == props.type">
+      <AppButton :color="buttonVariant" max-width="150px" text="Wybrany" />
+    </template>
+    <template v-else>
+      <AppButton
         :color="buttonVariant"
         :onClick="handleSelectPlan"
         max-width="150px"
         text="Wybierz"
-    />
+      />
+    </template>
   </v-card>
 </template>
 
 <style scoped lang="scss">
-  @use "@/assets/styles/variables" as *;
+@use "@/assets/styles/variables" as *;
 
-  .pricing-card {
-    border-radius: 20px;
-    &__features {
-      background-color: transparent;
-      box-shadow: none;
-      color: inherit;
-    }
+.pricing-card {
+  border-radius: 20px;
+  &__features {
+    background-color: transparent;
+    box-shadow: none;
+    color: inherit;
   }
+}
 </style>

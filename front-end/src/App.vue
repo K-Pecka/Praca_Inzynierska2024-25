@@ -11,7 +11,7 @@ import { watch } from 'vue';
 import { useNotificationStore} from "@/stores";
 import { toastConfig } from '@/lib';
 
-import SafeConfirmDialog from "@/components/SafeConfirmDialog.vue";
+import SafeConfirmDialog from "@/components/shared/dialog/SafeConfirmDialog.vue";
 import { useSafeDelete } from "@/composables/useSafeDelete";
 
 import 'vue-toastification/dist/index.css';

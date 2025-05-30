@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ExpenseItem from "./ExpenseItem.vue";
-import { Expense } from "@/types";
+import ExpenseItem from "../expense/ExpenseItem.vue";
+import { Expense } from "@/types/";
 
 const { expenses, variant, config, limit, noIcon,isOwnerTrip } = defineProps<{
   expenses?: Expense[];

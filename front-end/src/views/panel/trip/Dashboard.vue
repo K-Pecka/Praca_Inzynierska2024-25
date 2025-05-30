@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Box, Section, HeaderSection, ExpensesList } from "@/components";
 import { useTripStore } from "@/stores/trip/useTripStore";
-import AppLoader from "@/components/common/AppLoader.vue";
+import AppLoader from "@/components/shared/AppLoader.vue";
 import { onMounted } from "vue";
 import { DebtList} from "@/components";
 import { DebtDetails } from "@/types";

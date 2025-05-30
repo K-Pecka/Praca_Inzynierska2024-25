@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import type SafeConfirmDialog from "@/components/SafeConfirmDialog.vue";
+import type SafeConfirmDialog from "@/components/shared/SafeConfirmDialog.vue";
 
 type ConfirmOptions = {
   title?: string;

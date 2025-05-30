@@ -5,7 +5,7 @@ import {useTripStore} from "@/stores/trip/useTripStore";
 import TicketForm from "@/components/trip/module/ticket/TicketForm.vue";
 import AppButton from "@/components/AppButton.vue";
 import {useUtilsStore} from "@/stores";
-import HeaderSection from "@/components/common/HeaderSection.vue";
+import HeaderSection from "@/components/shared/HeaderSection.vue";
 import {images} from "@/data";
 import TicketCard from "@/components/trip/module/ticket/TicketCard.vue"
 
@@ -13,8 +13,8 @@ import {useAuthStore} from "@/stores"
 const {userData} = useAuthStore();
 const {isOwner} = userData;
 const {getTripId} = useUtilsStore();
-const tripStore = useTripStore();
-const {ticket} = tripStore;
+const {trip:tripStore,ticket} = useTripStore();
+
 const {getTickets, createTicket} = ticket;
 const {
   data: tickets,

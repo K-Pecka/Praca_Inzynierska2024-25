@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { pricingPlans } from "@/data/page/home";
 import PricingCard from "@/components/home/PricingCard.vue";
-import Section from "@/components/common/Section.vue";
+import Section from "@/components/shared/Section.vue";
 import { HeaderSection } from "@/components";
 import { useAuthStore } from "@/stores";
 import { PricingPlanType } from "@/types/types";

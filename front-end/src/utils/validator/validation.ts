@@ -40,7 +40,14 @@ export class Validator {
         : null;
     });
   }
-  
+  strongPassword(): this {
+    return this.addRule("strongPassword", (value: string) => {
+      const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_\-+=/\\[\]`~;']).+$/;
+      return regex.test(value)
+        ? null
+        : this.errorMessage.strongPassword;
+    });
+  }
   maxLength(length: number): this {
     return this.addRule("maxLength", (value: string) => {
       return value.length > length

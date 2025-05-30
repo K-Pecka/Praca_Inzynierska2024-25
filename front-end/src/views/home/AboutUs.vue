@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import TeamMemberCard from "@/components/ui/TeamMemberCard.vue";
-import Section from "@/components/common/Section.vue";
+import Section from "@/components/shared/Section.vue";
 import { aboutTeam } from "@/data";
 import { HeaderSection } from "@/components";
 </script>

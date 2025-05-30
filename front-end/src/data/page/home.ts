@@ -86,25 +86,25 @@ export const footerData = () => ({
 
 export const pricingPlans = [
     {
-        type: "tourist",
+        type: null,
         name: "Podstawowy",
         price: "Darmowy",
-        features: ["3 wycieczki w skali roku", "1 plan na wycieczkę", "brak możliwości zapraszania uczestników"],
+        features: ["3 wycieczki w skali roku", "1 plan na wycieczkę", "brak uczestników","",""],
         contentVariant: "secondary" as "secondary",
         buttonVariant: "primary" as "primary",
     },
     {
-        type: "premium",
+        type: "tourist",
         name: "Turysta",
         price: "15.0 zł / miesiąc",
-        features: ["Nielimitowane wycieczki", "Nielimitowane plany", "do 5 uczestników"],
+        features: ["Nielimitowane wycieczki", "Nielimitowane plany", "do 5 uczestników","",""],
         buttonVariant: "primary" as "primary",
     },
     {
         type: "guide",
         name: "Podróżnik",
         price: "45.0 zł / miesiąc",
-        features: ["Tekst", "Tekst", "Tekst"],
+        features: ["Nielimitowane wycieczki", "Nielimitowane plany", "Nielimitowane ilość uczestników","czat grupowy","kanał ogłoszeniowy"],
         contentVariant: "secondary" as "secondary",
         buttonVariant: "primary" as "primary",
     },

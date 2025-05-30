@@ -4,7 +4,7 @@ export const fetchLogOut = async () => {
   const { data, error } = await fetchData(apiEndpoints.auth.logout, "POST");
 
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
   return data;

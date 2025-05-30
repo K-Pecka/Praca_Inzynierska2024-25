@@ -10,13 +10,25 @@ export const useUtilsStore = defineStore("utils", () => {
     const id = route.params.tripId;
       return Number(Array.isArray(id) ? id[0] : id);
   }
-  const getPlanId = ()=>{
-    const id = route.params.planId;
+  const getItineraryId = ()=>{
+    const id = route.params.itineraryId;
       return Number(Array.isArray(id) ? id[0] : id);
   }
   const getRole = ()=>{
     const role = route.params.role;
       return String(Array.isArray(role) ? role[0] : role);
+  }
+  const getPage = () =>{
+    const page = route.query.page;
+    return Number(Array.isArray(page) ? page[0] : page) || 1;
+  }
+  const setPage = (newPage:number) =>{
+    router.push({
+    query: {
+      ...route.query,
+      page: newPage.toString(),
+    },
+  });
   }
   const isCurrentRouteNotInSet = (RouteSet: string[]) =>
     computed(() => {
@@ -69,5 +81,5 @@ export const useUtilsStore = defineStore("utils", () => {
     }
     return (numerator / denominator).toFixed(2);
   };
-  return {getPlanId,getRole,safeDivision,combineDateAndTime,mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, formatDatePolish };
+  return {setPage,getPage,getItineraryId,getRole,safeDivision,combineDateAndTime,mapCategoryBudget,useRouter, getTripId, isCurrentRouteNotInSet, formatDatePolish };
 });

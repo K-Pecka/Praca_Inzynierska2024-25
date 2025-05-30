@@ -3,23 +3,24 @@ import type { RouteRecordRaw } from "vue-router";
 import homeRoutes from "./homeRoutes";
 import panelRoutes from "./panelRoutes";
 import tripRoutes from "@/router/tripRoutes";
-import authRoutes from "./authRoutes";
 import inviteRouters from "./inviteRouters"
-import paymentRoutes from "./paymentRoutes"
+import infotRoutes from "./infotRoutes"
 import { useAuthStore, useNotificationStore } from "@/stores";
 
 const routes: RouteRecordRaw[] = [
-  ...authRoutes,
   ...homeRoutes,
   panelRoutes,
   tripRoutes,
   inviteRouters,
-  paymentRoutes
+  infotRoutes
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior() {
+    return { top: 0 };
+  },
 });
 
 router.beforeEach(async (to, from, next) => {

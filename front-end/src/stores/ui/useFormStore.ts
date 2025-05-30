@@ -25,12 +25,16 @@ export const useFormStore = defineStore("form", () => {
   const extraValidationMessages = {
     isEqual: "Hasła muszą być takie same",
     dateRange: "Data zakończenia nie może być wcześniejsza niż rozpoczęcia",
+    strongPassword: "Hasło musi zawierać przynajmniej jedną dużą literę, jedną cyfrę i jeden znak specjalny."
   };
 
   const getLoginInputs = (): Input[] => loginInput(getErrorMessages());
   const getRegisterInputs = (): Input[] =>
     registerInput(
-      getErrorMessages({ isEqual: extraValidationMessages.isEqual })
+      getErrorMessages({ 
+        isEqual: extraValidationMessages.isEqual,
+        strongPassword:extraValidationMessages.strongPassword
+       })
     );
   const getPlanInputs = (): Input[] =>
     planInput(
@@ -46,7 +50,10 @@ export const useFormStore = defineStore("form", () => {
       profilePersonalInput(getErrorMessages());
 
   const getProfilePasswordInputs = (): Input[] =>
-      profilePasswordInput(getErrorMessages({ isEqual: extraValidationMessages.isEqual }));
+      profilePasswordInput(getErrorMessages({ 
+        isEqual: extraValidationMessages.isEqual,
+        strongPassword:extraValidationMessages.strongPassword
+       }));
 
   const formInputGenerators: Record<FormType, () => Input[]> = {
     [FormType.LOGIN]: getLoginInputs,

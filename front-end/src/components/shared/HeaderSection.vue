@@ -5,7 +5,8 @@ import AppButton from "@/components/AppButton.vue";
 
 const route = useRoute();
 const tripId = Number(route.params.tripId);
-const {getTripDetails} = useTripStore();
+const {trip:tripStore} = useTripStore();
+const {getTripDetails} = tripStore;
 const {trip, isLoading_trip, error_trip} = getTripDetails(tripId);
 
 defineProps<{

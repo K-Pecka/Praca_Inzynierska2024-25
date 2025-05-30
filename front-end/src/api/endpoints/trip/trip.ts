@@ -4,14 +4,18 @@ import { QueryFunctionContext } from "@tanstack/vue-query";
 import { Budget } from "@/types/interface";
 
 
-export const fetchTrips = async () => {
+export const fetchTrips = async ():Promise<TripData> => {
     const { data, error } = await fetchData<TripData>(apiEndpoints.trip.all, "GET");
 
     if (error) {
         throw new Error(error);
     }
+    
+    if (!data) {
+        throw new Error("No data returned from fetchTrips");
+    }
 
-    return data?.results || [];
+    return data;
 };
 
 export const fetchTrip = async ({ queryKey }: QueryFunctionContext<[string, number]>) => {

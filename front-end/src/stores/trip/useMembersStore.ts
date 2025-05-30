@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
+
 import type { Trip, User } from "@/types";
 import { fetchUserById } from "@/api";
 

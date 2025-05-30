@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import { Section, Form, HeaderSection } from "@/components";
-import TermsDialog from "@/components/dialog/TermsDialog.vue";
+import {TermsDialog} from "@/components";
 import { Register } from "@/types/interface";
 import { FormType } from "@/types/enum";
 import { useAuthStore, useFormStore, usePageHomeStore } from "@/stores";

@@ -3,12 +3,13 @@ import { ref, computed } from "vue";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { createActivity } from "@/api/endpoints/trip/activity";
 import { useNotificationStore, useUtilsStore } from "@/stores";
-import { fetchActivity, fetchActivityTypes } from "@/api/endpoints/trip/activity";
+import { fetchActivity } from "@/api/endpoints/trip/activity";
 import { Activity, ActivityType } from "@/types/interface";
 import {getMutationDelete} from "@/api/services/activityQuery"
+import {activity} from "@/data/category/activity"
 
 export const useActivityStore = defineStore("activity", () => {
-  const {getPlanId,getTripId} = useUtilsStore()
+  const {getItineraryId,getTripId} = useUtilsStore()
   const notification = useNotificationStore();
   const activities = ref<Activity[]>([]);
   const activeError = ref<boolean>(false);
@@ -17,10 +18,10 @@ export const useActivityStore = defineStore("activity", () => {
   const queryClient = useQueryClient();
   const activityTypes = ref<ActivityType[]>([]);
 
-  const getActivity = (tripId?: number, planId?: number) => {
+  const getActivity = (tripId?: number, itineraryId?: number) => {
     return useQuery<Activity[], Error>({
-      queryKey: ["activities", (tripId || getTripId()), (planId || getPlanId())],
-      queryFn: () => fetchActivity({ tripId: String(tripId || getTripId()), planId: String(planId || getPlanId()) }),
+      queryKey: ["activities", (tripId || getTripId()), (itineraryId || getItineraryId())],
+      queryFn: () => fetchActivity({ tripId: String(tripId || getTripId()), itineraryId: String(itineraryId || getItineraryId()) }),
     });
   };
 
@@ -61,7 +62,7 @@ export const useActivityStore = defineStore("activity", () => {
     }) => createActivity(activityData, param),
     onSuccess: (_, variables) => {
       setSuccessCurrentMessage("Dodano aktywność");
-      queryClient.invalidateQueries({ queryKey: ["activities", Number(variables.param.tripId), Number(variables.param.planId)] });
+      queryClient.invalidateQueries({ queryKey: ["activities", Number(variables.param.tripId), Number(variables.param.itineraryId)] });
     },
     onError: () => {
         setError(true);
@@ -69,10 +70,8 @@ export const useActivityStore = defineStore("activity", () => {
 
     },
   });
-
   async function loadActivityTypes(tripId: string) {
-    const typesFromApi = await fetchActivityTypes(tripId);
-    activityTypes.value = typesFromApi.map(t => ({
+    activityTypes.value = activity.map(t => ({
       id: t.id,
       name: t.name,
     }));

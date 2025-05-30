@@ -43,7 +43,7 @@ const submitTicket = async () => {
       name: form.value.title,
       amount: form.value.amount,
       currency: form.value.currency,
-      members:form.value.user
+      members:form.value.user.length>0?form.value.user:[members[0]?.userId]
     },
     {
       onSuccess: () => {
@@ -67,6 +67,7 @@ const formIsValid = ref(false);
               <v-select
                 v-model="form.user"
                 :items="members"
+                isDisabl
                 item-title="name"
                 item-value="userId"
                 label="Podaj uczestnika"
