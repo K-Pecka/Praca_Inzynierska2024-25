@@ -28,6 +28,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         token['subscription_active'] = user.subscription_active
         token['subscription_plan'] = user.subscription_plan
+        token['subscription_cancelled'] = True if not user.stripe_subscription_id and user.subscription_active else False
 
         return token
 
@@ -52,5 +53,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['email'] = self.user.email
         data['subscription_active'] = self.user.subscription_active
         data['subscription_plan'] = self.user.subscription_plan
+        data['subscription_cancelled'] = 'True' if not self.user.stripe_subscription_id and self.user.subscription_active else 'False'
 
         return data
