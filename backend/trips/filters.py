@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from trips.models import Expense, Trip, ExpenseType
+from trips.models import Expense, Trip, ExpenseType, DetailedExpense
 from users.models import UserProfile
 
 
@@ -69,7 +69,7 @@ class DetailedExpenseFilter(filters.FilterSet):
     members = filters.ModelChoiceFilter(queryset=UserProfile.objects.all(), label="Uczestnicy")
 
     class Meta:
-        model = Expense
+        model = DetailedExpense
         fields = [
             "name",
             "creator",
