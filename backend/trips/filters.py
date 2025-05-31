@@ -59,11 +59,20 @@ class ExpenseFilter(filters.FilterSet):
 class DetailedExpenseFilter(filters.FilterSet):
     name = filters.CharFilter(field_name='name', label="Nazwa")
     creator = filters.NumberFilter(field_name='creator', label="Twórca")
-    amount = filters.NumberFilter(field_name="amount", lookup_expr='lte', label="Kwota")
+
+    amount_from = filters.NumberFilter(field_name="amount", lookup_expr='gte', label="Kwota od")
+    amount_to = filters.NumberFilter(field_name="amount", lookup_expr='lte', label="Kwota do")
+
+    amount_in_pln_from = filters.NumberFilter(field_name="amount_in_pln", lookup_expr='gte', label="Kwota PLN od")
+    amount_in_pln_to = filters.NumberFilter(field_name="amount_in_pln", lookup_expr='lte', label="Kwota PLN do")
+
+    amount_per_member_from = filters.NumberFilter(field_name="amount_per_member", lookup_expr='gte', label="Na osobę od")
+    amount_per_member_to = filters.NumberFilter(field_name="amount_per_member", lookup_expr='lte', label="Na osobę do")
+
+    amount_per_member_in_pln_from = filters.NumberFilter(field_name="amount_per_member_in_pln", lookup_expr='gte', label="Na osobę PLN od")
+    amount_per_member_in_pln_to = filters.NumberFilter(field_name="amount_per_member_in_pln", lookup_expr='lte', label="Na osobę PLN do")
+
     currency = filters.CharFilter(field_name="currency", label="Waluta")
-    amount_in_pln = filters.CharFilter(field_name="amount_in_pln", label="Dokładna data")
-    amount_per_member_in_pln = filters.CharFilter(field_name="amount_per_member_in_pln", label="")
-    amount_per_member = filters.CharFilter(field_name="amount_per_member", lookup_expr='lte', label="Data do")
     trip = filters.ModelChoiceFilter(queryset=Trip.objects.all(), label="Wycieczka")
     user = filters.ModelChoiceFilter(queryset=UserProfile.objects.all(), label="Użytkownik")
     members = filters.ModelChoiceFilter(queryset=UserProfile.objects.all(), label="Uczestnicy")
@@ -73,12 +82,17 @@ class DetailedExpenseFilter(filters.FilterSet):
         fields = [
             "name",
             "creator",
-            "amount",
+            "amount_from",
+            "amount_to",
+            "amount_in_pln_from",
+            "amount_in_pln_to",
+            "amount_per_member_from",
+            "amount_per_member_to",
+            "amount_per_member_in_pln_from",
+            "amount_per_member_in_pln_to",
             "currency",
-            "amount_in_pln",
-            "amount_per_member_in_pln",
-            "amount_per_member",
             "trip",
             "user",
             "members"
         ]
+
