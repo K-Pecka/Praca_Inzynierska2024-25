@@ -44,7 +44,7 @@ class ItineraryActivity(BaseModel):
     )
     ticket = models.ForeignKey(
         Ticket,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         null=True,
         blank=True
     )
