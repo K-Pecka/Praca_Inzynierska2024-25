@@ -32,7 +32,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return token
 
-    def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
+    def validate(self, attrs):
         try:
             data = super().validate(attrs)
         except AuthenticationFailed:
@@ -53,6 +53,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['email'] = self.user.email
         data['subscription_active'] = self.user.subscription_active
         data['subscription_plan'] = self.user.subscription_plan
-        data['subscription_cancelled'] = 'True' if not self.user.stripe_subscription_id and self.user.subscription_active else 'False'
+        data['subscription_cancelled'] = bool(not self.user.stripe_subscription_id and self.user.subscription_active)
 
         return data
