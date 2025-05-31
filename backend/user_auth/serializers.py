@@ -1,7 +1,9 @@
 from typing import Dict, Any
 
-from rest_framework import serializers
+from django.utils.translation import gettext_lazy as _
 
+from rest_framework import serializers
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from users.serializers.user_profile_serializers import UserProfileListJWTSerializer
@@ -30,7 +32,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
-        data = super().validate(attrs)
+        try:
+            data = super().validate(attrs)
+        except AuthenticationFailed:
+            raise AuthenticationFailed(_("Niepoprawne dane logowania."))
 
         refresh = self.get_token(self.user)
 
