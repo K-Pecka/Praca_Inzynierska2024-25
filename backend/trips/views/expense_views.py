@@ -64,6 +64,11 @@ class ExpenseTypeListAPIView(ListAPIView):
 
 @extend_schema(tags=['expense'])
 class DetailedExpenseViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ExpenseFilter
+
     def get_queryset(self):
         trip_pk = self.kwargs.get('trip_pk')
         return DetailedExpense.objects.filter(trip__id=trip_pk).order_by('-created_at')
