@@ -1,5 +1,3 @@
-import json
-
 import stripe
 from django.conf import settings
 from drf_spectacular.utils import extend_schema
@@ -7,6 +5,8 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from users.models import CustomUser, UserProfile, UserProfileType
 from .models import Order
@@ -194,3 +194,36 @@ class StripeWebhookView(APIView):
                 print("Nie znaleziono subskrypcji.")
 
         return HttpResponse(status=200)
+
+
+@extend_schema(tags=["payments"], operation_id="cancel_subscription")
+class CancelSubscriptionView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        subscription_id = user.subscription_id
+
+        if not subscription_id:
+            return Response(
+                {"error": "Użytkownik nie ma aktywnej subskrypcji."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            canceled = stripe.Subscription.modify(subscription_id, cancel_at_period_end=True)
+
+            user.subscription_id = None
+            user.save(update_fields=["subscription_id",])
+
+            return Response({
+                "message": "Subskrypcja została anulowana.",
+                "stripe_status": canceled.status,
+                "stripe_id": canceled.id,
+            })
+
+        except stripe.error.StripeError as e:
+            return Response(
+                {"error": f"Błąd Stripe: {str(e)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
