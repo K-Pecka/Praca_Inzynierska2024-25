@@ -14,6 +14,7 @@ from rest_framework.generics import UpdateAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from chats.choices import ChatroomType
 from server.permissions import IsTripCreator, IsTripCreatorOrTargetUser
 from trips.models import Trip, TripAccessToken
 from trips.serializers.trip_participant_serializers import TripParticipantsUpdateSerializer
@@ -38,7 +39,7 @@ def handle_remove(trip, data):
                 profile.user.delete()
         else:
             with transaction.atomic():
-                profile.chat_rooms.filter(trip=trip).delete()
+                profile.chat_rooms.filter(trip=trip, type=ChatroomType.PRIVATE).delete()
                 trip.members.remove(profile)
         delete_access_token(trip, profile)
 
