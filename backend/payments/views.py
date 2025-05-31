@@ -202,7 +202,7 @@ class CancelSubscriptionView(RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-        subscription_id = user.subscription_id
+        subscription_id = user.stripe_subscription_id
 
         if not subscription_id:
             return Response(
@@ -213,8 +213,8 @@ class CancelSubscriptionView(RetrieveAPIView):
         try:
             canceled = stripe.Subscription.modify(subscription_id, cancel_at_period_end=True)
 
-            user.subscription_id = None
-            user.save(update_fields=["subscription_id",])
+            user.stripe_subscription_id = None
+            user.save(update_fields=["stripe_subscription_id",])
 
             return Response({
                 "message": "Subskrypcja została anulowana.",
