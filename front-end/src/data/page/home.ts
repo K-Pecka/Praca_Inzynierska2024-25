@@ -102,7 +102,7 @@ export const pricingPlans = [
     },
     {
         type: "guide",
-        name: "Podróżnik",
+        name: "Przewodnik",
         price: "45.0 zł / miesiąc",
         features: ["Nielimitowane wycieczki", "Nielimitowane plany", "Nielimitowane ilość uczestników","czat grupowy","kanał ogłoszeniowy"],
         contentVariant: "secondary" as "secondary",
