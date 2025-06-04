@@ -23,6 +23,7 @@ export interface User {
   fullname?: string;
   subscription_active?: boolean;
   subscription_plan?: string;
+  subscription_cancelled?: boolean;
 }
 
 export interface Profile {

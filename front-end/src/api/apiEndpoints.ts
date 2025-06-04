@@ -37,8 +37,12 @@ export const apiEndpoints = {
     update:`/user/update/`,
     getUserById: `/user/user/by-profile/:userId/`,
     role: `/user/profile/:role/change-default/`,
+    delete:`/user/delete/`
   },
-  pay: `/payment/create-checkout-session/`,
+  pay: {
+    payment:`/payment/create-checkout-session/`,
+    cancel:'/payment/subscription/cancel/'
+  },
   auth: {
     login: `/user_auth/login/`,
     register: `/user/create/`,

@@ -30,6 +30,7 @@ export const useParticipants = () => {
             if(idParticipant == getActiveProfile()?.id)
             {
                 notifications.setSuccessCurrentMessage("Pomyślnie opuściłeś wycieczkę!");
+                queryClient.refetchQueries({ queryKey: ["trips", getRole()] });
                 router.push({name:"ChooseTrip",params:{role:getRole()}})
                 return
             }

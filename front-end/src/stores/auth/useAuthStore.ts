@@ -4,7 +4,6 @@ import { useMutation, useQuery } from "@tanstack/vue-query";
 import router from "@/router";
 import { TOKEN, User } from "@/types";
 import { useNotificationStore } from "@/stores/ui/useNotificationStore";
-import { useFormStore, usePermissionStore } from "@/stores";
 import {
   loginFetch,
   registerFetch,
@@ -12,19 +11,18 @@ import {
   fetchLogOut,
   fetchPermission,
   fetchPaymentUrl,
-  updateUser
+  updateUser,
 } from "@/api/endpoints/auth";
-import { getMutationUpdateUser } from "@/api/services/userQuery";
+import { getMutationUpdateUser, deleteUserMutation } from "@/api/services/userQuery";
 import { queryClient } from "@/main";
 import { useRoleStore } from "./useRoleStore";
+import { subscriptionCancelMutation } from "@/api/services/payQuery";
 
 export const useAuthStore = defineStore(
   "auth",
   () => {
     const notificationStore = useNotificationStore();
-    const permissionStore = usePermissionStore();
     const roleStore = useRoleStore();
-    const formStore = useFormStore();
 
     const token = ref<TOKEN | null>(null);
     const user = ref<User | null>(null);
@@ -86,7 +84,13 @@ export const useAuthStore = defineStore(
         return false;
       }
     };
-
+    const updateDataUser = (data: Record<string, string>) => {
+      if (!user.value) return;
+      saveUser({
+        ...user.value,
+        ...data,
+      });
+    }
     const checkPermission = async (
       name: string | undefined,
       type: "nav" | "path" = "nav"
@@ -134,7 +138,7 @@ export const useAuthStore = defineStore(
       mutationFn: registerFetch,
       onSuccess: () => {
         notificationStore.setSuccessCurrentMessage(
-          "Rejestracja zakończona sukcesem"
+          "Aby dokończyć rejestrację, potwierdz email"
         );
         router.push({ name: "logIn" });
       },
@@ -160,10 +164,8 @@ export const useAuthStore = defineStore(
       }) => {
           return updateUser(dto);
       },
-      onSuccess: (data) => {
-        if (data && user.value) {
-          user.value.first_name = data.first_name ?? user.value.first_name;
-          user.value.last_name = data.last_name ?? user.value.last_name;
+      onSuccess: () => {
+        if (user.value) {
           notificationStore.setSuccessCurrentMessage(
             "Zaktualizowano dane profilu"
           );
@@ -217,8 +219,23 @@ export const useAuthStore = defineStore(
         }
       }
     });
-
+    const cancelSubscription =subscriptionCancelMutation({
+      notification: notificationStore,
+      updateUser:updateDataUser,
+      successMessage: "Z powodzenie udało się anulować subskrypcje",
+      errorMessage: "Wystąpił problem z anulowanie subskrypcji",
+    })
+    const deleteUser = deleteUserMutation({
+      saveToken,
+      saveUser,
+      notification: notificationStore,
+      queryClient,
+      successMessage: "Pomyślnie usunięto użytkownika",
+      errorMessage: "Wystąpił problem z usunięciem użytkownika",
+    })
     return {
+      deleteUser,
+      cancelSubscription,
       startCheckout,
       userData: {
         getUser,

@@ -32,17 +32,13 @@ export const fetchUserRole = async (role: string): Promise<Profile> => {
 
   return data as Profile;
 };
-
-export const fetchPaymentUrl = async (priceId: string) => {
-  const { data, error } = await fetchData(
-    apiEndpoints.pay,
-    "POST",
-    { price_id: priceId }
-  );
+export const fetchDeleteUser =async () => {
+  const url = apiEndpoints.user.delete;
+  const { data, error } = await fetchData(url, "DELETE");
 
   if (error) {
     throw error;
   }
 
-  return data as { checkout_url: string};
+  return data;
 };
