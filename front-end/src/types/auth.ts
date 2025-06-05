@@ -1,6 +1,7 @@
 export interface TOKEN {
   refresh?: string;
   access?: string;
+  initialAccessToken?: string;
 }
 
 export interface Register {

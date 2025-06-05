@@ -121,13 +121,15 @@ export const useAuthStore = defineStore(
     const loginMutation = useMutation({
       mutationFn: loginFetch,
       onSuccess: async (data) => {
-        saveToken({ access: data.access, refresh: data.refresh });
-        saveUser(data);
+        const {access,refresh,...userData} = data;
+        saveToken({ access,refresh});
+        saveUser(userData);
         notificationStore.setSuccessCurrentMessage("Zalogowano pomyślnie");
         await nextTick();
         router.push({ name: "landing" });
       },
       onError: (err: any) => {
+        
         notificationStore.setErrorCurrentMessage(
           err?.detail || "Nieoczekiwany błąd podczas logowania"
         );
@@ -205,6 +207,7 @@ export const useAuthStore = defineStore(
       return user.value?.profiles?.find((profile) => profile.is_default) || null;
     }
     const isGuide = () => getUser()?.profiles?.find((profile) => profile.type == 2)?.is_default ?? false;
+    
     const startCheckout  = useMutation({
       mutationFn: fetchPaymentUrl,
       onSuccess: (data) => {

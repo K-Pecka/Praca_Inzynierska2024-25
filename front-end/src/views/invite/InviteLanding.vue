@@ -3,8 +3,7 @@ import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import HeaderSection from "@/components/shared/HeaderSection.vue";
 import AppButton from "@/components/AppButton.vue";
-import { useAuthStore } from "@/stores";
-
+import { useAuthStore, useUtilsStore } from "@/stores";
 
 const name = ref("");
 const surname = ref("");
@@ -16,36 +15,52 @@ const nameRules = [(v: string) => !!v || "Imię jest wymagane"];
 const surnameRules = [(v: string) => !!v || "Nazwisko jest wymagane"];
 const passwordRules = [
   (v: string) => !!v || "Hasło jest wymagane",
-  (v: string) => v.length >= 6 || "Hasło musi mieć co najmniej 6 znaków",
+  (v: string) => v.length >= 8 || "Hasło musi mieć co najmniej 8 znaków",
+  (v: string) =>
+    /[a-z]/.test(v) || "Hasło musi zawierać co najmniej jedną małą literę",
+  (v: string) =>
+    /[A-Z]/.test(v) || "Hasło musi zawierać co najmniej jedną wielką literę",
+  (v: string) =>
+    /\d/.test(v) || "Hasło musi zawierać co najmniej jedną cyfrę",
+  (v: string) =>
+    /[!@#$%^&*(),.?":{}|<>_\-\\/~`+=\[\]]/.test(v) ||
+    "Hasło musi zawierać znak specjalny",
 ];
 const confirmPasswordRules = [
   (v: string) => !!v || "Powtórz hasło",
   (v: string) => v === password.value || "Hasła muszą się zgadzać",
 ];
-const {saveToken,userUpdateMutation} = useAuthStore()
+const { saveToken, userUpdateMutation } = useAuthStore();
 
-function goToLogin() {
-  formRef.value?.validate().then((isValid: boolean) => {
-    if (isValid && confirmPassword.value == password.value) {
+async function goToLogin() {
+  const result = await formRef.value?.validate();
+  console.log("TAK");
+  console.log(result)
+    if (result?.valid && confirmPassword.value === password.value) {
+      console.log("TAK2");
       userUpdateMutation.mutate({
         first_name: name.value,
         last_name: surname.value,
         password: password.value,
-        password_confirm: confirmPassword.value
-      })
-
-    }
-  });
+        password_confirm: confirmPassword.value,
+      });
+    };
 }
 
-onMounted(()=>{
+onMounted(() => {
   const route = useRoute();
-  saveToken({access:String(route.query.token)})
-})
+  const { validToken } = useUtilsStore();
+  const token = String(route.query.token);
+  if (validToken(token, "initialAccessToken")) {
+    saveToken({ initialAccessToken: token });
+  }
+});
 </script>
 
 <template>
-  <v-container class="fill-height d-flex flex-column align-center justify-center">
+  <v-container
+    class="fill-height d-flex flex-column align-center justify-center"
+  >
     <v-card max-width="700" class="pa-8 rounded-lg">
       <v-card-title class="text-left">
         <HeaderSection
@@ -56,7 +71,8 @@ onMounted(()=>{
       </v-card-title>
 
       <v-card-text class="mt-4 text-left">
-        Zostałeś zaproszony do wspólnej podróży. Uzupełnij dane, aby kontynuować.
+        Zostałeś zaproszony do wspólnej podróży. Uzupełnij dane, aby
+        kontynuować.
 
         <v-form ref="formRef" class="mt-6" validate-on="blur">
           <v-row dense class="mb-3" align="stretch">
@@ -112,13 +128,13 @@ onMounted(()=>{
 
       <v-card-actions class="justify-center mt-6">
         <AppButton
-                color="primary"
-                @click="goToLogin"
-                dense
-                font-auto
-                max-width="100%"
-                text="Dołącz teraz"
-            />
+          color="primary"
+          @click="goToLogin"
+          dense
+          font-auto
+          max-width="100%"
+          text="Dołącz teraz"
+        />
       </v-card-actions>
     </v-card>
   </v-container>

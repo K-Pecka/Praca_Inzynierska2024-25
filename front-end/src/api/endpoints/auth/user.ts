@@ -7,7 +7,7 @@ export const fetchUserById = async (id: number) => {
   const { data, error } = await fetchData<User>(url, "GET");
 
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
   return data as User;
@@ -17,7 +17,7 @@ export const updateUser = async (dto: { first_name?: string; last_name?: string;
   const { data, error } = await fetchData<User>(apiEndpoints.user.update, "PATCH",dto);
 
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
   return data as User;
@@ -27,7 +27,7 @@ export const fetchUserRole = async (role: string): Promise<Profile> => {
   const { data, error } = await fetchData<Profile>(url, "PATCH");
 
   if (error) {
-    throw new Error(error);
+    throw error;
   }
 
   return data as Profile;

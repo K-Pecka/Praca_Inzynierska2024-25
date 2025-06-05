@@ -12,7 +12,7 @@ export const getMutationUpdateUser = (option: Record<string,any>) => useMutation
         router.push({ name: "logIn" });
     },
     onError: (err: any) => {
-        option.notification.setErrorCurrentMessage(err?.message || option.errorMessage);
+        option.notification.setErrorCurrentMessage(err?.detail || err?.message || option.errorMessage);
     },
 });
 export const deleteUserMutation = (option: Record<string,any>) => useMutation({
@@ -24,6 +24,6 @@ export const deleteUserMutation = (option: Record<string,any>) => useMutation({
         router.push({ name: "landing" });
     },
     onError: (err: any) => {
-        option.notification.setErrorCurrentMessage(err?.message || option.errorMessage);
+        option.notification.setErrorCurrentMessage(err?.detail || err?.message || option.errorMessage);
     },
 });
