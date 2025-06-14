@@ -98,7 +98,7 @@ const SubscriptionTypeCommunication: Record<SubscriptionPlan, string> = {
     "Twoja subskrypcja turysty pozostaje aktywna do końca bieżącego okresu rozliczeniowego.",
   guide:
     "Twoja subskrypcja przewodnika pozostaje aktywna do końca bieżącego okresu rozliczeniowego.",
-  cancel: "Towja subskrypcja wygaśnie wraz z końcem okresu rozliczeniowego",
+  cancel: "Twoja subskrypcja wygaśnie wraz z końcem okresu rozliczeniowego",
 };
 const cancel = ref(user?.subscription_cancelled);
 const plan: SubscriptionPlan =

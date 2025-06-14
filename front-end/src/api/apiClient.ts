@@ -56,9 +56,6 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const authStore = useAuthStore();
-    if (error.response?.status === 404) {
-      // router.push('/404');
-    }
     if (error.response?.status === 500) {
       router.push("/500");
     } else if (

@@ -8,7 +8,7 @@ const getValidator = (errorMessage: Record<string, string>): Validator => {
 export const profilePersonalInput = (errorMessage: Record<string, string>) => [
     {
         name: "first_name",
-        label: "Imię:",
+        label: "Imię",
         type: InputType.TEXT,
         placeholder: "Wprowadź imię",
         validation: getValidator(errorMessage).minLength(1),
@@ -17,7 +17,7 @@ export const profilePersonalInput = (errorMessage: Record<string, string>) => [
     },
     {
         name: "last_name",
-        label: "Nazwisko:",
+        label: "Nazwisko",
         type: InputType.TEXT,
         placeholder: "Wprowadź nazwisko",
         validation: getValidator(errorMessage).minLength(1),

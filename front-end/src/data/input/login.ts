@@ -8,7 +8,7 @@ const getValidator = (errorMessage: Record<string, string>): Validator => {
 export const loginInput = (errorMessage: Record<string, string>) => [
   {
     name: "email",
-    label: "Podaj Email:",
+    label: "Podaj Email",
     type: InputType.EMAIL,
     placeholder: "Wprowadź email",
     validation: getValidator(errorMessage).email(),
@@ -16,7 +16,7 @@ export const loginInput = (errorMessage: Record<string, string>) => [
   },
   {
     name: "password",
-    label: "Podaj Hasło:",
+    label: "Podaj Hasło",
     type: InputType.PASSWORD,
     placeholder: "Wprowadź hasło",
     validation: getValidator(errorMessage),

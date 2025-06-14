@@ -8,7 +8,7 @@ const getValidator = (errorMessage: Record<string, string>): Validator => {
 export const budgetInput = (errorMessage: Record<string, string>) => [
       {
         name: "budget_amount",
-        label: "Kwota:",
+        label: "Kwota",
         type: InputType.TEXT,
         placeholder: "np. 6000",
         validation: getValidator(errorMessage).minValue(0),

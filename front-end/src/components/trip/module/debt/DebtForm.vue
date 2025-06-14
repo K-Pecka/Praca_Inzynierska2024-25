@@ -59,7 +59,7 @@ const formIsValid = ref(false);
   <v-col cols="12">
     <v-form ref="formRef" v-slot="{ isValid }" v-model="formIsValid">
       <v-card class="ticket-form pa-3">
-        <v-card-title>Dodaj nowy wydatek</v-card-title>
+        <v-card-title>Dodaj nową zaległość</v-card-title>
         <v-card-text>
           
           <v-row>
