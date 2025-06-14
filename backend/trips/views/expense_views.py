@@ -8,7 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.core.exceptions import ValidationError
 
 from server.permissions import IsTripParticipant, IsExpenseOwnerOrTripCreator, IsTripParticipantOrCreator
-from trips.filters import ExpenseFilter
+from trips.filters import ExpenseFilter, DetailedExpenseFilter
 from trips.models import Expense, ExpenseType, DetailedExpense
 from trips.serializers.expense_serializers import ExpenseCreateSerializer, ExpenseRetrieveSerializer, \
     ExpenseListSerializer, ExpenseUpdateSerializer, ExpenseDeleteSerializer, ExpenseTypeListAPIView, \
@@ -64,6 +64,11 @@ class ExpenseTypeListAPIView(ListAPIView):
 
 @extend_schema(tags=['expense'])
 class DetailedExpenseViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = DetailedExpenseFilter
+
     def get_queryset(self):
         trip_pk = self.kwargs.get('trip_pk')
         return DetailedExpense.objects.filter(trip__id=trip_pk).order_by('-created_at')

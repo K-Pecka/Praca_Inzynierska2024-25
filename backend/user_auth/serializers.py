@@ -1,7 +1,9 @@
 from typing import Dict, Any
 
-from rest_framework import serializers
+from django.utils.translation import gettext_lazy as _
 
+from rest_framework import serializers
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from users.serializers.user_profile_serializers import UserProfileListJWTSerializer
@@ -26,11 +28,15 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         token['subscription_active'] = user.subscription_active
         token['subscription_plan'] = user.subscription_plan
+        token['subscription_cancelled'] = True if not user.stripe_subscription_id and user.subscription_active else False
 
         return token
 
-    def validate(self, attrs: Dict[str, Any]) -> Dict[str, str]:
-        data = super().validate(attrs)
+    def validate(self, attrs):
+        try:
+            data = super().validate(attrs)
+        except AuthenticationFailed:
+            raise AuthenticationFailed(_("Niepoprawne dane logowania."))
 
         refresh = self.get_token(self.user)
 
@@ -47,5 +53,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['email'] = self.user.email
         data['subscription_active'] = self.user.subscription_active
         data['subscription_plan'] = self.user.subscription_plan
+        data['subscription_cancelled'] = bool(not self.user.stripe_subscription_id and self.user.subscription_active)
 
         return data

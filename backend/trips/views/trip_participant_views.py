@@ -14,6 +14,7 @@ from rest_framework.generics import UpdateAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from chats.choices import ChatroomType
 from server.permissions import IsTripCreator, IsTripCreatorOrTargetUser
 from trips.models import Trip, TripAccessToken
 from trips.serializers.trip_participant_serializers import TripParticipantsUpdateSerializer
@@ -38,7 +39,7 @@ def handle_remove(trip, data):
                 profile.user.delete()
         else:
             with transaction.atomic():
-                profile.chat_rooms.filter(trip=trip).delete()
+                profile.chat_rooms.filter(trip=trip, type=ChatroomType.PRIVATE).delete()
                 trip.members.remove(profile)
         delete_access_token(trip, profile)
 
@@ -165,7 +166,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         if trip.members.filter(id=profile.id).exists():
             raise ValidationError(_("Użytkownik już jest uczestnikiem wycieczki"))
 
-        invitation_link = self.create_invitation_link(trip, profile.user)
+        invitation_link = self.create_invitation_link(trip, profile)
 
         send_invitation_email(
             email=data.get('email', profile.user.email),
@@ -179,11 +180,11 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             "is_guest": 'profile' not in data
         })
 
-    def create_invitation_link(self, trip, user):
+    def create_invitation_link(self, trip, profile):
         token = TripAccessToken.generate_token()
         token_instance, _ = TripAccessToken.objects.update_or_create(
             trip=trip,
-            user_profile=user.get_default_profile(),
+            user_profile=profile,
             defaults={'token': token}
         )
         endpoint_path = reverse('trip_join')
