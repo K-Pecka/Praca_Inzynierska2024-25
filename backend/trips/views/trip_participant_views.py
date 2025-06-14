@@ -166,7 +166,7 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
         if trip.members.filter(id=profile.id).exists():
             raise ValidationError(_("Użytkownik już jest uczestnikiem wycieczki"))
 
-        invitation_link = self.create_invitation_link(trip, profile.user)
+        invitation_link = self.create_invitation_link(trip, profile)
 
         send_invitation_email(
             email=data.get('email', profile.user.email),
@@ -180,11 +180,11 @@ class TripParticipantsUpdateAPIView(UpdateAPIView):
             "is_guest": 'profile' not in data
         })
 
-    def create_invitation_link(self, trip, user):
+    def create_invitation_link(self, trip, profile):
         token = TripAccessToken.generate_token()
         token_instance, _ = TripAccessToken.objects.update_or_create(
             trip=trip,
-            user_profile=user.get_default_profile(),
+            user_profile=profile,
             defaults={'token': token}
         )
         endpoint_path = reverse('trip_join')

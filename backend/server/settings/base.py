@@ -40,6 +40,7 @@ INSTALLED_ADDITIONAL_APPS = [
     'django_filters',
     'cloudinary',
     'cloudinary_storage',
+    'django_extensions',
 ]
 
 OWN_ADDITIONAL_APPS = [
