@@ -45,4 +45,4 @@ System składa się z trzech głównych komponentów:
 Projekt został wdrożony na platformie Heroku. Automatyzacja procesu wdrażania (CI/CD) realizowana jest przy użyciu GitHub Actions, z osobnymi pipeline’ami dla frontendu i backendu. Aplikacje są synchronizowane z głównym repozytorium na GitHubie.
 
 ---
-Projekt został zrealizowany w ramach pracy inżynierskiej.
+**Projekt został zrealizowany w ramach pracy inżynierskiej.**
