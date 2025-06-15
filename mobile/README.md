@@ -1,10 +1,3 @@
-# Plannder
-
-**Plannder** to system do organizacji i planowania podróży, zaprojektowana z myślą o turystach i przewodnikach. Umożliwia łatwe zarządzanie wycieczkami, dodawanie uczestników, planowanie harmonogramu, monitorowanie wydatków i wiele więcej.
-
-Aplikacja działa w oparciu o backend napisany w Django i integruje się z panelem webowym dostępnym pod adresem:  
-[https://www.plannder.com](https://www.plannder.com)
-
 # Aplikacja mobilna
 
 Aplikacja mobilna systemu **Plannder** służy jako podręczny niezbędnik realizacji zaplanowanej podróży. Umożliwia łatwe zarządzanie wycieczkami, dodawanie uczestników, planowanie harmonogramu, monitorowanie wydatków i wiele więcej.
