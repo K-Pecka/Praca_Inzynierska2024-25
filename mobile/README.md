@@ -1,6 +1,6 @@
 # Aplikacja mobilna
 
-Aplikacja mobilna systemu **Plannder** służy jako podręczny niezbędnik realizacji zaplanowanej podróży. Umożliwia łatwe zarządzanie wycieczkami, dodawanie uczestników, planowanie harmonogramu, monitorowanie wydatków i wiele więcej.
+Aplikacja mobilna systemu **Plannder** to podręczne narzędzie do kontrolowania przebiegu podróży. Umożliwia łatwe zarządzanie wycieczkami, dodawanie uczestników, planowanie harmonogramu, monitorowanie wydatków i wiele więcej.
 
 Aplikacja działa w oparciu o backend napisany w Django i integruje się z panelem webowym dostępnym pod adresem:  
 [https://www.plannder.com](https://www.plannder.com)
