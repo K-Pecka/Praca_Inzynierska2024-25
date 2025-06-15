@@ -45,19 +45,19 @@ Umożliwia planowanie i zarządzanie wycieczkami indywidalnymi oraz grupowymi. P
 
 ## Konfiguracja i uruchomienie
 
-## Sklonuj repozytorium
+### 1. Sklonuj repozytorium
 
 ```bash
 git clone https://github.com/K-Pecka/Praca_Inzynierska2024-25.git
 cd front-end
 ```
 
-## Zainstaluj zależności
+### 2. Zainstaluj zależności
 
 ```bash
 npm install
 ```
-## Uruchom aplikację
+### 3. Uruchom aplikację
 
 ```bash
 npm run dev
