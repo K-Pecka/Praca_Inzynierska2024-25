@@ -4,7 +4,7 @@ Backend aplikacji **Plannder** odpowiada za logikę biznesową, zarządzanie dan
 
 ---
 
-## 🔧 Technologie
+## Technologie
 
 - **Python**
 - **Django**
@@ -15,34 +15,34 @@ Backend aplikacji **Plannder** odpowiada za logikę biznesową, zarządzanie dan
 
 ---
 
-## 🧠 Główne funkcjonalności
+## Główne funkcjonalności
 
-### ✅ Uwierzytelnianie i autoryzacja
+### Uwierzytelnianie i autoryzacja
 - Logowanie użytkownika (turysta / przewodnik)
 - JWT – tokeny dostępu i odświeżania
 - Ochrona endpointów wymagających zalogowania
 
-### 🧭 Zarządzanie wycieczkami
+### Zarządzanie wycieczkami
 - Tworzenie i edycja planów podróży (dla przewodnika)
 - Pobieranie szczegółów wycieczki (dla turystów)
 - Lista miejsc i aktywności w harmonogramie
 
-### 📅 Harmonogram podróży
+### Harmonogram podróży
 - Szczegółowy plan dzienny
 - Przypisanie godzin, miejsc, opisu aktywności
 - Możliwość aktualizacji w czasie rzeczywistym
 
-### 💰 Budżet i wydatki
+### Budżet i wydatki
 - Śledzenie budżetu i wydatków uczestników
 - Rejestrowanie zaległości i płatności
 - Rozliczenia między uczestnikami
 
-### 💬 Kanały komunikacji
+### Kanały komunikacji
 - Czat w ramach wycieczki
 - Wymiana wiadomości między turystami a przewodnikiem
 - Obsługa WebSocket przez Django Channels
 
-### 🎫 Bilety
+### Bilety
 - Przechowywanie informacji o biletach
 - Dane o godzinach, cenach, statusie
 - Dostępność biletów dla uczestników
