@@ -3,6 +3,8 @@
 Aplikacja mobilna systemu **Plannder** to podręczne narzędzie do kontrolowania przebiegu podróży. Działa w oparciu o backend napisany w Django i integruje się z panelem webowym dostępnym pod adresem:  
 [https://www.plannder.com](https://www.plannder.com)
 
+[Pobierz plik ZIP z aplikacją (.apk)](https://github.com/K-Pecka/Praca_Inzynierska2024-25/raw/slave/mobile/plannder.zip)
+
 ---
 
 ## Funkcje aplikacji
