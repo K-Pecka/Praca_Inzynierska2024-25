@@ -57,9 +57,5 @@ Aplikacja działa w oparciu o backend napisany w Django i integruje się z panel
 
 ---
 
-## Panel użytkownika
-
 Rejestracja i planowanie wycieczek odbywa się na stronie:  
 [https://www.plannder.com](https://www.plannder.com)
-
----
