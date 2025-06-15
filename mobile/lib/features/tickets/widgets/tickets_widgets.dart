@@ -20,6 +20,14 @@ class TicketTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget ticketType;
+    if (ticket.type == 1) {
+      ticketType = const Text("Zwiedzanie", style: TextStyles.subtitle);
+    } else if (ticket.type == 34) {
+      ticketType = const Text("Teatr", style: TextStyles.subtitle);
+    } else {
+      ticketType = const Text("Inne", style: TextStyles.subtitle);
+    }
     return Card(
       color: AppColors.cardsBackground,
       margin: const EdgeInsets.only(bottom: 16),
@@ -41,10 +49,7 @@ class TicketTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Atrakcje Turystyczne",
-                  style: TextStyles.subtitle,
-                ),
+                ticketType,
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,

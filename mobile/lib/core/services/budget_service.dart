@@ -6,9 +6,7 @@ import '../models/expense_model.dart';
 class BudgetService {
   static final String _baseUrl = 'https://api.plannder.com';
 
-  static Future<List<ExpenseModel>> fetchExpenses({
-    required int tripId,
-  }) async {
+  static Future<List<ExpenseModel>> fetchExpenses({required int tripId}) async {
     List<ExpenseModel> allExpenses = [];
     String? nextUrl = '$_baseUrl/trip/$tripId/expenses/';
 
@@ -16,7 +14,9 @@ class BudgetService {
       final response = await HttpHandler.request(Uri.parse(nextUrl));
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> decoded = jsonDecode(utf8.decode(response.bodyBytes));
+        final Map<String, dynamic> decoded = jsonDecode(
+          utf8.decode(response.bodyBytes),
+        );
         final List<dynamic> results = decoded['results'];
         allExpenses.addAll(results.map((e) => ExpenseModel.fromJson(e)));
         nextUrl = decoded['next'];
@@ -50,11 +50,7 @@ class BudgetService {
       'category': category,
     });
 
-    final response = await HttpHandler.request(
-      url,
-      method: 'POST',
-      body: body,
-    );
+    final response = await HttpHandler.request(url, method: 'POST', body: body);
 
     if (response.statusCode != 201) {
       throw Exception('Błąd podczas dodawania wydatku: ${response.body}');
@@ -69,11 +65,7 @@ class BudgetService {
     final url = Uri.parse('$_baseUrl/trip/$tripId/expenses/$expenseId/');
     final body = jsonEncode(updates);
 
-    final response = await HttpHandler.request(
-      url,
-      method: 'PUT',
-      body: body,
-    );
+    final response = await HttpHandler.request(url, method: 'PUT', body: body);
 
     if (response.statusCode != 200) {
       throw Exception('Nie udało się zaktualizować wydatku: ${response.body}');
@@ -85,14 +77,10 @@ class BudgetService {
     required int expenseId,
   }) async {
     final url = Uri.parse('$_baseUrl/trip/$tripId/expenses/$expenseId/');
-    final response = await HttpHandler.request(
-      url,
-      method: 'DELETE',
-    );
+    final response = await HttpHandler.request(url, method: 'DELETE');
 
     if (response.statusCode != 204) {
       throw Exception('Nie udało się usunąć wydatku: ${response.body}');
     }
   }
 }
-

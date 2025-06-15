@@ -46,11 +46,18 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
     final bool isGuide = _currentTrip.creator.type == 2;
     final bool isCreator = _currentTrip.creator.id == widget.userProfileId;
 
-    final Widget budgetView = isGuide
-        ? (isCreator
-        ? DebtOverviewScreen(trip: _currentTrip)
-        : TouristDebtScreen(trip: _currentTrip, userProfileId: widget.userProfileId))
-        : BudgetScreen(trip: _currentTrip, userProfileId: widget.userProfileId);
+    final Widget budgetView =
+        isGuide
+            ? (isCreator
+                ? DebtOverviewScreen(trip: _currentTrip)
+                : TouristDebtScreen(
+                  trip: _currentTrip,
+                  userProfileId: widget.userProfileId,
+                ))
+            : BudgetScreen(
+              trip: _currentTrip,
+              userProfileId: widget.userProfileId,
+            );
 
     final List<Widget> screens = [
       TouristDashboard(
@@ -83,5 +90,6 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
     );
   }
 }
+
 
 
