@@ -19,7 +19,7 @@ Aplikacja działa w oparciu o backend napisany w Django i integruje się z panel
 - logowanie na konto turysty i przewodnika
 - Przegląd zaplanowanej wycieczki
 - Podgląd planu podróży
-- Monitorowanie budżetu i wydatków
+- Monitorowanie budżetu, wydatków i zaległości
 - Kanały komunikacji w wycieczkach organizowanych przez przewodnika
 - Obsługa biletów
 
