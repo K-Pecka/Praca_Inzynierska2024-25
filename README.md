@@ -47,13 +47,13 @@ Projekt został wdrożony na platformie Heroku. Automatyzacja procesu wdrażania
 
 ## Autorzy
 
-**Mateusz Wiśniewski**
+**Mateusz Wiśniewski** [Github](https://github.com/s24893-pj)
 
-**Andrzej Ebertowski**
+**Andrzej Ebertowski** [Github](https://github.com/AndrzejjE)
 
-**Jakub Pobłocki**
+**Jakub Pobłocki** [Github](https://github.com/s25770-pj)
 
-**Kacper pecka**
+**Kacper Pecka** [Github](https://github.com/K-Pecka)
 
 ---
 
