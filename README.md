@@ -50,5 +50,5 @@ Projekt został wdrożony na platformie Heroku. Automatyzacja procesu wdrażania
 - **Andrzej Ebertowski**
 - **Jakub Pobłocki**
 - **Kacper pecka**
-- 
+
 **Projekt został zrealizowany w ramach pracy inżynierskiej.**
