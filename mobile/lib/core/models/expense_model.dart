@@ -8,7 +8,9 @@ class ExpenseModel {
   final DateTime date;
   final String? note;
   final String category;
-  final String? user;
+  final int? user;
+  final String? username;
+  final double convertedAmount;
 
   ExpenseModel({
     required this.id,
@@ -19,6 +21,8 @@ class ExpenseModel {
     required this.category,
     this.note,
     this.user,
+    this.username,
+    required this.convertedAmount,
   });
 
   factory ExpenseModel.fromJson(Map<String, dynamic> json) {
@@ -30,7 +34,11 @@ class ExpenseModel {
       date: DateFormat('dd.MM.yyyy').parse(json['date']),
       category: json['category'].toString(),
       note: json['note'],
-      user: json['user']?.toString(),
+      user: json['user'] is int
+          ? json['user']
+          : int.tryParse(json['user'].toString()),
+      username: json['username']?.toString(),
+      convertedAmount: double.parse(json['converted_amount'].toString()),
     );
   }
 }

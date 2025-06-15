@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import '../../core/models/trip_model.dart';
-import '../../features/dashboard/screens/tourist_dashboard_screen.dart';
+import '../../features/dashboard/screens/dashboard_screen.dart';
 import '../../features/itineraries/screens/itinerary_screen.dart';
-import '../../features/budget/screens/tourist_budget_screen.dart';
+import '../../features/budget/screens/budget_screen.dart';
+import '../../features/budget/screens/debt_overview_screen.dart';
+import '../../features/budget/screens/tourist_debt_screen.dart';
 import '../../core/widgets/bottom_navigation.dart';
+import '../../features/tickets/screens/tickets_screen.dart';
+import '../../features/chat/screens/chat_overview_screen.dart';
 
 class BottomNavScaffold extends StatefulWidget {
-  final String token;
   final int userProfileId;
+  final int profileType;
   final TripModel trip;
 
   const BottomNavScaffold({
     super.key,
-    required this.token,
     required this.userProfileId,
+    required this.profileType,
     required this.trip,
   });
 
@@ -39,36 +43,53 @@ class _BottomNavScaffoldState extends State<BottomNavScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isGuide = _currentTrip.creator.type == 2;
+    final bool isCreator = _currentTrip.creator.id == widget.userProfileId;
+
+    final Widget budgetView =
+        isGuide
+            ? (isCreator
+                ? DebtOverviewScreen(trip: _currentTrip)
+                : TouristDebtScreen(
+                  trip: _currentTrip,
+                  userProfileId: widget.userProfileId,
+                ))
+            : BudgetScreen(
+              trip: _currentTrip,
+              userProfileId: widget.userProfileId,
+            );
+
     final List<Widget> screens = [
       TouristDashboard(
-        token: widget.token,
-        userProfileId: widget.userProfileId,
         trip: _currentTrip,
+        userProfileId: widget.userProfileId,
         onTripChange: _updateTrip,
       ),
-      ItineraryScreen(
-        trip: _currentTrip,
-        token: widget.token,
-      ),
-      TouristBudgetScreen(
-        token: widget.token,
+      ItineraryScreen(trip: _currentTrip),
+      budgetView,
+      TouristTicketsScreen(trip: _currentTrip),
+      ChatOverviewScreen(
         trip: _currentTrip,
         userProfileId: widget.userProfileId,
+        profileType: widget.profileType,
       ),
-      const Placeholder(),
-      const Placeholder(),
     ];
 
     return Scaffold(
       body: screens[_currentIndex],
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        trip: _currentTrip,
+        onTap: (index) {
+          final isChatTab = index == 4;
+          final isGuide = _currentTrip.creator.type == 2;
+          if (isChatTab && !isGuide) return;
+          setState(() => _currentIndex = index);
+        },
       ),
     );
   }
 }
-
 
 
 

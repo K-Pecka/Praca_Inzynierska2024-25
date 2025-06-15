@@ -1,26 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '/core/theme/icons.dart';
+import '/core/theme/themes.dart';
+import '/core/models/trip_model.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
+  final TripModel trip;
 
   const CustomBottomNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
+    required this.trip,
   });
 
-  static const _selectedColor = Color(0xFF6C55ED);
-  static const _unselectedColor = Colors.white;
+  static const _selectedColor = AppColors.primary;
+  static const _unselectedColor = AppColors.cardsBackground;
+
+  Color _getColorForIcon(int index) {
+    if (index == 4 && trip.creator.type != 2) {
+      return Colors.grey.shade700;
+    }
+    return currentIndex == index ? _selectedColor : _unselectedColor;
+  }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: onTap,
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.navigationBackground,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: _selectedColor,
       unselectedItemColor: _unselectedColor,
@@ -54,7 +65,7 @@ class CustomBottomNavBar extends StatelessWidget {
   Widget _navIcon(SvgPicture icon, int index) {
     return ColorFiltered(
       colorFilter: ColorFilter.mode(
-        currentIndex == index ? _selectedColor : _unselectedColor,
+        _getColorForIcon(index),
         BlendMode.srcIn,
       ),
       child: SizedBox(width: 32, height: 32, child: icon),

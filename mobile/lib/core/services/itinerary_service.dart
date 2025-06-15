@@ -1,46 +1,56 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:mobile/core/utils/http_handler.dart';
 import '../models/activity_model.dart';
-import '/core/models/itinerary_model.dart';
+import '../models/itinerary_model.dart';
 
 class ItineraryService {
-  Future<List<ItineraryModel>> fetchItineraries({
-    required int tripId,
-    required String token,
-  }) async {
-    final url = Uri.parse(
-      'https://api.plannder.com/trip/$tripId/itinerary/all/',
-    );
-    final response = await http.get(
-      url,
-      headers: {'accept': 'application/json', 'Authorization': 'Bearer $token'},
-    );
+  static final String _baseUrl = 'https://api.plannder.com';
 
-    if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
-      return data.map((json) => ItineraryModel.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load itineraries');
+  static Future<List<ItineraryModel>> fetchItineraries({
+    required int tripId,
+  }) async {
+    List<ItineraryModel> allItineraries = [];
+    String? nextUrl = '$_baseUrl/trip/$tripId/itinerary/?page=1&page_size=10';
+
+    while (nextUrl != null) {
+      final response = await HttpHandler.request(Uri.parse(nextUrl));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decoded = jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> results = decoded['results'];
+        allItineraries.addAll(results.map((json) => ItineraryModel.fromJson(json)));
+
+        nextUrl = decoded['next'];
+      } else {
+        throw Exception('Nie udało się pobrać planów: ${response.body}');
+      }
     }
+
+    return allItineraries;
   }
 
-  Future<List<ActivityModel>> fetchActivities({
+  static Future<List<ActivityModel>> fetchActivities({
     required int tripId,
     required int itineraryId,
-    required String token,
   }) async {
-    final response = await http.get(
-      Uri.parse(
-        'https://api.plannder.com/trip/$tripId/itinerary/$itineraryId/activities/all/',
-      ),
-      headers: {'accept': 'application/json', 'Authorization': 'Bearer $token'},
-    );
+    List<ActivityModel> allActivities = [];
+    String? nextUrl = '$_baseUrl/trip/$tripId/itinerary/$itineraryId/activities/';
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data.map((e) => ActivityModel.fromJson(e)).toList();
-    } else {
-      throw Exception('Nie udało się pobrać aktywności');
+    while (nextUrl != null) {
+      final response = await HttpHandler.request(Uri.parse(nextUrl));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decoded = jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> results = decoded['results'];
+        allActivities.addAll(results.map((json) => ActivityModel.fromJson(json)));
+
+        nextUrl = decoded['next'];
+      } else {
+        throw Exception('Nie udało się pobrać aktywności: ${response.body}');
+      }
     }
+
+    return allActivities;
   }
 }

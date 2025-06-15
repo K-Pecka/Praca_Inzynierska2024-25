@@ -1,42 +1,34 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:mobile/core/utils/http_handler.dart';
 import '../models/trip_model.dart';
 
 class TripService {
-  final String baseUrl = 'https://api.plannder.com';
+  static final String _baseUrl = 'https://api.plannder.com';
 
-  Future<List<TripModel>> fetchTrips(String token) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/trip/all/'),
-      headers: {
-        'accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+  static Future<List<TripModel>> getAllTrips() async {
+    final url = Uri.parse('$_baseUrl/trip/');
+    final response = await HttpHandler.request(url);
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data.map((e) => TripModel.fromJson(e)).toList();
+      final Map<String, dynamic> decoded =
+      jsonDecode(utf8.decode(response.bodyBytes));
+
+      final List<dynamic> results = decoded['results'];
+      return results.map((e) => TripModel.fromJson(e)).toList();
     } else {
-      throw Exception('Błąd podczas pobierania wycieczek');
+      throw Exception('Błąd podczas pobierania wycieczek: ${response.body}');
     }
   }
 
-  Future<TripModel?> fetchTripById(String token, int tripId) async {
-    final trips = await fetchTrips(token);
-    return trips.firstWhere(
-          (trip) => trip.id == tripId,
-      orElse: () => trips.isNotEmpty
-          ? trips.first
-          : TripModel(
-        id: -1,
-        name: 'Brak',
-        creatorId: 0,
-        members: [],
-        startDate: DateTime.now(),
-        endDate: DateTime.now(),
-        budgetAmount: 0.0,
-      ),
-    );
+  static Future<TripModel> getTripById(int tripId) async {
+    final url = Uri.parse('$_baseUrl/trip/$tripId/');
+    final response = await HttpHandler.request(url);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
+      return TripModel.fromJson(data);
+    } else {
+      throw Exception('Błąd podczas pobierania wycieczki o ID $tripId: ${response.body}');
+    }
   }
 }

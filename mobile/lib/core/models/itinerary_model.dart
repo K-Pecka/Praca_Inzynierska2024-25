@@ -17,6 +17,9 @@ class ItineraryModel {
     required this.activitiesCount,
   });
 
+  @override
+  String toString() => name;
+
   factory ItineraryModel.fromJson(Map<String, dynamic> json) {
     return ItineraryModel(
       id: json['id'],
@@ -27,5 +30,4 @@ class ItineraryModel {
       tripId: json['trip'],
       activitiesCount: json['activities_count'].toString(),
     );
-  }
-}
+  }}

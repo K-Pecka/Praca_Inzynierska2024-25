@@ -1,5 +1,64 @@
-# Vue 3 + TypeScript + Vite
+# Aplikacja Internetowa
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Umożliwia planowanie i zarządzanie wycieczkami indywidalnymi oraz grupowymi. Pozwala tworzyć plany podróży, zapraszać uczestników, śledzić wydatki i zarządzać budżetem.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Funkcjonalności
+
+### Autoryzacja
+- Rejestracja użytkowników
+- Logowanie i wylogowywanie
+- Obsługa ról użytkownika (np. przewodnik, uczestnik)
+
+### Zarządzanie podróżami
+- Tworzenie i edytowanie podróży
+- Dodawanie uczestników
+- Planowanie harmonogramu
+- Zarządzanie biletami i subskrypcjami
+
+### Budżet i finanse
+- Dodawanie wydatków
+- Dzielenie kosztów między uczestników
+
+
+## Technologie
+
+### Frontend
+- **Vue 3**
+- **TypeScript**
+- **Vuetify** – komponenty UI
+- **Vue Router** – routing
+- **Pinia** – zarządzanie stanem
+- **TanStack Query (vue-query)** – komunikacja z API i cache
+
+### Inne
+- **Vite** – bundler
+- **Axios** – komunikacja z API
+
+
+## Wymagania systemowe
+
+- Node.js (>= 18)
+- npm lub yarn
+- Git
+- Przeglądarka zgodna z HTML5 (np. Chrome, Firefox)
+
+
+## Konfiguracja i uruchomienie
+
+1. Sklonuj repozytorium
+
+```bash
+git clone https://github.com/K-Pecka/Praca_Inzynierska2024-25.git
+cd front-end
+```
+
+2. Zainstaluj zależności
+
+```bash
+npm install
+```
+3. Uruchom aplikację
+
+```bash
+npm run dev
+```

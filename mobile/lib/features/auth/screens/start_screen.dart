@@ -26,13 +26,27 @@ class StartScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const TouristLoginScreen(),
+                          builder: (_) => const LoginScreen(
+                            profileType: 1,
+                            title: 'Logowanie: Turysta',
+                            borderColor: Color(0xFFBFDFFF),
+                          ),
                         ),
                       );
                     },
                     onGuideTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const LoginScreen(
+                            profileType: 2,
+                            title: 'Logowanie: Przewodnik',
+                            borderColor: Color(0xFFA8E6B5),
+                          ),
+                        ),
+                      );
                     },
-                  ),
+                  )
                 ],
               ),
             ),

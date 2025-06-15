@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/theme/icons.dart';
+import '../../../core/theme/themes.dart';
 
 class BudgetOverviewCard extends StatefulWidget {
   final double totalBudget;
@@ -30,82 +31,116 @@ class _BudgetOverviewCardState extends State<BudgetOverviewCard> {
       progressColor = Colors.red;
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF4F2FF),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              ColorFiltered(
-                colorFilter: const ColorFilter.mode(Color(0xFF6C55ED), BlendMode.srcIn),
-                child: SizedBox(width: 32, height: 32, child: AppIcons.money),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                AppColors.primary,
+                BlendMode.srcIn,
               ),
-              const SizedBox(width: 8),
-              const Text(
-                'Budżet',
-                style: TextStyles.cardTitleHeading,
+              child: SizedBox(width: 36, height: 36, child: AppIcons.money),
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'Budżet',
+              style: TextStyles.cardTitleHeading,
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.cardsBackground,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${widget.totalBudget.toStringAsFixed(0)} PLN',
+                style: TextStyles.totalBudgetAmount,
+              ),
+              const SizedBox(height: 8),
+              LinearProgressIndicator(
+                value: percent.clamp(0.0, 1.0),
+                backgroundColor: Colors.grey[300],
+                color: progressColor,
+                minHeight: 6,
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${widget.used.toStringAsFixed(0)} PLN',
+                    style: TextStyles.usedBudget(progressColor),
+                  ),
+                  Text(
+                    '${(percent * 100).toStringAsFixed(1)}%',
+                    style: TextStyles.usedBudget(progressColor),
+                  ),
+                ],
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            '${widget.totalBudget.toStringAsFixed(0)} PLN',
-            style: TextStyles.totalBudgetAmount,
-          ),
-          const SizedBox(height: 8),
-          LinearProgressIndicator(
-            value: percent.clamp(0.0, 1.0),
-            backgroundColor: Colors.grey[300],
-            color: progressColor,
-            minHeight: 6,
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${widget.used.toStringAsFixed(0)} PLN',
-                style: TextStyles.usedBudget(progressColor),
-              ),
-              Text(
-                '${(percent * 100).toStringAsFixed(1)}%',
-                style: TextStyles.usedBudget(progressColor),
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
 
-class ToggleExpenseFormButton extends StatelessWidget {
+class BudgetActionsRow extends StatelessWidget {
   final bool showForm;
-  final VoidCallback onToggle;
+  final VoidCallback onToggleForm;
+  final VoidCallback onFilter;
 
-  const ToggleExpenseFormButton({
+  const BudgetActionsRow({
     super.key,
     required this.showForm,
-    required this.onToggle,
+    required this.onToggleForm,
+    required this.onFilter,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: IconButton(
-        icon: Icon(
-          showForm ? Icons.remove_circle_outline : Icons.add_circle_outline,
-          size: 48,
-          color: const Color(0xFF6C55ED),
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton(
+            onPressed: onToggleForm,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(
+              showForm ? 'Anuluj' : 'Dodaj',
+              style: TextStyles.whiteSubtitle,
+            ),
+          ),
         ),
-        onPressed: onToggle,
-      ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: onFilter,
+            label: const Text('Filtruj', style: TextStyles.whiteSubtitle),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

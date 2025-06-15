@@ -63,20 +63,22 @@ Widget buildChooseProfileButtons({
   );
 }
 
-Widget buildTouristLoginForm({
+Widget buildLoginForm({
   required TextEditingController emailController,
   required TextEditingController passwordController,
   required bool isLoading,
   required VoidCallback onLogin,
+  required Color borderColor,
 }) {
   return Container(
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
-      border: Border.all(color: Color(0xFFBFDFFF), width: 2),
+      border: Border.all(color: borderColor, width: 2),
       borderRadius: BorderRadius.circular(20),
     ),
     child: Column(
       children: [
+        // Email
         TextField(
           controller: emailController,
           style: TextStyles.subtitle,
@@ -84,9 +86,12 @@ Widget buildTouristLoginForm({
             labelText: 'Email',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             labelStyle: TextStyles.subtitle,
+            prefixIcon: const Icon(Icons.email_outlined),
           ),
         ),
         const SizedBox(height: 16),
+
+        // Hasło
         TextField(
           controller: passwordController,
           obscureText: true,
@@ -95,9 +100,13 @@ Widget buildTouristLoginForm({
             labelText: 'Hasło',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             labelStyle: TextStyles.subtitle,
+            prefixIcon: const Icon(Icons.lock_outline),
           ),
+          onSubmitted: (_) => onLogin(),
         ),
         const SizedBox(height: 24),
+
+        // Przycisk logowania
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -109,13 +118,12 @@ Widget buildTouristLoginForm({
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
-            child:
-                isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                      'Zaloguj',
-                      style: TextStyles.whiteSubtitle,
-                    ),
+            child: isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : const Text(
+              'Zaloguj',
+              style: TextStyles.whiteSubtitle,
+            ),
           ),
         ),
       ],
