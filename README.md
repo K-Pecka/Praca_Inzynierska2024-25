@@ -48,8 +48,11 @@ Projekt został wdrożony na platformie Heroku. Automatyzacja procesu wdrażania
 ## Autorzy
 
 **Mateusz Wiśniewski**
+
 **Andrzej Ebertowski**
+
 **Jakub Pobłocki**
+
 **Kacper pecka**
 
 ---
